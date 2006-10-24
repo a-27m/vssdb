@@ -46,7 +46,7 @@ namespace ServerApp
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
 			this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
-			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.tabControl = new System.Windows.Forms.TabControl();
 			this.tabMessages = new System.Windows.Forms.TabPage();
 			this.tabRobots = new System.Windows.Forms.TabPage();
 			this.tabCommon = new System.Windows.Forms.TabPage();
@@ -77,7 +77,7 @@ namespace ServerApp
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
 			this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
 			this.toolStripContainer1.SuspendLayout();
-			this.tabControl1.SuspendLayout();
+			this.tabControl.SuspendLayout();
 			this.tabMessages.SuspendLayout();
 			this.tabRobots.SuspendLayout();
 			splitContainer2.Panel1.SuspendLayout();
@@ -169,7 +169,7 @@ namespace ServerApp
 			// 
 			// toolStripContainer1.ContentPanel
 			// 
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.tabControl1);
+			this.toolStripContainer1.ContentPanel.Controls.Add(this.tabControl);
 			this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(487, 343);
 			this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.toolStripContainer1.Location = new System.Drawing.Point(0, 24);
@@ -184,17 +184,17 @@ namespace ServerApp
 			// 
 			// tabControl1
 			// 
-			this.tabControl1.Controls.Add(this.tabEmails);
-			this.tabControl1.Controls.Add(this.tabMessages);
-			this.tabControl1.Controls.Add(this.tabRobots);
-			this.tabControl1.Controls.Add(this.tabCommon);
-			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tabControl1.Location = new System.Drawing.Point(0, 0);
-			this.tabControl1.Name = "tabControl1";
-			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(487, 343);
-			this.tabControl1.TabIndex = 0;
-			this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+			this.tabControl.Controls.Add(this.tabEmails);
+			this.tabControl.Controls.Add(this.tabMessages);
+			this.tabControl.Controls.Add(this.tabRobots);
+			this.tabControl.Controls.Add(this.tabCommon);
+			this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tabControl.Location = new System.Drawing.Point(0, 0);
+			this.tabControl.Name = "tabControl1";
+			this.tabControl.SelectedIndex = 0;
+			this.tabControl.Size = new System.Drawing.Size(487, 343);
+			this.tabControl.TabIndex = 0;
+			this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
 			// 
 			// tabMessages
 			// 
@@ -449,7 +449,7 @@ namespace ServerApp
 			this.toolStripContainer1.TopToolStripPanel.PerformLayout();
 			this.toolStripContainer1.ResumeLayout(false);
 			this.toolStripContainer1.PerformLayout();
-			this.tabControl1.ResumeLayout(false);
+			this.tabControl.ResumeLayout(false);
 			this.tabMessages.ResumeLayout(false);
 			this.tabRobots.ResumeLayout(false);
 			splitContainer2.Panel1.ResumeLayout(false);
@@ -468,7 +468,7 @@ namespace ServerApp
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStrip toolStrip1;
 		private System.Windows.Forms.ToolStripContainer toolStripContainer1;
-		private System.Windows.Forms.TabControl tabControl1;
+		private System.Windows.Forms.TabControl tabControl;
 		private System.Windows.Forms.TabPage tabMessages;
 		private System.Windows.Forms.ListBox listMessages;
 		private System.Windows.Forms.Button buttonMessageAdd;

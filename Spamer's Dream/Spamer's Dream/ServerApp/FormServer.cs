@@ -76,7 +76,7 @@ WHERE
 			OpenSqlConnection();
 		}
 
-		#region MySQL methods
+		#region MySQL access methods
 
 		private void OpenSqlConnection() {
 			if ( sqlConnection != null )
@@ -170,16 +170,22 @@ WHERE
 			FillListMessages(listLetter);
 		}
 
-		private Cli GetSmtpServerById(int id) {
-			MySqlCommand sqlCmd =
-	new MySqlCommand(selectRobotsQuery, sqlConnection);
+		private void PopulateEmails() {
+			throw new Exception("The method or operation is not implemented.");
+		}
+
+		private AuthServerInfo GetSmtpServerById(int id) {
+			AuthServerInfo servInf;
+			MySqlCommand sqlCmd = new MySqlCommand(selectRobotsQuery, sqlConnection);
 			MySqlDataReader sqlReader = sqlCmd.ExecuteReader();
 			if ( sqlReader.Read() ) {
-
+				sqlr
 			}
 		}
 
 		#endregion
+
+		#region UDP Interface
 
 		void Priem(IAsyncResult iar) {
 			IPEndPoint remoteIPEndPoint = null;
@@ -207,6 +213,8 @@ WHERE
 			uclient.Send(dgrm, dgrm.Length);
 			uclient.Close();
 		}
+
+		#endregion
 
 		private void SendStartToAll() {
 			int roborPort = sets.RobotUdpPort;
@@ -240,6 +248,7 @@ WHERE
 		#region Events handlers
 
 		private void FormServer_Load(object sender, EventArgs e) {
+			tabControl.SelectedIndex = 0;// messages tab
 			PopulateMessages();
 		}
 
@@ -249,7 +258,7 @@ WHERE
 		}
 
 		private void tabControl1_SelectedIndexChanged(object sender, EventArgs e) {
-			switch ( tabControl1.SelectedIndex ) {
+			switch ( tabControl.SelectedIndex ) {
 			case 0: // messages
 				PopulateMessages();
 				break;
@@ -257,8 +266,10 @@ WHERE
 				PopulateRobots();
 				break;
 			case 2: // emails
+				PopulateEmails();
 				break;
 			case 3: // common
+				//PopulateMessages();
 				break;
 			default:
 				break;
