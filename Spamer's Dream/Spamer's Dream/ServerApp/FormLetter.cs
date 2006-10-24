@@ -31,14 +31,13 @@ namespace ServerApp
 		{
 			this.letter.Subject = textSubject.Text;
 			this.letter.Body = textBody.Text;
-			this.letter.IsHtml = ( checkIsHtml ? 1 : 0 );
+			this.letter.IsHtml = ( checkIsHtml.Checked ? 1 : 0 );
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}
 
 		private void buttonCancel_Click(object sender, EventArgs e)
 		{
-			this.letter = null;
 			this.DialogResult = DialogResult.Cancel;
 			this.Close();
 		}

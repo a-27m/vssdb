@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonTypes.cs" />
     <Compile Include="FormLetter.cs">
       <SubType>Form</SubType>
     </Compile>
