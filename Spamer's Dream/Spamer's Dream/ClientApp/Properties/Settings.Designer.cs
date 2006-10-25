@@ -25,64 +25,86 @@ namespace ClientApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("54321")]
-        public int ServerUdpPort {
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
+        public string DbHost {
             get {
-                return ((int)(this["ServerUdpPort"]));
+                return ((string)(this["DbHost"]));
             }
             set {
-                this["ServerUdpPort"] = value;
+                this["DbHost"] = value;
             }
         }
-
-
-		[global::System.Configuration.UserScopedSettingAttribute()]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("localhost")]
-		public string DbHost {
-			get {
-				return ( (string)( this["DbHost"] ) );
-			}
-			set {
-				this["DbHost"] = value;
-			}
-		}
-
-		[global::System.Configuration.UserScopedSettingAttribute()]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("test")]
-		public string DbName {
-			get {
-				return ( (string)( this["DbName"] ) );
-			}
-			set {
-				this["DbName"] = value;
-			}
-		}
-
-		[global::System.Configuration.UserScopedSettingAttribute()]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("root")]
-		public string DbUser {
-			get {
-				return ( (string)( this["DbUser"] ) );
-			}
-			set {
-				this["DbUser"] = value;
-			}
-		}
-
-		[global::System.Configuration.UserScopedSettingAttribute()]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("")]
-		public string DbPassword {
-			get {
-				return ( (string)( this["DbPassword"] ) );
-			}
-			set {
-				this["DbPassword"] = value;
-			}
-		}
-
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("root")]
+        public string DbUser {
+            get {
+                return ((string)(this["DbUser"]));
+            }
+            set {
+                this["DbUser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DbPassword {
+            get {
+                return ((string)(this["DbPassword"]));
+            }
+            set {
+                this["DbPassword"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("test")]
+        public string DbName {
+            get {
+                return ((string)(this["DbName"]));
+            }
+            set {
+                this["DbName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int LettersDoze {
+            get {
+                return ((int)(this["LettersDoze"]));
+            }
+            set {
+                this["LettersDoze"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
+        public string SpamServerHost {
+            get {
+                return ((string)(this["SpamServerHost"]));
+            }
+            set {
+                this["SpamServerHost"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("54321")]
+        public int SpamServerPort {
+            get {
+                return ((int)(this["SpamServerPort"]));
+            }
+            set {
+                this["SpamServerPort"] = value;
+            }
+        }
     }
 }

@@ -120,33 +120,46 @@ WHERE
 		private IEnumerable<string> GetRobotsHosts() {
 			if ( !TryConnection() ) { yield break; }
 
+			MySqlDataReader sqlReader = null;
 			MySqlCommand sqlCmd =
 				new MySqlCommand(selectValidHostnamesQuery, sqlConnection);
-			MySqlDataReader sqlReader = sqlCmd.ExecuteReader();
+
+			sqlReader = sqlCmd.ExecuteReader();
 
 			while ( sqlReader.Read() )
 				yield return sqlReader.GetString(0);
+			if ( sqlReader != null )
+				sqlReader.Close();
 		}
 
 		private void PopulateMessages() {
 			if ( !TryConnection() )
 				return;
 
+			MySqlDataReader sqlReader = null;
 			MySqlCommand sqlCmd =
-				new MySqlCommand(selectMessagesQuery, sqlConnection);
-			MySqlDataReader sqlReader = sqlCmd.ExecuteReader();
+			new MySqlCommand(selectMessagesQuery, sqlConnection);
 
-			Letter letter;
-			listLetter = new List<Letter>();
-			while ( sqlReader.Read() ) {
-				letter.Id = sqlReader.GetInt32(0);
-				letter.Subject = sqlReader.GetString(1);
-				letter.Body = sqlReader.GetString(2);
-				letter.IsHtml = sqlReader.GetBoolean(3) ? 1 : 0;
-				listLetter.Add(letter);
+			try {
+				sqlReader = sqlCmd.ExecuteReader();
+
+				Letter letter;
+				listLetter = new List<Letter>();
+				while ( sqlReader.Read() ) {
+					letter.Id = sqlReader.GetInt32(0);
+					letter.Subject = sqlReader.GetString(1);
+					letter.Body = sqlReader.GetString(2);
+					letter.IsHtml = sqlReader.GetBoolean(3) ? 1 : 0;
+					listLetter.Add(letter);
+				}
 			}
-
-			sqlReader.Close();
+			catch ( MySqlException ex ) {
+				MessageBox.Show("Failed to populate messages list: " + ex.Message);
+			}
+			finally {
+				if ( sqlReader != null )
+					sqlReader.Close();
+			}
 			FillListMessages();
 		}
 
@@ -322,14 +335,12 @@ WHERE
 			}
 		}
 
-		private void checkPassHide_CheckedChanged(object sender, EventArgs e) {
-			textBox4.UseSystemPasswordChar = checkPassHide.Checked;
-		}
-
 		private void buttonSend_Click(object sender, EventArgs e) {
 			SendStartToAll();
 		}
 
 		#endregion
+
+
 	}
 }
