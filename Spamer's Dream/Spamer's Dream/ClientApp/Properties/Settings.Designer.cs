@@ -25,158 +25,64 @@ namespace ClientApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
-        public string SpamConfigServerHost {
-            get {
-                return ((string)(this["SpamConfigServerHost"]));
-            }
-            set {
-                this["SpamConfigServerHost"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("54321")]
-        public int SpamConfigServerUdpPort {
+        public int ServerUdpPort {
             get {
-                return ((int)(this["SpamConfigServerUdpPort"]));
+                return ((int)(this["ServerUdpPort"]));
             }
             set {
-                this["SpamConfigServerUdpPort"] = value;
+                this["ServerUdpPort"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Spamer")]
-        public string MyName {
-            get {
-                return ((string)(this["MyName"]));
-            }
-            set {
-                this["MyName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("w_axell@rambler.ru")]
-        public string MyEmail {
-            get {
-                return ((string)(this["MyEmail"]));
-            }
-            set {
-                this["MyEmail"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("smtp.rambler.ru")]
-        public string SmtpServerHost {
-            get {
-                return ((string)(this["SmtpServerHost"]));
-            }
-            set {
-                this["SmtpServerHost"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("25")]
-        public int SmtpServerPort {
-            get {
-                return ((int)(this["SmtpServerPort"]));
-            }
-            set {
-                this["SmtpServerPort"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("w_axell")]
-        public string SmtpUsername {
-            get {
-                return ((string)(this["SmtpUsername"]));
-            }
-            set {
-                this["SmtpUsername"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("rNY7rUuM2627jax")]
-        public string SmtpPassword {
-            get {
-                return ((string)(this["SmtpPassword"]));
-            }
-            set {
-                this["SmtpPassword"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool SmtpUseSSL {
-            get {
-                return ((bool)(this["SmtpUseSSL"]));
-            }
-            set {
-                this["SmtpUseSSL"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool QuerySpamServerForSettings {
-            get {
-                return ((bool)(this["QuerySpamServerForSettings"]));
-            }
-            set {
-                this["QuerySpamServerForSettings"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
-        public string SpamMessagesServerHost {
-            get {
-                return ((string)(this["SpamMessagesServerHost"]));
-            }
-            set {
-                this["SpamMessagesServerHost"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("54321")]
-        public int SpamMessagesServerTcpPort {
-            get {
-                return ((int)(this["SpamMessagesServerTcpPort"]));
-            }
-            set {
-                this["SpamMessagesServerTcpPort"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("54321")]
-        public int UdpPort {
-            get {
-                return ((int)(this["UdpPort"]));
-            }
-            set {
-                this["UdpPort"] = value;
-            }
-        }
+
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("localhost")]
+		public string DbHost {
+			get {
+				return ( (string)( this["DbHost"] ) );
+			}
+			set {
+				this["DbHost"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("test")]
+		public string DbName {
+			get {
+				return ( (string)( this["DbName"] ) );
+			}
+			set {
+				this["DbName"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("root")]
+		public string DbUser {
+			get {
+				return ( (string)( this["DbUser"] ) );
+			}
+			set {
+				this["DbUser"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("")]
+		public string DbPassword {
+			get {
+				return ( (string)( this["DbPassword"] ) );
+			}
+			set {
+				this["DbPassword"] = value;
+			}
+		}
+
     }
 }

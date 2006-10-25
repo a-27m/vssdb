@@ -2,43 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ClientApp.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="SpamConfigServerHost" Type="System.String" Scope="User">
-      <Value Profile="(Default)">127.0.0.1</Value>
-    </Setting>
-    <Setting Name="SpamConfigServerUdpPort" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">54321</Value>
-    </Setting>
-    <Setting Name="MyName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Spamer</Value>
-    </Setting>
-    <Setting Name="MyEmail" Type="System.String" Scope="User">
-      <Value Profile="(Default)">w_axell@rambler.ru</Value>
-    </Setting>
-    <Setting Name="SmtpServerHost" Type="System.String" Scope="User">
-      <Value Profile="(Default)">smtp.rambler.ru</Value>
-    </Setting>
-    <Setting Name="SmtpServerPort" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">25</Value>
-    </Setting>
-    <Setting Name="SmtpUsername" Type="System.String" Scope="User">
-      <Value Profile="(Default)">w_axell</Value>
-    </Setting>
-    <Setting Name="SmtpPassword" Type="System.String" Scope="User">
-      <Value Profile="(Default)">rNY7rUuM2627jax</Value>
-    </Setting>
-    <Setting Name="SmtpUseSSL" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="QuerySpamServerForSettings" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="SpamMessagesServerHost" Type="System.String" Scope="User">
-      <Value Profile="(Default)">127.0.0.1</Value>
-    </Setting>
-    <Setting Name="SpamMessagesServerTcpPort" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">54321</Value>
-    </Setting>
-    <Setting Name="UdpPort" Type="System.Int32" Scope="User">
+    <Setting Name="ServerUdpPort" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">54321</Value>
     </Setting>
   </Settings>
