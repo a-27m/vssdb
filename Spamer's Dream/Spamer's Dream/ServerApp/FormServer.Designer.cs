@@ -111,9 +111,11 @@ namespace ServerApp
 			// 
 			this.listBoxMessages.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.listBoxMessages.FormattingEnabled = true;
+			this.listBoxMessages.HorizontalScrollbar = true;
 			this.listBoxMessages.IntegralHeight = false;
 			this.listBoxMessages.Location = new System.Drawing.Point(0, 0);
 			this.listBoxMessages.Name = "listBoxMessages";
+			this.listBoxMessages.ScrollAlwaysVisible = true;
 			this.listBoxMessages.Size = new System.Drawing.Size(379, 311);
 			this.listBoxMessages.TabIndex = 0;
 			// 
@@ -174,9 +176,13 @@ namespace ServerApp
 			// 
 			this.listBoxRobots.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.listBoxRobots.FormattingEnabled = true;
+			this.listBoxRobots.HorizontalExtent = 20;
+			this.listBoxRobots.HorizontalScrollbar = true;
 			this.listBoxRobots.IntegralHeight = false;
 			this.listBoxRobots.Location = new System.Drawing.Point(0, 0);
+			this.listBoxRobots.MultiColumn = true;
 			this.listBoxRobots.Name = "listBoxRobots";
+			this.listBoxRobots.ScrollAlwaysVisible = true;
 			this.listBoxRobots.Size = new System.Drawing.Size(270, 311);
 			this.listBoxRobots.TabIndex = 0;
 			// 

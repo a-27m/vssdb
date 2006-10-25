@@ -129,7 +129,7 @@ WHERE
 		}
 
 		private void PopulateMessages() {
-			if ( !( listBoxMessages.Enabled = TryConnection() ) )
+			if ( !TryConnection() )
 				return;
 
 			MySqlCommand sqlCmd =
@@ -152,7 +152,7 @@ WHERE
 
 		private void PopulateRobots() {
 			if ( !TryConnection() ) {
-				listBoxRobots.Enabled = false;
+				//listBoxRobots.Enabled = false;
 				return;
 			}
 
@@ -181,10 +181,6 @@ WHERE
 
 			FillListRobots();
 		}
-
-		//private void ResolveSmtpId(Robot robot) {
-		//    robot.SmtpServer = GetSmtpServerById(robot.SmtpId);
-		//}
 
 		private void PopulateEmails() {
 			//throw new Exception("The method or operation is not implemented.");
@@ -298,7 +294,7 @@ WHERE
 		#region Events handlers
 
 		private void FormServer_Load(object sender, EventArgs e) {
-			tabControl.TabPages["tabMessages"].Select();
+			tabControl.SelectedTab = tabControl.TabPages["tabMessages"];
 			PopulateMessages();
 		}
 
