@@ -15,7 +15,7 @@
       <Value Profile="(Default)">test</Value>
     </Setting>
     <Setting Name="LettersDoze" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">5</Value>
+      <Value Profile="(Default)">4</Value>
     </Setting>
     <Setting Name="SpamServerHost" Type="System.String" Scope="User">
       <Value Profile="(Default)">127.0.0.1</Value>
