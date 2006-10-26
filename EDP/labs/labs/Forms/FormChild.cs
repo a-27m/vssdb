@@ -6,33 +6,26 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace lab1
-{
-	struct GridsRow
-	{
+namespace lab1 {
+	struct GridsRow {
 		public string Title;
 		public Array Content;
 
-		public GridsRow(string Title, Array Content)
-		{
+		public GridsRow(string Title, Array Content) {
 			this.Content = Content;
 			this.Title = Title;
 		}
 
 	}
 
-	public partial class FormChild : Form
-	{
+	public partial class FormChild : Form {
 		private DataSet dataSet;
 
-		public double[] Data
-		{
-			get
-			{
+		public double[] Data {
+			get {
 				return dataSet.Data.Clone() as double[];
 			}
-			set
-			{
+			set {
 				dataSet = new DataSet(value);
 				if ( Visible )
 					UpdateGrid();
@@ -40,33 +33,28 @@ namespace lab1
 		}
 
 		List<GridsRow> rows = null;
-		int maxGridRowLen =0;
+		int maxGridRowLen = 0;
 
 		protected bool changed = false;
 
-		public FormChild(double[] data)
-		{
+		public FormChild(double[] data) {
 			InitializeComponent();
 			Data = data;
 		}
 
-		public FormChild()
-		{
+		public FormChild() {
 			InitializeComponent();
 		}
 
-		void FormChild_Shown(object sender, EventArgs e)
-		{
+		void FormChild_Shown(object sender, EventArgs e) {
 			UpdateGrid();
 		}
 
-		public void AddRow(Array data)
-		{
+		public void AddRow(Array data) {
 			AddRow("Х", data);
 		}
 
-		public void AddRow(string Title, Array data)
-		{
+		public void AddRow(string Title, Array data) {
 			if ( rows == null )
 				rows = new List<GridsRow>();
 
@@ -78,15 +66,13 @@ namespace lab1
 			UpdateGrid();
 		}
 
-		public void PrintLine(string str)
-		{
+		public void PrintLine(string str) {
 			textBox1.Text += str + "\r\n";
 		}
 
-		public void UpdateGrid()
-		{
-			if ( dataGridDataSet != null )
-			{
+		public void UpdateGrid() {
+			if ( ( dataSet.Length > 0 )
+				&& ( dataGridDataSet != null ) ) {
 				dataGridDataSet.Rows.Clear();
 				dataGridDataSet.Columns.Clear();
 
@@ -98,14 +84,14 @@ namespace lab1
 				dataGridDataSet.Rows[0].HeaderCell.Value = "»сх. выборка";
 
 				for ( int i = 0; i < dataSet.Length; i++ )
-					dataGridDataSet[i,0].Value = dataSet[i];
+					dataGridDataSet[i, 0].Value = dataSet[i];
 
 				dataGridDataSet.AutoResizeColumns();
 				dataGridDataSet.AutoResizeRows();
 			}
 
-			if ((rows == null )
-				||( rows.Count == 0 ) 
+			if ( ( rows == null )
+				|| ( rows.Count == 0 )
 				|| ( dataGridAnalysis == null )
 				)
 				return;
@@ -115,14 +101,13 @@ namespace lab1
 
 			rows.ForEach(FindMax);
 
-			for ( int i = 0; i <maxGridRowLen ; i++ )
+			for ( int i = 0; i < maxGridRowLen; i++ )
 				dataGridAnalysis.Columns.Add("column" + i.ToString(),
 					( i + 1 ).ToString());
 
 			dataGridAnalysis.Rows.Add(rows.Count);
 
-			for ( int j = 0; j < rows.Count; j++ )
-			{
+			for ( int j = 0; j < rows.Count; j++ ) {
 				dataGridAnalysis.Rows[j].HeaderCell.Value =
 					rows[j].Title;
 
@@ -136,14 +121,12 @@ namespace lab1
 			dataGridAnalysis.AutoResizeRows();
 		}
 
-		void FindMax(GridsRow gr)
-		{
+		void FindMax(GridsRow gr) {
 			if ( gr.Content.Length > maxGridRowLen )
 				maxGridRowLen = gr.Content.Length;
 		}
 
-		private void contextMenuAdd_Click(object sender, EventArgs e)
-		{
+		private void contextMenuAdd_Click(object sender, EventArgs e) {
 			changed = true;
 			double d = 0;
 			dataSet.Add(d);
