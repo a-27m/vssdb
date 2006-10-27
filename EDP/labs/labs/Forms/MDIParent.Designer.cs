@@ -75,15 +75,15 @@ namespace lab1
 			this.buttonNumCharacteristics = new System.Windows.Forms.ToolStripButton();
 			this.toolStrip2 = new System.Windows.Forms.ToolStrip();
 			this.buttonDrawPoints = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
 			this.buttonDrawEmpFn = new System.Windows.Forms.ToolStripButton();
 			this.buttonDrawHistogram = new System.Windows.Forms.ToolStripButton();
-			this.listBox1 = new System.Windows.Forms.ListBox();
 			this.toolStrip3 = new System.Windows.Forms.ToolStrip();
 			this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolRavnomZn = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolExpZn = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolNormZn = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+			this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
 			this.menuStrip.SuspendLayout();
 			this.toolStrip.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
@@ -494,6 +494,16 @@ namespace lab1
 			this.buttonDrawPoints.Text = "Исходное множество точек";
 			this.buttonDrawPoints.Click += new System.EventHandler(this.buttonDrawPoints_Click);
 			// 
+			// toolStripButton1
+			// 
+			this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolStripButton1.Image = ( (System.Drawing.Image)( resources.GetObject("toolStripButton1.Image") ) );
+			this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton1.Name = "toolStripButton1";
+			this.toolStripButton1.Size = new System.Drawing.Size(182, 22);
+			this.toolStripButton1.Text = "Упорядоченное множество точек";
+			this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+			// 
 			// buttonDrawEmpFn
 			// 
 			this.buttonDrawEmpFn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -513,19 +523,6 @@ namespace lab1
 			this.buttonDrawHistogram.Size = new System.Drawing.Size(75, 22);
 			this.buttonDrawHistogram.Text = "Гистограмма";
 			this.buttonDrawHistogram.Click += new System.EventHandler(this.buttonDrawHistogram_Click);
-			// 
-			// listBox1
-			// 
-			this.listBox1.Dock = System.Windows.Forms.DockStyle.Right;
-			this.listBox1.FormattingEnabled = true;
-			this.listBox1.HorizontalScrollbar = true;
-			this.listBox1.IntegralHeight = false;
-			this.listBox1.Location = new System.Drawing.Point(490, 124);
-			this.listBox1.Name = "listBox1";
-			this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-			this.listBox1.Size = new System.Drawing.Size(142, 329);
-			this.listBox1.TabIndex = 7;
-			this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
 			// 
 			// toolStrip3
 			// 
@@ -571,22 +568,23 @@ namespace lab1
 			this.toolNormZn.Text = "Нормальный закон";
 			this.toolNormZn.Click += new System.EventHandler(this.toolNormZn_Click);
 			// 
-			// toolStripButton1
+			// checkedListBox1
 			// 
-			this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolStripButton1.Image = ( (System.Drawing.Image)( resources.GetObject("toolStripButton1.Image") ) );
-			this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton1.Name = "toolStripButton1";
-			this.toolStripButton1.Size = new System.Drawing.Size(182, 22);
-			this.toolStripButton1.Text = "Упорядоченное множество точек";
-			this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+			this.checkedListBox1.CheckOnClick = true;
+			this.checkedListBox1.Dock = System.Windows.Forms.DockStyle.Right;
+			this.checkedListBox1.FormattingEnabled = true;
+			this.checkedListBox1.Location = new System.Drawing.Point(512, 124);
+			this.checkedListBox1.Name = "checkedListBox1";
+			this.checkedListBox1.Size = new System.Drawing.Size(120, 319);
+			this.checkedListBox1.TabIndex = 11;
+			this.checkedListBox1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBox1_ItemCheck);
 			// 
 			// mdiParent
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(632, 453);
-			this.Controls.Add(this.listBox1);
+			this.Controls.Add(this.checkedListBox1);
 			this.Controls.Add(this.toolStrip3);
 			this.Controls.Add(this.toolStrip2);
 			this.Controls.Add(this.toolStrip1);
@@ -659,14 +657,14 @@ namespace lab1
         private System.Windows.Forms.ToolStripButton buttonDrawEmpFn;
         private System.Windows.Forms.ToolStripButton buttonDrawHistogram;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton buttonCorelation;
-		private System.Windows.Forms.ListBox listBox1;
+		private System.Windows.Forms.ToolStripButton buttonCorelation;
 		private System.Windows.Forms.ToolStrip toolStrip3;
 		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
 		private System.Windows.Forms.ToolStripMenuItem toolRavnomZn;
 		private System.Windows.Forms.ToolStripMenuItem toolExpZn;
 		private System.Windows.Forms.ToolStripMenuItem toolNormZn;
 		private System.Windows.Forms.ToolStripButton toolStripButton1;
+		private System.Windows.Forms.CheckedListBox checkedListBox1;
     }
 }
 

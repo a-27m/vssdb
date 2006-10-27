@@ -70,6 +70,10 @@ namespace lab1 {
 			textBox1.Text += str + "\r\n";
 		}
 
+		public void ClearLines() {
+			textBox1.Clear();
+		}
+
 		public void UpdateGrid() {
 			if ( ( dataSet.Length > 0 )
 				&& ( dataGridDataSet != null ) ) {
