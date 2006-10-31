@@ -363,7 +363,7 @@ namespace Lab_05
 			if ( p0.Length != g.Length )
 				throw new ArgumentException("p0[] and f[] sizes dont match");
 			if ( p0.Length != 2 )
-				throw new NotImplementedException();
+				throw new NotImplementedException("multidimensional case is not implemented yet");
 
 			double[] p_prev = new double[p0.Length];
 
@@ -380,8 +380,8 @@ namespace Lab_05
 				p_prev[0] = p0[0];
 				p_prev[1] = p0[1];
 
-				p0[0] = g[0](p0[0]);
-				p0[1] = g[1](p0[1]);
+				p0[0] = g[0](p0[1]);
+				p0[1] = g[1](p0[0]);
 				stepsMaden++;
 
 				//lines.Add(new PointF[] {

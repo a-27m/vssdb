@@ -54,6 +54,7 @@ namespace Lab_05
 			this.radioStillPt = new System.Windows.Forms.RadioButton();
 			this.radioNewtone = new System.Windows.Forms.RadioButton();
 			this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+			this.checkBox1 = new System.Windows.Forms.CheckBox();
 			groupBox2 = new System.Windows.Forms.GroupBox();
 			label4 = new System.Windows.Forms.Label();
 			label1 = new System.Windows.Forms.Label();
@@ -82,14 +83,14 @@ namespace Lab_05
 			groupBox2.Controls.Add(label7);
 			groupBox2.Location = new System.Drawing.Point(173, 12);
 			groupBox2.Name = "groupBox2";
-			groupBox2.Size = new System.Drawing.Size(328, 162);
+			groupBox2.Size = new System.Drawing.Size(346, 207);
 			groupBox2.TabIndex = 8;
 			groupBox2.TabStop = false;
 			groupBox2.Text = "Параметры";
 			// 
 			// textBox1
 			// 
-			this.textBox1.Location = new System.Drawing.Point(55, 48);
+			this.textBox1.Location = new System.Drawing.Point(75, 48);
 			this.textBox1.Name = "textBox1";
 			this.textBox1.ReadOnly = true;
 			this.textBox1.Size = new System.Drawing.Size(100, 20);
@@ -99,7 +100,7 @@ namespace Lab_05
 			// label4
 			// 
 			label4.AutoSize = true;
-			label4.Location = new System.Drawing.Point(14, 51);
+			label4.Location = new System.Drawing.Point(34, 51);
 			label4.Name = "label4";
 			label4.Size = new System.Drawing.Size(35, 13);
 			label4.TabIndex = 22;
@@ -109,7 +110,7 @@ namespace Lab_05
 			// 
 			label1.AutoSize = true;
 			label1.Font = new System.Drawing.Font("Symbol", 10F);
-			label1.Location = new System.Drawing.Point(176, 23);
+			label1.Location = new System.Drawing.Point(202, 23);
 			label1.Name = "label1";
 			label1.Size = new System.Drawing.Size(14, 17);
 			label1.TabIndex = 17;
@@ -118,7 +119,7 @@ namespace Lab_05
 			// 
 			// textE
 			// 
-			this.textE.Location = new System.Drawing.Point(196, 22);
+			this.textE.Location = new System.Drawing.Point(222, 22);
 			this.textE.Name = "textE";
 			this.textE.Size = new System.Drawing.Size(100, 20);
 			this.textE.TabIndex = 18;
@@ -126,13 +127,14 @@ namespace Lab_05
 			// 
 			// groupFirstApproximation
 			// 
+			this.groupFirstApproximation.Controls.Add(this.checkBox1);
 			this.groupFirstApproximation.Controls.Add(label2);
 			this.groupFirstApproximation.Controls.Add(this.textX0);
 			this.groupFirstApproximation.Controls.Add(label3);
 			this.groupFirstApproximation.Controls.Add(this.textY0);
-			this.groupFirstApproximation.Location = new System.Drawing.Point(6, 74);
+			this.groupFirstApproximation.Location = new System.Drawing.Point(17, 86);
 			this.groupFirstApproximation.Name = "groupFirstApproximation";
-			this.groupFirstApproximation.Size = new System.Drawing.Size(158, 81);
+			this.groupFirstApproximation.Size = new System.Drawing.Size(158, 108);
 			this.groupFirstApproximation.TabIndex = 15;
 			this.groupFirstApproximation.TabStop = false;
 			this.groupFirstApproximation.Text = "Начальное приближение";
@@ -177,7 +179,7 @@ namespace Lab_05
 			this.groupInterval.Controls.Add(this.textX1);
 			this.groupInterval.Controls.Add(label9);
 			this.groupInterval.Controls.Add(this.textX2);
-			this.groupInterval.Location = new System.Drawing.Point(179, 83);
+			this.groupInterval.Location = new System.Drawing.Point(197, 86);
 			this.groupInterval.Name = "groupInterval";
 			this.groupInterval.Size = new System.Drawing.Size(143, 72);
 			this.groupInterval.TabIndex = 21;
@@ -220,7 +222,7 @@ namespace Lab_05
 			// 
 			// textBoxFx
 			// 
-			this.textBoxFx.Location = new System.Drawing.Point(55, 22);
+			this.textBoxFx.Location = new System.Drawing.Point(75, 22);
 			this.textBoxFx.Name = "textBoxFx";
 			this.textBoxFx.ReadOnly = true;
 			this.textBoxFx.Size = new System.Drawing.Size(100, 20);
@@ -230,7 +232,7 @@ namespace Lab_05
 			// label7
 			// 
 			label7.AutoSize = true;
-			label7.Location = new System.Drawing.Point(14, 25);
+			label7.Location = new System.Drawing.Point(34, 25);
 			label7.Name = "label7";
 			label7.Size = new System.Drawing.Size(35, 13);
 			label7.TabIndex = 11;
@@ -314,8 +316,19 @@ namespace Lab_05
 			// 
 			this.errorProvider.ContainerControl = this;
 			// 
+			// checkBox1
+			// 
+			this.checkBox1.AutoSize = true;
+			this.checkBox1.Location = new System.Drawing.Point(16, 85);
+			this.checkBox1.Name = "checkBox1";
+			this.checkBox1.Size = new System.Drawing.Size(115, 17);
+			this.checkBox1.TabIndex = 5;
+			this.checkBox1.Text = "Pick up graphically";
+			this.checkBox1.UseVisualStyleBackColor = true;
+			// 
 			// Form5
 			// 
+			this.AcceptButton = this.buttonSolve;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(531, 388);
@@ -359,6 +372,7 @@ namespace Lab_05
 		private System.Windows.Forms.RadioButton radioStillPt;
 		private System.Windows.Forms.RadioButton radioNewtone;
 		private System.Windows.Forms.ErrorProvider errorProvider;
+		private System.Windows.Forms.CheckBox checkBox1;
 	}
 }
 
