@@ -9,47 +9,47 @@ namespace Lab_05
 {
 	public partial class Form5 : Form
 	{
-		//class Vector<T>
-		//{
-		//    T[] _A;
-		//    public Vector(params T[] A)
-		//    {
-		//        _A = (T[])A.Clone();
-		//    }
-		//    public Vector(Vector<T> A)
-		//    {
-		//        _A = (T[])A.Components.Clone();
-		//    }
+		class Vector<T>
+		{
+			//	  T[] _A;
+			//    public Vector(params T[] A)
+			//    {
+			//        _A = (T[])A.Clone();
+			//    }
+			//    public Vector(Vector<T> A)
+			//    {
+			//        _A = (T[])A.Components.Clone();
+			//    }
 
-		//    public int Length
-		//    {
-		//        get { return _A.Length; }
-		//    }
+			//    public int Length
+			//    {
+			//        get { return _A.Length; }
+			//    }
 
-		//    public T[] Components
-		//    {
-		//        get { return _A; }
-		//        set { _A = value; }
-		//    }
+			//    public T[] Components
+			//    {
+			//        get { return _A; }
+			//        set { _A = value; }
+			//    }
 
 
-		//    public T this[int index]
-		//    {
-		//        get { return _A[index]; }
-		//        set
-		//        {
-		//            if ( index < _A.Length )
-		//                _A[index] = value;
-		//        }
-		//    }
+			//    public T this[int index]
+			//    {
+			//        get { return _A[index]; }
+			//        set
+			//        {
+			//            if ( index < _A.Length )
+			//                _A[index] = value;
+			//        }
+			//    }
 
-		//    public static Vector<T> operator *(Vector<T> V, double a) {
-		//        Vector<T> res = new Vector<T>(V);
-		//        for ( int i = 0; i < res.Length; i++ )
-		//            res[i] = (double)res[i] * a;
-		//        return res;
-		//    }
-		//}
+			//    public static Vector<T> operator *(Vector<T> V, double a) {
+			//        Vector<T> res = new Vector<T>(V);
+			//        for ( int i = 0; i < res.Length; i++ )
+			//            res[i] = (double)res[i] * a;
+			//        return res;
+			//    }
+		}
 
 		private enum SolutionMethod
 		{
@@ -64,13 +64,26 @@ namespace Lab_05
 			radioStillPt.Enabled = false;
 		}
 
-		double t = 0;
+		//double t = 0;
 
 		SolutionMethod selectedSolMeth;
 
+		List<double[]> roots = null;
+
 		#region functions
 
-		List<double[]> roots = null;
+		double g1(double y)
+		{
+			//return Math.Sqrt(y + 7) * Math.Cos(y);
+
+			return Math.Sin(Math.Pow(y + 5, Math.Cos(y + 5)));//-1.38;
+		}
+		double g2(double x)
+		{
+			//return x * x * x - 2 * Math.Sin(x);
+
+			return Math.Cos(Math.Pow(x + 6, Math.Sin(x + 6)));//-1.3;
+		}
 
 		double f1(double[] X)
 		{
@@ -100,23 +113,24 @@ namespace Lab_05
 		}
 		double f1y(double t)
 		{
-			return t * t * t - 2 * Math.Sin(t);
+			//return t * t * t - 2 * Math.Sin(t);
+
+			return Math.Cos(Math.Pow(t + 6, Math.Sin(t + 6)));//-1.38;
+			//return t * t;
 		}
 
 		double f2x(double t)
 		{
-			return Math.Sqrt(t + 7) * Math.Cos(t);
+			//return Math.Sqrt(t + 7) * Math.Cos(t);
+
+			return Math.Sin(Math.Pow(t + 5, Math.Cos(t + 5)));//-1.3;
+			//return t * t;
 		}
 		double f2y(double t)
 		{
 			return t;
 		}
 
-		double f2_explicit(double x)
-		{
-			return Math.Sin(Math.Acos(x));
-		}
-		
 		//double g1(double[] X)
 		//{
 		//    if ( X.Length < 2 )
@@ -200,12 +214,12 @@ namespace Lab_05
 
 			errorProvider.Clear();
 
-			try
-			{ eps = float.Parse(textE.Text); }
-			catch ( FormatException )
-			{ errorProvider.SetError(textE, "Wrong float number"); return; }
-			if ( eps < 0 )
-			{
+			try { eps = float.Parse(textE.Text); }
+			catch ( FormatException ) {
+				errorProvider.SetError(textE, "Wrong float number");
+				return;
+			}
+			if ( eps < 0 ) {
 				errorProvider.SetError(textE, "Has to be > 0");
 				return;
 			}
@@ -214,19 +228,17 @@ namespace Lab_05
 			DekartForm dForm = null;
 			List<PointF[]> lines = null;
 
-			switch ( selectedSolMeth )
-			{
-			#region Method Still Point
-			case SolutionMethod.StillPoint:
-				try
-				{ x0 = float.Parse(textX0.Text); }
-				catch ( FormatException )
-				{ errorProvider.SetError(textX0, "Wrong float number"); return; }
+			switch ( selectedSolMeth ) {
 
-				try
-				{ y0 = float.Parse(textY0.Text); }
-				catch ( FormatException )
-				{ errorProvider.SetError(textY0, "Wrong float number"); return; }
+			#region Method Still Point
+
+			case SolutionMethod.StillPoint:
+
+				try { x0 = float.Parse(textX0.Text); }
+				catch ( FormatException ) { errorProvider.SetError(textX0, "Wrong float number"); return; }
+
+				try { y0 = float.Parse(textY0.Text); }
+				catch ( FormatException ) { errorProvider.SetError(textY0, "Wrong float number"); return; }
 
 				dForm = new DekartForm(100, 100, 300, 300);
 				dForm.Size = new Size(750, 600);
@@ -236,13 +248,13 @@ namespace Lab_05
 				dForm.AddGraphic(f2x, f2y, -5f, 5f, DrawModes.DrawLines, Color.Blue);
 
 				res = FindSysRoot.StillPointMethod(
-				    new double[] { x0, y0 },
-				    new DoubleMultiDimFunction[] { f1, f2 },
-				    eps, out lines, false);
+					new double[] { x0, y0 },
+					new DoubleFunction[] { g1, g2 },
+					eps, out lines, false);
 				break;
 			#endregion
 
-			//#region Method Newtone
+			#region Method Newtone
 			//case SolutionMethod.Newtone:
 			//    try
 			//    { x0 = float.Parse(textX0.Text); }
@@ -264,7 +276,7 @@ namespace Lab_05
 			//    res = FindSysRoot.Newtone(f, df, p0, eps, out lines, false);
 			//    break;
 
-			//#endregion
+			#endregion
 
 			default:
 				return;
@@ -272,10 +284,8 @@ namespace Lab_05
 
 			#region Print results
 
-			if ( lines != null )
-			{
-				foreach ( PointF[] pts in lines )
-				{ dForm.AddPolygon(Color.Red, DrawModes.DrawLines, pts); }
+			if ( lines != null ) {
+				foreach ( PointF[] pts in lines ) { dForm.AddPolygon(Color.Red, DrawModes.DrawLines, pts); }
 			}
 			dForm.Show();
 			dForm.Update2();
@@ -283,8 +293,7 @@ namespace Lab_05
 			listRoots.Items.Clear();
 			listY.Items.Clear();
 
-			if ( double.IsNaN(res[0]) || double.IsNaN(res[1]) )
-			{
+			if ( double.IsNaN(res[0]) || double.IsNaN(res[1]) ) {
 				MessageBox.Show("Корни не найдены.");
 				return;
 			}
@@ -306,9 +315,52 @@ namespace Lab_05
 
 	public class FindSysRoot
 	{
-		public static double[] StillPointMethod(double[] p0, DoubleMultiDimFunction[] f, double eps, out List<PointF[]> lines, bool silent)
+
+		public static double StillPointMethod(DoubleFunction f, double p0,
+			double eps, out List<PointF[]> lines, bool silent)
 		{
-			if ( p0.Length != f.Length )
+			double p_prev;
+
+			int stepsMaden = 0;
+
+			lines = new List<PointF[]>();
+
+			lines.Add(new PointF[] {
+                    new PointF((float)p0, 0),
+                    new PointF((float)p0, (float)(f(p0)-p0))}
+				);
+
+			do {
+				p_prev = p0;
+				p0 = f(p0) - p0;// ==g
+				stepsMaden++;
+
+				lines.Add(new PointF[] {
+                        new PointF((float)p_prev, 0),
+                        new PointF((float)p_prev, (float)p0),
+                        new PointF((float)p0, (float)p0),
+                        new PointF((float)p0, 0)});
+
+				if ( stepsMaden % 100 == 0 ) {
+					if ( silent )
+						return double.NaN;
+
+					if ( MessageBox.Show("Performed " + stepsMaden.ToString()
+						+ " steps, continue?", "Разошлось наверно?",
+						MessageBoxButtons.OKCancel, MessageBoxIcon.Question,
+						MessageBoxDefaultButton.Button1) != DialogResult.OK ) {
+						return double.NaN;
+					}
+				}
+			}
+			while ( Math.Abs(p0 - p_prev) >= eps );
+
+			return p0;
+		}
+
+		public static double[] StillPointMethod(double[] p0, DoubleFunction[] g, double eps, out List<PointF[]> lines, bool silent)
+		{
+			if ( p0.Length != g.Length )
 				throw new ArgumentException("p0[] and f[] sizes dont match");
 			if ( p0.Length != 2 )
 				throw new NotImplementedException();
@@ -324,37 +376,39 @@ namespace Lab_05
 				new PointF((float)p0[0], (float)p0[1])}
 				);
 
-			do
-			{
+			do {
 				p_prev[0] = p0[0];
 				p_prev[1] = p0[1];
 
-				p0[0] = f[0](p0) + p0[0];// ==g
-				p0[1] = f[1](p0) + p0[1];// ==g
+				p0[0] = g[0](p0[0]);
+				p0[1] = g[1](p0[1]);
 				stepsMaden++;
 
+				//lines.Add(new PointF[] {
+				//        new PointF((float)p_prev, 0),
+				//        new PointF((float)p_prev, (float)p0),
+				//        new PointF((float)p0, (float)p0),
+				//        new PointF((float)p0, 0)}
+				//        );
+
 				lines.Add(new PointF[] {
-					new PointF((float)p_prev[0], (float)p_prev[1]),
-					new PointF((float)p0[0], (float)p0[1])
+				    new PointF((float)p_prev[0], (float)p_prev[1]),
+				    new PointF((float)p0[0], (float)p0[1])
 				});
 
-				if ( stepsMaden % 100 == 0 )
-				{
+				if ( stepsMaden % 100 == 0 ) {
 					if ( silent )
 						return new double[] { double.NaN, double.NaN };
 
 					if ( MessageBox.Show("Performed " + stepsMaden.ToString()
 						+ " steps, continue?", "Разошлось наверно?",
 						MessageBoxButtons.OKCancel, MessageBoxIcon.Question,
-						MessageBoxDefaultButton.Button1) != DialogResult.OK )
-					{
+						MessageBoxDefaultButton.Button1) != DialogResult.OK ) {
 						return new double[] { double.NaN, double.NaN };
 					}
 				}
 			}
-			while ( ( Math.Abs(p0[0] - p_prev[0]) >= eps ) &&
-				( Math.Abs(p0[1] - p_prev[1]) >= eps ) &&
-				( true ) );
+			while ( ro(p0, p_prev) >= eps );
 
 			return p0;
 		}
@@ -362,6 +416,19 @@ namespace Lab_05
 		public static double Newtone(DoubleMultiDimFunction[] g, double p0, double eps, out List<PointF[]> lines, bool p)
 		{
 			throw new Exception("The method or operation is not implemented.");
+		}
+
+		private static double ro(double[] p1, double[] p2)
+		{
+			double dist=0;
+
+			if ( p1.Length != p2.Length )
+				throw new ArgumentException("Points dimentions do not match!");
+
+			for ( int i = 0; i < p1.Length; i++ )
+				dist += Math.Pow(p2[i] - p1[i], 2);
+
+			return Math.Sqrt(dist);
 		}
 	}
 }
