@@ -540,6 +540,10 @@ namespace DekartGraphic
 		}
 
 		#endregion
+
+		private void DekartForm_MouseClick(object sender, MouseEventArgs e) {
+
+		}
 	}
 
 	//public class FormReport : Form

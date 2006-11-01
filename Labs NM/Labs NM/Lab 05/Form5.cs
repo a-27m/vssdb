@@ -24,12 +24,12 @@ namespace Lab_05
 
 		#region functions
 
-		double g1(double y)
+		double g1S(double y)
 		{
 			return Math.Sqrt(y + 7) * Math.Cos(y) - 2.0;
 			//return Math.Sin(Math.Pow(y + 5, Math.Cos(y + 5)));//-1.38;
 		}
-		double g2(double x)
+		double g2S(double x)
 		{
 			return x * x * x - 2 * Math.Sin(x) + 1.2;
 			//return Math.Cos(Math.Pow(x + 6, Math.Sin(x + 6)));//-1.3;
@@ -62,14 +62,26 @@ namespace Lab_05
 		}
 		double f1y(double t)
 		{
+			return t * t * t - 2 * Math.Sin(t);
+			//return Math.Cos(Math.Pow(t + 6, Math.Sin(t + 6)));
+			//return t * t;
+		}
+		double f1yS(double t)
+		{
 			return t * t * t - 2 * Math.Sin(t) + 1.2;
-			//return Math.Cos(Math.Pow(t + 6, Math.Sin(t + 6)));//-1.38;
+			//return Math.Cos(Math.Pow(t + 6, Math.Sin(t + 6)))-1.38;
 			//return t * t;
 		}
 		double f2x(double t)
 		{
+			return Math.Sqrt(t + 7) * Math.Cos(t);
+			//return Math.Sin(Math.Pow(t + 5, Math.Cos(t + 5)));
+			//return t * t;
+		}
+		double f2xS(double t)
+		{
 			return Math.Sqrt(t + 7) * Math.Cos(t) - 2.0;
-			//return Math.Sin(Math.Pow(t + 5, Math.Cos(t + 5)));//-1.3;
+			//return Math.Sin(Math.Pow(t + 5, Math.Cos(t + 5)))-1.3;
 			//return t * t;
 		}
 		double f2y(double t)
@@ -172,11 +184,11 @@ namespace Lab_05
 				dForm.Size = new Size(750, 600);
 				dForm.Use_IsVisible = false;
 
-				dForm.AddGraphic(f1x, f1y, -5f, 5f, DrawModes.DrawLines, Color.Green);
-				dForm.AddGraphic(f2x, f2y, -5f, 5f, DrawModes.DrawLines, Color.Blue);
+				dForm.AddGraphic(f1x, f1yS, -5f, 5f, DrawModes.DrawLines, Color.Green);
+				dForm.AddGraphic(f2xS, f2y, -5f, 5f, DrawModes.DrawLines, Color.Blue);
 				res = FindSysRoot.StillPointMethod(
 					new double[] { x0, y0 },
-					new DoubleFunction[] { g1, g2 },
+					new DoubleFunction[] { g1S, g2S },
 					eps, out lines, speedUp, false);
 				break;
 			#endregion
@@ -309,7 +321,7 @@ namespace Lab_05
 			return p0;
 		}
 
-		public static double Newtone(DoubleMultiDimFunction[] F, DoubleMultiDimFunction[,] J,
+		public static double[] Newtone(DoubleMultiDimFunction[] F, DoubleMultiDimFunction[,] J,
 			double[] x0, double eps,
 			out List<PointF[]> lines, bool silent)
 		{
@@ -318,16 +330,76 @@ namespace Lab_05
 			if ( F.GetLength(0) != J.GetLength(0) )
 				throw new ArgumentException("Sizes of J and F are not correct");
 
-			double[] x = x0;
+			List<PointF> nodes = new List<PointF>();
+			lines = new List<PointF[]>();
 
-			DoubleMultiDimFunction[,] J1 = new DoubleMultiDimFunction[J.GetLength(0), J.GetLength(1)];
-			x = SubAb(x);
+			DoubleMultiDimFunction[,] _F =
+				new DoubleMultiDimFunction[F.GetLength(0), 1];
+
+			for ( int i = 0; i < F.GetLength(0); i++ )
+				_F[i, 0] = F[i];
+
+			double[] x_old, x = x0;
+
+			double[,] J1AtPt = new double[J.GetLength(0), J.GetLength(1)];
+
+			int stepsMaden = 0;
+
+			nodes.Add(new PointF((float)x0[0], (float)x0[1]));
+
+			do {
+				x_old = (double[])x.Clone();
+				J1AtPt = ValAtPt(J, x);
+				double delta = det(J1AtPt);
+
+				double t_for_swap = J1AtPt[0, 0];
+				J1AtPt[0, 0] = J1AtPt[1, 1] / delta;
+				J1AtPt[0, 1] = -J1AtPt[0, 1] / delta;
+				J1AtPt[1, 0] = -J1AtPt[1, 0] / delta;
+				J1AtPt[1, 1] = t_for_swap / delta;
+
+				double[,] tmp_x = MulAb(J1AtPt, ValAtPt(_F, x));
+				for ( int i = 0; i < x.GetLength(0); i++ )
+					x[i] -= tmp_x[i, 0];
+
+
+				nodes.Add(new PointF((float)x[0], (float)x[1]));
+
+				stepsMaden++;
+
+				if ( stepsMaden % 100 == 0 ) {
+					if ( silent ) {
+						lines.Add(nodes.ToArray());
+						return new double[] { double.NaN, double.NaN };
+					}
+
+					if ( MessageBox.Show("Performed " + stepsMaden.ToString()
+						+ " steps, continue?", "Разошлось наверно?",
+						MessageBoxButtons.OKCancel, MessageBoxIcon.Question,
+						MessageBoxDefaultButton.Button1) != DialogResult.OK ) {
+						lines.Add(nodes.ToArray());
+						return new double[] { double.NaN, double.NaN };
+					}
+				}
+
+			} while ( ro(x, x_old) >= eps );
+
+			lines.Add(nodes.ToArray());
+
 			return x;
 		}
 
-		private static DoubleMultiDimFunction[,] Revert(DoubleMultiDimFunction[,] J)
+		private static double det(double[,] m)
 		{
-			throw new Exception("The method or operation is not implemented.");
+			if ( m.GetLength(0) != m.GetLength(1) )
+				throw new ArgumentException("Square matrices only");
+			if ( m.GetLength(0) == 1 )
+				return m[0, 0];
+			if ( m.GetLength(0) == 2 )
+				return m[0, 0] * m[1, 1] - m[0, 1] * m[1, 0];
+			if ( m.GetLength(0) > 2 )
+				throw new NotImplementedException("Multidimensional case is not implemanted yet");
+			return double.NaN;
 		}
 
 		private static double[,] ValAtPt(DoubleMultiDimFunction[,] W, double[] x)
@@ -352,7 +424,8 @@ namespace Lab_05
 			return m;
 
 		}
-		private static double[,] MulAbAtPt(DoubleMultiDimFunction[,] A, DoubleMultiDimFunction[, ] B, double[] x)
+
+		private static double[,] MulAb(double[,] A, double[,] B)
 		{
 			int m = A.GetLength(0);
 			// check soglasovannost'
@@ -366,7 +439,7 @@ namespace Lab_05
 				for ( int j = 0; j < p; j++ ) {
 					ab[i, j] = 0;
 					for ( int k = 0; k < n; k++ )
-						ab[i, j] += A[i, k](x) * B[k, j](x);
+						ab[i, j] += A[i, k] * B[k, j];
 				}
 			return ab;
 		}

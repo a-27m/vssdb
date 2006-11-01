@@ -52,10 +52,10 @@ namespace Lab_05
 			this.listY = new System.Windows.Forms.ListBox();
 			this.listRoots = new System.Windows.Forms.ListBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.checkSpeedUp = new System.Windows.Forms.CheckBox();
 			this.radioStillPt = new System.Windows.Forms.RadioButton();
 			this.radioNewtone = new System.Windows.Forms.RadioButton();
 			this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-			this.checkSpeedUp = new System.Windows.Forms.CheckBox();
 			groupBox2 = new System.Windows.Forms.GroupBox();
 			label4 = new System.Windows.Forms.Label();
 			label1 = new System.Windows.Forms.Label();
@@ -303,6 +303,16 @@ namespace Lab_05
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Метод";
 			// 
+			// checkSpeedUp
+			// 
+			this.checkSpeedUp.AutoSize = true;
+			this.checkSpeedUp.Location = new System.Drawing.Point(24, 42);
+			this.checkSpeedUp.Name = "checkSpeedUp";
+			this.checkSpeedUp.Size = new System.Drawing.Size(72, 17);
+			this.checkSpeedUp.TabIndex = 23;
+			this.checkSpeedUp.Text = "Speed up";
+			this.checkSpeedUp.UseVisualStyleBackColor = true;
+			// 
 			// radioStillPt
 			// 
 			this.radioStillPt.AutoSize = true;
@@ -314,6 +324,7 @@ namespace Lab_05
 			this.radioStillPt.TabStop = true;
 			this.radioStillPt.Text = "неподвижной &точки";
 			this.radioStillPt.UseVisualStyleBackColor = true;
+			this.radioStillPt.CheckedChanged += new System.EventHandler(this.radioStillPt_CheckedChanged);
 			// 
 			// radioNewtone
 			// 
@@ -325,20 +336,11 @@ namespace Lab_05
 			this.radioNewtone.TabStop = true;
 			this.radioNewtone.Text = "&Ньютона";
 			this.radioNewtone.UseVisualStyleBackColor = true;
+			this.radioNewtone.CheckedChanged += new System.EventHandler(this.radioNewtone_CheckedChanged);
 			// 
 			// errorProvider
 			// 
 			this.errorProvider.ContainerControl = this;
-			// 
-			// checkSpeedUp
-			// 
-			this.checkSpeedUp.AutoSize = true;
-			this.checkSpeedUp.Location = new System.Drawing.Point(24, 42);
-			this.checkSpeedUp.Name = "checkSpeedUp";
-			this.checkSpeedUp.Size = new System.Drawing.Size(72, 17);
-			this.checkSpeedUp.TabIndex = 23;
-			this.checkSpeedUp.Text = "Speed up";
-			this.checkSpeedUp.UseVisualStyleBackColor = true;
 			// 
 			// Form5
 			// 

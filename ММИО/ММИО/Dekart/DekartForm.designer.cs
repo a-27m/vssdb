@@ -274,6 +274,7 @@ namespace DekartGraphic
 			this.Name = "DekartForm";
 			this.Text = "Graphic";
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+			this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DekartForm_MouseClick);
 			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
 			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
 			this.toolStrip1.ResumeLayout(false);

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DekartGraphic", "Dekart\Dek
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 05", "Lab 05\Lab 05.csproj", "{8DF8DAAB-A418-4987-A00E-1D000D373FA1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 06", "Lab 06\Lab 06.csproj", "{2874F064-A219-422D-909E-A24D034AE919}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{8DF8DAAB-A418-4987-A00E-1D000D373FA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DF8DAAB-A418-4987-A00E-1D000D373FA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DF8DAAB-A418-4987-A00E-1D000D373FA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2874F064-A219-422D-909E-A24D034AE919}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2874F064-A219-422D-909E-A24D034AE919}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2874F064-A219-422D-909E-A24D034AE919}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2874F064-A219-422D-909E-A24D034AE919}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
