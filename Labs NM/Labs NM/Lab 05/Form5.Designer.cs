@@ -40,6 +40,7 @@ namespace Lab_05
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.textE = new System.Windows.Forms.TextBox();
 			this.groupFirstApproximation = new System.Windows.Forms.GroupBox();
+			this.checkPick = new System.Windows.Forms.CheckBox();
 			this.textX0 = new System.Windows.Forms.TextBox();
 			this.textY0 = new System.Windows.Forms.TextBox();
 			this.groupInterval = new System.Windows.Forms.GroupBox();
@@ -54,7 +55,7 @@ namespace Lab_05
 			this.radioStillPt = new System.Windows.Forms.RadioButton();
 			this.radioNewtone = new System.Windows.Forms.RadioButton();
 			this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-			this.checkBox1 = new System.Windows.Forms.CheckBox();
+			this.checkSpeedUp = new System.Windows.Forms.CheckBox();
 			groupBox2 = new System.Windows.Forms.GroupBox();
 			label4 = new System.Windows.Forms.Label();
 			label1 = new System.Windows.Forms.Label();
@@ -127,7 +128,7 @@ namespace Lab_05
 			// 
 			// groupFirstApproximation
 			// 
-			this.groupFirstApproximation.Controls.Add(this.checkBox1);
+			this.groupFirstApproximation.Controls.Add(this.checkPick);
 			this.groupFirstApproximation.Controls.Add(label2);
 			this.groupFirstApproximation.Controls.Add(this.textX0);
 			this.groupFirstApproximation.Controls.Add(label3);
@@ -138,6 +139,17 @@ namespace Lab_05
 			this.groupFirstApproximation.TabIndex = 15;
 			this.groupFirstApproximation.TabStop = false;
 			this.groupFirstApproximation.Text = "Начальное приближение";
+			// 
+			// checkPick
+			// 
+			this.checkPick.AutoSize = true;
+			this.checkPick.Location = new System.Drawing.Point(16, 85);
+			this.checkPick.Name = "checkPick";
+			this.checkPick.Size = new System.Drawing.Size(115, 17);
+			this.checkPick.TabIndex = 5;
+			this.checkPick.Text = "Pick up graphically";
+			this.checkPick.UseVisualStyleBackColor = true;
+			this.checkPick.CheckedChanged += new System.EventHandler(this.checkPick_CheckedChanged);
 			// 
 			// label2
 			// 
@@ -240,7 +252,7 @@ namespace Lab_05
 			// 
 			// buttonSolve
 			// 
-			this.buttonSolve.Location = new System.Drawing.Point(12, 98);
+			this.buttonSolve.Location = new System.Drawing.Point(18, 177);
 			this.buttonSolve.Name = "buttonSolve";
 			this.buttonSolve.Size = new System.Drawing.Size(100, 23);
 			this.buttonSolve.TabIndex = 20;
@@ -281,11 +293,12 @@ namespace Lab_05
 			// 
 			// groupBox1
 			// 
+			this.groupBox1.Controls.Add(this.checkSpeedUp);
 			this.groupBox1.Controls.Add(this.radioStillPt);
 			this.groupBox1.Controls.Add(this.radioNewtone);
 			this.groupBox1.Location = new System.Drawing.Point(12, 12);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(155, 76);
+			this.groupBox1.Size = new System.Drawing.Size(155, 120);
 			this.groupBox1.TabIndex = 22;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Метод";
@@ -293,6 +306,7 @@ namespace Lab_05
 			// radioStillPt
 			// 
 			this.radioStillPt.AutoSize = true;
+			this.radioStillPt.Checked = true;
 			this.radioStillPt.Location = new System.Drawing.Point(6, 19);
 			this.radioStillPt.Name = "radioStillPt";
 			this.radioStillPt.Size = new System.Drawing.Size(124, 17);
@@ -304,7 +318,7 @@ namespace Lab_05
 			// radioNewtone
 			// 
 			this.radioNewtone.AutoSize = true;
-			this.radioNewtone.Location = new System.Drawing.Point(6, 42);
+			this.radioNewtone.Location = new System.Drawing.Point(6, 75);
 			this.radioNewtone.Name = "radioNewtone";
 			this.radioNewtone.Size = new System.Drawing.Size(70, 17);
 			this.radioNewtone.TabIndex = 3;
@@ -316,15 +330,15 @@ namespace Lab_05
 			// 
 			this.errorProvider.ContainerControl = this;
 			// 
-			// checkBox1
+			// checkSpeedUp
 			// 
-			this.checkBox1.AutoSize = true;
-			this.checkBox1.Location = new System.Drawing.Point(16, 85);
-			this.checkBox1.Name = "checkBox1";
-			this.checkBox1.Size = new System.Drawing.Size(115, 17);
-			this.checkBox1.TabIndex = 5;
-			this.checkBox1.Text = "Pick up graphically";
-			this.checkBox1.UseVisualStyleBackColor = true;
+			this.checkSpeedUp.AutoSize = true;
+			this.checkSpeedUp.Location = new System.Drawing.Point(24, 42);
+			this.checkSpeedUp.Name = "checkSpeedUp";
+			this.checkSpeedUp.Size = new System.Drawing.Size(72, 17);
+			this.checkSpeedUp.TabIndex = 23;
+			this.checkSpeedUp.Text = "Speed up";
+			this.checkSpeedUp.UseVisualStyleBackColor = true;
 			// 
 			// Form5
 			// 
@@ -336,6 +350,7 @@ namespace Lab_05
 			this.Controls.Add(this.buttonSolve);
 			this.Controls.Add(this.groupBox5);
 			this.Controls.Add(groupBox2);
+			this.MaximizeBox = false;
 			this.Name = "Form5";
 			this.Text = "NMLW#5@11";
 			this.Load += new System.EventHandler(this.Form5_Load);
@@ -372,7 +387,8 @@ namespace Lab_05
 		private System.Windows.Forms.RadioButton radioStillPt;
 		private System.Windows.Forms.RadioButton radioNewtone;
 		private System.Windows.Forms.ErrorProvider errorProvider;
-		private System.Windows.Forms.CheckBox checkBox1;
+		private System.Windows.Forms.CheckBox checkPick;
+		private System.Windows.Forms.CheckBox checkSpeedUp;
 	}
 }
 
