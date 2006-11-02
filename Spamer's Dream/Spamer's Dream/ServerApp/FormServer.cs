@@ -1,60 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
+
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using ServerApp.Properties;
-using System.Reflection;
-using System.Data;
 using SpamerTypes;
 
 namespace ServerApp {
 
 	public partial class FormServer : Form {
 
-		#region const strings
-
-		public const string selectValidHostnamesQuery =
-@"SELECT
-	Hostname
-FROM
-	robots
-WHERE
-	(Hostname <> '0.0.0.0') AND
-	(Hostname <> '255.255.255.255')";
-
-		public const string selectMessagesQuery =
-@"SELECT Id,Subject,Body,IsHtml FROM messages";
-
-		public const string selectRobotsQuery =
-@"SELECT
-	IP,HumanName,SmtpID
-FROM
-	robots
-WHERE
-	(IP <> '0.0.0.0') AND
-	(IP <> '255.255.255.255')";
-
-		public const string selectSmtpByIdQuery =
-@"SELECT
-	Host,Port,Login,Password,UseSSL
-FROM
-	smtpservers
-WHERE
-	Id = ";
-
-		public const string connectionStrFormat =
-			"server={0};user id={1}; password={2}; database={3}; pooling=false";
-
-		#endregion
-
 		UdpClient udpClient;
-		MySqlConnection sqlConnection;
+		DbClient dbClient;
 		Settings sets = Settings.Default;
 
 		List<Robot> listRobot = null;
@@ -115,21 +80,6 @@ WHERE
 				OpenSqlConnection();
 			}
 			return true;
-		}
-
-		private IEnumerable<string> GetRobotsHosts() {
-			if ( !TryConnection() ) { yield break; }
-
-			MySqlDataReader sqlReader = null;
-			MySqlCommand sqlCmd =
-				new MySqlCommand(selectValidHostnamesQuery, sqlConnection);
-
-			sqlReader = sqlCmd.ExecuteReader();
-
-			while ( sqlReader.Read() )
-				yield return sqlReader.GetString(0);
-			if ( sqlReader != null )
-				sqlReader.Close();
 		}
 
 		private void PopulateMessages() {
