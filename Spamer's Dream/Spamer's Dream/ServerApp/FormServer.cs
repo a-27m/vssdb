@@ -19,7 +19,8 @@ namespace ServerApp {
 	public partial class FormServer : Form {
 
 		UdpClient udpClient;
-		DbClient dbClient;
+		static DbClient dbClient;
+		bool DbAvailable = false;
 		Settings sets = Settings.Default;
 
 		List<Robot> listRobot = null;
@@ -41,51 +42,18 @@ namespace ServerApp {
 			}
 			#endregion
 
-			OpenSqlConnection();
+			dbClient = new DbClient(sets.DbHost, sets.DbUser, sets.DbPassword, sets.DbName);
+			if ( !dbClient.TryConnection() ) {
+				MessageBox.Show("Database function will be disabled for this session due to the connection problems.", sets.DbName + " is not available");
+				DbAvailable = false;
+			}
+			else { DbAvailable = true; }
 		}
 
 		#region MySQL access methods
-
-		private void OpenSqlConnection() {
-			if ( sqlConnection != null )
-				sqlConnection.Close();
-
-			string connectionStr = String.Format(connectionStrFormat,
-				sets.DbHost, sets.DbUser, sets.DbPassword, sets.DbName);
-
-			try {
-				sqlConnection = new MySqlConnection(connectionStr);
-				sqlConnection.Open();
-			}
-			catch ( MySqlException ex ) {
-				MessageBox.Show(ex.Message, "Error connecting to the db server");
-				return;
-			}
-		}
-
-		private bool TryConnection() {
-			while ( sqlConnection.State != ConnectionState.Open ) {
-				DialogResult dRes;
-				dRes = MessageBox.Show(
-					"Please, check DB server " +
-					"avaliability and settings on `Common` tab." +
-					Environment.NewLine + Environment.NewLine +
-					"Try to connect again?", "Database connection failed",
-					MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-
-				if ( dRes == DialogResult.No )
-					return false;
-
-				sqlConnection.Dispose();
-				OpenSqlConnection();
-			}
-			return true;
-		}
-
+		
 		private void PopulateMessages() {
-			if ( !TryConnection() )
-				return;
-
+			dbClient.
 			MySqlDataReader sqlReader = null;
 			MySqlCommand sqlCmd =
 			new MySqlCommand(selectMessagesQuery, sqlConnection);
@@ -269,7 +237,7 @@ namespace ServerApp {
 		private void tabControl1_SelectedIndexChanged(object sender, EventArgs e) {
 			switch ( tabControl.SelectedIndex ) {
 			case 0: // emails
-				PopulateEmails();
+				if (DbAvailable) PopulateEmails();
 				break;
 			case 1: // messages
 				PopulateMessages();
