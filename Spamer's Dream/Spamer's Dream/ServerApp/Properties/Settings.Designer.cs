@@ -25,7 +25,7 @@ namespace ServerApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("54321")]
+        [global::System.Configuration.DefaultSettingValueAttribute("54320")]
         public int RobotUdpPort {
             get {
                 return ((int)(this["RobotUdpPort"]));
@@ -80,6 +80,18 @@ namespace ServerApp.Properties {
             }
             set {
                 this["DbPassword"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("54321")]
+        public int ServerPort {
+            get {
+                return ((int)(this["ServerPort"]));
+            }
+            set {
+                this["ServerPort"] = value;
             }
         }
     }

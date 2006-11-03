@@ -14,9 +14,26 @@ using MySql.Data.MySqlClient;
 using ServerApp.Properties;
 using SpamerTypes;
 
-namespace ServerApp {
+namespace ServerApp
+{
 
-	public partial class FormServer : Form {
+	public partial class FormServer : Form
+	{
+		#region const strings
+
+		public const string selectMessagesQuery =
+@"SELECT Id,Subject,Body,IsHtml FROM messages";
+
+		public const string selectRobotsQuery =
+@"SELECT
+	IP,HumanName,SmtpID
+FROM
+	robots
+WHERE
+	(IP <> '0.0.0.0') AND
+	(IP <> '255.255.255.255')";
+
+		#endregion
 
 		UdpClient udpClient;
 		static DbClient dbClient;
@@ -26,12 +43,13 @@ namespace ServerApp {
 		List<Robot> listRobot = null;
 		List<Letter> listLetter = null;
 
-		public FormServer() {
+		public FormServer()
+		{
 			InitializeComponent();
 
 			#region Open UDP client
 			try {
-				udpClient = new UdpClient(sets.RobotUdpPort);
+				udpClient = new UdpClient(sets.ServerPort);
 				udpClient.BeginReceive(Priem, new object());
 			}
 			catch ( SocketException exc ) {
@@ -43,53 +61,36 @@ namespace ServerApp {
 			#endregion
 
 			dbClient = new DbClient(sets.DbHost, sets.DbUser, sets.DbPassword, sets.DbName);
+
 			if ( !dbClient.TryConnection() ) {
-				MessageBox.Show("Database function will be disabled for this session due to the connection problems.", sets.DbName + " is not available");
+				MessageBox.Show("Database functions will be disabled for this session due to the connection problems.", sets.DbName + " is not available");
 				DbAvailable = false;
 			}
 			else { DbAvailable = true; }
 		}
 
-		#region MySQL access methods
-		
-		private void PopulateMessages() {
-			dbClient.
-			MySqlDataReader sqlReader = null;
-			MySqlCommand sqlCmd =
-			new MySqlCommand(selectMessagesQuery, sqlConnection);
+		private void PopulateMessages()
+		{
+			MySqlDataReader sqlReader =
+				dbClient.GetQueryReader(selectMessagesQuery);
 
-			try {
-				sqlReader = sqlCmd.ExecuteReader();
+			listLetter = new List<Letter>();
+			while ( sqlReader.Read() ) {
+				int Id = sqlReader.GetInt32(0);
+				string Subject = sqlReader.GetString(1);
+				string Body = sqlReader.GetString(2);
+				bool IsHtml = sqlReader.GetBoolean(3);
+				listLetter.Add(new Letter(Id, Subject, Body, IsHtml));
+			}
 
-				Letter letter;
-				listLetter = new List<Letter>();
-				while ( sqlReader.Read() ) {
-					letter.Id = sqlReader.GetInt32(0);
-					letter.Subject = sqlReader.GetString(1);
-					letter.Body = sqlReader.GetString(2);
-					letter.IsHtml = sqlReader.GetBoolean(3) ? 1 : 0;
-					listLetter.Add(letter);
-				}
-			}
-			catch ( MySqlException ex ) {
-				MessageBox.Show("Failed to populate messages list: " + ex.Message);
-			}
-			finally {
-				if ( sqlReader != null )
-					sqlReader.Close();
-			}
+			sqlReader.Close();
 			FillListMessages();
 		}
 
-		private void PopulateRobots() {
-			if ( !TryConnection() ) {
-				//listBoxRobots.Enabled = false;
-				return;
-			}
-
-			MySqlCommand sqlCmd =
-				new MySqlCommand(selectRobotsQuery, sqlConnection);
-			MySqlDataReader sqlReader = sqlCmd.ExecuteReader();
+		private void PopulateRobots()
+		{
+			MySqlDataReader sqlReader =
+				dbClient.GetQueryReader(selectRobotsQuery);
 
 			Robot robot = new Robot();
 			listRobot = new List<Robot>();
@@ -106,39 +107,17 @@ namespace ServerApp {
 			for ( int i = 0; i < listRobot.Count; i++ ) {
 				Robot tmpRobot = listRobot[i];
 				tmpRobot.SmtpServer =
-					GetSmtpServerById(tmpRobot.SmtpId);
+					dbClient.GetSmtpServerById(tmpRobot.SmtpId);
 				listRobot[i] = tmpRobot;
 			}
 
 			FillListRobots();
 		}
 
-		private void PopulateEmails() {
-			//throw new Exception("The method or operation is not implemented.");
-		}
-
-		private AuthServerInfo GetSmtpServerById(int id) {
-			AuthServerInfo servInf = new AuthServerInfo();
-			MySqlCommand sqlCmd = new MySqlCommand(selectSmtpByIdQuery + id.ToString(),
-				sqlConnection);
-			MySqlDataReader sqlReader = sqlCmd.ExecuteReader();
-			if ( sqlReader.Read() ) {
-				// Host Port login Password UseSSL
-				servInf.Host = sqlReader.GetString(0);
-				servInf.Port = sqlReader.GetInt32(1);
-				servInf.Username = sqlReader.GetString(2);
-				servInf.Password = sqlReader.GetString(3);
-				servInf.UseSSL = sqlReader.GetInt16(4) == 1 ? true : false;
-			}
-			sqlReader.Close();
-			return servInf;
-		}
-
-		#endregion
-
 		#region UDP Interface
 
-		void Priem(IAsyncResult iar) {
+		void Priem(IAsyncResult iar)
+		{
 			IPEndPoint remoteIPEndPoint = null;
 
 			byte[] bytes = udpClient.EndReceive(iar, ref remoteIPEndPoint);
@@ -157,26 +136,36 @@ namespace ServerApp {
 			udpClient.BeginReceive(Priem, iar);
 		}
 
-		private void AddRobot(string p) {
+		private void AddRobot(string p)
+		{
 			throw new Exception("The method or operation is not implemented.");
 		}
 
-		private void Say(string Host, int Port, SpamLanguage cmd) {
+		private void Say(string Host, int Port, SpamLanguage cmd)
+		{
 			byte[] dgrm = new byte[] { (byte)cmd };
+			UdpClient uclient = null;
 
-			UdpClient uclient = new UdpClient(Host, Port);
-			uclient.Send(dgrm, dgrm.Length);
-			uclient.Close();
+			try {
+				uclient = new UdpClient(Host,Port);
+				uclient.Send(dgrm, dgrm.Length);
+
+			}
+			catch ( SocketException sexc ) {
+				MessageBox.Show(sexc.Message);
+			}
+			finally { if(uclient!=null) uclient.Close(); }
 		}
 
 		#endregion
 
-		private void SendStartToAll() {
-			int roborPort = sets.RobotUdpPort;
+		private void SendStartToAll()
+		{
+			int robotPort = sets.RobotUdpPort;
 
-			foreach ( string robotHost in GetRobotsHosts() ) {
+			foreach ( string robotHost in dbClient.GetRobotsHosts() ) {
 				try {
-					Say(robotHost, roborPort, SpamLanguage.Start);
+					Say(robotHost, robotPort, SpamLanguage.Start);
 				}
 				catch ( Exception exc ) {
 					MessageBox.Show(exc.Message);
@@ -185,7 +174,8 @@ namespace ServerApp {
 			}
 		}
 
-		private void FillListMessages() {
+		private void FillListMessages()
+		{
 			listBoxMessages.Items.Clear();
 			foreach ( Letter letter in listLetter ) {
 				string item = "";
@@ -200,7 +190,8 @@ namespace ServerApp {
 			}
 		}
 
-		private void FillListRobots() {
+		private void FillListRobots()
+		{
 			listBoxRobots.Items.Clear();
 
 			if ( listRobot == null ) {
@@ -224,41 +215,48 @@ namespace ServerApp {
 
 		#region Events handlers
 
-		private void FormServer_Load(object sender, EventArgs e) {
-			tabControl.SelectedTab = tabControl.TabPages["tabMessages"];
-			PopulateMessages();
+		private void FormServer_Load(object sender, EventArgs e)
+		{
+			if ( DbAvailable ) {
+				tabControl.SelectedTab = tabControl.TabPages["tabMessages"];
+				PopulateMessages();
+			}
 		}
 
-		private void optionsToolStripMenuItem_Click(object sender, EventArgs e) {
+		private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
 			FormOptions fOpts = new FormOptions();
 			fOpts.Show();
 		}
 
-		private void tabControl1_SelectedIndexChanged(object sender, EventArgs e) {
+		private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+		{
 			switch ( tabControl.SelectedIndex ) {
 			case 0: // emails
-				if (DbAvailable) PopulateEmails();
+				//if ( DbAvailable )
+				//    PopulateEmails();
 				break;
 			case 1: // messages
-				PopulateMessages();
+				if ( DbAvailable )
+					PopulateMessages();
 				break;
 			case 2: // robots
-				PopulateRobots();
+				if ( DbAvailable )
+					PopulateRobots();
 				break;
 			case 3: // common
-				//PopulateMessages();
+
 				break;
 			default:
 				break;
 			}
 		}
 
-		private void buttonSend_Click(object sender, EventArgs e) {
+		private void buttonSend_Click(object sender, EventArgs e)
+		{
 			SendStartToAll();
 		}
 
 		#endregion
-
-
 	}
 }

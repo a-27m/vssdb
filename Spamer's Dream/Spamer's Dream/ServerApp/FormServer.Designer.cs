@@ -30,38 +30,27 @@ namespace ServerApp
 		{
 			this.components = new System.ComponentModel.Container();
 			System.Windows.Forms.SplitContainer splitContainer2;
-			System.Windows.Forms.GroupBox groupBox1;
+			System.Windows.Forms.Label label6;
 			System.Windows.Forms.Label label5;
+			System.Windows.Forms.GroupBox groupBox1;
 			System.Windows.Forms.Label label4;
 			System.Windows.Forms.Label label3;
 			System.Windows.Forms.Label label2;
 			System.Windows.Forms.Label label1;
-			System.Windows.Forms.Label label6;
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormServer));
-			this.listBoxMessages = new System.Windows.Forms.ListBox();
 			this.listBoxRobots = new System.Windows.Forms.ListBox();
+			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.textBox5 = new System.Windows.Forms.TextBox();
 			this.textBox4 = new System.Windows.Forms.TextBox();
 			this.textBox3 = new System.Windows.Forms.TextBox();
+			this.buttonRobotSmtpDef = new System.Windows.Forms.Button();
 			this.textBox2 = new System.Windows.Forms.TextBox();
 			this.textRobotSmtpHost = new System.Windows.Forms.TextBox();
-			this.buttonRobotSmtpDef = new System.Windows.Forms.Button();
 			this.buttonRobotSmtpSet = new System.Windows.Forms.Button();
+			this.listBoxMessages = new System.Windows.Forms.ListBox();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-			this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
-			this.tabControl = new System.Windows.Forms.TabControl();
-			this.tabEmails = new System.Windows.Forms.TabPage();
-			this.tabMessages = new System.Windows.Forms.TabPage();
-			this.tabRobots = new System.Windows.Forms.TabPage();
-			this.tabCommon = new System.Windows.Forms.TabPage();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.textBox1 = new System.Windows.Forms.TextBox();
-			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
 			this.fileToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
@@ -73,24 +62,36 @@ namespace ServerApp
 			this.customizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.contentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.indexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.contentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.dataGridMessages = new System.Windows.Forms.DataGridView();
 			this.toolStart = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
+			this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
+			this.tabControl = new System.Windows.Forms.TabControl();
+			this.tabEmails = new System.Windows.Forms.TabPage();
+			this.tabMessages = new System.Windows.Forms.TabPage();
+			this.dataGridMessages = new System.Windows.Forms.DataGridView();
+			this.tabRobots = new System.Windows.Forms.TabPage();
+			this.tabCommon = new System.Windows.Forms.TabPage();
 			splitContainer2 = new System.Windows.Forms.SplitContainer();
-			groupBox1 = new System.Windows.Forms.GroupBox();
+			label6 = new System.Windows.Forms.Label();
 			label5 = new System.Windows.Forms.Label();
+			groupBox1 = new System.Windows.Forms.GroupBox();
 			label4 = new System.Windows.Forms.Label();
 			label3 = new System.Windows.Forms.Label();
 			label2 = new System.Windows.Forms.Label();
 			label1 = new System.Windows.Forms.Label();
-			label6 = new System.Windows.Forms.Label();
 			splitContainer2.Panel1.SuspendLayout();
 			splitContainer2.Panel2.SuspendLayout();
 			splitContainer2.SuspendLayout();
+			this.groupBox2.SuspendLayout();
 			groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
@@ -99,22 +100,9 @@ namespace ServerApp
 			this.toolStripContainer1.SuspendLayout();
 			this.tabControl.SuspendLayout();
 			this.tabMessages.SuspendLayout();
-			this.tabRobots.SuspendLayout();
-			this.groupBox2.SuspendLayout();
 			( (System.ComponentModel.ISupportInitialize)( this.dataGridMessages ) ).BeginInit();
+			this.tabRobots.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// listBoxMessages
-			// 
-			this.listBoxMessages.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.listBoxMessages.FormattingEnabled = true;
-			this.listBoxMessages.HorizontalScrollbar = true;
-			this.listBoxMessages.IntegralHeight = false;
-			this.listBoxMessages.Location = new System.Drawing.Point(3, 3);
-			this.listBoxMessages.Name = "listBoxMessages";
-			this.listBoxMessages.ScrollAlwaysVisible = true;
-			this.listBoxMessages.Size = new System.Drawing.Size(460, 303);
-			this.listBoxMessages.TabIndex = 0;
 			// 
 			// splitContainer2
 			// 
@@ -150,6 +138,51 @@ namespace ServerApp
 			this.listBoxRobots.Size = new System.Drawing.Size(258, 303);
 			this.listBoxRobots.TabIndex = 0;
 			// 
+			// groupBox2
+			// 
+			this.groupBox2.Controls.Add(this.textBox1);
+			this.groupBox2.Controls.Add(label6);
+			this.groupBox2.Controls.Add(this.textBox5);
+			this.groupBox2.Controls.Add(label5);
+			this.groupBox2.Location = new System.Drawing.Point(3, 3);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(190, 79);
+			this.groupBox2.TabIndex = 13;
+			this.groupBox2.TabStop = false;
+			this.groupBox2.Text = "IP, name (optional)";
+			// 
+			// textBox1
+			// 
+			this.textBox1.Location = new System.Drawing.Point(80, 19);
+			this.textBox1.Name = "textBox1";
+			this.textBox1.Size = new System.Drawing.Size(100, 20);
+			this.textBox1.TabIndex = 13;
+			// 
+			// label6
+			// 
+			label6.AutoSize = true;
+			label6.Location = new System.Drawing.Point(54, 22);
+			label6.Name = "label6";
+			label6.Size = new System.Drawing.Size(20, 13);
+			label6.TabIndex = 14;
+			label6.Text = "IP:";
+			// 
+			// textBox5
+			// 
+			this.textBox5.Location = new System.Drawing.Point(80, 45);
+			this.textBox5.Name = "textBox5";
+			this.textBox5.Size = new System.Drawing.Size(100, 20);
+			this.textBox5.TabIndex = 11;
+			// 
+			// label5
+			// 
+			label5.AutoSize = true;
+			label5.Location = new System.Drawing.Point(6, 48);
+			label5.Name = "label5";
+			label5.Size = new System.Drawing.Size(68, 13);
+			label5.TabIndex = 12;
+			label5.Text = "From (name):";
+			// 
 			// groupBox1
 			// 
 			groupBox1.Controls.Add(label4);
@@ -167,22 +200,6 @@ namespace ServerApp
 			groupBox1.TabIndex = 6;
 			groupBox1.TabStop = false;
 			groupBox1.Text = "SMTP";
-			// 
-			// label5
-			// 
-			label5.AutoSize = true;
-			label5.Location = new System.Drawing.Point(6, 48);
-			label5.Name = "label5";
-			label5.Size = new System.Drawing.Size(68, 13);
-			label5.TabIndex = 12;
-			label5.Text = "From (name):";
-			// 
-			// textBox5
-			// 
-			this.textBox5.Location = new System.Drawing.Point(80, 45);
-			this.textBox5.Name = "textBox5";
-			this.textBox5.Size = new System.Drawing.Size(100, 20);
-			this.textBox5.TabIndex = 11;
 			// 
 			// label4
 			// 
@@ -234,6 +251,15 @@ namespace ServerApp
 			this.textBox3.Size = new System.Drawing.Size(100, 20);
 			this.textBox3.TabIndex = 4;
 			// 
+			// buttonRobotSmtpDef
+			// 
+			this.buttonRobotSmtpDef.Location = new System.Drawing.Point(52, 132);
+			this.buttonRobotSmtpDef.Name = "buttonRobotSmtpDef";
+			this.buttonRobotSmtpDef.Size = new System.Drawing.Size(75, 23);
+			this.buttonRobotSmtpDef.TabIndex = 1;
+			this.buttonRobotSmtpDef.Text = "Default";
+			this.buttonRobotSmtpDef.UseVisualStyleBackColor = true;
+			// 
 			// textBox2
 			// 
 			this.textBox2.Location = new System.Drawing.Point(80, 45);
@@ -249,15 +275,6 @@ namespace ServerApp
 			this.textRobotSmtpHost.Size = new System.Drawing.Size(100, 20);
 			this.textRobotSmtpHost.TabIndex = 2;
 			// 
-			// buttonRobotSmtpDef
-			// 
-			this.buttonRobotSmtpDef.Location = new System.Drawing.Point(52, 132);
-			this.buttonRobotSmtpDef.Name = "buttonRobotSmtpDef";
-			this.buttonRobotSmtpDef.Size = new System.Drawing.Size(75, 23);
-			this.buttonRobotSmtpDef.TabIndex = 1;
-			this.buttonRobotSmtpDef.Text = "Default";
-			this.buttonRobotSmtpDef.UseVisualStyleBackColor = true;
-			// 
 			// buttonRobotSmtpSet
 			// 
 			this.buttonRobotSmtpSet.Location = new System.Drawing.Point(62, 270);
@@ -266,6 +283,18 @@ namespace ServerApp
 			this.buttonRobotSmtpSet.TabIndex = 0;
 			this.buttonRobotSmtpSet.Text = "Set";
 			this.buttonRobotSmtpSet.UseVisualStyleBackColor = true;
+			// 
+			// listBoxMessages
+			// 
+			this.listBoxMessages.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.listBoxMessages.FormattingEnabled = true;
+			this.listBoxMessages.HorizontalScrollbar = true;
+			this.listBoxMessages.IntegralHeight = false;
+			this.listBoxMessages.Location = new System.Drawing.Point(3, 3);
+			this.listBoxMessages.Name = "listBoxMessages";
+			this.listBoxMessages.ScrollAlwaysVisible = true;
+			this.listBoxMessages.Size = new System.Drawing.Size(460, 303);
+			this.listBoxMessages.TabIndex = 0;
 			// 
 			// menuStrip1
 			// 
@@ -280,6 +309,128 @@ namespace ServerApp
 			this.menuStrip1.TabIndex = 10;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
+			// fileToolStripMenuItem1
+			// 
+			this.fileToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.toolStripSeparator,
+            this.saveToolStripMenuItem,
+            this.saveAsToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.exitToolStripMenuItem1});
+			this.fileToolStripMenuItem1.Name = "fileToolStripMenuItem1";
+			this.fileToolStripMenuItem1.Size = new System.Drawing.Size(35, 20);
+			this.fileToolStripMenuItem1.Text = "&File";
+			// 
+			// openToolStripMenuItem
+			// 
+			this.openToolStripMenuItem.Image = ( (System.Drawing.Image)( resources.GetObject("openToolStripMenuItem.Image") ) );
+			this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+			this.openToolStripMenuItem.ShortcutKeys = ( (System.Windows.Forms.Keys)( ( System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O ) ) );
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.openToolStripMenuItem.Text = "&Open";
+			// 
+			// toolStripSeparator
+			// 
+			this.toolStripSeparator.Name = "toolStripSeparator";
+			this.toolStripSeparator.Size = new System.Drawing.Size(148, 6);
+			// 
+			// saveToolStripMenuItem
+			// 
+			this.saveToolStripMenuItem.Image = ( (System.Drawing.Image)( resources.GetObject("saveToolStripMenuItem.Image") ) );
+			this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+			this.saveToolStripMenuItem.ShortcutKeys = ( (System.Windows.Forms.Keys)( ( System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S ) ) );
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.saveToolStripMenuItem.Text = "&Save";
+			// 
+			// saveAsToolStripMenuItem
+			// 
+			this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.saveAsToolStripMenuItem.Text = "Save &As";
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
+			// 
+			// exitToolStripMenuItem1
+			// 
+			this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
+			this.exitToolStripMenuItem1.Size = new System.Drawing.Size(151, 22);
+			this.exitToolStripMenuItem1.Text = "E&xit";
+			// 
+			// toolsToolStripMenuItem
+			// 
+			this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.customizeToolStripMenuItem,
+            this.optionsToolStripMenuItem});
+			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+			this.toolsToolStripMenuItem.Text = "&Tools";
+			// 
+			// customizeToolStripMenuItem
+			// 
+			this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
+			this.customizeToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+			this.customizeToolStripMenuItem.Text = "&Customize";
+			// 
+			// optionsToolStripMenuItem
+			// 
+			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+			this.optionsToolStripMenuItem.Text = "&Options";
+			// 
+			// helpToolStripMenuItem
+			// 
+			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contentsToolStripMenuItem,
+            this.indexToolStripMenuItem,
+            this.searchToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.aboutToolStripMenuItem});
+			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+			this.helpToolStripMenuItem.Text = "&Help";
+			// 
+			// contentsToolStripMenuItem
+			// 
+			this.contentsToolStripMenuItem.Name = "contentsToolStripMenuItem";
+			this.contentsToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.contentsToolStripMenuItem.Text = "&Contents";
+			// 
+			// indexToolStripMenuItem
+			// 
+			this.indexToolStripMenuItem.Name = "indexToolStripMenuItem";
+			this.indexToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.indexToolStripMenuItem.Text = "&Index";
+			// 
+			// searchToolStripMenuItem
+			// 
+			this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
+			this.searchToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.searchToolStripMenuItem.Text = "&Search";
+			// 
+			// toolStripSeparator5
+			// 
+			this.toolStripSeparator5.Name = "toolStripSeparator5";
+			this.toolStripSeparator5.Size = new System.Drawing.Size(126, 6);
+			// 
+			// aboutToolStripMenuItem
+			// 
+			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.aboutToolStripMenuItem.Text = "&About...";
+			// 
+			// toolStart
+			// 
+			this.toolStart.Name = "toolStart";
+			this.toolStart.Size = new System.Drawing.Size(43, 20);
+			this.toolStart.Text = "Start";
+			this.toolStart.Click += new System.EventHandler(this.buttonSend_Click);
+			// 
 			// toolStrip1
 			// 
 			this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
@@ -293,6 +444,40 @@ namespace ServerApp
 			this.toolStrip1.Size = new System.Drawing.Size(191, 25);
 			this.toolStrip1.TabIndex = 11;
 			this.toolStrip1.Text = "toolStrip1";
+			// 
+			// toolStripButton1
+			// 
+			this.toolStripButton1.Image = ( (System.Drawing.Image)( resources.GetObject("toolStripButton1.Image") ) );
+			this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton1.Name = "toolStripButton1";
+			this.toolStripButton1.Size = new System.Drawing.Size(46, 22);
+			this.toolStripButton1.Text = "Add";
+			// 
+			// toolStripButton2
+			// 
+			this.toolStripButton2.Image = ( (System.Drawing.Image)( resources.GetObject("toolStripButton2.Image") ) );
+			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton2.Name = "toolStripButton2";
+			this.toolStripButton2.Size = new System.Drawing.Size(66, 22);
+			this.toolStripButton2.Text = "Remove";
+			// 
+			// toolStripButton3
+			// 
+			this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolStripButton3.Image = ( (System.Drawing.Image)( resources.GetObject("toolStripButton3.Image") ) );
+			this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton3.Name = "toolStripButton3";
+			this.toolStripButton3.Size = new System.Drawing.Size(34, 22);
+			this.toolStripButton3.Text = "Load";
+			// 
+			// toolStripButton4
+			// 
+			this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolStripButton4.Image = ( (System.Drawing.Image)( resources.GetObject("toolStripButton4.Image") ) );
+			this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton4.Name = "toolStripButton4";
+			this.toolStripButton4.Size = new System.Drawing.Size(33, 22);
+			this.toolStripButton4.Text = "View";
 			// 
 			// toolStripContainer1
 			// 
@@ -331,7 +516,7 @@ namespace ServerApp
 			this.tabEmails.Location = new System.Drawing.Point(4, 22);
 			this.tabEmails.Name = "tabEmails";
 			this.tabEmails.Padding = new System.Windows.Forms.Padding(3);
-			this.tabEmails.Size = new System.Drawing.Size(479, 317);
+			this.tabEmails.Size = new System.Drawing.Size(466, 309);
 			this.tabEmails.TabIndex = 2;
 			this.tabEmails.Text = "Emails";
 			this.tabEmails.UseVisualStyleBackColor = true;
@@ -348,6 +533,18 @@ namespace ServerApp
 			this.tabMessages.Text = "Messages";
 			this.tabMessages.UseVisualStyleBackColor = true;
 			// 
+			// dataGridMessages
+			// 
+			this.dataGridMessages.AllowUserToAddRows = false;
+			this.dataGridMessages.AllowUserToDeleteRows = false;
+			this.dataGridMessages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridMessages.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.dataGridMessages.Location = new System.Drawing.Point(3, 3);
+			this.dataGridMessages.Name = "dataGridMessages";
+			this.dataGridMessages.Size = new System.Drawing.Size(460, 303);
+			this.dataGridMessages.TabIndex = 2;
+			this.dataGridMessages.Visible = false;
+			// 
 			// tabRobots
 			// 
 			this.tabRobots.Controls.Add(splitContainer2);
@@ -363,206 +560,10 @@ namespace ServerApp
 			// 
 			this.tabCommon.Location = new System.Drawing.Point(4, 22);
 			this.tabCommon.Name = "tabCommon";
-			this.tabCommon.Size = new System.Drawing.Size(574, 309);
+			this.tabCommon.Size = new System.Drawing.Size(466, 309);
 			this.tabCommon.TabIndex = 3;
 			this.tabCommon.Text = "Common";
 			this.tabCommon.UseVisualStyleBackColor = true;
-			// 
-			// groupBox2
-			// 
-			this.groupBox2.Controls.Add(this.textBox1);
-			this.groupBox2.Controls.Add(label6);
-			this.groupBox2.Controls.Add(this.textBox5);
-			this.groupBox2.Controls.Add(label5);
-			this.groupBox2.Location = new System.Drawing.Point(3, 3);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(190, 79);
-			this.groupBox2.TabIndex = 13;
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "IP, name (optional)";
-			// 
-			// textBox1
-			// 
-			this.textBox1.Location = new System.Drawing.Point(80, 19);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(100, 20);
-			this.textBox1.TabIndex = 13;
-			// 
-			// label6
-			// 
-			label6.AutoSize = true;
-			label6.Location = new System.Drawing.Point(54, 22);
-			label6.Name = "label6";
-			label6.Size = new System.Drawing.Size(20, 13);
-			label6.TabIndex = 14;
-			label6.Text = "IP:";
-			// 
-			// toolStripButton1
-			// 
-			this.toolStripButton1.Image = ( (System.Drawing.Image)( resources.GetObject("toolStripButton1.Image") ) );
-			this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton1.Name = "toolStripButton1";
-			this.toolStripButton1.Size = new System.Drawing.Size(46, 22);
-			this.toolStripButton1.Text = "Add";
-			// 
-			// toolStripButton2
-			// 
-			this.toolStripButton2.Image = ( (System.Drawing.Image)( resources.GetObject("toolStripButton2.Image") ) );
-			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton2.Name = "toolStripButton2";
-			this.toolStripButton2.Size = new System.Drawing.Size(66, 22);
-			this.toolStripButton2.Text = "Remove";
-			// 
-			// toolStripButton3
-			// 
-			this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolStripButton3.Image = ( (System.Drawing.Image)( resources.GetObject("toolStripButton3.Image") ) );
-			this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton3.Name = "toolStripButton3";
-			this.toolStripButton3.Size = new System.Drawing.Size(34, 22);
-			this.toolStripButton3.Text = "Load";
-			// 
-			// toolStripButton4
-			// 
-			this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolStripButton4.Image = ( (System.Drawing.Image)( resources.GetObject("toolStripButton4.Image") ) );
-			this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton4.Name = "toolStripButton4";
-			this.toolStripButton4.Size = new System.Drawing.Size(33, 22);
-			this.toolStripButton4.Text = "View";
-			// 
-			// fileToolStripMenuItem1
-			// 
-			this.fileToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openToolStripMenuItem,
-            this.toolStripSeparator,
-            this.saveToolStripMenuItem,
-            this.saveAsToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.exitToolStripMenuItem1});
-			this.fileToolStripMenuItem1.Name = "fileToolStripMenuItem1";
-			this.fileToolStripMenuItem1.Size = new System.Drawing.Size(35, 20);
-			this.fileToolStripMenuItem1.Text = "&File";
-			// 
-			// openToolStripMenuItem
-			// 
-			this.openToolStripMenuItem.Image = ( (System.Drawing.Image)( resources.GetObject("openToolStripMenuItem.Image") ) );
-			this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.ShortcutKeys = ( (System.Windows.Forms.Keys)( ( System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O ) ) );
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.openToolStripMenuItem.Text = "&Open";
-			// 
-			// toolStripSeparator
-			// 
-			this.toolStripSeparator.Name = "toolStripSeparator";
-			this.toolStripSeparator.Size = new System.Drawing.Size(149, 6);
-			// 
-			// saveToolStripMenuItem
-			// 
-			this.saveToolStripMenuItem.Image = ( (System.Drawing.Image)( resources.GetObject("saveToolStripMenuItem.Image") ) );
-			this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-			this.saveToolStripMenuItem.ShortcutKeys = ( (System.Windows.Forms.Keys)( ( System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S ) ) );
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.saveToolStripMenuItem.Text = "&Save";
-			// 
-			// saveAsToolStripMenuItem
-			// 
-			this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.saveAsToolStripMenuItem.Text = "Save &As";
-			// 
-			// toolStripSeparator1
-			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
-			// 
-			// exitToolStripMenuItem1
-			// 
-			this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-			this.exitToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-			this.exitToolStripMenuItem1.Text = "E&xit";
-			// 
-			// toolsToolStripMenuItem
-			// 
-			this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.customizeToolStripMenuItem,
-            this.optionsToolStripMenuItem});
-			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-			this.toolsToolStripMenuItem.Text = "&Tools";
-			// 
-			// customizeToolStripMenuItem
-			// 
-			this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-			this.customizeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.customizeToolStripMenuItem.Text = "&Customize";
-			// 
-			// optionsToolStripMenuItem
-			// 
-			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.optionsToolStripMenuItem.Text = "&Options";
-			// 
-			// helpToolStripMenuItem
-			// 
-			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.contentsToolStripMenuItem,
-            this.indexToolStripMenuItem,
-            this.searchToolStripMenuItem,
-            this.toolStripSeparator5,
-            this.aboutToolStripMenuItem});
-			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
-			this.helpToolStripMenuItem.Text = "&Help";
-			// 
-			// indexToolStripMenuItem
-			// 
-			this.indexToolStripMenuItem.Name = "indexToolStripMenuItem";
-			this.indexToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.indexToolStripMenuItem.Text = "&Index";
-			// 
-			// searchToolStripMenuItem
-			// 
-			this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-			this.searchToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.searchToolStripMenuItem.Text = "&Search";
-			// 
-			// toolStripSeparator5
-			// 
-			this.toolStripSeparator5.Name = "toolStripSeparator5";
-			this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
-			// 
-			// aboutToolStripMenuItem
-			// 
-			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.aboutToolStripMenuItem.Text = "&About...";
-			// 
-			// contentsToolStripMenuItem
-			// 
-			this.contentsToolStripMenuItem.Name = "contentsToolStripMenuItem";
-			this.contentsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.contentsToolStripMenuItem.Text = "&Contents";
-			// 
-			// dataGridMessages
-			// 
-			this.dataGridMessages.AllowUserToAddRows = false;
-			this.dataGridMessages.AllowUserToDeleteRows = false;
-			this.dataGridMessages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridMessages.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dataGridMessages.Location = new System.Drawing.Point(3, 3);
-			this.dataGridMessages.Name = "dataGridMessages";
-			this.dataGridMessages.Size = new System.Drawing.Size(460, 303);
-			this.dataGridMessages.TabIndex = 2;
-			// 
-			// toolStart
-			// 
-			this.toolStart.Name = "toolStart";
-			this.toolStart.Size = new System.Drawing.Size(43, 20);
-			this.toolStart.Text = "Start";
-			this.toolStart.Click += new System.EventHandler(this.buttonSend_Click);
 			// 
 			// FormServer
 			// 
@@ -577,6 +578,8 @@ namespace ServerApp
 			splitContainer2.Panel1.ResumeLayout(false);
 			splitContainer2.Panel2.ResumeLayout(false);
 			splitContainer2.ResumeLayout(false);
+			this.groupBox2.ResumeLayout(false);
+			this.groupBox2.PerformLayout();
 			groupBox1.ResumeLayout(false);
 			groupBox1.PerformLayout();
 			this.menuStrip1.ResumeLayout(false);
@@ -590,10 +593,8 @@ namespace ServerApp
 			this.toolStripContainer1.PerformLayout();
 			this.tabControl.ResumeLayout(false);
 			this.tabMessages.ResumeLayout(false);
-			this.tabRobots.ResumeLayout(false);
-			this.groupBox2.ResumeLayout(false);
-			this.groupBox2.PerformLayout();
 			( (System.ComponentModel.ISupportInitialize)( this.dataGridMessages ) ).EndInit();
+			this.tabRobots.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

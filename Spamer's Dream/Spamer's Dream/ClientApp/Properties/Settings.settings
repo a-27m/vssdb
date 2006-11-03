@@ -15,13 +15,16 @@
       <Value Profile="(Default)">test</Value>
     </Setting>
     <Setting Name="LettersDoze" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">4</Value>
+      <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="SpamServerHost" Type="System.String" Scope="User">
       <Value Profile="(Default)">127.0.0.1</Value>
     </Setting>
     <Setting Name="SpamServerPort" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">54321</Value>
+    </Setting>
+    <Setting Name="RobotPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">54320</Value>
     </Setting>
   </Settings>
 </SettingsFile>

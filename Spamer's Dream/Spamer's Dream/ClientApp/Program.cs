@@ -14,12 +14,12 @@ namespace ClientApp
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			try
+			//try
 			{ Application.Run(new FormClient()); }
-			catch ( Exception e )
-			{
-				MessageBox.Show(e.Message, "General system error");
-			}
+			//catch ( Exception e )
+			//{
+			//    MessageBox.Show(e.Message, "General system error");
+			//}
 		}
 	}
 }

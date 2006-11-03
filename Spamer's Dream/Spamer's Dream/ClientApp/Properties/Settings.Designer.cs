@@ -73,7 +73,7 @@ namespace ClientApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int LettersDoze {
             get {
                 return ((int)(this["LettersDoze"]));
@@ -104,6 +104,18 @@ namespace ClientApp.Properties {
             }
             set {
                 this["SpamServerPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("54320")]
+        public int RobotPort {
+            get {
+                return ((int)(this["RobotPort"]));
+            }
+            set {
+                this["RobotPort"] = value;
             }
         }
     }
