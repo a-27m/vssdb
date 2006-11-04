@@ -120,7 +120,7 @@ namespace ServerApp
 			splitContainer2.Panel2.Controls.Add(this.groupBox2);
 			splitContainer2.Panel2.Controls.Add(groupBox1);
 			splitContainer2.Panel2.Controls.Add(this.buttonRobotSmtpSet);
-			splitContainer2.Size = new System.Drawing.Size(460, 303);
+			splitContainer2.Size = new System.Drawing.Size(460, 370);
 			splitContainer2.SplitterDistance = 258;
 			splitContainer2.TabIndex = 1;
 			// 
@@ -135,7 +135,7 @@ namespace ServerApp
 			this.listBoxRobots.MultiColumn = true;
 			this.listBoxRobots.Name = "listBoxRobots";
 			this.listBoxRobots.ScrollAlwaysVisible = true;
-			this.listBoxRobots.Size = new System.Drawing.Size(258, 303);
+			this.listBoxRobots.Size = new System.Drawing.Size(258, 370);
 			this.listBoxRobots.TabIndex = 0;
 			// 
 			// groupBox2
@@ -485,11 +485,11 @@ namespace ServerApp
 			// toolStripContainer1.ContentPanel
 			// 
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.tabControl);
-			this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(474, 335);
+			this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(474, 402);
 			this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.toolStripContainer1.Location = new System.Drawing.Point(0, 24);
 			this.toolStripContainer1.Name = "toolStripContainer1";
-			this.toolStripContainer1.Size = new System.Drawing.Size(474, 360);
+			this.toolStripContainer1.Size = new System.Drawing.Size(474, 427);
 			this.toolStripContainer1.TabIndex = 12;
 			this.toolStripContainer1.Text = "toolStripContainer1";
 			// 
@@ -507,7 +507,7 @@ namespace ServerApp
 			this.tabControl.Location = new System.Drawing.Point(0, 0);
 			this.tabControl.Name = "tabControl";
 			this.tabControl.SelectedIndex = 0;
-			this.tabControl.Size = new System.Drawing.Size(474, 335);
+			this.tabControl.Size = new System.Drawing.Size(474, 402);
 			this.tabControl.TabIndex = 0;
 			this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
 			// 
@@ -551,7 +551,7 @@ namespace ServerApp
 			this.tabRobots.Location = new System.Drawing.Point(4, 22);
 			this.tabRobots.Name = "tabRobots";
 			this.tabRobots.Padding = new System.Windows.Forms.Padding(3);
-			this.tabRobots.Size = new System.Drawing.Size(466, 309);
+			this.tabRobots.Size = new System.Drawing.Size(466, 376);
 			this.tabRobots.TabIndex = 1;
 			this.tabRobots.Text = "Robots";
 			this.tabRobots.UseVisualStyleBackColor = true;
@@ -569,7 +569,7 @@ namespace ServerApp
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(474, 384);
+			this.ClientSize = new System.Drawing.Size(474, 451);
 			this.Controls.Add(this.toolStripContainer1);
 			this.Controls.Add(this.menuStrip1);
 			this.Name = "FormServer";

@@ -118,5 +118,29 @@ namespace ClientApp.Properties {
                 this["RobotPort"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int MaxLettersCache {
+            get {
+                return ((int)(this["MaxLettersCache"]));
+            }
+            set {
+                this["MaxLettersCache"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ClientId {
+            get {
+                return ((int)(this["ClientId"]));
+            }
+            set {
+                this["ClientId"] = value;
+            }
+        }
     }
 }

@@ -26,5 +26,11 @@
     <Setting Name="RobotPort" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">54320</Value>
     </Setting>
+    <Setting Name="MaxLettersCache" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="ClientId" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

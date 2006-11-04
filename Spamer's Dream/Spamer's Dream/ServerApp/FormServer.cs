@@ -143,7 +143,19 @@ WHERE
 
 		private void Say(string Host, int Port, SpamLanguage cmd)
 		{
-			byte[] dgrm = new byte[] { (byte)cmd };
+			Say(Host, Port, cmd, new byte[0]);
+		}
+
+		private void Say(string Host, int Port,
+			SpamLanguage cmd, byte[] attachment)
+		{
+			byte[] dgrm = new byte[attachment.Length+1];
+			
+			dgrm[0] = (byte)cmd;
+			for ( int i = 0; i < attachment.Length; i++ ) {
+				dgrm[i + 1] = attachment[i];
+			}
+
 			UdpClient uclient = null;
 
 			try {
@@ -163,9 +175,10 @@ WHERE
 		{
 			int robotPort = sets.RobotUdpPort;
 
-			foreach ( string robotHost in dbClient.GetRobotsHosts() ) {
+			foreach ( Robot robot in dbClient.GetRobotsHosts() ) {
 				try {
-					Say(robotHost, robotPort, SpamLanguage.Start);
+					Say(robot.IP, robotPort,
+						SpamLanguage.Start,	BitConverter.GetBytes(robot.Id));
 				}
 				catch ( Exception exc ) {
 					MessageBox.Show(exc.Message);
