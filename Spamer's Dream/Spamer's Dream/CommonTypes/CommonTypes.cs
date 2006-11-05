@@ -124,18 +124,28 @@ namespace CommonTypes
 
 	public struct SimpleMailTask
 	{
+		public int TaskId;
 		public MailAddress Address;
 		public int MessageID;
 
-		public SimpleMailTask(MailAddress Address, int MessageID)
+		public SimpleMailTask(int TaskId, MailAddress Address, int MessageID)
 		{
+			this.TaskId = TaskId;
 			this.Address = Address;
 			this.MessageID = MessageID;
 		}
 
-		public SimpleMailTask(string Address, string DisplayName, int MessageID)
+		public SimpleMailTask(int TaskId, string Address, string DisplayName, int MessageID)
 		{
+			this.TaskId = TaskId;
 			this.Address = new MailAddress(Address, DisplayName);
+			this.MessageID = MessageID;
+		}
+
+		public SimpleMailTask(int TaskId, string Address, int MessageID)
+		{
+			this.TaskId = TaskId;
+			this.Address = new MailAddress(Address);
 			this.MessageID = MessageID;
 		}
 	}
@@ -187,44 +197,24 @@ WHERE (IP <> '0.0.0.0') AND (IP <> '255.255.255.255')";
 		public void OpenConnection()
 		{
 			if ( sqlConnection != null )
+			{
 				sqlConnection.Close();
+				sqlConnection.Dispose();
+			}
 
 			string connectionStr = String.Format(connectionStrFormat,
 				DbHost, DbUser, DbPassword, DbName);
 
-			try
-			{
+			//try
+			//{
 				sqlConnection = new MySqlConnection(connectionStr);
 				sqlConnection.Open();
-			}
-			catch ( MySqlException ex )
-			{
-				MessageBox.Show(ex.Message, "Error connecting to the db server");
-				return;
-			}
-		}
-
-		public bool TryConnection()
-		{
-			if ( sqlConnection == null ) { OpenConnection(); }
-
-			while ( sqlConnection.State != ConnectionState.Open )
-			{
-				DialogResult dRes;
-				dRes = MessageBox.Show(
-					"Please, check DB server " +
-					"availability and settings." +
-					Environment.NewLine + Environment.NewLine +
-					"Try to connect again?", "Database connection failed",
-					MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-
-				if ( dRes == DialogResult.No )
-					return false;
-
-				sqlConnection.Dispose();
-				OpenConnection();
-			}
-			return true;
+			//}
+			//catch ( MySqlException ex )
+			//{
+			//    MessageBox.Show(ex.Message, "Error connecting to the db server");
+			//    return;
+			//}
 		}
 
 		public void CloseConnection()
@@ -233,31 +223,17 @@ WHERE (IP <> '0.0.0.0') AND (IP <> '255.255.255.255')";
 				sqlConnection.Close();
 		}
 
-		public IEnumerable<SimpleMailTask> LoadEmails(int CountLimit)
+		public IEnumerable<SimpleMailTask> LoadTasks(int CountLimit)
 		{
-			//List<SimpleMailTask> tasks = new List<SimpleMailTask>(CountLimit);
-
 			if ( !TryConnection() )
 				throw new Exception("Connection must to be opened first");
 
 			string sqlLockTablesQuery = "LOCK TABLES emails READ;";
-			MySqlCommand sqlCmd =
-				new MySqlCommand(sqlLockTablesQuery, sqlConnection);
-
-			try { sqlCmd.ExecuteNonQuery(); }
-
-			catch ( MySqlException ex )
-			{
-				MessageBox.Show(
-					String.Format("Query '{1}' failed:{2}{3}",
-					sqlLockTablesQuery,
-					Environment.NewLine + Environment.NewLine,
-					ex.Message));
+			if ( SendQuery(sqlLockTablesQuery) < 0 )
 				yield break;
-			}
 
 			string sqlQueryFreeEmails =
-@"SELECT Email,Username, MsgID
+@"SELECT Id,Email,Username, MsgID
 FROM emails
 WHERE ServedBy IS NULL
 ORDER BY RAND()
@@ -265,39 +241,56 @@ LIMIT " + CountLimit.ToString();
 
 			MySqlDataReader sqlReader = GetQueryReader(sqlQueryFreeEmails);
 
-			if ( sqlReader == null )
+			if ( sqlReader != null )
 			{
-				sqlCmd = new MySqlCommand("UNLOCK TABLES;", sqlConnection);
-
-				try { sqlCmd.ExecuteNonQuery(); }
-
-				catch ( MySqlException ex )
+				while ( sqlReader.Read() )
 				{
-					MessageBox.Show(
-						String.Format("Query '{1}' failed:{2}{3}",
-						sqlLockTablesQuery,
-						Environment.NewLine + Environment.NewLine,
-						ex.Message));
+					SimpleMailTask task;
+					if ( sqlReader.IsDBNull(2) )
+						task = new SimpleMailTask(
+							sqlReader.GetInt32(0),
+							sqlReader.GetString(1),// address
+							sqlReader.GetInt32(3));// msgid
+					else
+						task = new SimpleMailTask(
+							sqlReader.GetInt32(0),
+							sqlReader.GetString(1),// address
+							sqlReader.GetString(2),// display name
+							sqlReader.GetInt32(3));// msgid
+					yield return task;
 				}
 
-				yield break;
+				sqlReader.Close();
 			}
 
-			while ( sqlReader.Read() )
-			{
-				yield return new SimpleMailTask(
-					sqlReader.GetString(0),// address
-					sqlReader.GetString(1),// display name
-					sqlReader.GetInt32(2));// msgid
-			}
-
-			sqlReader.Close();
+			SendQuery("UNLOCK TABLES;");
 			yield break;
 		}
 
-		public Letter LoadMessage(int Id)
+		public Letter GetMessage(int Id)
 		{
-			throw new Exception("The method or operation is not implemented.");
+			string sqlGetMessageById =
+@"SELECT Id, Subject, Body, IsHtml
+FROM messages
+WHERE Id="+Id.ToString()+
+@" LIMIT 1";
+
+			MySqlDataReader sqlReader = GetQueryReader(sqlGetMessageById);
+			if ( sqlReader != null )
+			{
+				if ( sqlReader.Read() )
+				{
+					Letter letter = new Letter(
+						sqlReader.GetInt32(0),// id
+						sqlReader.GetString(1),// subj
+						sqlReader.GetString(2),// body
+						sqlReader.GetBoolean(3)// ishtml
+						);
+					sqlReader.Close();
+					return letter;
+				}
+			}
+			throw new Exception("Letter not found");
 		}
 
 		public MySqlDataReader GetQueryReader(string Query)
@@ -317,6 +310,28 @@ LIMIT " + CountLimit.ToString();
 					Environment.NewLine + ex.Message);
 			}
 			return sqlReader;
+		}
+
+		public int SendQuery(string Query)
+		{
+			if ( !TryConnection() )
+				throw new Exception("Connection must to be opened first");
+
+			MySqlCommand sqlCmd =
+				new MySqlCommand(Query, sqlConnection);
+
+			int LinesAffected = -1;
+			try { LinesAffected = sqlCmd.ExecuteNonQuery(); }
+
+			catch ( MySqlException ex )
+			{
+				MessageBox.Show(
+					String.Format("Query '{0}' failed:{1}{2}",
+					Query,
+					Environment.NewLine + Environment.NewLine,
+					ex.Message));
+			}
+			return LinesAffected;
 		}
 
 		public IEnumerable<Robot> GetRobotsHosts()
@@ -358,32 +373,49 @@ LIMIT " + CountLimit.ToString();
 			return servInf;
 		}
 
-		public AuthServerInfo PickAnySmtp()
+		public AuthServerInfo GetAnySmtp()
 		{
-			MySqlDataReader sqlReader = GetQueryReader(@"
-SELECT * FROM smtpservers ORDER BY RAND() LIMIT 1;");
+			MySqlDataReader sqlReader = GetQueryReader(
+@"SELECT Host,Port,Login,Password,UseSSL
+FROM smtpservers
+ORDER BY RAND()
+LIMIT 1;");
 
-			if ( sqlReader.Read() )
+
+			if ( sqlReader != null )
 			{
-				return new AuthServerInfo(
-					sqlReader.GetString(0),
-					sqlReader.GetInt32(1),
-					sqlReader.GetString(2),
-					sqlReader.GetString(3),
-					sqlReader.GetBoolean(4));
+				AuthServerInfo serverInfo = null;
+				if ( sqlReader.Read() )
+				{
+					serverInfo = new AuthServerInfo(
+						sqlReader.GetString(0),
+						sqlReader.GetInt32(1),
+						sqlReader.GetString(2),
+						sqlReader.GetString(3),
+						sqlReader.GetBoolean(4));
+				}
+				sqlReader.Close();
+				if ( serverInfo != null )
+					return serverInfo;
 			}
-			else
-				return null;
+			throw new Exception("Failed to aquire SMTP server parameters from database");
+
 		}
 
 		public MailAddress RobotAddrById(int Id)
 		{
 			string name, email;
+			MailAddress mailAddr = null;
 
 			MySqlDataReader sqlReader = GetQueryReader(
 @"SELECT Email,Name
 FROM robots
 WHERE Id=" + Id.ToString() + " LIMIT 1;");
+
+			if ( sqlReader == null )
+
+				throw new Exception("Robot with ID " + Id.ToString() +
+					" is unknown in database");
 
 			if ( sqlReader.Read() )
 			{
@@ -392,16 +424,14 @@ WHERE Id=" + Id.ToString() + " LIMIT 1;");
 				if ( !sqlReader.IsDBNull(1) )
 				{
 					name = sqlReader.GetString(1);
-					return new MailAddress(email);
+					mailAddr = new MailAddress(email, name);
 				}
 				else
-				{
-					return new MailAddress(email);
-				}
+					mailAddr = new MailAddress(email);
 			}
-			else
-				throw new Exception("Robot with ID " + Id.ToString() + 
-					" is unknown in database");
+
+			sqlReader.Close();
+			return mailAddr;
 		}
 	}
 }
