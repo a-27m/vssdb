@@ -152,6 +152,8 @@ namespace CommonTypes
 
 	public class DbClient
 	{
+		#region Ñ î é ä å ò
+
 		#region const strings
 
 		public const string selectSmtpByIdQuery =
@@ -205,16 +207,8 @@ WHERE (IP <> '0.0.0.0') AND (IP <> '255.255.255.255')";
 			string connectionStr = String.Format(connectionStrFormat,
 				DbHost, DbUser, DbPassword, DbName);
 
-			//try
-			//{
-				sqlConnection = new MySqlConnection(connectionStr);
-				sqlConnection.Open();
-			//}
-			//catch ( MySqlException ex )
-			//{
-			//    MessageBox.Show(ex.Message, "Error connecting to the db server");
-			//    return;
-			//}
+			sqlConnection = new MySqlConnection(connectionStr);
+			sqlConnection.Open();
 		}
 
 		public void CloseConnection()
@@ -223,48 +217,60 @@ WHERE (IP <> '0.0.0.0') AND (IP <> '255.255.255.255')";
 				sqlConnection.Close();
 		}
 
-		public IEnumerable<SimpleMailTask> LoadTasks(int CountLimit)
+		public AuthServerInfo GetAnySmtp()
 		{
-			if ( !TryConnection() )
-				throw new Exception("Connection must to be opened first");
-
-			string sqlLockTablesQuery = "LOCK TABLES emails READ;";
-			if ( SendQuery(sqlLockTablesQuery) < 0 )
-				yield break;
-
-			string sqlQueryFreeEmails =
-@"SELECT Id,Email,Username, MsgID
-FROM emails
-WHERE ServedBy IS NULL
+			MySqlDataReader sqlReader = GetQueryReader(
+@"SELECT Host,Port,Login,Password,UseSSL
+FROM smtpservers
 ORDER BY RAND()
-LIMIT " + CountLimit.ToString();
-
-			MySqlDataReader sqlReader = GetQueryReader(sqlQueryFreeEmails);
+LIMIT 1;");
 
 			if ( sqlReader != null )
-			{
-				while ( sqlReader.Read() )
+				if ( sqlReader.Read() )
 				{
-					SimpleMailTask task;
-					if ( sqlReader.IsDBNull(2) )
-						task = new SimpleMailTask(
-							sqlReader.GetInt32(0),
-							sqlReader.GetString(1),// address
-							sqlReader.GetInt32(3));// msgid
-					else
-						task = new SimpleMailTask(
-							sqlReader.GetInt32(0),
-							sqlReader.GetString(1),// address
-							sqlReader.GetString(2),// display name
-							sqlReader.GetInt32(3));// msgid
-					yield return task;
+					AuthServerInfo serverInfo = new AuthServerInfo(
+						sqlReader.GetString(0),
+						sqlReader.GetInt32(1),
+						sqlReader.GetString(2),
+						sqlReader.GetString(3),
+						sqlReader.GetBoolean(4));
+
+					sqlReader.Close();
+					return serverInfo;
 				}
 
-				sqlReader.Close();
-			}
+			throw new Exception("Failed to aquire SMTP server parameters from database");
 
-			SendQuery("UNLOCK TABLES;");
-			yield break;
+		}
+
+		public MailAddress RobotAddrById(int Id)
+		{
+			string name, email;
+			MailAddress mailAddr = null;
+
+			MySqlDataReader sqlReader = GetQueryReader(
+@"SELECT Email,Name
+FROM robots
+WHERE Id=" + Id.ToString() + " LIMIT 1;");
+
+			if ( sqlReader != null )
+				if ( sqlReader.Read() )
+				{
+					email = sqlReader.GetString(0);
+
+					if ( !sqlReader.IsDBNull(1) )
+					{
+						name = sqlReader.GetString(1);
+						mailAddr = new MailAddress(email, name);
+					}
+					else
+						mailAddr = new MailAddress(email);
+					sqlReader.Close();
+					return mailAddr;
+				}
+
+			throw new Exception("Robot with ID " + Id.ToString() +
+				" is unknown in database " + DbName);
 		}
 
 		public Letter GetMessage(int Id)
@@ -272,12 +278,11 @@ LIMIT " + CountLimit.ToString();
 			string sqlGetMessageById =
 @"SELECT Id, Subject, Body, IsHtml
 FROM messages
-WHERE Id="+Id.ToString()+
+WHERE Id=" + Id.ToString() +
 @" LIMIT 1";
 
 			MySqlDataReader sqlReader = GetQueryReader(sqlGetMessageById);
 			if ( sqlReader != null )
-			{
 				if ( sqlReader.Read() )
 				{
 					Letter letter = new Letter(
@@ -289,13 +294,84 @@ WHERE Id="+Id.ToString()+
 					sqlReader.Close();
 					return letter;
 				}
-			}
+
 			throw new Exception("Letter not found");
+		}
+
+		public AuthServerInfo GetSmtpServerById(int id)
+		{
+			MySqlDataReader sqlReader = GetQueryReader(selectSmtpByIdQuery + id.ToString());
+			if(sqlReader!=null)
+			if ( sqlReader.Read() )
+			{
+				AuthServerInfo servInf = new AuthServerInfo();
+				servInf.Host = sqlReader.GetString(0);// Host
+				servInf.Port = sqlReader.GetInt32(1);// Port
+				servInf.Username = sqlReader.GetString(2);// login
+				servInf.Password = sqlReader.GetString(3);// Password
+				servInf.UseSSL = sqlReader.GetBoolean(4); // UseSSL
+
+				sqlReader.Close();
+				return servInf;
+			}
+
+		throw new Exception("Smtp server data with id "+id.ToString()+" cannot be found");
+		}
+
+		#endregion
+
+		public IEnumerable<SimpleMailTask> GetTasks(int CountLimit, int ClientID)
+		{
+			if ( !IsConnectionOpened )
+				throw new Exception("Connection must to be opened first");
+
+			string clientPickedTaskToken = "~"+ClientID.ToString();
+
+			string sqlMarkTaskQuery = 
+@"UPDATE emails
+SET ServedBy="+clientPickedTaskToken+@"
+WHERE ServedBy IS NULL
+ORDER BY RAND()
+LIMIT "+CountLimit.ToString();
+
+			if ( SendQuery(sqlMarkTaskQuery) < 0 )
+				yield break;
+
+			string sqlQueryMarked =
+@"SELECT Id,Email,Username, MsgID
+FROM emails
+WHERE ServedBy=" + clientPickedTaskToken;
+
+			MySqlDataReader sqlReader = GetQueryReader(sqlQueryMarked);
+
+			if ( sqlReader != null )
+			{
+				while ( sqlReader.Read() )
+				{
+					SimpleMailTask task;
+					if ( sqlReader.IsDBNull(2) )
+						task = new SimpleMailTask(
+							sqlReader.GetInt32(0),// id
+							sqlReader.GetString(1),// address
+							sqlReader.GetInt32(3));// msgid
+					else
+						task = new SimpleMailTask(
+							sqlReader.GetInt32(0),// id
+							sqlReader.GetString(1),// address
+							sqlReader.GetString(2),// display name
+							sqlReader.GetInt32(3));// msgid
+					yield return task;
+				}
+
+				sqlReader.Close();
+			}
+
+			yield break;
 		}
 
 		public MySqlDataReader GetQueryReader(string Query)
 		{
-			if ( !TryConnection() )
+			if ( !IsConnectionOpened )
 				throw new Exception("Connection must to be opened first");
 
 			MySqlDataReader sqlReader = null;
@@ -308,13 +384,14 @@ WHERE Id="+Id.ToString()+
 			{
 				MessageBox.Show("Failed read query answer: " +
 					Environment.NewLine + ex.Message);
+				throw;
 			}
 			return sqlReader;
 		}
 
 		public int SendQuery(string Query)
 		{
-			if ( !TryConnection() )
+			if ( !IsConnectionOpened )
 				throw new Exception("Connection must to be opened first");
 
 			MySqlCommand sqlCmd =
@@ -336,8 +413,8 @@ WHERE Id="+Id.ToString()+
 
 		public IEnumerable<Robot> GetRobotsHosts()
 		{
-			if ( !TryConnection() )
-				yield break;
+			if ( !IsConnectionOpened )
+				throw new Exception("Connection must to be opened first");
 
 			MySqlDataReader sqlReader =
 				this.GetQueryReader(selectValidHostnamesQuery);
@@ -352,86 +429,6 @@ WHERE Id="+Id.ToString()+
 
 			if ( sqlReader != null )
 				sqlReader.Close();
-		}
-
-		public AuthServerInfo GetSmtpServerById(int id)
-		{
-			AuthServerInfo servInf = new AuthServerInfo();
-			MySqlCommand sqlCmd = new MySqlCommand(selectSmtpByIdQuery + id.ToString(),
-				sqlConnection);
-			MySqlDataReader sqlReader = sqlCmd.ExecuteReader();
-			if ( sqlReader.Read() )
-			{
-
-				servInf.Host = sqlReader.GetString(0);// Host
-				servInf.Port = sqlReader.GetInt32(1);// Port
-				servInf.Username = sqlReader.GetString(2);// login
-				servInf.Password = sqlReader.GetString(3);// Password
-				servInf.UseSSL = sqlReader.GetBoolean(4); // UseSSL
-			}
-			sqlReader.Close();
-			return servInf;
-		}
-
-		public AuthServerInfo GetAnySmtp()
-		{
-			MySqlDataReader sqlReader = GetQueryReader(
-@"SELECT Host,Port,Login,Password,UseSSL
-FROM smtpservers
-ORDER BY RAND()
-LIMIT 1;");
-
-
-			if ( sqlReader != null )
-			{
-				AuthServerInfo serverInfo = null;
-				if ( sqlReader.Read() )
-				{
-					serverInfo = new AuthServerInfo(
-						sqlReader.GetString(0),
-						sqlReader.GetInt32(1),
-						sqlReader.GetString(2),
-						sqlReader.GetString(3),
-						sqlReader.GetBoolean(4));
-				}
-				sqlReader.Close();
-				if ( serverInfo != null )
-					return serverInfo;
-			}
-			throw new Exception("Failed to aquire SMTP server parameters from database");
-
-		}
-
-		public MailAddress RobotAddrById(int Id)
-		{
-			string name, email;
-			MailAddress mailAddr = null;
-
-			MySqlDataReader sqlReader = GetQueryReader(
-@"SELECT Email,Name
-FROM robots
-WHERE Id=" + Id.ToString() + " LIMIT 1;");
-
-			if ( sqlReader == null )
-
-				throw new Exception("Robot with ID " + Id.ToString() +
-					" is unknown in database");
-
-			if ( sqlReader.Read() )
-			{
-				email = sqlReader.GetString(0);
-
-				if ( !sqlReader.IsDBNull(1) )
-				{
-					name = sqlReader.GetString(1);
-					mailAddr = new MailAddress(email, name);
-				}
-				else
-					mailAddr = new MailAddress(email);
-			}
-
-			sqlReader.Close();
-			return mailAddr;
 		}
 	}
 }

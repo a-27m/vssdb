@@ -2,17 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-
+using System.Text;
+using System.Windows.Forms;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using ServerApp.Properties;
-using SpamerTypes;
+using CommonTypes;
 
 namespace ServerApp
 {
@@ -26,7 +24,7 @@ namespace ServerApp
 
 		public const string selectRobotsQuery =
 @"SELECT
-	IP,HumanName,SmtpID
+	IP,Name,SmtpID
 FROM
 	robots
 WHERE
@@ -62,7 +60,8 @@ WHERE
 
 			dbClient = new DbClient(sets.DbHost, sets.DbUser, sets.DbPassword, sets.DbName);
 
-			if ( !dbClient.TryConnection() ) {
+			dbClient.OpenConnection();
+			if ( !dbClient.IsConnectionOpened ) {
 				MessageBox.Show("Database functions will be disabled for this session due to the connection problems.", sets.DbName + " is not available");
 				DbAvailable = false;
 			}
@@ -197,7 +196,7 @@ WHERE
 				item += letter.Subject == null ? "<no subject>" :
 					"'" + letter.Subject + "'";
 				item += ", as ";
-				item += letter.IsHtml == 1 ? "HTML" : "text";
+				item += letter.IsHtml ? "HTML" : "text";
 
 				listBoxMessages.Items.Add(item);
 			}
