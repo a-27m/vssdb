@@ -270,5 +270,15 @@ WHERE
 		}
 
 		#endregion
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			int ra = dbClient.SendQuery(
+@"UPDATE emails
+SET State=NULL");
+
+			MessageBox.Show("Rows affected: " + ra,
+				"Cleanup");
+		}
 	}
 }

@@ -322,27 +322,24 @@ WHERE Id=" + Id.ToString() +
 
 		public IEnumerable<SimpleMailTask> GetTasks(int CountLimit, int ClientID)
 		{
+			string sqlQuery;
+
 			if ( !IsConnectionOpened )
 				throw new Exception("Connection must to be opened first");
 
-			string clientPickedTaskToken = "~"+ClientID.ToString();
+			sqlQuery= 
+@"UPDATE emails SET State="+DbClient.TokenSelected(ClientID)+@"
+WHERE State IS NULL ORDER BY RAND() LIMIT "+CountLimit.ToString();
 
-			string sqlMarkTaskQuery = 
-@"UPDATE emails
-SET ServedBy="+clientPickedTaskToken+@"
-WHERE ServedBy IS NULL
-ORDER BY RAND()
-LIMIT "+CountLimit.ToString();
-
-			if ( SendQuery(sqlMarkTaskQuery) < 0 )
+			if ( SendQuery(sqlQuery) < 1 )
 				yield break;
 
-			string sqlQueryMarked =
-@"SELECT Id,Email,Username, MsgID
+			sqlQuery =
+@"SELECT Id,Email,Username,MsgID
 FROM emails
-WHERE ServedBy=" + clientPickedTaskToken;
+WHERE State=" + DbClient.TokenSelected(ClientID);
 
-			MySqlDataReader sqlReader = GetQueryReader(sqlQueryMarked);
+			MySqlDataReader sqlReader = GetQueryReader(sqlQuery);
 
 			if ( sqlReader != null )
 			{
@@ -365,6 +362,13 @@ WHERE ServedBy=" + clientPickedTaskToken;
 
 				sqlReader.Close();
 			}
+
+			sqlQuery =
+@"UPDATE emails
+SET State=" + DbClient.TokenTaken(ClientID) + @"
+WHERE State=" + DbClient.TokenSelected(ClientID);
+			if ( SendQuery(sqlQuery) < 1 )
+				yield break;
 
 			yield break;
 		}
@@ -429,6 +433,24 @@ WHERE ServedBy=" + clientPickedTaskToken;
 
 			if ( sqlReader != null )
 				sqlReader.Close();
+		}
+
+		/// <returns>single-QUOTED token</returns>
+		public static object TokenTaken(int ClientId)
+		{
+			return "'Taken by " + ClientId.ToString() + "'";
+		}
+
+		/// <returns>single-QUOTED token</returns>
+		private static string TokenSelected(int ClientId)
+		{
+			return "'Selected by " + ClientId.ToString() + "'";
+		}
+
+		/// <returns>single-QUOTED token</returns>
+		public static string TokenDone(int ClientId)
+		{
+			return "'Done by " + ClientId.ToString() + "'";
 		}
 	}
 }

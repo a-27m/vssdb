@@ -80,6 +80,7 @@ namespace ServerApp
 			this.dataGridMessages = new System.Windows.Forms.DataGridView();
 			this.tabRobots = new System.Windows.Forms.TabPage();
 			this.tabCommon = new System.Windows.Forms.TabPage();
+			this.button1 = new System.Windows.Forms.Button();
 			splitContainer2 = new System.Windows.Forms.SplitContainer();
 			label6 = new System.Windows.Forms.Label();
 			label5 = new System.Windows.Forms.Label();
@@ -99,6 +100,7 @@ namespace ServerApp
 			this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
 			this.toolStripContainer1.SuspendLayout();
 			this.tabControl.SuspendLayout();
+			this.tabEmails.SuspendLayout();
 			this.tabMessages.SuspendLayout();
 			( (System.ComponentModel.ISupportInitialize)( this.dataGridMessages ) ).BeginInit();
 			this.tabRobots.SuspendLayout();
@@ -293,7 +295,7 @@ namespace ServerApp
 			this.listBoxMessages.Location = new System.Drawing.Point(3, 3);
 			this.listBoxMessages.Name = "listBoxMessages";
 			this.listBoxMessages.ScrollAlwaysVisible = true;
-			this.listBoxMessages.Size = new System.Drawing.Size(460, 303);
+			this.listBoxMessages.Size = new System.Drawing.Size(460, 370);
 			this.listBoxMessages.TabIndex = 0;
 			// 
 			// menuStrip1
@@ -513,10 +515,11 @@ namespace ServerApp
 			// 
 			// tabEmails
 			// 
+			this.tabEmails.Controls.Add(this.button1);
 			this.tabEmails.Location = new System.Drawing.Point(4, 22);
 			this.tabEmails.Name = "tabEmails";
 			this.tabEmails.Padding = new System.Windows.Forms.Padding(3);
-			this.tabEmails.Size = new System.Drawing.Size(466, 309);
+			this.tabEmails.Size = new System.Drawing.Size(466, 376);
 			this.tabEmails.TabIndex = 2;
 			this.tabEmails.Text = "Emails";
 			this.tabEmails.UseVisualStyleBackColor = true;
@@ -528,7 +531,7 @@ namespace ServerApp
 			this.tabMessages.Location = new System.Drawing.Point(4, 22);
 			this.tabMessages.Name = "tabMessages";
 			this.tabMessages.Padding = new System.Windows.Forms.Padding(3);
-			this.tabMessages.Size = new System.Drawing.Size(466, 309);
+			this.tabMessages.Size = new System.Drawing.Size(466, 376);
 			this.tabMessages.TabIndex = 0;
 			this.tabMessages.Text = "Messages";
 			this.tabMessages.UseVisualStyleBackColor = true;
@@ -541,7 +544,7 @@ namespace ServerApp
 			this.dataGridMessages.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.dataGridMessages.Location = new System.Drawing.Point(3, 3);
 			this.dataGridMessages.Name = "dataGridMessages";
-			this.dataGridMessages.Size = new System.Drawing.Size(460, 303);
+			this.dataGridMessages.Size = new System.Drawing.Size(460, 370);
 			this.dataGridMessages.TabIndex = 2;
 			this.dataGridMessages.Visible = false;
 			// 
@@ -560,10 +563,20 @@ namespace ServerApp
 			// 
 			this.tabCommon.Location = new System.Drawing.Point(4, 22);
 			this.tabCommon.Name = "tabCommon";
-			this.tabCommon.Size = new System.Drawing.Size(466, 309);
+			this.tabCommon.Size = new System.Drawing.Size(466, 376);
 			this.tabCommon.TabIndex = 3;
 			this.tabCommon.Text = "Common";
 			this.tabCommon.UseVisualStyleBackColor = true;
+			// 
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(354, 108);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(75, 51);
+			this.button1.TabIndex = 0;
+			this.button1.Text = "Clear task\'s states";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
 			// 
 			// FormServer
 			// 
@@ -592,6 +605,7 @@ namespace ServerApp
 			this.toolStripContainer1.ResumeLayout(false);
 			this.toolStripContainer1.PerformLayout();
 			this.tabControl.ResumeLayout(false);
+			this.tabEmails.ResumeLayout(false);
 			this.tabMessages.ResumeLayout(false);
 			( (System.ComponentModel.ISupportInitialize)( this.dataGridMessages ) ).EndInit();
 			this.tabRobots.ResumeLayout(false);
@@ -644,6 +658,7 @@ namespace ServerApp
 		private System.Windows.Forms.ToolStripButton toolStripButton4;
 		private System.Windows.Forms.DataGridView dataGridMessages;
 		private System.Windows.Forms.ToolStripMenuItem toolStart;
+		private System.Windows.Forms.Button button1;
 	}
 }
 
