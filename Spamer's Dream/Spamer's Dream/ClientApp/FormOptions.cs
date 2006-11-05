@@ -5,11 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using ServerApp.Properties;
+using ClientApp.Properties;
 using System.Configuration;
 using System.IO;
 
-namespace ServerApp
+namespace ClientApp
 {
 	public partial class FormOptions : Form
 	{
@@ -23,8 +23,10 @@ namespace ServerApp
 
 		private void FormOptions_Load(object sender, EventArgs e)
 		{
-			textUdpOutPort.Text = appSettings.RobotUdpPort.ToString();
-			textUdpInPort.Text = appSettings.ServerPort.ToString();
+			textUdpInPort.Text = appSettings.RobotPort.ToString();
+
+			textCacheDepth.Text = appSettings.MaxLettersCache.ToString();
+			textDoze.Text = appSettings.LettersDoze.ToString();
 
 			textDbHost.Text = appSettings.DbHost;
 			textDbName.Text = appSettings.DbName;
@@ -38,13 +40,17 @@ namespace ServerApp
 		{
 			errorProvider.Clear();
 
-			try { appSettings.RobotUdpPort = int.Parse(textUdpOutPort.Text); }
-			catch ( FormatException )
-			{ errorProvider.SetError(textUdpOutPort, "Bad port number"); return; }
-
-			try { appSettings.ServerPort = int.Parse(textUdpInPort.Text); }
+			try { appSettings.RobotPort = int.Parse(textUdpInPort.Text); }
 			catch ( FormatException )
 			{ errorProvider.SetError(textUdpInPort, "Bad port number"); return; }
+
+			try { appSettings.LettersDoze = int.Parse(textDoze.Text); }
+			catch ( FormatException )
+			{ errorProvider.SetError(textDoze, "Bad integer number"); return; }
+
+			try { appSettings.MaxLettersCache = int.Parse(textCacheDepth.Text); }
+			catch ( FormatException )
+			{ errorProvider.SetError(textCacheDepth, "Bad integer number"); return; }
 
 			appSettings["DbHost"] = textDbHost.Text;
 			appSettings["DbName"] = textDbName.Text;

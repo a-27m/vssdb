@@ -33,8 +33,8 @@ namespace ServerApp
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.textSubject = new System.Windows.Forms.TextBox();
 			this.textBody = new System.Windows.Forms.TextBox();
-			this.checkIsHtml = new System.Windows.Forms.CheckBox();
 			this.buttonLoad = new System.Windows.Forms.Button();
+			this.checkIsHtml = new System.Windows.Forms.CheckBox();
 			this.buttonOK = new System.Windows.Forms.Button();
 			this.buttonCancel = new System.Windows.Forms.Button();
 			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -55,13 +55,23 @@ namespace ServerApp
 			label1.Text = "Subject:";
 			label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
+			// label2
+			// 
+			label2.AutoSize = true;
+			label2.Location = new System.Drawing.Point(21, 78);
+			label2.Name = "label2";
+			label2.Size = new System.Drawing.Size(34, 13);
+			label2.TabIndex = 1;
+			label2.Text = "Body:";
+			label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
 			// tableLayoutPanel1
 			// 
 			this.tableLayoutPanel1.ColumnCount = 4;
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 18F));
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 18F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel1.Controls.Add(this.textSubject, 1, 2);
 			this.tableLayoutPanel1.Controls.Add(this.textBody, 1, 4);
 			this.tableLayoutPanel1.Controls.Add(this.buttonLoad, 2, 5);
@@ -86,23 +96,13 @@ namespace ServerApp
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(341, 317);
 			this.tableLayoutPanel1.TabIndex = 1;
 			// 
-			// label2
-			// 
-			label2.AutoSize = true;
-			label2.Location = new System.Drawing.Point(21, 78);
-			label2.Name = "label2";
-			label2.Size = new System.Drawing.Size(34, 13);
-			label2.TabIndex = 1;
-			label2.Text = "Body:";
-			label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
-			// 
 			// textSubject
 			// 
 			this.tableLayoutPanel1.SetColumnSpan(this.textSubject, 2);
 			this.textSubject.Dock = System.Windows.Forms.DockStyle.Top;
 			this.textSubject.Location = new System.Drawing.Point(21, 41);
 			this.textSubject.Name = "textSubject";
-			this.textSubject.Size = new System.Drawing.Size(298, 20);
+			this.textSubject.Size = new System.Drawing.Size(296, 20);
 			this.textSubject.TabIndex = 2;
 			// 
 			// textBody
@@ -112,8 +112,19 @@ namespace ServerApp
 			this.textBody.Location = new System.Drawing.Point(21, 101);
 			this.textBody.Multiline = true;
 			this.textBody.Name = "textBody";
-			this.textBody.Size = new System.Drawing.Size(298, 117);
+			this.textBody.Size = new System.Drawing.Size(296, 117);
 			this.textBody.TabIndex = 3;
+			// 
+			// buttonLoad
+			// 
+			this.buttonLoad.Anchor = System.Windows.Forms.AnchorStyles.Right;
+			this.buttonLoad.Location = new System.Drawing.Point(242, 224);
+			this.buttonLoad.Name = "buttonLoad";
+			this.buttonLoad.Size = new System.Drawing.Size(75, 23);
+			this.buttonLoad.TabIndex = 5;
+			this.buttonLoad.Text = "Load ...";
+			this.buttonLoad.UseVisualStyleBackColor = true;
+			this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
 			// 
 			// checkIsHtml
 			// 
@@ -127,22 +138,11 @@ namespace ServerApp
 			this.checkIsHtml.Text = "It\'s in HTML";
 			this.checkIsHtml.UseVisualStyleBackColor = true;
 			// 
-			// buttonLoad
-			// 
-			this.buttonLoad.Anchor = System.Windows.Forms.AnchorStyles.Right;
-			this.buttonLoad.Location = new System.Drawing.Point(244, 224);
-			this.buttonLoad.Name = "buttonLoad";
-			this.buttonLoad.Size = new System.Drawing.Size(75, 23);
-			this.buttonLoad.TabIndex = 5;
-			this.buttonLoad.Text = "Load ...";
-			this.buttonLoad.UseVisualStyleBackColor = true;
-			this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
-			// 
 			// buttonOK
 			// 
 			this.buttonOK.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom )
 						| System.Windows.Forms.AnchorStyles.Right ) ) );
-			this.buttonOK.Location = new System.Drawing.Point(92, 272);
+			this.buttonOK.Location = new System.Drawing.Point(91, 272);
 			this.buttonOK.Name = "buttonOK";
 			this.buttonOK.Size = new System.Drawing.Size(75, 24);
 			this.buttonOK.TabIndex = 2;
@@ -154,7 +154,7 @@ namespace ServerApp
 			// 
 			this.buttonCancel.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom )
 						| System.Windows.Forms.AnchorStyles.Left ) ) );
-			this.buttonCancel.Location = new System.Drawing.Point(173, 272);
+			this.buttonCancel.Location = new System.Drawing.Point(172, 272);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(75, 24);
 			this.buttonCancel.TabIndex = 6;
@@ -176,6 +176,7 @@ namespace ServerApp
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Name = "FormLetter";
 			this.Text = "Message";
+			this.Load += new System.EventHandler(this.FormLetter_Load);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);

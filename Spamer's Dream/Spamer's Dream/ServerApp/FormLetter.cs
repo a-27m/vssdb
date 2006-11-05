@@ -1,18 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using System.IO;
-using SpamerTypes;
+using CommonTypes;
 
 namespace ServerApp
 {
 	public partial class FormLetter : Form
 	{
-		public Letter letter;
+		public Letter letter = null;
 
 		public FormLetter()
 		{
@@ -32,7 +31,7 @@ namespace ServerApp
 		{
 			this.letter.Subject = textSubject.Text;
 			this.letter.Body = textBody.Text;
-			this.letter.IsHtml = ( checkIsHtml.Checked ? 1 : 0 );
+			this.letter.IsHtml = checkIsHtml.Checked;
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}
@@ -41,6 +40,16 @@ namespace ServerApp
 		{
 			this.DialogResult = DialogResult.Cancel;
 			this.Close();
+		}
+
+		private void FormLetter_Load(object sender, EventArgs e)
+		{
+			if ( letter != null )
+			{
+				textSubject.Text = letter.Subject;
+				textBody.Text = letter.Body;
+				checkIsHtml.Checked = letter.IsHtml;
+			}
 		}
 	}
 }

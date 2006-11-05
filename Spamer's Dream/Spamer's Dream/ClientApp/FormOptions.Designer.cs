@@ -1,4 +1,4 @@
-namespace ServerApp
+namespace ClientApp
 {
 	partial class FormOptions
 	{
@@ -43,18 +43,29 @@ namespace ServerApp
 			this.textDbName = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.textUdpOutPort = new System.Windows.Forms.TextBox();
-			this.label6 = new System.Windows.Forms.Label();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.textCacheDepth = new System.Windows.Forms.TextBox();
+			this.label6 = new System.Windows.Forms.Label();
+			this.label7 = new System.Windows.Forms.Label();
+			this.textDoze = new System.Windows.Forms.TextBox();
 			label1 = new System.Windows.Forms.Label();
 			( (System.ComponentModel.ISupportInitialize)( this.errorProvider ) ).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
 			// 
+			// label1
+			// 
+			label1.AutoSize = true;
+			label1.Location = new System.Drawing.Point(5, 19);
+			label1.Name = "label1";
+			label1.Size = new System.Drawing.Size(98, 13);
+			label1.TabIndex = 2;
+			label1.Text = "Incoming (server\'s):";
+			// 
 			// buttonOk
 			// 
-			this.buttonOk.Location = new System.Drawing.Point(46, 220);
+			this.buttonOk.Location = new System.Drawing.Point(303, 146);
 			this.buttonOk.Name = "buttonOk";
 			this.buttonOk.Size = new System.Drawing.Size(75, 23);
 			this.buttonOk.TabIndex = 0;
@@ -65,22 +76,13 @@ namespace ServerApp
 			// buttonCancel
 			// 
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(129, 220);
+			this.buttonCancel.Location = new System.Drawing.Point(303, 175);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
 			this.buttonCancel.TabIndex = 1;
 			this.buttonCancel.Text = "Can&cel";
 			this.buttonCancel.UseVisualStyleBackColor = true;
 			this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-			// 
-			// label1
-			// 
-			label1.AutoSize = true;
-			label1.Location = new System.Drawing.Point(5, 19);
-			label1.Name = "label1";
-			label1.Size = new System.Drawing.Size(98, 13);
-			label1.TabIndex = 2;
-			label1.Text = "Incoming (server\'s):";
 			// 
 			// textUdpInPort
 			// 
@@ -181,35 +183,48 @@ namespace ServerApp
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "MySQL server";
 			// 
-			// textUdpOutPort
+			// groupBox2
 			// 
-			this.textUdpOutPort.Location = new System.Drawing.Point(117, 35);
-			this.textUdpOutPort.Name = "textUdpOutPort";
-			this.textUdpOutPort.Size = new System.Drawing.Size(100, 20);
-			this.textUdpOutPort.TabIndex = 14;
-			this.textUdpOutPort.Text = "?";
+			this.groupBox2.Controls.Add(label1);
+			this.groupBox2.Controls.Add(this.textUdpInPort);
+			this.groupBox2.Location = new System.Drawing.Point(12, 132);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(121, 69);
+			this.groupBox2.TabIndex = 15;
+			this.groupBox2.TabStop = false;
+			this.groupBox2.Text = "UDP ports";
+			// 
+			// textCacheDepth
+			// 
+			this.textCacheDepth.Location = new System.Drawing.Point(266, 44);
+			this.textCacheDepth.Name = "textCacheDepth";
+			this.textCacheDepth.Size = new System.Drawing.Size(123, 20);
+			this.textCacheDepth.TabIndex = 16;
 			// 
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(114, 19);
+			this.label6.Location = new System.Drawing.Point(263, 28);
 			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(93, 13);
-			this.label6.TabIndex = 13;
-			this.label6.Text = "Outgoing (robot\'s):";
+			this.label6.Size = new System.Drawing.Size(128, 13);
+			this.label6.TabIndex = 17;
+			this.label6.Text = "Messages cache\'s depth:";
 			// 
-			// groupBox2
+			// label7
 			// 
-			this.groupBox2.Controls.Add(label1);
-			this.groupBox2.Controls.Add(this.textUdpOutPort);
-			this.groupBox2.Controls.Add(this.textUdpInPort);
-			this.groupBox2.Controls.Add(this.label6);
-			this.groupBox2.Location = new System.Drawing.Point(12, 132);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(226, 69);
-			this.groupBox2.TabIndex = 15;
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "UDP ports";
+			this.label7.AutoSize = true;
+			this.label7.Location = new System.Drawing.Point(263, 77);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(78, 13);
+			this.label7.TabIndex = 19;
+			this.label7.Text = "Tasks at once:";
+			// 
+			// textDoze
+			// 
+			this.textDoze.Location = new System.Drawing.Point(266, 93);
+			this.textDoze.Name = "textDoze";
+			this.textDoze.Size = new System.Drawing.Size(123, 20);
+			this.textDoze.TabIndex = 18;
 			// 
 			// FormOptions
 			// 
@@ -217,7 +232,11 @@ namespace ServerApp
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
-			this.ClientSize = new System.Drawing.Size(251, 262);
+			this.ClientSize = new System.Drawing.Size(401, 213);
+			this.Controls.Add(this.label7);
+			this.Controls.Add(this.textDoze);
+			this.Controls.Add(this.label6);
+			this.Controls.Add(this.textCacheDepth);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.buttonCancel);
@@ -235,6 +254,7 @@ namespace ServerApp
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -253,8 +273,10 @@ namespace ServerApp
 		private System.Windows.Forms.TextBox textDbHost;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.TextBox textUdpOutPort;
-		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.GroupBox groupBox2;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.TextBox textCacheDepth;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.TextBox textDoze;
 	}
 }
