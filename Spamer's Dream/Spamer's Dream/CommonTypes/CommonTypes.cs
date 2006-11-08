@@ -4,6 +4,8 @@ using System.Data;
 using System.Net.Mail;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using System.Collections;
+using System.ComponentModel;
 
 namespace CommonTypes
 {
@@ -78,6 +80,22 @@ namespace CommonTypes
 			this.IsHtml = IsHtml;
 		}
 
+		public Letter(int Id, string Subject, bool IsHtml)
+		{
+			this.Id = Id;
+			this.Subject = Subject;
+			this.Body = null;
+			this.IsHtml = IsHtml;
+		}
+
+		public Letter(int Id, bool IsHtml)
+		{
+			this.Id = Id;
+			this.Subject = null;
+			this.Body = null;
+			this.IsHtml = IsHtml;
+		}
+
 		/// <summary>
 		/// Warning: searches with T~O(N^2)
 		/// </summary>
@@ -91,6 +109,16 @@ namespace CommonTypes
 				if ( enumer.Current.Id == id )
 					return enumer.Current;
 			return null;
+		}
+
+		public override string ToString()
+		{
+			string asString = "Id: " + Id.ToString();
+			if ( Subject != null )
+				asString += ", \"" + Subject + "\"";
+			asString += ( IsHtml ? ", HTML" : ", text" );
+
+			return asString;
 		}
 	}
 
@@ -378,7 +406,8 @@ WHERE Id=" + Id.ToString() +
 
 			sqlQuery =
 @"UPDATE emails SET State=" + DbClient.TokenSelected(ClientID) + @"
-WHERE State IS NULL ORDER BY RAND() LIMIT " + CountLimit.ToString();
+WHERE (State IS NULL)AND(MsgID>0)
+ORDER BY RAND() LIMIT " + CountLimit.ToString();
 
 			if ( SendQuery(sqlQuery) < 1 )
 				yield break;
@@ -503,9 +532,108 @@ WHERE State=" + DbClient.TokenSelected(ClientID);
 		}
 
 
-		public IList<string> GetEmailsList()
+		public List<string> GetEmailsList()
 		{
-			MySqlDataReader sqlReader = GetQueryReader("select Name,email,MsgId from emails");
+			List<string> list = new List<string>();
+			MySqlDataReader sqlReader = GetQueryReader("select Username,email,MsgId from emails");
+			while ( sqlReader.Read() )
+			{
+				string format;
+				if ( sqlReader.IsDBNull(0) )
+					format = "{1}, with message ID: {2}";
+				else
+					format = "\"{0}\" <{1}>, with message ID: {2}";
+				string username = sqlReader.GetString(0);
+				string email = sqlReader.GetString(1);
+				int msgid = sqlReader.GetInt32(2);
+				string str = string.Format(format, username, email, msgid);
+
+				list.Add(str);
+			}
+			sqlReader.Close();
+
+			return list;
+		}
+
+		public void AddEmail(string email)
+		{
+			SendQuery(string.Format(
+@"INSERT Emails
+SET Email='{0}',MsgID=0", email));
+		}
+
+		public void AddEmail(string email, string displayName)
+		{
+			SendQuery(string.Format(
+@"INSERT Emails
+SET Email='{0}',Username='{1}',MsgID=0",
+		email, displayName));
+		}
+
+		public void AddEmail(string email, string displayName, string MsgId)
+		{
+			SendQuery(string.Format(
+@"INSERT Emails
+SET Email='{0}',Username='{1}',MsgID={2}",
+		email, displayName, MsgId));
+		}
+
+		//        public void UpdateEmailsMsgId(string email, string displayName, int MsgId)
+		//        {
+		//            SendQuery(string.Format(
+		//@"UPDATE Emails
+		//SET Email='{0}',Username='{1}',MsgID={2}
+		//SELECT ",
+		//        email, displayName, MsgId));
+		//        }
+
+		public List<Letter> GetMessagesList()
+		{
+			List<Letter> list = new List<Letter>();
+			MySqlDataReader sqlReader = GetQueryReader("select Id,Subject, IsHTML from messages");
+			while ( sqlReader.Read() )
+			{
+				int id = sqlReader.GetInt32(0);
+				string subject = sqlReader.GetString(1);
+				bool isHtml = sqlReader.GetBoolean(2);
+
+				Letter letter;
+
+				if ( sqlReader.IsDBNull(1) )
+					letter = new Letter(id, isHtml);
+				else
+					letter = new Letter(id, subject, isHtml);
+
+				list.Add(letter);
+			}
+			sqlReader.Close();
+
+			return list;
+		}
+
+		public void UpdateMessade(int id, Letter letter)
+		{
+			string strFSubject =
+				(letter.Subject !=null)&&
+				( letter.Subject != "" )?
+				"'{0}'":"NULL";
+
+			string strFBody =
+				(letter.Body !=null)&&
+				( letter.Body != "" )?
+				"'{1}'":"NULL";
+
+			string subject = string.Join("\\'",
+				letter.Subject.Split('\''));
+
+			string body = string.Join("\\'",
+				letter.Body.Split('\''));
+
+			SendQuery(string.Format(
+@"UPDATE messages
+SET Subject=" + strFSubject + ",Body=" + strFBody + @",IsHTML={2}
+WHERE Id={3}",
+			 subject, body, letter.IsHtml?1:0, id));
 
 		}
 	}

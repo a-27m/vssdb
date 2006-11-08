@@ -11,6 +11,7 @@ using MySql.Data;
 using MySql.Data.MySqlClient;
 using ServerApp.Properties;
 using CommonTypes;
+using System.IO;
 
 namespace ServerApp
 {
@@ -255,9 +256,10 @@ WHERE
 			if ( DbAvailable )
 			{
 				tabControl1_SelectedIndexChanged(sender, e);
-			//    tabControl.SelectedTab = tabControl.TabPages["tabMessages"];
-			//    PopulateMessages();
+				//    tabControl.SelectedTab = tabControl.TabPages["tabMessages"];
+				//    PopulateMessages();
 			}
+			listMessages.ValueMember = "Id";
 		}
 
 		private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -265,30 +267,6 @@ WHERE
 			FormOptions fOpts = new FormOptions();
 			fOpts.Show();
 		}
-
-		//private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-		//{
-		//    switch ( tabControl.SelectedIndex )
-		//    {
-		//    case 0: // emails
-		//        //if ( DbAvailable )
-		//        //    PopulateEmails();
-		//        break;
-		//    case 1: // messages
-		//        if ( DbAvailable )
-		//            PopulateMessages();
-		//        break;
-		//    case 2: // robots
-		//        if ( DbAvailable )
-		//            PopulateRobots();
-		//        break;
-		//    case 3: // common
-
-		//        break;
-		//    default:
-		//        break;
-		//    }
-		//}
 
 		private void StartAll_Click(object sender, EventArgs e)
 		{
@@ -302,30 +280,100 @@ WHERE
 
 		private void ClearStates_Click(object sender, EventArgs e)
 		{
-			if ( DbAvailable ){				
-			int ra = dbClient.SendQuery(
-@"UPDATE emails
+			if ( DbAvailable )
+			{
+				int ra = dbClient.SendQuery(
+	@"UPDATE emails
 SET State=NULL");
 
-			MessageBox.Show("Rows affected: " + ra,
-				"Cleanup");}
-				else
-					MessageBox.Show("Database is not connected");
+				MessageBox.Show("Rows affected: " + ra,
+					"Cleanup");
+			}
+			else
+				MessageBox.Show("Database is not connected");
 		}
 
 		private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			switch ( tabControl1.SelectedTab.Name )
-			{ 
+			{
 			case "tabEmails":
-				listBox1.DataSource = dbClient.GetEmailsList();
+				listEmails.DataSource = dbClient.GetEmailsList();
+				break;
+			case "tabMessages":
+				listMessages.DataSource = dbClient.GetMessagesList();
 				break;
 			}
 		}
 
-		private object GetEmailsDataSource()
+		private void buttonTab1Load_Click(object sender, EventArgs e)
 		{
-			throw new Exception("The method or operation is not implemented.");
+			if ( openFileDialogEmails.ShowDialog() == DialogResult.OK )
+			{
+				string fileName = openFileDialogEmails.FileName;
+				//foreach ( string fileName in openFileDialogEmails.FileNames )
+				//{
+				FileInfo fileInfo = new FileInfo(fileName);
+				StreamReader fReader = new StreamReader(fileName);
+
+				char[] delims;
+				switch ( fileInfo.Extension )
+				{
+				case "csv":
+					delims = new char[] { ';' };
+					break;
+				//case "txt":  // *.txt falls into this branch also
+				default:
+					delims = new char[] { '|' };
+					break;
+				}
+
+				int lineNo = 0;
+				while ( !fReader.EndOfStream )
+				{
+					string line = fReader.ReadLine();
+					lineNo++;
+
+					// split line into email and maybe name
+					string[] tmp = line.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+					if ( tmp.Length < 1 )
+					{
+						MessageBox.Show("Input file was in bad format at line " + lineNo.ToString(), "Bad CSV file format",
+							MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						fReader.Close();
+						return;
+					}
+					if ( tmp.Length == 1 )
+						dbClient.AddEmail(tmp[0]);
+					if ( tmp.Length == 2 )
+						dbClient.AddEmail(tmp[0], tmp[1]);
+					uint fakeVar;
+					if ( ( tmp.Length == 3 ) &&
+						( uint.TryParse(tmp[2], out fakeVar) ) )
+						dbClient.AddEmail(tmp[0], tmp[1], tmp[2]);
+				}
+				//}
+
+				tabControl1_SelectedIndexChanged(sender, e);
+			}
+		}
+
+		private void buttonTabMsgEdit_Click(object sender, EventArgs e)
+		{
+			if ( listMessages.SelectedItems.Count == 0 )
+				return;
+
+			Letter letter;
+			letter =listMessages.SelectedValue as Letter;
+			letter = dbClient.GetMessage(letter.Id);
+
+			FormLetter fLetter = new FormLetter();
+			fLetter.letter = letter;
+			if (fLetter.ShowDialog()== DialogResult.OK)
+			letter = fLetter.letter;
+			else return;
+			
+			dbClient.UpdateMessade(letter.Id, letter);
 		}
 	}
 }
