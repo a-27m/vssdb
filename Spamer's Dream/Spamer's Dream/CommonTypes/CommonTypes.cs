@@ -502,5 +502,11 @@ WHERE State=" + DbClient.TokenSelected(ClientID);
 			return "'Done by " + ClientId.ToString() + "'";
 		}
 
+
+		public IList<string> GetEmailsList()
+		{
+			MySqlDataReader sqlReader = GetQueryReader("select Name,email,MsgId from emails");
+
+		}
 	}
 }

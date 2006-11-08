@@ -252,11 +252,12 @@ WHERE
 
 		private void FormServer_Load(object sender, EventArgs e)
 		{
-			//if ( DbAvailable )
-			//{
+			if ( DbAvailable )
+			{
+				tabControl1_SelectedIndexChanged(sender, e);
 			//    tabControl.SelectedTab = tabControl.TabPages["tabMessages"];
 			//    PopulateMessages();
-			//}
+			}
 		}
 
 		private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -310,6 +311,21 @@ SET State=NULL");
 				"Cleanup");}
 				else
 					MessageBox.Show("Database is not connected");
+		}
+
+		private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			switch ( tabControl1.SelectedTab.Name )
+			{ 
+			case "tabEmails":
+				listBox1.DataSource = dbClient.GetEmailsList();
+				break;
+			}
+		}
+
+		private object GetEmailsDataSource()
+		{
+			throw new Exception("The method or operation is not implemented.");
 		}
 	}
 }
