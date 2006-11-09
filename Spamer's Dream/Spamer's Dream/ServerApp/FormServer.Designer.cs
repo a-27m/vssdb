@@ -28,6 +28,8 @@ namespace ServerApp
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
+			System.Windows.Forms.Label label1;
 			this.buttonStart = new System.Windows.Forms.Button();
 			this.buttonReset = new System.Windows.Forms.Button();
 			this.buttonOptions = new System.Windows.Forms.Button();
@@ -36,12 +38,16 @@ namespace ServerApp
 			this.tabEmails = new System.Windows.Forms.TabPage();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.listEmails = new System.Windows.Forms.ListBox();
+			this.textMsgID = new System.Windows.Forms.TextBox();
+			this.button1 = new System.Windows.Forms.Button();
 			this.buttonTab1Load = new System.Windows.Forms.Button();
-			this.openFileDialogEmails = new System.Windows.Forms.OpenFileDialog();
 			this.tabMessages = new System.Windows.Forms.TabPage();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.listMessages = new System.Windows.Forms.ListBox();
 			this.buttonTabMsgEdit = new System.Windows.Forms.Button();
+			this.openFileDialogEmails = new System.Windows.Forms.OpenFileDialog();
+			this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+			label1 = new System.Windows.Forms.Label();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -54,7 +60,17 @@ namespace ServerApp
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
+			( (System.ComponentModel.ISupportInitialize)( this.errorProvider ) ).BeginInit();
 			this.SuspendLayout();
+			// 
+			// label1
+			// 
+			label1.AutoSize = true;
+			label1.Location = new System.Drawing.Point(7, 75);
+			label1.Name = "label1";
+			label1.Size = new System.Drawing.Size(67, 13);
+			label1.TabIndex = 2;
+			label1.Text = "Message ID:";
 			// 
 			// buttonStart
 			// 
@@ -104,7 +120,7 @@ namespace ServerApp
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-			this.splitContainer1.Size = new System.Drawing.Size(339, 407);
+			this.splitContainer1.Size = new System.Drawing.Size(418, 444);
 			this.splitContainer1.SplitterDistance = 51;
 			this.splitContainer1.TabIndex = 14;
 			// 
@@ -116,7 +132,7 @@ namespace ServerApp
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(339, 352);
+			this.tabControl1.Size = new System.Drawing.Size(418, 389);
 			this.tabControl1.TabIndex = 0;
 			this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
 			// 
@@ -126,7 +142,7 @@ namespace ServerApp
 			this.tabEmails.Location = new System.Drawing.Point(4, 22);
 			this.tabEmails.Name = "tabEmails";
 			this.tabEmails.Padding = new System.Windows.Forms.Padding(3);
-			this.tabEmails.Size = new System.Drawing.Size(331, 326);
+			this.tabEmails.Size = new System.Drawing.Size(410, 363);
 			this.tabEmails.TabIndex = 0;
 			this.tabEmails.Text = "E-mails";
 			this.tabEmails.UseVisualStyleBackColor = true;
@@ -134,6 +150,7 @@ namespace ServerApp
 			// splitContainer2
 			// 
 			this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
 			this.splitContainer2.Location = new System.Drawing.Point(3, 3);
 			this.splitContainer2.Name = "splitContainer2";
 			// 
@@ -143,9 +160,12 @@ namespace ServerApp
 			// 
 			// splitContainer2.Panel2
 			// 
+			this.splitContainer2.Panel2.Controls.Add(this.textMsgID);
+			this.splitContainer2.Panel2.Controls.Add(label1);
+			this.splitContainer2.Panel2.Controls.Add(this.button1);
 			this.splitContainer2.Panel2.Controls.Add(this.buttonTab1Load);
-			this.splitContainer2.Size = new System.Drawing.Size(325, 320);
-			this.splitContainer2.SplitterDistance = 240;
+			this.splitContainer2.Size = new System.Drawing.Size(404, 357);
+			this.splitContainer2.SplitterDistance = 305;
 			this.splitContainer2.TabIndex = 2;
 			// 
 			// listEmails
@@ -155,19 +175,89 @@ namespace ServerApp
 			this.listEmails.IntegralHeight = false;
 			this.listEmails.Location = new System.Drawing.Point(0, 0);
 			this.listEmails.Name = "listEmails";
-			this.listEmails.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-			this.listEmails.Size = new System.Drawing.Size(240, 320);
+			this.listEmails.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+			this.listEmails.Size = new System.Drawing.Size(305, 357);
 			this.listEmails.TabIndex = 1;
+			this.listEmails.SelectedIndexChanged += new System.EventHandler(this.listEmails_SelectedIndexChanged);
+			// 
+			// textMsgID
+			// 
+			this.errorProvider.SetIconAlignment(this.textMsgID, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
+			this.textMsgID.Location = new System.Drawing.Point(25, 91);
+			this.textMsgID.Name = "textMsgID";
+			this.textMsgID.Size = new System.Drawing.Size(60, 20);
+			this.textMsgID.TabIndex = 3;
+			this.textMsgID.TextChanged += new System.EventHandler(this.textMsgID_TextChanged);
+			// 
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(10, 117);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(75, 23);
+			this.button1.TabIndex = 1;
+			this.button1.Text = "Set ID";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
 			// 
 			// buttonTab1Load
 			// 
-			this.buttonTab1Load.Location = new System.Drawing.Point(3, 3);
+			this.buttonTab1Load.Location = new System.Drawing.Point(10, 17);
 			this.buttonTab1Load.Name = "buttonTab1Load";
 			this.buttonTab1Load.Size = new System.Drawing.Size(75, 23);
 			this.buttonTab1Load.TabIndex = 0;
 			this.buttonTab1Load.Text = "Load…";
 			this.buttonTab1Load.UseVisualStyleBackColor = true;
 			this.buttonTab1Load.Click += new System.EventHandler(this.buttonTab1Load_Click);
+			// 
+			// tabMessages
+			// 
+			this.tabMessages.Controls.Add(this.splitContainer3);
+			this.tabMessages.Location = new System.Drawing.Point(4, 22);
+			this.tabMessages.Name = "tabMessages";
+			this.tabMessages.Padding = new System.Windows.Forms.Padding(3);
+			this.tabMessages.Size = new System.Drawing.Size(410, 363);
+			this.tabMessages.TabIndex = 1;
+			this.tabMessages.Text = "Messages";
+			this.tabMessages.UseVisualStyleBackColor = true;
+			// 
+			// splitContainer3
+			// 
+			this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+			this.splitContainer3.IsSplitterFixed = true;
+			this.splitContainer3.Location = new System.Drawing.Point(3, 3);
+			this.splitContainer3.Name = "splitContainer3";
+			// 
+			// splitContainer3.Panel1
+			// 
+			this.splitContainer3.Panel1.Controls.Add(this.listMessages);
+			// 
+			// splitContainer3.Panel2
+			// 
+			this.splitContainer3.Panel2.Controls.Add(this.buttonTabMsgEdit);
+			this.splitContainer3.Size = new System.Drawing.Size(404, 357);
+			this.splitContainer3.SplitterDistance = 305;
+			this.splitContainer3.TabIndex = 3;
+			// 
+			// listMessages
+			// 
+			this.listMessages.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.listMessages.FormattingEnabled = true;
+			this.listMessages.IntegralHeight = false;
+			this.listMessages.Location = new System.Drawing.Point(0, 0);
+			this.listMessages.Name = "listMessages";
+			this.listMessages.Size = new System.Drawing.Size(305, 357);
+			this.listMessages.TabIndex = 1;
+			// 
+			// buttonTabMsgEdit
+			// 
+			this.buttonTabMsgEdit.Location = new System.Drawing.Point(10, 17);
+			this.buttonTabMsgEdit.Name = "buttonTabMsgEdit";
+			this.buttonTabMsgEdit.Size = new System.Drawing.Size(75, 23);
+			this.buttonTabMsgEdit.TabIndex = 0;
+			this.buttonTabMsgEdit.Text = "Edit…";
+			this.buttonTabMsgEdit.UseVisualStyleBackColor = true;
+			this.buttonTabMsgEdit.Click += new System.EventHandler(this.buttonTabMsgEdit_Click);
 			// 
 			// openFileDialogEmails
 			// 
@@ -178,62 +268,20 @@ namespace ServerApp
 			this.openFileDialogEmails.SupportMultiDottedExtensions = true;
 			this.openFileDialogEmails.Title = "Select files containing e-mails list";
 			// 
-			// tabMessages
+			// errorProvider
 			// 
-			this.tabMessages.Controls.Add(this.splitContainer3);
-			this.tabMessages.Location = new System.Drawing.Point(4, 22);
-			this.tabMessages.Name = "tabMessages";
-			this.tabMessages.Padding = new System.Windows.Forms.Padding(3);
-			this.tabMessages.Size = new System.Drawing.Size(331, 326);
-			this.tabMessages.TabIndex = 1;
-			this.tabMessages.Text = "Messages";
-			this.tabMessages.UseVisualStyleBackColor = true;
-			// 
-			// splitContainer3
-			// 
-			this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer3.Location = new System.Drawing.Point(3, 3);
-			this.splitContainer3.Name = "splitContainer3";
-			// 
-			// splitContainer3.Panel1
-			// 
-			this.splitContainer3.Panel1.Controls.Add(this.listMessages);
-			// 
-			// 
-			// 
-			this.splitContainer3.Panel2.Controls.Add(this.buttonTabMsgEdit);
-			this.splitContainer3.Size = new System.Drawing.Size(325, 320);
-			this.splitContainer3.SplitterDistance = 240;
-			this.splitContainer3.TabIndex = 3;
-			// 
-			// listMessages
-			// 
-			this.listMessages.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.listMessages.FormattingEnabled = true;
-			this.listMessages.IntegralHeight = false;
-			this.listMessages.Location = new System.Drawing.Point(0, 0);
-			this.listMessages.Name = "listMessages";
-			this.listMessages.Size = new System.Drawing.Size(240, 320);
-			this.listMessages.TabIndex = 1;
-			// 
-			// buttonTabMsgEdit
-			// 
-			this.buttonTabMsgEdit.Location = new System.Drawing.Point(3, 3);
-			this.buttonTabMsgEdit.Name = "buttonTabMsgEdit";
-			this.buttonTabMsgEdit.Size = new System.Drawing.Size(75, 23);
-			this.buttonTabMsgEdit.TabIndex = 0;
-			this.buttonTabMsgEdit.Text = "Edit…";
-			this.buttonTabMsgEdit.UseVisualStyleBackColor = true;
-			this.buttonTabMsgEdit.Click += new System.EventHandler(this.buttonTabMsgEdit_Click);
+			this.errorProvider.BlinkRate = 120;
+			this.errorProvider.ContainerControl = this.splitContainer3;
 			// 
 			// FormServer
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(339, 407);
+			this.ClientSize = new System.Drawing.Size(418, 444);
 			this.Controls.Add(this.splitContainer1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.MaximizeBox = false;
+			this.MinimumSize = new System.Drawing.Size(308, 83);
 			this.Name = "FormServer";
 			this.Text = "Server";
 			this.Load += new System.EventHandler(this.FormServer_Load);
@@ -244,11 +292,13 @@ namespace ServerApp
 			this.tabEmails.ResumeLayout(false);
 			this.splitContainer2.Panel1.ResumeLayout(false);
 			this.splitContainer2.Panel2.ResumeLayout(false);
+			this.splitContainer2.Panel2.PerformLayout();
 			this.splitContainer2.ResumeLayout(false);
 			this.tabMessages.ResumeLayout(false);
 			this.splitContainer3.Panel1.ResumeLayout(false);
 			this.splitContainer3.Panel2.ResumeLayout(false);
 			this.splitContainer3.ResumeLayout(false);
+			( (System.ComponentModel.ISupportInitialize)( this.errorProvider ) ).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -269,6 +319,9 @@ namespace ServerApp
 		private System.Windows.Forms.SplitContainer splitContainer3;
 		private System.Windows.Forms.ListBox listMessages;
 		private System.Windows.Forms.Button buttonTabMsgEdit;
+		private System.Windows.Forms.TextBox textMsgID;
+		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.ErrorProvider errorProvider;
 
 	}
 }

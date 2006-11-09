@@ -39,8 +39,7 @@ WHERE
 		bool DbAvailable = false;
 		Settings sets = new Settings();
 
-		//List<Robot> listRobot = null;
-		//List<Letter> listLetter = null;
+		bool textMsgIDChanged = false;
 
 		public FormServer()
 		{
@@ -76,54 +75,6 @@ WHERE
 			}
 			else { DbAvailable = true; }
 		}
-
-		//private void PopulateMessages()
-		//{
-		//    MySqlDataReader sqlReader =
-		//        dbClient.GetQueryReader(selectMessagesQuery);
-
-		//    listLetter = new List<Letter>();
-		//    while ( sqlReader.Read() )
-		//    {
-		//        int Id = sqlReader.GetInt32(0);
-		//        string Subject = sqlReader.GetString(1);
-		//        string Body = sqlReader.GetString(2);
-		//        bool IsHtml = sqlReader.GetBoolean(3);
-		//        listLetter.Add(new Letter(Id, Subject, Body, IsHtml));
-		//    }
-
-		//    sqlReader.Close();
-		//    FillListMessages();
-		//}
-
-		//private void PopulateRobots()
-		//{
-		//    MySqlDataReader sqlReader =
-		//        dbClient.GetQueryReader(selectRobotsQuery);
-
-		//    Robot robot = new Robot();
-		//    listRobot = new List<Robot>();
-		//    while ( sqlReader.Read() )
-		//    {
-		//        // IP, HumanName, SmtpID
-		//        robot.IP = sqlReader.GetString(0);
-		//        robot.Name = sqlReader.GetString(1);
-		//        robot.SmtpId = sqlReader.GetInt32(2);
-		//        listRobot.Add(robot);
-		//    }
-
-		//    sqlReader.Close();
-
-		//    for ( int i = 0; i < listRobot.Count; i++ )
-		//    {
-		//        Robot tmpRobot = listRobot[i];
-		//        tmpRobot.SmtpServer =
-		//            dbClient.GetSmtpServerById(tmpRobot.SmtpId);
-		//        listRobot[i] = tmpRobot;
-		//    }
-
-		//    FillListRobots();
-		//}
 
 		#region UDP Interface
 
@@ -207,58 +158,12 @@ WHERE
 			}
 		}
 
-		//private void FillListMessages()
-		//{
-		//    listBoxMessages.Items.Clear();
-		//    foreach ( Letter letter in listLetter )
-		//    {
-		//        string item = "";
-		//        item += "#" + letter.Id.ToString()
-		//            + " ";
-		//        item += letter.Subject == null ? "<no subject>" :
-		//            "'" + letter.Subject + "'";
-		//        item += ", as ";
-		//        item += letter.IsHtml ? "HTML" : "text";
-
-		//        listBoxMessages.Items.Add(item);
-		//    }
-		//}
-
-		//private void FillListRobots()
-		//{
-		//    listBoxRobots.Items.Clear();
-
-		//    if ( listRobot == null )
-		//    {
-		//        listBoxRobots.Items.Add("<no robots in database>");
-		//        return;
-		//    }
-
-		//    foreach ( Robot robot in listRobot )
-		//    {
-		//        string item = "";
-		//        item += robot.IP + " \"";
-		//        item += robot.Name + "\"; SMTP: ";
-		//        item += robot.SmtpServer.Host + ":";
-		//        item += robot.SmtpServer.Port.ToString() + ", ";
-		//        item += robot.SmtpServer.Username + ":";
-		//        item += robot.SmtpServer.Password + ", ";
-		//        item += robot.SmtpServer.UseSSL ? "using SSL" : "not using SSL";
-
-		//        listBoxRobots.Items.Add(item);
-		//    }
-		//}
-
 		#region Events handlers
 
 		private void FormServer_Load(object sender, EventArgs e)
 		{
 			if ( DbAvailable )
-			{
 				tabControl1_SelectedIndexChanged(sender, e);
-				//    tabControl.SelectedTab = tabControl.TabPages["tabMessages"];
-				//    PopulateMessages();
-			}
 			listMessages.ValueMember = "Id";
 		}
 
@@ -295,14 +200,23 @@ SET State=NULL");
 
 		private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			switch ( tabControl1.SelectedTab.Name )
+			if ( DbAvailable )
 			{
-			case "tabEmails":
-				listEmails.DataSource = dbClient.GetEmailsList();
-				break;
-			case "tabMessages":
-				listMessages.DataSource = dbClient.GetMessagesList();
-				break;
+				switch ( tabControl1.SelectedTab.Name )
+				{
+				case "tabEmails":
+					listEmails.DataSource = dbClient.GetEmailsList();
+					break;
+				case "tabMessages":
+					listMessages.DataSource = dbClient.GetMessagesList();
+					break;
+				}
+			}
+			else
+			{
+				foreach ( Control ctrl in tabControl1.SelectedTab.Controls )
+					ctrl.Enabled = false;
+				MessageBox.Show("Database is not connected");
 			}
 		}
 
@@ -364,16 +278,91 @@ SET State=NULL");
 				return;
 
 			Letter letter;
-			letter =listMessages.SelectedValue as Letter;
-			letter = dbClient.GetMessage(letter.Id);
+			letter = listMessages.SelectedValue as Letter;
+			letter = dbClient.GetMessageById(letter.Id);
 
 			FormLetter fLetter = new FormLetter();
 			fLetter.letter = letter;
-			if (fLetter.ShowDialog()== DialogResult.OK)
-			letter = fLetter.letter;
-			else return;
-			
-			dbClient.UpdateMessade(letter.Id, letter);
+			if ( fLetter.ShowDialog() == DialogResult.OK )
+				letter = fLetter.letter;
+			else
+				return;
+
+			dbClient.UpdateMessage(letter.Id, letter);
+		}
+
+		private void listEmails_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if ( listEmails.SelectedItems.Count < 1 ) {
+				textMsgID.Clear();
+				return;
+			}
+			// check whether msgids differs for selection
+			SimpleMailTask prevTask = listEmails.SelectedItems[0] as SimpleMailTask;
+
+			bool MsgIdVaries = false;
+
+			foreach ( Object selItem in listEmails.SelectedItems )
+			{
+				SimpleMailTask task = selItem as SimpleMailTask;
+				if ( task.MessageID != prevTask.MessageID )
+				{
+					MsgIdVaries = true;
+					break;
+				}
+				prevTask = task;
+			}
+
+			if ( !MsgIdVaries )
+			{
+				SimpleMailTask task = listEmails.SelectedValue as SimpleMailTask;
+				textMsgID.Text = task.MessageID.ToString();
+			}
+			else
+			{
+				textMsgID.Clear();
+			}
+
+			textMsgIDChanged = false;
+		}
+
+		private void textMsgID_TextChanged(object sender, EventArgs e)
+		{
+			textMsgIDChanged = true;
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			if ( !textMsgIDChanged )
+				return;
+
+			int newId = 0;
+			errorProvider.Clear();
+			errorProvider.SetIconAlignment(textMsgID, ErrorIconAlignment.MiddleLeft);
+			try { newId = int.Parse(textMsgID.Text); }
+			catch ( FormatException )
+			{
+				errorProvider.SetError(textMsgID, "Wrong message id, please enter integer number.");
+				return;
+			}
+
+			foreach ( object selItem in listEmails.SelectedItems )
+			{
+				SimpleMailTask task = selItem as SimpleMailTask;
+				task.MessageID = newId;
+				dbClient.UpdateTask(task.TaskId, task);
+			}
+
+			int[] currentSelection = new int[listEmails.SelectedIndices.Count];
+			listEmails.SelectedIndices.CopyTo(currentSelection, 0);
+
+			tabControl1_SelectedIndexChanged(sender, e);
+
+			listEmails.SelectedIndexChanged -= listEmails_SelectedIndexChanged;
+			listEmails.ClearSelected();
+			foreach(int selIndex in currentSelection)
+				listEmails.SetSelected(selIndex, true);
+			listEmails.SelectedIndexChanged += listEmails_SelectedIndexChanged;
 		}
 	}
 }

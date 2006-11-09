@@ -159,7 +159,7 @@ namespace CommonTypes
 		}
 	}
 
-	public struct SimpleMailTask
+	public class SimpleMailTask
 	{
 		public int TaskId;
 		public MailAddress Address;
@@ -185,12 +185,25 @@ namespace CommonTypes
 			this.Address = new MailAddress(Address);
 			this.MessageID = MessageID;
 		}
+
+		public override string ToString()
+		{
+			string asString = "";
+			if ( ( Address.DisplayName == null ) ||
+				( Address.DisplayName == "" ) )
+				asString = Address.Address.ToString();
+			else
+				asString = string.Format("\"{0}\" <{1}>",
+					Address.DisplayName, Address.Address);
+
+			asString += ", with message ID: " + MessageID.ToString();
+
+			return asString;
+		}
 	}
 
 	public class DbClient
 	{
-		#region Ñ î é ä å ò
-
 		#region const strings
 
 		public const string selectSmtpByIdQuery =
@@ -232,7 +245,6 @@ WHERE (IP <> '0.0.0.0') AND (IP <> '255.255.255.255')";
 					sqlConnection.Close();
 			}
 		}
-
 		public void OpenConnection()
 		{
 			if ( sqlConnection != null )
@@ -247,11 +259,51 @@ WHERE (IP <> '0.0.0.0') AND (IP <> '255.255.255.255')";
 			sqlConnection = new MySqlConnection(connectionStr);
 			sqlConnection.Open();
 		}
-
-		public void CloseConnection()
+	public void CloseConnection()
 		{
 			if ( sqlConnection != null )
 				sqlConnection.Close();
+		}
+
+		public MySqlDataReader GetQueryReader(string Query)
+		{
+			if ( !IsConnectionOpened )
+				throw new Exception("Connection must to be opened first");
+
+			MySqlDataReader sqlReader = null;
+			MySqlCommand sqlCmd =
+			new MySqlCommand(Query, sqlConnection);
+
+			try { sqlReader = sqlCmd.ExecuteReader(); }
+
+			catch ( MySqlException ex )
+			{
+				MessageBox.Show("Failed read query answer: " +
+					Environment.NewLine + ex.Message);
+				throw;
+			}
+			return sqlReader;
+		}
+		public int SendQuery(string Query)
+		{
+			if ( !IsConnectionOpened )
+				throw new Exception("Connection must to be opened first");
+
+			MySqlCommand sqlCmd =
+				new MySqlCommand(Query, sqlConnection);
+
+			int LinesAffected = -1;
+			try { LinesAffected = sqlCmd.ExecuteNonQuery(); }
+
+			catch ( MySqlException ex )
+			{
+				MessageBox.Show(
+					String.Format("Query '{0}' failed:{1}{2}",
+					Query,
+					Environment.NewLine + Environment.NewLine,
+					ex.Message));
+			}
+			return LinesAffected;
 		}
 
 		public AuthServerInfo GetAnySmtp()
@@ -279,37 +331,6 @@ LIMIT 1;");
 			throw new Exception("Failed to aquire SMTP server parameters from database");
 
 		}
-
-		public MailAddress RobotAddrById(int Id)
-		{
-			string name, email;
-			MailAddress mailAddr = null;
-
-			MySqlDataReader sqlReader = GetQueryReader(
-@"SELECT Email,Name
-FROM robots
-WHERE Id=" + Id.ToString() + " LIMIT 1;");
-
-			if ( sqlReader != null )
-				if ( sqlReader.Read() )
-				{
-					email = sqlReader.GetString(0);
-
-					if ( !sqlReader.IsDBNull(1) )
-					{
-						name = sqlReader.GetString(1);
-						mailAddr = new MailAddress(email, name);
-					}
-					else
-						mailAddr = new MailAddress(email);
-					sqlReader.Close();
-					return mailAddr;
-				}
-
-			throw new Exception("Robot with ID " + Id.ToString() +
-				" is unknown in database " + DbName);
-		}
-
 		public Robot RobotById(int Id)
 		{
 			string name, email;
@@ -349,8 +370,55 @@ WHERE Id=" + Id.ToString() + " LIMIT 1;");
 			throw new Exception("Robot with ID " + Id.ToString() +
 				" is unknown in database " + DbName);
 		}
+		public MailAddress RobotAddrById(int Id)
+		{
+			string name, email;
+			MailAddress mailAddr = null;
 
-		public Letter GetMessage(int Id)
+			MySqlDataReader sqlReader = GetQueryReader(
+@"SELECT Email,Name
+FROM robots
+WHERE Id=" + Id.ToString() + " LIMIT 1;");
+
+			if ( sqlReader != null )
+				if ( sqlReader.Read() )
+				{
+					email = sqlReader.GetString(0);
+
+					if ( !sqlReader.IsDBNull(1) )
+					{
+						name = sqlReader.GetString(1);
+						mailAddr = new MailAddress(email, name);
+					}
+					else
+						mailAddr = new MailAddress(email);
+					sqlReader.Close();
+					return mailAddr;
+				}
+
+			throw new Exception("Robot with ID " + Id.ToString() +
+				" is unknown in database " + DbName);
+		}
+		public AuthServerInfo GetSmtpServerById(int id)
+		{
+			MySqlDataReader sqlReader = GetQueryReader(selectSmtpByIdQuery + id.ToString());
+			if ( sqlReader != null )
+				if ( sqlReader.Read() )
+				{
+					AuthServerInfo servInf = new AuthServerInfo();
+					servInf.Host = sqlReader.GetString(0);// Host
+					servInf.Port = sqlReader.GetInt32(1);// Port
+					servInf.Username = sqlReader.GetString(2);// login
+					servInf.Password = sqlReader.GetString(3);// Password
+					servInf.UseSSL = sqlReader.GetBoolean(4); // UseSSL
+
+					sqlReader.Close();
+					return servInf;
+				}
+
+			throw new Exception("Smtp server data with id " + id.ToString() + " cannot be found");
+		}
+		public Letter GetMessageById(int Id)
 		{
 			string sqlGetMessageById =
 @"SELECT Id, Subject, Body, IsHtml
@@ -374,28 +442,6 @@ WHERE Id=" + Id.ToString() +
 
 			throw new Exception("Letter not found");
 		}
-
-		public AuthServerInfo GetSmtpServerById(int id)
-		{
-			MySqlDataReader sqlReader = GetQueryReader(selectSmtpByIdQuery + id.ToString());
-			if ( sqlReader != null )
-				if ( sqlReader.Read() )
-				{
-					AuthServerInfo servInf = new AuthServerInfo();
-					servInf.Host = sqlReader.GetString(0);// Host
-					servInf.Port = sqlReader.GetInt32(1);// Port
-					servInf.Username = sqlReader.GetString(2);// login
-					servInf.Password = sqlReader.GetString(3);// Password
-					servInf.UseSSL = sqlReader.GetBoolean(4); // UseSSL
-
-					sqlReader.Close();
-					return servInf;
-				}
-
-			throw new Exception("Smtp server data with id " + id.ToString() + " cannot be found");
-		}
-
-		#endregion
 
 		public IEnumerable<SimpleMailTask> GetTasks(int CountLimit, int ClientID)
 		{
@@ -451,48 +497,6 @@ WHERE State=" + DbClient.TokenSelected(ClientID);
 			yield break;
 		}
 
-		public MySqlDataReader GetQueryReader(string Query)
-		{
-			if ( !IsConnectionOpened )
-				throw new Exception("Connection must to be opened first");
-
-			MySqlDataReader sqlReader = null;
-			MySqlCommand sqlCmd =
-			new MySqlCommand(Query, sqlConnection);
-
-			try { sqlReader = sqlCmd.ExecuteReader(); }
-
-			catch ( MySqlException ex )
-			{
-				MessageBox.Show("Failed read query answer: " +
-					Environment.NewLine + ex.Message);
-				throw;
-			}
-			return sqlReader;
-		}
-
-		public int SendQuery(string Query)
-		{
-			if ( !IsConnectionOpened )
-				throw new Exception("Connection must to be opened first");
-
-			MySqlCommand sqlCmd =
-				new MySqlCommand(Query, sqlConnection);
-
-			int LinesAffected = -1;
-			try { LinesAffected = sqlCmd.ExecuteNonQuery(); }
-
-			catch ( MySqlException ex )
-			{
-				MessageBox.Show(
-					String.Format("Query '{0}' failed:{1}{2}",
-					Query,
-					Environment.NewLine + Environment.NewLine,
-					ex.Message));
-			}
-			return LinesAffected;
-		}
-
 		public IEnumerable<Robot> GetRobotsHosts()
 		{
 			if ( !IsConnectionOpened )
@@ -518,74 +522,57 @@ WHERE State=" + DbClient.TokenSelected(ClientID);
 		{
 			return "'Taken by " + ClientId.ToString() + "'";
 		}
-
 		/// <returns>single-QUOTED token</returns>
 		private static string TokenSelected(int ClientId)
 		{
 			return "'Selected by " + ClientId.ToString() + "'";
 		}
-
 		/// <returns>single-QUOTED token</returns>
 		public static string TokenDone(int ClientId)
 		{
 			return "'Done by " + ClientId.ToString() + "'";
 		}
 
-
-		public List<string> GetEmailsList()
+		public List<SimpleMailTask> GetEmailsList()
 		{
-			List<string> list = new List<string>();
-			MySqlDataReader sqlReader = GetQueryReader("select Username,email,MsgId from emails");
+			List<SimpleMailTask> list = new List<SimpleMailTask>();
+			MySqlDataReader sqlReader = GetQueryReader("select Id,Username,email,MsgId from emails");
 			while ( sqlReader.Read() )
 			{
-				string format;
-				if ( sqlReader.IsDBNull(0) )
-					format = "{1}, with message ID: {2}";
-				else
-					format = "\"{0}\" <{1}>, with message ID: {2}";
-				string username = sqlReader.GetString(0);
-				string email = sqlReader.GetString(1);
-				int msgid = sqlReader.GetInt32(2);
-				string str = string.Format(format, username, email, msgid);
+				SimpleMailTask task;
 
-				list.Add(str);
+				int id = sqlReader.GetInt32(0);
+				string username = sqlReader.GetString(1);
+				string email = sqlReader.GetString(2);
+				int msgid = sqlReader.GetInt32(3);
+
+				if ( sqlReader.IsDBNull(1) )
+					task = new SimpleMailTask(id, email, msgid);
+				else
+					task = new SimpleMailTask(id, email, username, msgid);
+
+				list.Add(task);
 			}
 			sqlReader.Close();
 
 			return list;
 		}
-
-		public void AddEmail(string email)
+		public void UpdateTask(int id, SimpleMailTask task)
 		{
-			SendQuery(string.Format(
-@"INSERT Emails
-SET Email='{0}',MsgID=0", email));
-		}
+			string strFUsername=
+			    ( task.Address.DisplayName!= null ) &&
+				( task.Address.DisplayName != "" ) ?
+			    "'{0}'" : "NULL";
 
-		public void AddEmail(string email, string displayName)
-		{
-			SendQuery(string.Format(
-@"INSERT Emails
-SET Email='{0}',Username='{1}',MsgID=0",
-		email, displayName));
-		}
+			string username = string.Join("\\'",
+			    task.Address.DisplayName.Split('\''));
 
-		public void AddEmail(string email, string displayName, string MsgId)
-		{
 			SendQuery(string.Format(
-@"INSERT Emails
-SET Email='{0}',Username='{1}',MsgID={2}",
-		email, displayName, MsgId));
+@"UPDATE emails
+SET Username=" + strFUsername + @",Email='{1}',MsgID={2}
+WHERE Id={3}",
+			 username, task.Address.Address, task.MessageID, id));
 		}
-
-		//        public void UpdateEmailsMsgId(string email, string displayName, int MsgId)
-		//        {
-		//            SendQuery(string.Format(
-		//@"UPDATE Emails
-		//SET Email='{0}',Username='{1}',MsgID={2}
-		//SELECT ",
-		//        email, displayName, MsgId));
-		//        }
 
 		public List<Letter> GetMessagesList()
 		{
@@ -610,18 +597,17 @@ SET Email='{0}',Username='{1}',MsgID={2}",
 
 			return list;
 		}
-
-		public void UpdateMessade(int id, Letter letter)
+		public void UpdateMessage(int id, Letter letter)
 		{
 			string strFSubject =
-				(letter.Subject !=null)&&
-				( letter.Subject != "" )?
-				"'{0}'":"NULL";
+				( letter.Subject != null ) &&
+				( letter.Subject != "" ) ?
+				"'{0}'" : "NULL";
 
 			string strFBody =
-				(letter.Body !=null)&&
-				( letter.Body != "" )?
-				"'{1}'":"NULL";
+				( letter.Body != null ) &&
+				( letter.Body != "" ) ?
+				"'{1}'" : "NULL";
 
 			string subject = string.Join("\\'",
 				letter.Subject.Split('\''));
@@ -633,8 +619,29 @@ SET Email='{0}',Username='{1}',MsgID={2}",
 @"UPDATE messages
 SET Subject=" + strFSubject + ",Body=" + strFBody + @",IsHTML={2}
 WHERE Id={3}",
-			 subject, body, letter.IsHtml?1:0, id));
+			 subject, body, letter.IsHtml ? 1 : 0, id));
 
+		}
+
+		public void AddEmail(string email)
+		{
+			SendQuery(string.Format(
+@"INSERT Emails
+SET Email='{0}',MsgID=0", email));
+		}
+		public void AddEmail(string email, string displayName)
+		{
+			SendQuery(string.Format(
+@"INSERT Emails
+SET Email='{0}',Username='{1}',MsgID=0",
+		email, displayName));
+		}
+		public void AddEmail(string email, string displayName, string MsgId)
+		{
+			SendQuery(string.Format(
+@"INSERT Emails
+SET Email='{0}',Username='{1}',MsgID={2}",
+		email, displayName, MsgId));
 		}
 	}
 }
