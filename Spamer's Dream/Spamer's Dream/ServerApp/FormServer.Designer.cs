@@ -47,6 +47,7 @@ namespace ServerApp
 			this.buttonTabMsgEdit = new System.Windows.Forms.Button();
 			this.openFileDialogEmails = new System.Windows.Forms.OpenFileDialog();
 			this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+			this.buttonStop = new System.Windows.Forms.Button();
 			label1 = new System.Windows.Forms.Label();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -80,11 +81,11 @@ namespace ServerApp
 			this.buttonStart.TabIndex = 11;
 			this.buttonStart.Text = "Start all";
 			this.buttonStart.UseVisualStyleBackColor = true;
-			this.buttonStart.Click += new System.EventHandler(this.StartAll_Click);
+			this.buttonStart.Click += new System.EventHandler(this.buttonStartAll_Click);
 			// 
 			// buttonReset
 			// 
-			this.buttonReset.Location = new System.Drawing.Point(94, 16);
+			this.buttonReset.Location = new System.Drawing.Point(197, 16);
 			this.buttonReset.Name = "buttonReset";
 			this.buttonReset.Size = new System.Drawing.Size(115, 23);
 			this.buttonReset.TabIndex = 12;
@@ -94,7 +95,7 @@ namespace ServerApp
 			// 
 			// buttonOptions
 			// 
-			this.buttonOptions.Location = new System.Drawing.Point(215, 16);
+			this.buttonOptions.Location = new System.Drawing.Point(318, 16);
 			this.buttonOptions.Name = "buttonOptions";
 			this.buttonOptions.Size = new System.Drawing.Size(75, 23);
 			this.buttonOptions.TabIndex = 13;
@@ -113,6 +114,7 @@ namespace ServerApp
 			// 
 			// splitContainer1.Panel1
 			// 
+			this.splitContainer1.Panel1.Controls.Add(this.buttonStop);
 			this.splitContainer1.Panel1.Controls.Add(this.buttonStart);
 			this.splitContainer1.Panel1.Controls.Add(this.buttonOptions);
 			this.splitContainer1.Panel1.Controls.Add(this.buttonReset);
@@ -178,7 +180,7 @@ namespace ServerApp
 			this.listEmails.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
 			this.listEmails.Size = new System.Drawing.Size(305, 357);
 			this.listEmails.TabIndex = 1;
-			this.listEmails.SelectedIndexChanged += new System.EventHandler(this.listEmails_SelectedIndexChanged);
+			this.listEmails.SelectedIndexChanged += new System.EventHandler(this.tabEmails_listEmails_SelectedIndexChanged);
 			// 
 			// textMsgID
 			// 
@@ -187,7 +189,7 @@ namespace ServerApp
 			this.textMsgID.Name = "textMsgID";
 			this.textMsgID.Size = new System.Drawing.Size(60, 20);
 			this.textMsgID.TabIndex = 3;
-			this.textMsgID.TextChanged += new System.EventHandler(this.textMsgID_TextChanged);
+			this.textMsgID.TextChanged += new System.EventHandler(this.tabEmails_textMsgID_TextChanged);
 			// 
 			// button1
 			// 
@@ -197,7 +199,7 @@ namespace ServerApp
 			this.button1.TabIndex = 1;
 			this.button1.Text = "Set ID";
 			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
+			this.button1.Click += new System.EventHandler(this.tabEmails_buttonSet_Click);
 			// 
 			// buttonTab1Load
 			// 
@@ -207,7 +209,7 @@ namespace ServerApp
 			this.buttonTab1Load.TabIndex = 0;
 			this.buttonTab1Load.Text = "Load…";
 			this.buttonTab1Load.UseVisualStyleBackColor = true;
-			this.buttonTab1Load.Click += new System.EventHandler(this.buttonTab1Load_Click);
+			this.buttonTab1Load.Click += new System.EventHandler(this.tabEmails_buttonLoad_Click);
 			// 
 			// tabMessages
 			// 
@@ -257,7 +259,7 @@ namespace ServerApp
 			this.buttonTabMsgEdit.TabIndex = 0;
 			this.buttonTabMsgEdit.Text = "Edit…";
 			this.buttonTabMsgEdit.UseVisualStyleBackColor = true;
-			this.buttonTabMsgEdit.Click += new System.EventHandler(this.buttonTabMsgEdit_Click);
+			this.buttonTabMsgEdit.Click += new System.EventHandler(this.tabMsg_buttonEdit_Click);
 			// 
 			// openFileDialogEmails
 			// 
@@ -272,6 +274,16 @@ namespace ServerApp
 			// 
 			this.errorProvider.BlinkRate = 120;
 			this.errorProvider.ContainerControl = this.splitContainer3;
+			// 
+			// buttonStop
+			// 
+			this.buttonStop.Location = new System.Drawing.Point(94, 16);
+			this.buttonStop.Name = "buttonStop";
+			this.buttonStop.Size = new System.Drawing.Size(75, 23);
+			this.buttonStop.TabIndex = 14;
+			this.buttonStop.Text = "Stop all";
+			this.buttonStop.UseVisualStyleBackColor = true;
+			this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
 			// 
 			// FormServer
 			// 
@@ -322,6 +334,7 @@ namespace ServerApp
 		private System.Windows.Forms.TextBox textMsgID;
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.ErrorProvider errorProvider;
+		private System.Windows.Forms.Button buttonStop;
 
 	}
 }

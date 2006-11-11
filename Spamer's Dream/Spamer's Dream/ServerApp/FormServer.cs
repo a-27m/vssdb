@@ -157,6 +157,24 @@ WHERE
 				}
 			}
 		}
+		private void SendStopToAll()
+		{
+			int robotPort = sets.RobotUdpPort;
+
+			foreach ( Robot robot in dbClient.GetRobotsHosts() )
+			{
+				try
+				{
+					Say(robot.IP, robotPort,
+						SpamLanguage.Stop);
+				}
+				catch ( Exception exc )
+				{
+					MessageBox.Show(exc.Message);
+					continue;
+				}
+			}
+		}
 
 		#region Events handlers
 
@@ -173,16 +191,6 @@ WHERE
 			fOpts.Show();
 		}
 
-		private void StartAll_Click(object sender, EventArgs e)
-		{
-			if ( DbAvailable )
-				SendStartToAll();
-			else
-				MessageBox.Show("Database is not connected");
-		}
-
-		#endregion
-
 		private void ClearStates_Click(object sender, EventArgs e)
 		{
 			if ( DbAvailable )
@@ -194,6 +202,21 @@ SET State=NULL");
 				MessageBox.Show("Rows affected: " + ra,
 					"Cleanup");
 			}
+			else
+				MessageBox.Show("Database is not connected");
+		}
+
+		private void buttonStartAll_Click(object sender, EventArgs e)
+		{
+			if ( DbAvailable )
+				SendStartToAll();
+			else
+				MessageBox.Show("Database is not connected");
+		}
+		private void buttonStop_Click(object sender, EventArgs e)
+		{
+			if ( DbAvailable )
+				SendStopToAll();
 			else
 				MessageBox.Show("Database is not connected");
 		}
@@ -220,7 +243,7 @@ SET State=NULL");
 			}
 		}
 
-		private void buttonTab1Load_Click(object sender, EventArgs e)
+		private void tabEmails_buttonLoad_Click(object sender, EventArgs e)
 		{
 			if ( openFileDialogEmails.ShowDialog() == DialogResult.OK )
 			{
@@ -272,28 +295,15 @@ SET State=NULL");
 			}
 		}
 
-		private void buttonTabMsgEdit_Click(object sender, EventArgs e)
+		private void tabEmails_textMsgID_TextChanged(object sender, EventArgs e)
 		{
-			if ( listMessages.SelectedItems.Count == 0 )
-				return;
-
-			Letter letter;
-			letter = listMessages.SelectedValue as Letter;
-			letter = dbClient.GetMessageById(letter.Id);
-
-			FormLetter fLetter = new FormLetter();
-			fLetter.letter = letter;
-			if ( fLetter.ShowDialog() == DialogResult.OK )
-				letter = fLetter.letter;
-			else
-				return;
-
-			dbClient.UpdateMessage(letter.Id, letter);
+			textMsgIDChanged = true;
 		}
 
-		private void listEmails_SelectedIndexChanged(object sender, EventArgs e)
+		private void tabEmails_listEmails_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if ( listEmails.SelectedItems.Count < 1 ) {
+			if ( listEmails.SelectedItems.Count < 1 )
+			{
 				textMsgID.Clear();
 				return;
 			}
@@ -326,12 +336,7 @@ SET State=NULL");
 			textMsgIDChanged = false;
 		}
 
-		private void textMsgID_TextChanged(object sender, EventArgs e)
-		{
-			textMsgIDChanged = true;
-		}
-
-		private void button1_Click(object sender, EventArgs e)
+		private void tabEmails_buttonSet_Click(object sender, EventArgs e)
 		{
 			if ( !textMsgIDChanged )
 				return;
@@ -358,11 +363,32 @@ SET State=NULL");
 
 			tabControl1_SelectedIndexChanged(sender, e);
 
-			listEmails.SelectedIndexChanged -= listEmails_SelectedIndexChanged;
+			listEmails.SelectedIndexChanged -= tabEmails_listEmails_SelectedIndexChanged;
 			listEmails.ClearSelected();
-			foreach(int selIndex in currentSelection)
+			foreach ( int selIndex in currentSelection )
 				listEmails.SetSelected(selIndex, true);
-			listEmails.SelectedIndexChanged += listEmails_SelectedIndexChanged;
+			listEmails.SelectedIndexChanged += tabEmails_listEmails_SelectedIndexChanged;
 		}
+
+		private void tabMsg_buttonEdit_Click(object sender, EventArgs e)
+		{
+			if ( listMessages.SelectedItems.Count == 0 )
+				return;
+
+			Letter letter;
+			letter = listMessages.SelectedValue as Letter;
+			letter = dbClient.GetMessageById(letter.Id);
+
+			FormLetter fLetter = new FormLetter();
+			fLetter.letter = letter;
+			if ( fLetter.ShowDialog() == DialogResult.OK )
+				letter = fLetter.letter;
+			else
+				return;
+
+			dbClient.UpdateMessage(letter.Id, letter);
+		}
+
+		#endregion
 	}
 }
