@@ -207,7 +207,7 @@ namespace ServerApp
 			this.buttonTab1Load.Name = "buttonTab1Load";
 			this.buttonTab1Load.Size = new System.Drawing.Size(75, 23);
 			this.buttonTab1Load.TabIndex = 0;
-			this.buttonTab1Load.Text = "Load…";
+			this.buttonTab1Load.Text = "Load...";
 			this.buttonTab1Load.UseVisualStyleBackColor = true;
 			this.buttonTab1Load.Click += new System.EventHandler(this.tabEmails_buttonLoad_Click);
 			// 
@@ -257,7 +257,7 @@ namespace ServerApp
 			this.buttonTabMsgEdit.Name = "buttonTabMsgEdit";
 			this.buttonTabMsgEdit.Size = new System.Drawing.Size(75, 23);
 			this.buttonTabMsgEdit.TabIndex = 0;
-			this.buttonTabMsgEdit.Text = "Edit…";
+			this.buttonTabMsgEdit.Text = "Edit...";
 			this.buttonTabMsgEdit.UseVisualStyleBackColor = true;
 			this.buttonTabMsgEdit.Click += new System.EventHandler(this.tabMsg_buttonEdit_Click);
 			// 
@@ -297,6 +297,9 @@ namespace ServerApp
 			this.Name = "FormServer";
 			this.Text = "Server";
 			this.Load += new System.EventHandler(this.FormServer_Load);
+			this.Opacity = 0;
+			this.Shown += new System.EventHandler(this.FormServer_Shown);
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormServer_FormClosing);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			this.splitContainer1.ResumeLayout(false);
@@ -312,7 +315,6 @@ namespace ServerApp
 			this.splitContainer3.ResumeLayout(false);
 			( (System.ComponentModel.ISupportInitialize)( this.errorProvider ) ).EndInit();
 			this.ResumeLayout(false);
-
 		}
 
 		#endregion

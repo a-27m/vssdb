@@ -643,5 +643,12 @@ SET Email='{0}',Username='{1}',MsgID=0",
 SET Email='{0}',Username='{1}',MsgID={2}",
 		email, displayName, MsgId));
 		}
+
+		public void AddRobot(string ip)
+		{
+			SendQuery(string.Format(
+@"INSERT Robots
+SET IP='{0}'", email));
+		}
 	}
 }

