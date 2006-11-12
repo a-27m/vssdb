@@ -331,7 +331,8 @@ LIMIT 1;");
 			throw new Exception("Failed to aquire SMTP server parameters from database");
 
 		}
-		public Robot RobotById(int Id)
+
+		public Robot GetRobotById(int Id)
 		{
 			string name, email;
 			MailAddress mailAddr = null;
@@ -370,9 +371,9 @@ WHERE Id=" + Id.ToString() + " LIMIT 1;");
 			throw new Exception("Robot with ID " + Id.ToString() +
 				" is unknown in database " + DbName);
 		}
-		public MailAddress RobotAddrById(int Id)
+		public MailAddress GetRobotAddrById(int Id)
 		{
-			string name, email;
+			string name=null, email=null;
 			MailAddress mailAddr = null;
 
 			MySqlDataReader sqlReader = GetQueryReader(
@@ -383,17 +384,26 @@ WHERE Id=" + Id.ToString() + " LIMIT 1;");
 			if ( sqlReader != null )
 				if ( sqlReader.Read() )
 				{
-					email = sqlReader.GetString(0);
+					if (!sqlReader.IsDBNull(0))
+						email = sqlReader.GetString(0);
 
 					if ( !sqlReader.IsDBNull(1) )
-					{
 						name = sqlReader.GetString(1);
-						mailAddr = new MailAddress(email, name);
+					sqlReader.Close();
+
+					if ( email == null )
+					{
+						return null; 
 					}
 					else
-						mailAddr = new MailAddress(email);
-					sqlReader.Close();
-					return mailAddr;
+					{
+						if ( name == null )
+							mailAddr = new MailAddress(email);
+						else
+							mailAddr = new MailAddress(email, name);
+
+						return mailAddr;
+					}
 				}
 
 			throw new Exception("Robot with ID " + Id.ToString() +
@@ -496,7 +506,53 @@ WHERE State=" + DbClient.TokenSelected(ClientID);
 
 			yield break;
 		}
+		public List<SimpleMailTask> GetEmailsList()
+		{
+			List<SimpleMailTask> list = new List<SimpleMailTask>();
+			MySqlDataReader sqlReader = GetQueryReader("select Id,Username,email,MsgId from emails");
+			while ( sqlReader.Read() )
+			{
+				SimpleMailTask task;
 
+				int id = sqlReader.GetInt32(0);
+				string username = sqlReader.GetString(1);
+				string email = sqlReader.GetString(2);
+				int msgid = sqlReader.GetInt32(3);
+
+				if ( sqlReader.IsDBNull(1) )
+					task = new SimpleMailTask(id, email, msgid);
+				else
+					task = new SimpleMailTask(id, email, username, msgid);
+
+				list.Add(task);
+			}
+			sqlReader.Close();
+
+			return list;
+		}
+		public List<Letter> GetMessagesList()
+		{
+			List<Letter> list = new List<Letter>();
+			MySqlDataReader sqlReader = GetQueryReader("SELECT Id,Subject,IsHTML FROM messages");
+			while ( sqlReader.Read() )
+			{
+				int id = sqlReader.GetInt32(0);
+				string subject = sqlReader.GetString(1);
+				bool isHtml = sqlReader.GetBoolean(2);
+
+				Letter letter;
+
+				if ( sqlReader.IsDBNull(1) )
+					letter = new Letter(id, isHtml);
+				else
+					letter = new Letter(id, subject, isHtml);
+
+				list.Add(letter);
+			}
+			sqlReader.Close();
+
+			return list;
+		}
 		public IEnumerable<Robot> GetRobotsHosts()
 		{
 			if ( !IsConnectionOpened )
@@ -533,30 +589,6 @@ WHERE State=" + DbClient.TokenSelected(ClientID);
 			return "'Done by " + ClientId.ToString() + "'";
 		}
 
-		public List<SimpleMailTask> GetEmailsList()
-		{
-			List<SimpleMailTask> list = new List<SimpleMailTask>();
-			MySqlDataReader sqlReader = GetQueryReader("select Id,Username,email,MsgId from emails");
-			while ( sqlReader.Read() )
-			{
-				SimpleMailTask task;
-
-				int id = sqlReader.GetInt32(0);
-				string username = sqlReader.GetString(1);
-				string email = sqlReader.GetString(2);
-				int msgid = sqlReader.GetInt32(3);
-
-				if ( sqlReader.IsDBNull(1) )
-					task = new SimpleMailTask(id, email, msgid);
-				else
-					task = new SimpleMailTask(id, email, username, msgid);
-
-				list.Add(task);
-			}
-			sqlReader.Close();
-
-			return list;
-		}
 		public void UpdateTask(int id, SimpleMailTask task)
 		{
 			string strFUsername=
@@ -572,30 +604,6 @@ WHERE State=" + DbClient.TokenSelected(ClientID);
 SET Username=" + strFUsername + @",Email='{1}',MsgID={2}
 WHERE Id={3}",
 			 username, task.Address.Address, task.MessageID, id));
-		}
-
-		public List<Letter> GetMessagesList()
-		{
-			List<Letter> list = new List<Letter>();
-			MySqlDataReader sqlReader = GetQueryReader("select Id,Subject, IsHTML from messages");
-			while ( sqlReader.Read() )
-			{
-				int id = sqlReader.GetInt32(0);
-				string subject = sqlReader.GetString(1);
-				bool isHtml = sqlReader.GetBoolean(2);
-
-				Letter letter;
-
-				if ( sqlReader.IsDBNull(1) )
-					letter = new Letter(id, isHtml);
-				else
-					letter = new Letter(id, subject, isHtml);
-
-				list.Add(letter);
-			}
-			sqlReader.Close();
-
-			return list;
 		}
 		public void UpdateMessage(int id, Letter letter)
 		{
@@ -648,7 +656,7 @@ SET Email='{0}',Username='{1}',MsgID={2}",
 		{
 			SendQuery(string.Format(
 @"INSERT Robots
-SET IP='{0}'", email));
+SET IP='{0}'", ip));
 		}
 	}
 }

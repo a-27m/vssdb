@@ -41,6 +41,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FormClient.cs">
@@ -48,6 +49,12 @@
     </Compile>
     <Compile Include="FormClient.Designer.cs">
       <DependentUpon>FormClient.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormKnock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormKnock.Designer.cs">
+      <DependentUpon>FormKnock.cs</DependentUpon>
     </Compile>
     <Compile Include="FormOptions.cs">
       <SubType>Form</SubType>
@@ -60,6 +67,10 @@
     <EmbeddedResource Include="FormClient.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormKnock.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormKnock.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormOptions.resx">
       <DependentUpon>FormOptions.cs</DependentUpon>
