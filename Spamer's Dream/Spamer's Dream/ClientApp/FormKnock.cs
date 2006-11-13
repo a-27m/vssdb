@@ -41,6 +41,7 @@ namespace ClientApp
 			errorProvider.Clear();
 
 			string host = textServerIP.Text;
+			int port = 0;
 
 			try { port = int.Parse(textServerPort.Text); }
 			catch ( FormatException )
@@ -64,7 +65,7 @@ namespace ClientApp
 				return;
 			}
 			if ( textName.Text != "" )
-				mailAddress = new MailAddress(textEmail.Text, textName);
+				mailAddress = new MailAddress(textEmail.Text, textName.Text);
 
 			this.DialogResult = DialogResult.OK;
 			this.Close();

@@ -35,7 +35,7 @@ namespace ClientApp
 			}
 			Application.Run(frmClient);
 
-			mu.ReleaseMutex();
+			//mu.ReleaseMutex();
 			mu.Close();
 		}
 	}

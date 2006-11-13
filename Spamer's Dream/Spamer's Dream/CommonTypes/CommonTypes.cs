@@ -1,14 +1,15 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Net.Mail;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-using System.Collections;
-using System.ComponentModel;
 
 namespace CommonTypes
 {
+	#region My primitives
 	[Serializable]
 	public class ServerInfo
 	{
@@ -202,6 +203,8 @@ namespace CommonTypes
 		}
 	}
 
+	#endregion
+
 	public class DbClient
 	{
 		#region const strings
@@ -259,7 +262,7 @@ WHERE (IP <> '0.0.0.0') AND (IP <> '255.255.255.255')";
 			sqlConnection = new MySqlConnection(connectionStr);
 			sqlConnection.Open();
 		}
-	public void CloseConnection()
+		public void CloseConnection()
 		{
 			if ( sqlConnection != null )
 				sqlConnection.Close();
@@ -373,7 +376,7 @@ WHERE Id=" + Id.ToString() + " LIMIT 1;");
 		}
 		public MailAddress GetRobotAddrById(int Id)
 		{
-			string name=null, email=null;
+			string name = null, email = null;
 			MailAddress mailAddr = null;
 
 			MySqlDataReader sqlReader = GetQueryReader(
@@ -384,7 +387,7 @@ WHERE Id=" + Id.ToString() + " LIMIT 1;");
 			if ( sqlReader != null )
 				if ( sqlReader.Read() )
 				{
-					if (!sqlReader.IsDBNull(0))
+					if ( !sqlReader.IsDBNull(0) )
 						email = sqlReader.GetString(0);
 
 					if ( !sqlReader.IsDBNull(1) )
@@ -393,7 +396,7 @@ WHERE Id=" + Id.ToString() + " LIMIT 1;");
 
 					if ( email == null )
 					{
-						return null; 
+						return null;
 					}
 					else
 					{
@@ -591,19 +594,18 @@ WHERE State=" + DbClient.TokenSelected(ClientID);
 
 		public void UpdateTask(int id, SimpleMailTask task)
 		{
-			string strFUsername=
-			    ( task.Address.DisplayName!= null ) &&
+			string strFUsername =
+				( task.Address.DisplayName != null ) &&
 				( task.Address.DisplayName != "" ) ?
-			    "'{0}'" : "NULL";
+				"'{0}'" : "NULL";
 
 			string username = string.Join("\\'",
-			    task.Address.DisplayName.Split('\''));
+				task.Address.DisplayName.Split('\''));
 
 			SendQuery(string.Format(
 @"UPDATE emails
 SET Username=" + strFUsername + @",Email='{1}',MsgID={2}
-WHERE Id={3}",
-			 username, task.Address.Address, task.MessageID, id));
+WHERE Id={3}", username, task.Address.Address, task.MessageID, id));
 		}
 		public void UpdateMessage(int id, Letter letter)
 		{
@@ -626,37 +628,59 @@ WHERE Id={3}",
 			SendQuery(string.Format(
 @"UPDATE messages
 SET Subject=" + strFSubject + ",Body=" + strFBody + @",IsHTML={2}
-WHERE Id={3}",
-			 subject, body, letter.IsHtml ? 1 : 0, id));
+WHERE Id={3}", subject, body, letter.IsHtml ? 1 : 0, id));
 
 		}
 
 		public void AddEmail(string email)
 		{
-			SendQuery(string.Format(
-@"INSERT Emails
-SET Email='{0}',MsgID=0", email));
+			SendQuery(string.Format(@"INSERT Emails SET Email='{0}',MsgID=0", email));
 		}
 		public void AddEmail(string email, string displayName)
 		{
-			SendQuery(string.Format(
-@"INSERT Emails
-SET Email='{0}',Username='{1}',MsgID=0",
-		email, displayName));
+			displayName = string.Join("\\'",
+				   displayName.Split('\''));
+
+			SendQuery(string.Format(@"INSERT Emails SET Email='{0}',Username='{1}',MsgID=0",
+				email, displayName));
 		}
 		public void AddEmail(string email, string displayName, string MsgId)
 		{
-			SendQuery(string.Format(
-@"INSERT Emails
-SET Email='{0}',Username='{1}',MsgID={2}",
-		email, displayName, MsgId));
+			displayName = string.Join("\\'",
+				   displayName.Split('\''));
+
+			SendQuery(string.Format(@"INSERT Emails SET Email='{0}',Username='{1}',MsgID={2}",
+				email, displayName, MsgId));
 		}
 
-		public void AddRobot(string ip)
+		public void AddRobot(string ipStr)
 		{
-			SendQuery(string.Format(
-@"INSERT Robots
-SET IP='{0}'", ip));
+			MySqlDataReader sqlReader =
+				GetQueryReader("SELECT * FROM Robots WHERE IP='" + ipStr + "'");
+
+			if ( !sqlReader.Read() )
+				SendQuery(string.Format("INSERT Robots SET IP='{0}'", ipStr));
+
+			sqlReader.Close();
+		}
+		public void AddRobot(string ipStr, MailAddress mailAddress)
+		{
+			string name = string.Join("\\'",
+				mailAddress.DisplayName.Split('\''));
+
+			string query = string.Format(@" Robots SET IP='{0}',Name='{1}',Email='{2}'",
+					ipStr, name, mailAddress.Address);
+
+			MySqlDataReader sqlReader =
+				GetQueryReader("SELECT * FROM Robots WHERE IP='" + ipStr + "'");
+
+			if ( sqlReader.Read() )
+				query = "UPDATE" + query;
+			else
+				query = "INSERT" + query;
+			sqlReader.Close();
+
+			SendQuery(query);
 		}
 	}
 }

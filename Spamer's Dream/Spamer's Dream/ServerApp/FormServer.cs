@@ -13,6 +13,8 @@ using ServerApp.Properties;
 using CommonTypes;
 using System.IO;
 using System.Threading;
+using System.Net.Mail;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ServerApp
 {
@@ -92,7 +94,18 @@ WHERE
 			switch ( verb )
 			{
 			case SpamLanguage.KnockKnock:
-				dbClient.AddRobot(remoteIPEndPoint.Address.ToString());
+				string ipStr = remoteIPEndPoint.Address.ToString();
+				if ( bytes.Length > 1 )
+				{
+					BinaryFormatter formatter =
+					   new BinaryFormatter();
+					MemoryStream mStream = new MemoryStream(bytes, 1, bytes.Length - 1);
+					string[] mailData = ((string)(formatter.Deserialize(mStream))).Split('|');
+					MailAddress mailAddress = new MailAddress(
+					dbClient.AddRobot(ipStr,mailAddress);
+				}
+				else
+				dbClient.AddRobot(ipStr);
 				break;
 			default:
 				Thread messageThread = new Thread(new ThreadStart(delegate()
@@ -206,7 +219,7 @@ WHERE
 			}
 		}
 
-		private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+		private void buttonOptions_Click(object sender, EventArgs e)
 		{
 			FormOptions fOpts = new FormOptions();
 			fOpts.Show();

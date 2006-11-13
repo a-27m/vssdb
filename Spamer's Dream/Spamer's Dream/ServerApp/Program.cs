@@ -27,7 +27,7 @@ namespace ServerApp
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new FormServer());
 
-			mu.ReleaseMutex();
+			//mu.ReleaseMutex();
 			mu.Close();
 		}
 	}
