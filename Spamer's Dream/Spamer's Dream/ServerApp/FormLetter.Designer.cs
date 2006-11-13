@@ -71,7 +71,7 @@ namespace ServerApp
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 18F));
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 21F));
 			this.tableLayoutPanel1.Controls.Add(this.textSubject, 1, 2);
 			this.tableLayoutPanel1.Controls.Add(this.textBody, 1, 4);
 			this.tableLayoutPanel1.Controls.Add(this.buttonLoad, 2, 5);
@@ -93,7 +93,7 @@ namespace ServerApp
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 18F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 18F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(341, 317);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(460, 336);
 			this.tableLayoutPanel1.TabIndex = 1;
 			// 
 			// textSubject
@@ -102,7 +102,7 @@ namespace ServerApp
 			this.textSubject.Dock = System.Windows.Forms.DockStyle.Top;
 			this.textSubject.Location = new System.Drawing.Point(21, 41);
 			this.textSubject.Name = "textSubject";
-			this.textSubject.Size = new System.Drawing.Size(296, 20);
+			this.textSubject.Size = new System.Drawing.Size(414, 20);
 			this.textSubject.TabIndex = 2;
 			// 
 			// textBody
@@ -112,13 +112,13 @@ namespace ServerApp
 			this.textBody.Location = new System.Drawing.Point(21, 101);
 			this.textBody.Multiline = true;
 			this.textBody.Name = "textBody";
-			this.textBody.Size = new System.Drawing.Size(296, 117);
+			this.textBody.Size = new System.Drawing.Size(414, 136);
 			this.textBody.TabIndex = 3;
 			// 
 			// buttonLoad
 			// 
 			this.buttonLoad.Anchor = System.Windows.Forms.AnchorStyles.Right;
-			this.buttonLoad.Location = new System.Drawing.Point(242, 224);
+			this.buttonLoad.Location = new System.Drawing.Point(360, 243);
 			this.buttonLoad.Name = "buttonLoad";
 			this.buttonLoad.Size = new System.Drawing.Size(75, 23);
 			this.buttonLoad.TabIndex = 5;
@@ -131,18 +131,19 @@ namespace ServerApp
 			this.checkIsHtml.AutoSize = true;
 			this.checkIsHtml.Checked = true;
 			this.checkIsHtml.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.checkIsHtml.Location = new System.Drawing.Point(21, 224);
+			this.checkIsHtml.Location = new System.Drawing.Point(21, 243);
 			this.checkIsHtml.Name = "checkIsHtml";
 			this.checkIsHtml.Size = new System.Drawing.Size(83, 17);
 			this.checkIsHtml.TabIndex = 4;
 			this.checkIsHtml.Text = "It\'s in HTML";
 			this.checkIsHtml.UseVisualStyleBackColor = true;
+			this.checkIsHtml.CheckedChanged += new System.EventHandler(this.checkIsHtml_CheckedChanged);
 			// 
 			// buttonOK
 			// 
 			this.buttonOK.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom )
 						| System.Windows.Forms.AnchorStyles.Right ) ) );
-			this.buttonOK.Location = new System.Drawing.Point(91, 272);
+			this.buttonOK.Location = new System.Drawing.Point(150, 291);
 			this.buttonOK.Name = "buttonOK";
 			this.buttonOK.Size = new System.Drawing.Size(75, 24);
 			this.buttonOK.TabIndex = 2;
@@ -154,7 +155,7 @@ namespace ServerApp
 			// 
 			this.buttonCancel.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom )
 						| System.Windows.Forms.AnchorStyles.Left ) ) );
-			this.buttonCancel.Location = new System.Drawing.Point(172, 272);
+			this.buttonCancel.Location = new System.Drawing.Point(231, 291);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(75, 24);
 			this.buttonCancel.TabIndex = 6;
@@ -172,7 +173,7 @@ namespace ServerApp
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(341, 317);
+			this.ClientSize = new System.Drawing.Size(460, 336);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Name = "FormLetter";
 			this.Text = "Message";

@@ -40,9 +40,15 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommonTypes.cs" />
+    <Compile Include="FormBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBrowser.Designer.cs">
+      <DependentUpon>FormBrowser.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormLetter.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,6 +69,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormBrowser.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormBrowser.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormLetter.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormLetter.cs</DependentUpon>
@@ -99,6 +109,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="base.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonTypes\CommonTypes.csproj">
+      <Project>{99A7B774-BC07-4BB5-850B-51561790A5AC}</Project>
+      <Name>CommonTypes</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

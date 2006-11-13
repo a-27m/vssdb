@@ -261,6 +261,13 @@ WHERE (IP <> '0.0.0.0') AND (IP <> '255.255.255.255')";
 
 			sqlConnection = new MySqlConnection(connectionStr);
 			sqlConnection.Open();
+
+			if	( sqlConnection.State == ConnectionState.Open )
+			{
+				//SendQuery("SET CHARACTER_SET_CLIENT='cp1251'");
+				//SendQuery("SET CHARACTER_SET_RESULTS='cp1251'");
+				//SendQuery("SET COLLATION_CONNECTION='cp1251_general_ci'");
+			}
 		}
 		public void CloseConnection()
 		{
@@ -283,10 +290,11 @@ WHERE (IP <> '0.0.0.0') AND (IP <> '255.255.255.255')";
 			{
 				MessageBox.Show("Failed read query answer: " +
 					Environment.NewLine + ex.Message);
-				throw;
+				//throw;
 			}
 			return sqlReader;
 		}
+
 		public int SendQuery(string Query)
 		{
 			if ( !IsConnectionOpened )
@@ -681,6 +689,34 @@ WHERE Id={3}", subject, body, letter.IsHtml ? 1 : 0, id));
 			sqlReader.Close();
 
 			SendQuery(query);
+		}
+
+		public void AddLetter(Letter letter)
+		{
+			string strFSubject =
+	( letter.Subject != null ) &&
+	( letter.Subject != "" ) ?
+	"'{0}'" : "NULL";
+
+			string strFBody =
+				( letter.Body != null ) &&
+				( letter.Body != "" ) ?
+				"'{1}'" : "NULL";
+
+			string subject = string.Join("\\'",
+				letter.Subject.Split('\''));
+
+			string body = string.Join("\\'",
+				letter.Body.Split('\''));
+
+			SendQuery(string.Format(
+@"INSERT Messages
+SET Subject=" + strFSubject + ",Body=" + strFBody + @",IsHTML={2}",
+			  subject, body, letter.IsHtml ? 1 : 0));
+
+			SendQuery(string.Format(
+				"INSERT Messages SET Subject='{0}',Body='{1}',IsHTML={2}",
+				letter.Subject, letter.Body, letter.IsHtml ? 1 : 0));
 		}
 	}
 }

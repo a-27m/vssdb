@@ -29,6 +29,7 @@ namespace ServerApp
 
 		private void buttonOK_Click(object sender, EventArgs e)
 		{
+			letter = new Letter(0, true);
 			this.letter.Subject = textSubject.Text;
 			this.letter.Body = textBody.Text;
 			this.letter.IsHtml = checkIsHtml.Checked;
@@ -50,6 +51,15 @@ namespace ServerApp
 				textBody.Text = letter.Body;
 				checkIsHtml.Checked = letter.IsHtml;
 			}
+			checkIsHtml_CheckedChanged(sender, e);
+		}
+
+		private void checkIsHtml_CheckedChanged(object sender, EventArgs e)
+		{
+			if ( checkIsHtml.Checked )
+				textBody.Font = new Font("Microsoft Sans Serif", 10f);
+			else
+				textBody.Font = new Font("Lucida Sans Unicode", 10f);
 		}
 	}
 }

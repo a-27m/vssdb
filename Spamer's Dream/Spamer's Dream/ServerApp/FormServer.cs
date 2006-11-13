@@ -97,15 +97,21 @@ WHERE
 				string ipStr = remoteIPEndPoint.Address.ToString();
 				if ( bytes.Length > 1 )
 				{
+					MailAddress mailAddress;
 					BinaryFormatter formatter =
 					   new BinaryFormatter();
 					MemoryStream mStream = new MemoryStream(bytes, 1, bytes.Length - 1);
-					string[] mailData = ((string)(formatter.Deserialize(mStream))).Split('|');
-					MailAddress mailAddress = new MailAddress(
-					dbClient.AddRobot(ipStr,mailAddress);
+					string[] mailData = ( (string)( formatter.Deserialize(mStream) ) ).Split('\n');
+
+					if ( mailData.Length > 1 )
+						mailAddress = new MailAddress(mailData[0], mailData[1]);
+					else
+						mailAddress = new MailAddress(mailData[0]);
+
+					dbClient.AddRobot(ipStr, mailAddress);
 				}
 				else
-				dbClient.AddRobot(ipStr);
+					dbClient.AddRobot(ipStr);
 				break;
 			default:
 				Thread messageThread = new Thread(new ThreadStart(delegate()
@@ -198,7 +204,7 @@ WHERE
 		}
 		private void FormServer_Shown(object sender, EventArgs e)
 		{
-			double msec = 1000;
+			double msec = 600;
 			double steps = 100;
 			for ( double i = this.Opacity; i <= 1.0; i += 1.0 / steps )
 			{
@@ -209,12 +215,12 @@ WHERE
 		}
 		private void FormServer_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			double msec = 600;
+			double msec = 5;
 			double steps = 80;
 			for ( double i = this.Opacity; i >= 0; i -= 1.0 / steps )
 			{
 				this.Opacity = i;
-				Application.DoEvents();
+				//Application.DoEvents();
 				Thread.Sleep((int)( Math.Ceiling(msec / steps) ));
 			}
 		}
@@ -421,10 +427,67 @@ SET State=NULL");
 				return;
 
 			dbClient.UpdateMessage(letter.Id, letter);
+			listMessages.DataSource = dbClient.GetMessagesList();
+		}
+
+		private void emptyEmailsMenuItem_Click(object sender, EventArgs e)
+		{
+			if ( ( MessageBox.Show(
+				"You are about to delete all the target e-mall addresses" +
+				Environment.NewLine +
+				"from current database '" + sets.DbName + "'. New e-mails can be" +
+				Environment.NewLine +
+				"added later with \"Load...\" button on the \"Emails\" tab",
+				"Delete all e-mail addresses from database?",
+				MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK ) &&
+
+				( MessageBox.Show(
+				"This operation cannot be undone!",
+				"Confirm delete operation",
+				MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK ) )
+
+				dbClient.SendQuery("TRUNCATE TABLE Emails");
+		}
+
+		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			dbClient.CloseConnection();
+			this.DialogResult = DialogResult.OK;
+			Application.Exit();
+		}
+
+		private void listMessages_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			buttonPreview_Click(sender, e);
+		}
+
+		private void buttonPreview_Click(object sender, EventArgs e)
+		{
+			if ( listMessages.SelectedItems.Count == 0 )
+				return;
+
+			Letter letter;
+			letter = listMessages.SelectedValue as Letter;
+			letter = dbClient.GetMessageById(letter.Id);
+
+			FormBrowser fBro = new FormBrowser(letter.Body, letter.Subject);
+			fBro.Show();
+		}
+
+		private void buttonAddLetter_Click(object sender, EventArgs e)
+		{
+			Letter letter;
+			FormLetter fLetter = new FormLetter();
+			if ( fLetter.ShowDialog() == DialogResult.OK )
+			{
+				letter = fLetter.letter;
+				dbClient.AddLetter(letter);
+
+				listMessages.DataSource = dbClient.GetMessagesList();
+			}
 		}
 
 		#endregion
-
 
 	}
 }
