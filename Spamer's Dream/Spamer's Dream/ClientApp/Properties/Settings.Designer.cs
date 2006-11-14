@@ -214,5 +214,29 @@ namespace ClientApp.Properties {
                 this["SmtpId"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SwitchSmtpOnEveryTask {
+            get {
+                return ((bool)(this["SwitchSmtpOnEveryTask"]));
+            }
+            set {
+                this["SwitchSmtpOnEveryTask"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public string ErrorsBeforeSwitchSmtp {
+            get {
+                return ((string)(this["ErrorsBeforeSwitchSmtp"]));
+            }
+            set {
+                this["ErrorsBeforeSwitchSmtp"] = value;
+            }
+        }
     }
 }

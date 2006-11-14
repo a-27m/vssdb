@@ -95,24 +95,9 @@ WHERE
 			{
 			case SpamLanguage.KnockKnock:
 				string ipStr = remoteIPEndPoint.Address.ToString();
-				if ( bytes.Length > 1 )
-				{
-					MailAddress mailAddress;
-					BinaryFormatter formatter =
-					   new BinaryFormatter();
-					MemoryStream mStream = new MemoryStream(bytes, 1, bytes.Length - 1);
-					string[] mailData = ( (string)( formatter.Deserialize(mStream) ) ).Split('\n');
-
-					if ( mailData.Length > 1 )
-						mailAddress = new MailAddress(mailData[0], mailData[1]);
-					else
-						mailAddress = new MailAddress(mailData[0]);
-
-					dbClient.AddRobot(ipStr, mailAddress);
-				}
-				else
-					dbClient.AddRobot(ipStr);
+				dbClient.AddRobot(ipStr);
 				break;
+
 			default:
 				Thread messageThread = new Thread(new ThreadStart(delegate()
 				{
