@@ -39,11 +39,10 @@ namespace ServerApp
 			this.startAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.stopAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.serviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.resetDoneTasksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.emptyEmailsDatabseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.resetDoneTasksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.iewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,9 +56,10 @@ namespace ServerApp
 			this.tabMessages = new System.Windows.Forms.TabPage();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.listMessages = new System.Windows.Forms.ListBox();
-			this.buttonTabMsgEdit = new System.Windows.Forms.Button();
-			this.buttonPreview = new System.Windows.Forms.Button();
 			this.buttonAddLetter = new System.Windows.Forms.Button();
+			this.buttonPreview = new System.Windows.Forms.Button();
+			this.buttonTabMsgEdit = new System.Windows.Forms.Button();
+			this.tabMsg_buttonRemove = new System.Windows.Forms.Button();
 			label1 = new System.Windows.Forms.Label();
 			( (System.ComponentModel.ISupportInitialize)( this.errorProvider ) ).BeginInit();
 			this.menuStrip1.SuspendLayout();
@@ -104,18 +104,18 @@ namespace ServerApp
 			this.textMsgID.Name = "textMsgID";
 			this.textMsgID.Size = new System.Drawing.Size(60, 20);
 			this.textMsgID.TabIndex = 3;
+			this.textMsgID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tabEmails_textMsgID_KeyPress);
 			this.textMsgID.TextChanged += new System.EventHandler(this.tabEmails_textMsgID_TextChanged);
 			// 
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.actionToolStripMenuItem,
-            this.iewToolStripMenuItem,
             this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(422, 24);
+			this.menuStrip1.Size = new System.Drawing.Size(465, 24);
 			this.menuStrip1.TabIndex = 15;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -128,8 +128,8 @@ namespace ServerApp
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
 			this.actionToolStripMenuItem.Name = "actionToolStripMenuItem";
-			this.actionToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
-			this.actionToolStripMenuItem.Text = "&Action";
+			this.actionToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+			this.actionToolStripMenuItem.Text = "&Actions";
 			// 
 			// startAllToolStripMenuItem
 			// 
@@ -148,18 +148,11 @@ namespace ServerApp
 			// serviceToolStripMenuItem
 			// 
 			this.serviceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.resetDoneTasksToolStripMenuItem,
-            this.emptyEmailsDatabseToolStripMenuItem});
+            this.emptyEmailsDatabseToolStripMenuItem,
+            this.resetDoneTasksToolStripMenuItem});
 			this.serviceToolStripMenuItem.Name = "serviceToolStripMenuItem";
 			this.serviceToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
 			this.serviceToolStripMenuItem.Text = "Se&rvice";
-			// 
-			// resetDoneTasksToolStripMenuItem
-			// 
-			this.resetDoneTasksToolStripMenuItem.Name = "resetDoneTasksToolStripMenuItem";
-			this.resetDoneTasksToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-			this.resetDoneTasksToolStripMenuItem.Text = "Reset done tasks";
-			this.resetDoneTasksToolStripMenuItem.Click += new System.EventHandler(this.ClearStates_Click);
 			// 
 			// emptyEmailsDatabseToolStripMenuItem
 			// 
@@ -167,6 +160,13 @@ namespace ServerApp
 			this.emptyEmailsDatabseToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.emptyEmailsDatabseToolStripMenuItem.Text = "Empty e-mails databse";
 			this.emptyEmailsDatabseToolStripMenuItem.Click += new System.EventHandler(this.emptyEmailsMenuItem_Click);
+			// 
+			// resetDoneTasksToolStripMenuItem
+			// 
+			this.resetDoneTasksToolStripMenuItem.Name = "resetDoneTasksToolStripMenuItem";
+			this.resetDoneTasksToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+			this.resetDoneTasksToolStripMenuItem.Text = "Reset tasks";
+			this.resetDoneTasksToolStripMenuItem.Click += new System.EventHandler(this.ClearStates_Click);
 			// 
 			// toolStripSeparator1
 			// 
@@ -179,12 +179,6 @@ namespace ServerApp
 			this.exitToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
 			this.exitToolStripMenuItem.Text = "E&xit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-			// 
-			// iewToolStripMenuItem
-			// 
-			this.iewToolStripMenuItem.Name = "iewToolStripMenuItem";
-			this.iewToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
-			this.iewToolStripMenuItem.Text = "&View";
 			// 
 			// toolsToolStripMenuItem
 			// 
@@ -208,6 +202,7 @@ namespace ServerApp
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
 			this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
 			this.helpToolStripMenuItem.Text = "&Help";
+			this.helpToolStripMenuItem.Visible = false;
 			// 
 			// aboutToolStripMenuItem
 			// 
@@ -223,7 +218,7 @@ namespace ServerApp
 			this.tabControl1.Location = new System.Drawing.Point(0, 24);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(422, 282);
+			this.tabControl1.Size = new System.Drawing.Size(465, 282);
 			this.tabControl1.TabIndex = 16;
 			this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
 			// 
@@ -233,7 +228,7 @@ namespace ServerApp
 			this.tabEmails.Location = new System.Drawing.Point(4, 22);
 			this.tabEmails.Name = "tabEmails";
 			this.tabEmails.Padding = new System.Windows.Forms.Padding(3);
-			this.tabEmails.Size = new System.Drawing.Size(414, 256);
+			this.tabEmails.Size = new System.Drawing.Size(457, 256);
 			this.tabEmails.TabIndex = 0;
 			this.tabEmails.Text = "E-mails";
 			this.tabEmails.UseVisualStyleBackColor = true;
@@ -256,8 +251,8 @@ namespace ServerApp
 			this.splitContainer2.Panel2.Controls.Add(label1);
 			this.splitContainer2.Panel2.Controls.Add(this.buttonSetId);
 			this.splitContainer2.Panel2.Controls.Add(this.buttonTab1Load);
-			this.splitContainer2.Size = new System.Drawing.Size(408, 250);
-			this.splitContainer2.SplitterDistance = 309;
+			this.splitContainer2.Size = new System.Drawing.Size(451, 250);
+			this.splitContainer2.SplitterDistance = 352;
 			this.splitContainer2.TabIndex = 2;
 			// 
 			// listEmails
@@ -270,13 +265,13 @@ namespace ServerApp
 			this.listEmails.Location = new System.Drawing.Point(0, 0);
 			this.listEmails.Name = "listEmails";
 			this.listEmails.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-			this.listEmails.Size = new System.Drawing.Size(309, 250);
+			this.listEmails.Size = new System.Drawing.Size(352, 250);
 			this.listEmails.TabIndex = 1;
 			this.listEmails.SelectedIndexChanged += new System.EventHandler(this.tabEmails_listEmails_SelectedIndexChanged);
 			// 
 			// buttonSetId
 			// 
-			this.buttonSetId.Location = new System.Drawing.Point(10, 117);
+			this.buttonSetId.Location = new System.Drawing.Point(10, 116);
 			this.buttonSetId.Name = "buttonSetId";
 			this.buttonSetId.Size = new System.Drawing.Size(75, 23);
 			this.buttonSetId.TabIndex = 1;
@@ -300,7 +295,7 @@ namespace ServerApp
 			this.tabMessages.Location = new System.Drawing.Point(4, 22);
 			this.tabMessages.Name = "tabMessages";
 			this.tabMessages.Padding = new System.Windows.Forms.Padding(3);
-			this.tabMessages.Size = new System.Drawing.Size(414, 256);
+			this.tabMessages.Size = new System.Drawing.Size(457, 256);
 			this.tabMessages.TabIndex = 1;
 			this.tabMessages.Text = "Messages";
 			this.tabMessages.UseVisualStyleBackColor = true;
@@ -319,11 +314,12 @@ namespace ServerApp
 			// 
 			// splitContainer3.Panel2
 			// 
+			this.splitContainer3.Panel2.Controls.Add(this.tabMsg_buttonRemove);
 			this.splitContainer3.Panel2.Controls.Add(this.buttonAddLetter);
 			this.splitContainer3.Panel2.Controls.Add(this.buttonPreview);
 			this.splitContainer3.Panel2.Controls.Add(this.buttonTabMsgEdit);
-			this.splitContainer3.Size = new System.Drawing.Size(408, 250);
-			this.splitContainer3.SplitterDistance = 309;
+			this.splitContainer3.Size = new System.Drawing.Size(451, 250);
+			this.splitContainer3.SplitterDistance = 352;
 			this.splitContainer3.TabIndex = 3;
 			// 
 			// listMessages
@@ -335,23 +331,24 @@ namespace ServerApp
 			this.listMessages.ItemHeight = 16;
 			this.listMessages.Location = new System.Drawing.Point(0, 0);
 			this.listMessages.Name = "listMessages";
-			this.listMessages.Size = new System.Drawing.Size(309, 250);
+			this.listMessages.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+			this.listMessages.Size = new System.Drawing.Size(352, 250);
 			this.listMessages.TabIndex = 1;
-			this.listMessages.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listMessages_MouseDoubleClick);
+			this.listMessages.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tabMsg_listMessages_MouseDoubleClick);
 			// 
-			// buttonTabMsgEdit
+			// buttonAddLetter
 			// 
-			this.buttonTabMsgEdit.Location = new System.Drawing.Point(10, 39);
-			this.buttonTabMsgEdit.Name = "buttonTabMsgEdit";
-			this.buttonTabMsgEdit.Size = new System.Drawing.Size(75, 23);
-			this.buttonTabMsgEdit.TabIndex = 0;
-			this.buttonTabMsgEdit.Text = "Edit...";
-			this.buttonTabMsgEdit.UseVisualStyleBackColor = true;
-			this.buttonTabMsgEdit.Click += new System.EventHandler(this.tabMsg_buttonEdit_Click);
+			this.buttonAddLetter.Location = new System.Drawing.Point(10, 17);
+			this.buttonAddLetter.Name = "buttonAddLetter";
+			this.buttonAddLetter.Size = new System.Drawing.Size(75, 23);
+			this.buttonAddLetter.TabIndex = 2;
+			this.buttonAddLetter.Text = "Add...";
+			this.buttonAddLetter.UseVisualStyleBackColor = true;
+			this.buttonAddLetter.Click += new System.EventHandler(this.tabMsg_buttonAddLetter_Click);
 			// 
 			// buttonPreview
 			// 
-			this.buttonPreview.Location = new System.Drawing.Point(10, 68);
+			this.buttonPreview.Location = new System.Drawing.Point(10, 83);
 			this.buttonPreview.Name = "buttonPreview";
 			this.buttonPreview.Size = new System.Drawing.Size(75, 23);
 			this.buttonPreview.TabIndex = 1;
@@ -359,21 +356,31 @@ namespace ServerApp
 			this.buttonPreview.UseVisualStyleBackColor = true;
 			this.buttonPreview.Click += new System.EventHandler(this.buttonPreview_Click);
 			// 
-			// buttonAddLetter
+			// buttonTabMsgEdit
 			// 
-			this.buttonAddLetter.Location = new System.Drawing.Point(10, 10);
-			this.buttonAddLetter.Name = "buttonAddLetter";
-			this.buttonAddLetter.Size = new System.Drawing.Size(75, 23);
-			this.buttonAddLetter.TabIndex = 2;
-			this.buttonAddLetter.Text = "Add...";
-			this.buttonAddLetter.UseVisualStyleBackColor = true;
-			this.buttonAddLetter.Click += new System.EventHandler(this.buttonAddLetter_Click);
+			this.buttonTabMsgEdit.Location = new System.Drawing.Point(10, 50);
+			this.buttonTabMsgEdit.Name = "buttonTabMsgEdit";
+			this.buttonTabMsgEdit.Size = new System.Drawing.Size(75, 23);
+			this.buttonTabMsgEdit.TabIndex = 0;
+			this.buttonTabMsgEdit.Text = "Edit...";
+			this.buttonTabMsgEdit.UseVisualStyleBackColor = true;
+			this.buttonTabMsgEdit.Click += new System.EventHandler(this.tabMsg_buttonEdit_Click);
+			// 
+			// tabMsg_buttonRemove
+			// 
+			this.tabMsg_buttonRemove.Location = new System.Drawing.Point(10, 116);
+			this.tabMsg_buttonRemove.Name = "tabMsg_buttonRemove";
+			this.tabMsg_buttonRemove.Size = new System.Drawing.Size(75, 23);
+			this.tabMsg_buttonRemove.TabIndex = 3;
+			this.tabMsg_buttonRemove.Text = "Remove";
+			this.tabMsg_buttonRemove.UseVisualStyleBackColor = true;
+			this.tabMsg_buttonRemove.Click += new System.EventHandler(this.tabMsg_buttonRemove_Click);
 			// 
 			// FormServer
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(422, 306);
+			this.ClientSize = new System.Drawing.Size(465, 306);
 			this.Controls.Add(this.tabControl1);
 			this.Controls.Add(this.menuStrip1);
 			this.Icon = ( (System.Drawing.Icon)( resources.GetObject("$this.Icon") ) );
@@ -411,7 +418,6 @@ namespace ServerApp
 		private System.Windows.Forms.ToolStripMenuItem actionToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem startAllToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem stopAllToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem iewToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
@@ -434,6 +440,7 @@ namespace ServerApp
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 		private System.Windows.Forms.Button buttonPreview;
 		private System.Windows.Forms.Button buttonAddLetter;
+		private System.Windows.Forms.Button tabMsg_buttonRemove;
 
 	}
 }

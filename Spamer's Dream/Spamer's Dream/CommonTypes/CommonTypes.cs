@@ -261,13 +261,6 @@ WHERE (IP <> '0.0.0.0') AND (IP <> '255.255.255.255')";
 
 			sqlConnection = new MySqlConnection(connectionStr);
 			sqlConnection.Open();
-
-			if	( sqlConnection.State == ConnectionState.Open )
-			{
-				//SendQuery("SET CHARACTER_SET_CLIENT='cp1251'");
-				//SendQuery("SET CHARACTER_SET_RESULTS='cp1251'");
-				//SendQuery("SET COLLATION_CONNECTION='cp1251_general_ci'");
-			}
 		}
 		public void CloseConnection()
 		{
@@ -308,12 +301,14 @@ WHERE (IP <> '0.0.0.0') AND (IP <> '255.255.255.255')";
 
 			catch ( MySqlException ex )
 			{
-				MessageBox.Show(
+				throw new Exception(
 					String.Format("Query '{0}' failed:{1}{2}",
 					Query,
 					Environment.NewLine + Environment.NewLine,
-					ex.Message));
+					ex.Message), ex);
+				//throw ex;
 			}
+
 			return LinesAffected;
 		}
 
@@ -322,8 +317,7 @@ WHERE (IP <> '0.0.0.0') AND (IP <> '255.255.255.255')";
 			MySqlDataReader sqlReader = GetQueryReader(
 @"SELECT Host,Port,Login,Password,UseSSL
 FROM smtpservers
-ORDER BY RAND()
-LIMIT 1;");
+ORDER BY RAND() LIMIT 1;");
 
 			if ( sqlReader != null )
 				if ( sqlReader.Read() )
@@ -444,8 +438,7 @@ WHERE Id=" + Id.ToString() + " LIMIT 1;");
 			string sqlGetMessageById =
 @"SELECT Id, Subject, Body, IsHtml
 FROM messages
-WHERE Id=" + Id.ToString() +
-@" LIMIT 1";
+WHERE Id=" + Id.ToString() + " LIMIT 1";
 
 			MySqlDataReader sqlReader = GetQueryReader(sqlGetMessageById);
 			if ( sqlReader != null )
@@ -461,7 +454,7 @@ WHERE Id=" + Id.ToString() +
 					return letter;
 				}
 
-			throw new Exception("Letter not found");
+			throw new Exception("Letter not found!");
 		}
 
 		public IEnumerable<SimpleMailTask> GetTasks(int CountLimit, int ClientID)
@@ -694,14 +687,12 @@ WHERE Id={3}", subject, body, letter.IsHtml ? 1 : 0, id));
 		public void AddLetter(Letter letter)
 		{
 			string strFSubject =
-	( letter.Subject != null ) &&
-	( letter.Subject != "" ) ?
-	"'{0}'" : "NULL";
+				( letter.Subject != null ) &&
+				( letter.Subject != "" ) ?	"'{0}'" : "NULL";
 
 			string strFBody =
 				( letter.Body != null ) &&
-				( letter.Body != "" ) ?
-				"'{1}'" : "NULL";
+				( letter.Body != "" ) ? "'{1}'" : "NULL";
 
 			string subject = string.Join("\\'",
 				letter.Subject.Split('\''));
@@ -713,10 +704,11 @@ WHERE Id={3}", subject, body, letter.IsHtml ? 1 : 0, id));
 @"INSERT Messages
 SET Subject=" + strFSubject + ",Body=" + strFBody + @",IsHTML={2}",
 			  subject, body, letter.IsHtml ? 1 : 0));
+		}
 
-			SendQuery(string.Format(
-				"INSERT Messages SET Subject='{0}',Body='{1}',IsHTML={2}",
-				letter.Subject, letter.Body, letter.IsHtml ? 1 : 0));
+		public int DeleteMessage(int letterId)
+		{
+			return SendQuery("DELETE FROM messages WHERE Id=" + letterId.ToString() + " LIMIT 1");
 		}
 	}
 }

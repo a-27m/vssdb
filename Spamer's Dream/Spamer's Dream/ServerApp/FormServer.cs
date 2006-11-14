@@ -291,12 +291,12 @@ SET State=NULL");
 				//foreach ( string fileName in openFileDialogEmails.FileNames )
 				//{
 				FileInfo fileInfo = new FileInfo(fileName);
-				StreamReader fReader = new StreamReader(fileName);
+				StreamReader fReader = new StreamReader(fileName, Encoding.GetEncoding(1251));
 
 				char[] delims;
 				switch ( fileInfo.Extension )
 				{
-				case "csv":
+				case ".csv":
 					delims = new char[] { ';' };
 					break;
 				//case "txt":  // *.txt falls into this branch also
@@ -315,7 +315,7 @@ SET State=NULL");
 					string[] tmp = line.Split(delims, StringSplitOptions.RemoveEmptyEntries);
 					if ( tmp.Length < 1 )
 					{
-						MessageBox.Show("Input file was in bad format at line " + lineNo.ToString(), "Bad CSV file format",
+						MessageBox.Show("Input file was in bad format at line " + lineNo.ToString(), "Bad file format",
 							MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 						fReader.Close();
 						return;
@@ -410,6 +410,14 @@ SET State=NULL");
 			listEmails.SelectedIndexChanged += tabEmails_listEmails_SelectedIndexChanged;
 		}
 
+		private void tabEmails_textMsgID_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if ( e.KeyChar == (char)( Keys.Enter ) )
+			{
+				tabEmails_buttonSet_Click(sender, e);
+			}
+		}
+
 		private void tabMsg_buttonEdit_Click(object sender, EventArgs e)
 		{
 			if ( listMessages.SelectedItems.Count == 0 )
@@ -428,6 +436,54 @@ SET State=NULL");
 
 			dbClient.UpdateMessage(letter.Id, letter);
 			listMessages.DataSource = dbClient.GetMessagesList();
+		}
+
+		private void tabMsg_buttonAddLetter_Click(object sender, EventArgs e)
+		{
+			Letter letter;
+			FormLetter fLetter = new FormLetter();
+			if ( fLetter.ShowDialog() == DialogResult.OK )
+			{
+				letter = fLetter.letter;
+				dbClient.AddLetter(letter);
+
+				listMessages.DataSource = dbClient.GetMessagesList();
+			}
+		}
+
+		private void tabMsg_listMessages_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			buttonPreview_Click(sender, e);
+		}
+
+		private void tabMsg_buttonRemove_Click(object sender, EventArgs e)
+		{
+			if ( listMessages.SelectedItems.Count == 0 )
+				return;
+
+			Letter letter;
+			if ( MessageBox.Show("Delete selected letter" +
+				( listMessages.SelectedItems.Count > 1 ? "s?" : "?" ),
+				"Confirm remove operation",
+				 MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
+				 == DialogResult.OK )
+			{
+				int countRemoved = 0;
+				foreach ( Object selectedItem in listMessages.SelectedItems )
+				{
+					letter = selectedItem as Letter;
+					letter = dbClient.GetMessageById(letter.Id);
+
+					countRemoved +=
+					   dbClient.DeleteMessage(letter.Id);
+
+				}
+				MessageBox.Show("Deleted " + countRemoved.ToString() + " letters",
+					"Successfully removed",
+					MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+				listMessages.DataSource = dbClient.GetMessagesList();
+			}
 		}
 
 		private void emptyEmailsMenuItem_Click(object sender, EventArgs e)
@@ -456,11 +512,6 @@ SET State=NULL");
 			Application.Exit();
 		}
 
-		private void listMessages_MouseDoubleClick(object sender, MouseEventArgs e)
-		{
-			buttonPreview_Click(sender, e);
-		}
-
 		private void buttonPreview_Click(object sender, EventArgs e)
 		{
 			if ( listMessages.SelectedItems.Count == 0 )
@@ -474,20 +525,6 @@ SET State=NULL");
 			fBro.Show();
 		}
 
-		private void buttonAddLetter_Click(object sender, EventArgs e)
-		{
-			Letter letter;
-			FormLetter fLetter = new FormLetter();
-			if ( fLetter.ShowDialog() == DialogResult.OK )
-			{
-				letter = fLetter.letter;
-				dbClient.AddLetter(letter);
-
-				listMessages.DataSource = dbClient.GetMessagesList();
-			}
-		}
-
 		#endregion
-
 	}
 }

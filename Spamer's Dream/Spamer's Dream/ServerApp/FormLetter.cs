@@ -29,7 +29,8 @@ namespace ServerApp
 
 		private void buttonOK_Click(object sender, EventArgs e)
 		{
-			letter = new Letter(0, true);
+			if ( letter == null )
+				letter = new Letter(0, true);
 			this.letter.Subject = textSubject.Text;
 			this.letter.Body = textBody.Text;
 			this.letter.IsHtml = checkIsHtml.Checked;
