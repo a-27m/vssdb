@@ -13,6 +13,8 @@ namespace CommonTypes
 	[Serializable]
 	public class ServerInfo
 	{
+		public int Id = 0;
+
 		public string Host;
 		public int Port;
 
@@ -57,6 +59,49 @@ namespace CommonTypes
 		{
 			Username = null;
 			Password = null;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if ( obj is AuthServerInfo )
+			{
+				AuthServerInfo asi = obj as AuthServerInfo;
+
+				if ( asi.Host != this.Host )
+					return false;
+				if ( asi.Port != this.Port )
+					return false;
+				if ( asi.Username != this.Username )
+					return false;
+				if ( asi.Password != this.Password )
+					return false;
+				if ( asi.UseSSL != this.UseSSL )
+					return false;
+
+				return true;
+			}
+		}
+
+		public override string ToString()
+		{
+			// Id:1, user:pass @ smtp.rambler.ru:25, SSL
+
+			string asString = "";
+
+			if ( Id != 0 )
+				asString += "Id: " + Id.ToString() + ", ";
+
+			if ( Username != null )
+			{
+				asString += Username + ":" + Password + " @ ";
+			}
+
+			asString += Host + ":" + Port.ToString();
+
+			if ( UseSSL )
+				asString += ", SSL";
+
+			return asString;
 		}
 	}
 
@@ -336,6 +381,7 @@ ORDER BY RAND() LIMIT 1;");
 
 		}
 
+		#region Get[...]ById
 		public Robot GetRobotById(int Id)
 		{
 			string name, email;
@@ -455,7 +501,9 @@ WHERE Id=" + Id.ToString() + " LIMIT 1";
 
 			throw new Exception("Letter not found!");
 		}
+		#endregion
 
+		#region Get[...]List
 		public IEnumerable<SimpleMailTask> GetTasks(int CountLimit, int ClientID)
 		{
 			string sqlQuery;
@@ -575,6 +623,34 @@ WHERE State=" + DbClient.TokenSelected(ClientID);
 			if ( sqlReader != null )
 				sqlReader.Close();
 		}
+		public List<AuthServerInfo> GetSmtpsList()
+		{
+			List<AuthServerInfo> list = new List<AuthServerInfo>();
+			MySqlDataReader sqlReader = GetQueryReader(
+@"SELECT Id,Host,Port,Login,Password,UseSSL
+FROM smtpservers");
+			while ( sqlReader.Read() )
+			{
+				AuthServerInfo smtpServ = new AuthServerInfo();
+
+				smtpServ.Id = sqlReader.GetInt32(0);
+				smtpServ.Host = sqlReader.GetString(1);
+				smtpServ.Port = sqlReader.GetInt32(2);
+				smtpServ.UseSSL = sqlReader.GetBoolean(5);
+
+				if ( !sqlReader.IsDbNull(3) )
+				{
+					smtpServ.Username = sqlReader.GetString(3);
+					smtpServ.Password = sqlReader.GetString(4);
+				}
+
+				list.Add(smtpServ);
+			}
+			sqlReader.Close();
+
+			return list;
+		}
+		#endregion
 
 		/// <returns>single-QUOTED token</returns>
 		public static object TokenTaken(int ClientId)
@@ -687,7 +763,7 @@ WHERE Id={3}", subject, body, letter.IsHtml ? 1 : 0, id));
 		{
 			string strFSubject =
 				( letter.Subject != null ) &&
-				( letter.Subject != "" ) ?	"'{0}'" : "NULL";
+				( letter.Subject != "" ) ? "'{0}'" : "NULL";
 
 			string strFBody =
 				( letter.Body != null ) &&
@@ -704,10 +780,35 @@ WHERE Id={3}", subject, body, letter.IsHtml ? 1 : 0, id));
 SET Subject=" + strFSubject + ",Body=" + strFBody + @",IsHTML={2}",
 			  subject, body, letter.IsHtml ? 1 : 0));
 		}
-
-		public int DeleteMessage(int letterId)
+		public int DeleteLetter(int letterId)
 		{
 			return SendQuery("DELETE FROM messages WHERE Id=" + letterId.ToString() + " LIMIT 1");
+		}
+
+		public void AddSmtp(AuthServerInfo smtp)
+		{
+			string user, pass;
+
+			user = pass = "NULL";
+
+			if ( !String.IsNullOrEmpty(smtp.Username) )
+			{
+				user = "'" + smtp.Username + "'";
+
+				if ( smtp.Password == null )
+					smtp.Password = "";
+
+				pass = "'" + smtp.Password + "'";
+			}
+
+			SendQuery(string.Format("INSERT smtpservers " +
+				"SET Host='{0}',Port={1}," +
+				"Login=" + user + ",Password=" + pass +
+				",UseSSL={2}", smtp.Host, smtp.Port, smtp.UseSSL ? 1 : 0));
+		}
+		public int DeleteSmtp(int serverId)
+		{
+			return SendQuery("DELETE FROM smtpservers WHERE Id=" + serverId.ToString() + " LIMIT 1");
 		}
 	}
 }

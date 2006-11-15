@@ -43,6 +43,7 @@ WHERE
 		Settings sets = new Settings();
 
 		bool textMsgIDChanged = false;
+		bool smtpDataChanged = false;
 
 		public FormServer()
 		{
@@ -258,6 +259,8 @@ SET State=NULL");
 				case "tabMessages":
 					listMessages.DataSource = dbClient.GetMessagesList();
 					break;
+				case "tabSmtps":
+					listSmtps.DataSource = dbClient.GetSmtpsList();
 				}
 			}
 			else
@@ -372,7 +375,8 @@ SET State=NULL");
 			try { newId = int.Parse(textMsgID.Text); }
 			catch ( FormatException )
 			{
-				errorProvider.SetError(textMsgID, "Wrong message id, please enter integer number.");
+				errorProvider.SetError(textMsgID,
+					"Wrong message id, please enter integer number.");
 				return;
 			}
 
@@ -388,11 +392,15 @@ SET State=NULL");
 
 			tabControl1_SelectedIndexChanged(sender, e);
 
-			listEmails.SelectedIndexChanged -= tabEmails_listEmails_SelectedIndexChanged;
+			listEmails.SelectedIndexChanged -=
+				tabEmails_listEmails_SelectedIndexChanged;
 			listEmails.ClearSelected();
 			foreach ( int selIndex in currentSelection )
 				listEmails.SetSelected(selIndex, true);
-			listEmails.SelectedIndexChanged += tabEmails_listEmails_SelectedIndexChanged;
+			listEmails.SelectedIndexChanged += 
+				tabEmails_listEmails_SelectedIndexChanged;
+
+			textMsgIDChanged = false;
 		}
 
 		private void tabEmails_textMsgID_KeyPress(object sender, KeyPressEventArgs e)
@@ -438,7 +446,7 @@ SET State=NULL");
 
 		private void tabMsg_listMessages_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
-			buttonPreview_Click(sender, e);
+			tabMsg_buttonPreview_Click(sender, e);
 		}
 
 		private void tabMsg_buttonRemove_Click(object sender, EventArgs e)
@@ -460,7 +468,7 @@ SET State=NULL");
 					letter = dbClient.GetMessageById(letter.Id);
 
 					countRemoved +=
-					   dbClient.DeleteMessage(letter.Id);
+					   dbClient.DeleteLetter(letter.Id);
 
 				}
 				MessageBox.Show("Deleted " + countRemoved.ToString() + " letters",
@@ -469,6 +477,190 @@ SET State=NULL");
 
 				listMessages.DataSource = dbClient.GetMessagesList();
 			}
+		}
+
+		private void tabMsg_buttonPreview_Click(object sender, EventArgs e)
+		{
+			if ( listMessages.SelectedItems.Count == 0 )
+				return;
+
+			Letter letter;
+			letter = listMessages.SelectedValue as Letter;
+			letter = dbClient.GetMessageById(letter.Id);
+
+			FormBrowser fBro = new FormBrowser(letter.Body, letter.Subject);
+			fBro.Show();
+		}
+
+		private void tabSmtps_listSmtps_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if ( listEmails.SelectedItems.Count < 1 )
+			{
+				tabSmtps_ClearSmtpData();
+				return;
+			}
+
+			// check whether msgids differs for selection
+			AuthServerInfo prevItem = listSmtps.SelectedItems[0] as AuthServerInfo;
+
+			bool dataVaries = false;
+
+			foreach ( Object selItem in listSmtps.SelectedItems )
+			{
+				AuthServerInfo item = selItem as AuthServerInfo;
+				if(!prevItem.Equals(item))
+				{
+					dataVaries = true;
+					break;
+				}
+
+				prevItem = task;
+			}
+
+			if ( !dataVaries )
+			{
+				AuthServerInfo asi= listSmtps.SelectedValue as AuthServerInfo;
+				tabSmtps_textHost.Text = asi.Host;
+				tabSmtps_textPort.Text = asi.Port.ToString();
+				tabSmtps_textUser.Text = asi.Username;
+				tabSmtps_textPassword.Text = asi.Password;
+				tabSmtps_checkSSL.Checked = asi.UseSSL;
+			}
+			else
+			{
+				tabSmtps_ClearSmtpData();
+			}
+
+			smtpDataChanged = false;
+		}
+
+		private void tabSmtps_ClearSmtpData()
+		{
+			tabSmtps_textHost.Clear();
+			tabSmtps_textPassword.Clear();
+			tabSmtps_textPort.Clear();
+			tabSmtps_textUser.Clear();
+			tabSmtps_checkSSL.Checked = false;
+			return;
+		}
+
+		private void tabSmtps_smtpDataChanged(object sender, EventArgs e)
+		{
+			smtpDataChanged = true;
+		}
+
+		private void tabSmtps_buttonAdd_Click(object sender, EventArgs e)
+		{
+			AuthServerInfo smtp = _parseSmtpData();
+			if ( smtp == null )
+				return;
+
+			dbClient.AddSmtp(smtp);
+			listSmtps.DataSource = dbClient.GetSmtpsList();
+		}
+
+		private void tabSmtps_buttonSet_Click(object sender, EventArgs e)
+		{
+			if ( !smtpDataChanged )
+			    return;
+
+			if ( listSmtps.SelectedItems.Count < 1 )
+				return;
+			
+			AuthServerInfo newSmtp = _parseSmtpData();
+
+			if ( newSmtp == null )
+				return;
+
+			foreach ( object selItem in listSmtps.SelectedItems )
+			{
+				int curId = (selItem as AuthServerInfo).Id;			
+				dbClient.UpdateSmtp(curId, newSmtp);
+			}
+			
+			// save current selection
+			int[] currentSelection = new int[listSmtps.SelectedIndices.Count];
+			listSmtps.SelectedIndices.CopyTo(currentSelection, 0);
+
+			// what for we're doint this?
+			tabControl1_SelectedIndexChanged(sender, e);
+
+			// suspend SelectedIndexChanged processing
+			listSmtps.SelectedIndexChanged -= 
+				tabSmtps_listSmtps_SelectedIndexChanged;
+
+			// restore previous selection
+			listEmails.ClearSelected();
+			foreach ( int selIndex in currentSelection )
+				listSmtps.SetSelected(selIndex, true);
+
+			// restore SelectedIndexChanged processing
+			listSmtps.SelectedIndexChanged +=
+				tabSmtps_listSmtps_SelectedIndexChanged;
+
+			smtpDataChanged = false;
+		}
+
+		private void tabSmtps_buttonRemove_Click(object sender, EventArgs e)
+		{
+			if ( listSmtps.SelectedItems.Count == 0 )
+				return;
+
+			AuthServerInfo smtp;
+			if ( MessageBox.Show("Delete selected server" +
+				( listMessages.SelectedItems.Count > 1 ? "s?" : "?" ),
+				"Confirm remove operation",
+				 MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
+				 == DialogResult.OK )
+			{
+				int countRemoved = 0;
+				foreach ( Object selectedItem in listSmtps.SelectedItems )
+				{
+					smtp= selectedItem as AuthServerInfo;
+					smtp = dbClient.GetMessageById(smtp.Id);
+
+					countRemoved +=
+					   dbClient.DeleteSmtp(smtp.Id);
+				}
+
+				MessageBox.Show("Deleted " + countRemoved.ToString() + " servers",
+					"Successfully removed",
+					MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+				listSmtps.DataSource = dbClient.GetSmtpsList();
+			}
+		}
+
+		private AuthServerInfo _parseSmtpData()
+		{
+			errorProvider.Clear();
+
+			AuthServerInfo smtp = new AuthServerInfo();
+
+			smtp.Host = tabSmtps_textHost;
+
+			try { smtp.Port = int.Parse(tabSmtps_textPort.Text); }
+			catch ( FormatException )
+			{
+				errorProvider.SetError(tabSmtps_textPort, "Bad integer number!");
+				return null;
+			}
+
+			if ( ( smtp.Port < 1 ) || ( smtp.Port > 65535 ) )
+			{
+				errorProvider.SetError(tabSmtps_textPort, "Please, specify valid port number (1-65535)");
+				return null;
+			}
+
+			if ( tabSmtps_textUser.Text != "" )
+			{
+				smtp.Username = tabSmtps_textUser.Text;
+				smtp.Password = tabSmtps_textPassword;
+			}
+
+			smtp.UseSSL = tabSmtps_checkSSL.Checked;
+
+			return smtp;
 		}
 
 		private void emptyEmailsMenuItem_Click(object sender, EventArgs e)
@@ -495,19 +687,6 @@ SET State=NULL");
 			dbClient.CloseConnection();
 			this.DialogResult = DialogResult.OK;
 			Application.Exit();
-		}
-
-		private void buttonPreview_Click(object sender, EventArgs e)
-		{
-			if ( listMessages.SelectedItems.Count == 0 )
-				return;
-
-			Letter letter;
-			letter = listMessages.SelectedValue as Letter;
-			letter = dbClient.GetMessageById(letter.Id);
-
-			FormBrowser fBro = new FormBrowser(letter.Body, letter.Subject);
-			fBro.Show();
 		}
 
 		#endregion
