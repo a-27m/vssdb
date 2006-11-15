@@ -306,7 +306,6 @@ WHERE (IP <> '0.0.0.0') AND (IP <> '255.255.255.255')";
 					Query,
 					Environment.NewLine + Environment.NewLine,
 					ex.Message), ex);
-				//throw ex;
 			}
 
 			return LinesAffected;
