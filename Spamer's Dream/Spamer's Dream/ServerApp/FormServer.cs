@@ -261,6 +261,7 @@ SET State=NULL");
 					break;
 				case "tabSmtps":
 					listSmtps.DataSource = dbClient.GetSmtpsList();
+					break;
 				}
 			}
 			else
@@ -508,13 +509,13 @@ SET State=NULL");
 			foreach ( Object selItem in listSmtps.SelectedItems )
 			{
 				AuthServerInfo item = selItem as AuthServerInfo;
-				if(!prevItem.Equals(item))
+				if(!prevItem.EqualsNoId(item))
 				{
 					dataVaries = true;
 					break;
 				}
 
-				prevItem = task;
+				prevItem = item;
 			}
 
 			if ( !dataVaries )
@@ -617,7 +618,7 @@ SET State=NULL");
 				foreach ( Object selectedItem in listSmtps.SelectedItems )
 				{
 					smtp= selectedItem as AuthServerInfo;
-					smtp = dbClient.GetMessageById(smtp.Id);
+					smtp = dbClient.GetSmtpServerById(smtp.Id);
 
 					countRemoved +=
 					   dbClient.DeleteSmtp(smtp.Id);
@@ -637,7 +638,7 @@ SET State=NULL");
 
 			AuthServerInfo smtp = new AuthServerInfo();
 
-			smtp.Host = tabSmtps_textHost;
+			smtp.Host = tabSmtps_textHost.Text;
 
 			try { smtp.Port = int.Parse(tabSmtps_textPort.Text); }
 			catch ( FormatException )
@@ -652,10 +653,16 @@ SET State=NULL");
 				return null;
 			}
 
+			if ( tabSmtps_textHost.Text == "" )
+			{
+				errorProvider.SetError(tabSmtps_textHost, "Empty server name");
+				return null;
+			}
+
 			if ( tabSmtps_textUser.Text != "" )
 			{
 				smtp.Username = tabSmtps_textUser.Text;
-				smtp.Password = tabSmtps_textPassword;
+				smtp.Password = tabSmtps_textPassword.Text;
 			}
 
 			smtp.UseSSL = tabSmtps_checkSSL.Checked;
@@ -679,7 +686,7 @@ SET State=NULL");
 				"Confirm delete operation",
 				MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK ) )
 
-				dbClient.SendQuery("TRUNCATE TABLE Emails");
+				dbClient.ClearEmails();
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
