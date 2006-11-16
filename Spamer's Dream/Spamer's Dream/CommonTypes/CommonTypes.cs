@@ -61,7 +61,7 @@ namespace CommonTypes
 			Password = null;
 		}
 
-		public override bool Equals(object obj)
+		public bool EqualsNoId(object obj)
 		{
 			if ( obj is AuthServerInfo )
 			{
@@ -80,6 +80,7 @@ namespace CommonTypes
 
 				return true;
 			}
+			return false;
 		}
 
 		public override string ToString()
@@ -91,12 +92,12 @@ namespace CommonTypes
 			if ( Id != 0 )
 				asString += "Id: " + Id.ToString() + ", ";
 
+			asString += Host + ":" + Port.ToString();
+
 			if ( Username != null )
 			{
-				asString += Username + ":" + Password + " @ ";
+				asString += " (" + Username + ":" + Password + ")";
 			}
-
-			asString += Host + ":" + Port.ToString();
 
 			if ( UseSSL )
 				asString += ", SSL";
@@ -145,7 +146,7 @@ namespace CommonTypes
 		/// <summary>
 		/// Warning: searches with T~O(N^2)
 		/// </summary>
-		/// <param name="id">Id of requested message</param>
+		/// <param name="id">ID of requested message</param>
 		/// <returns>Requested letter or null if not found</returns>
 		public static Letter ById(IEnumerable<Letter> messages, int id)
 		{
@@ -171,25 +172,14 @@ namespace CommonTypes
 	public struct Robot
 	{
 		public int Id;
-		public MailAddress Address;
 		public string IP;
 		public int SmtpId;
 
 		public AuthServerInfo SmtpServer;
 
-		//public Robot(string Name, string IP, int SmtpId, AuthServerInfo SmtpServer)
-		//{
-		//    this.Id = 0;
-		//    this.Name = Name;
-		//    this.IP = IP;
-		//    this.SmtpId = SmtpId;
-		//    this.SmtpServer = SmtpServer;
-		//}
-
-		public Robot(MailAddress Address, string IP, int SmtpId, AuthServerInfo SmtpServer)
+		public Robot(string IP, int SmtpId, AuthServerInfo SmtpServer)
 		{
 			this.Id = 0;
-			this.Address = Address;
 			this.IP = IP;
 			this.SmtpId = SmtpId;
 			this.SmtpServer = SmtpServer;
@@ -199,7 +189,6 @@ namespace CommonTypes
 		{
 			this.IP = IP;
 			this.Id = Id;
-			this.Address = null;
 			this.SmtpId = 0;
 			this.SmtpServer = null;
 		}
@@ -384,76 +373,25 @@ ORDER BY RAND() LIMIT 1;");
 		#region Get[...]ById
 		public Robot GetRobotById(int Id)
 		{
-			string name, email;
-			MailAddress mailAddr = null;
-
 			string ip;
 			int smtpId;
 			Robot robot;
 
 			MySqlDataReader sqlReader = GetQueryReader(
-@"SELECT Email,Name,IP,SmtpID
+@"SELECT IP,SmtpID
 FROM robots
 WHERE Id=" + Id.ToString() + " LIMIT 1;");
 
 			if ( sqlReader != null )
 				if ( sqlReader.Read() )
 				{
-					email = sqlReader.GetString(0);
-
-					if ( !sqlReader.IsDBNull(1) )
-					{
-						name = sqlReader.GetString(1);
-						mailAddr = new MailAddress(email, name);
-					}
-					else
-						mailAddr = new MailAddress(email);
-
-					ip = sqlReader.GetString(2);
-					smtpId = sqlReader.GetInt32(3);
+					ip = sqlReader.GetString(0);
+					smtpId = sqlReader.GetInt32(1);
 
 					sqlReader.Close();
 
-					robot = new Robot(mailAddr, ip, smtpId, null);
+					robot = new Robot(ip, smtpId, null);
 					return robot;
-				}
-
-			throw new Exception("Robot with ID " + Id.ToString() +
-				" is unknown in database " + DbName);
-		}
-		public MailAddress GetRobotAddrById(int Id)
-		{
-			string name = null, email = null;
-			MailAddress mailAddr = null;
-
-			MySqlDataReader sqlReader = GetQueryReader(
-@"SELECT Email,Name
-FROM robots
-WHERE Id=" + Id.ToString() + " LIMIT 1;");
-
-			if ( sqlReader != null )
-				if ( sqlReader.Read() )
-				{
-					if ( !sqlReader.IsDBNull(0) )
-						email = sqlReader.GetString(0);
-
-					if ( !sqlReader.IsDBNull(1) )
-						name = sqlReader.GetString(1);
-					sqlReader.Close();
-
-					if ( email == null )
-					{
-						return null;
-					}
-					else
-					{
-						if ( name == null )
-							mailAddr = new MailAddress(email);
-						else
-							mailAddr = new MailAddress(email, name);
-
-						return mailAddr;
-					}
 				}
 
 			throw new Exception("Robot with ID " + Id.ToString() +
@@ -466,6 +404,7 @@ WHERE Id=" + Id.ToString() + " LIMIT 1;");
 				if ( sqlReader.Read() )
 				{
 					AuthServerInfo servInf = new AuthServerInfo();
+					servInf.Id = id;
 					servInf.Host = sqlReader.GetString(0);// Host
 					servInf.Port = sqlReader.GetInt32(1);// Port
 					servInf.Username = sqlReader.GetString(2);// login
@@ -552,8 +491,8 @@ WHERE State=" + DbClient.TokenSelected(ClientID);
 @"UPDATE emails
 SET State=" + DbClient.TokenTaken(ClientID) + @"
 WHERE State=" + DbClient.TokenSelected(ClientID);
-			if ( SendQuery(sqlQuery) < 1 )
-				yield break;
+
+			SendQuery(sqlQuery);
 
 			yield break;
 		}
@@ -638,7 +577,7 @@ FROM smtpservers");
 				smtpServ.Port = sqlReader.GetInt32(2);
 				smtpServ.UseSSL = sqlReader.GetBoolean(5);
 
-				if ( !sqlReader.IsDbNull(3) )
+				if ( !sqlReader.IsDBNull(3) )
 				{
 					smtpServ.Username = sqlReader.GetString(3);
 					smtpServ.Password = sqlReader.GetString(4);
@@ -707,6 +646,29 @@ SET Subject=" + strFSubject + ",Body=" + strFBody + @",IsHTML={2}
 WHERE Id={3}", subject, body, letter.IsHtml ? 1 : 0, id));
 
 		}
+		public void UpdateSmtp(int id, AuthServerInfo smtp)
+		{
+			string user, pass;
+
+			user = pass = "NULL";
+
+			if ( !String.IsNullOrEmpty(smtp.Username) )
+			{
+				user = "'" + smtp.Username + "'";
+
+				if ( smtp.Password == null )
+					smtp.Password = "";
+
+				pass = "'" + smtp.Password + "'";
+			}
+
+			SendQuery(string.Format("UPDATE smtpservers " +
+				"SET Host='{0}',Port={1}," +
+				"Login=" + user + ",Password=" + pass +
+				",UseSSL={2} WHERE Id={3}",
+				smtp.Host, smtp.Port,
+				smtp.UseSSL ? 1 : 0, id));
+		}
 
 		public void AddEmail(string email)
 		{
@@ -728,6 +690,10 @@ WHERE Id={3}", subject, body, letter.IsHtml ? 1 : 0, id));
 			SendQuery(string.Format(@"INSERT Emails SET Email='{0}',Username='{1}',MsgID={2}",
 				email, displayName, MsgId));
 		}
+		public void ClearEmails()
+		{
+			SendQuery("TRUNCATE TABLE Emails");
+		}
 
 		public void AddRobot(string ipStr)
 		{
@@ -739,24 +705,9 @@ WHERE Id={3}", subject, body, letter.IsHtml ? 1 : 0, id));
 
 			sqlReader.Close();
 		}
-		public void AddRobot(string ipStr, MailAddress mailAddress)
+		public int DeleteRobot(int robotId)
 		{
-			string name = string.Join("\\'",
-				mailAddress.DisplayName.Split('\''));
-
-			string query = string.Format(@" Robots SET IP='{0}',Name='{1}',Email='{2}'",
-					ipStr, name, mailAddress.Address);
-
-			MySqlDataReader sqlReader =
-				GetQueryReader("SELECT * FROM Robots WHERE IP='" + ipStr + "'");
-
-			if ( sqlReader.Read() )
-				query = "UPDATE" + query;
-			else
-				query = "INSERT" + query;
-			sqlReader.Close();
-
-			SendQuery(query);
+			return SendQuery("DELETE FROM robots WHERE Id=" + robotId.ToString() + " LIMIT 1");
 		}
 
 		public void AddLetter(Letter letter)
@@ -810,5 +761,6 @@ SET Subject=" + strFSubject + ",Body=" + strFBody + @",IsHTML={2}",
 		{
 			return SendQuery("DELETE FROM smtpservers WHERE Id=" + serverId.ToString() + " LIMIT 1");
 		}
+
 	}
 }
