@@ -367,7 +367,6 @@ ORDER BY RAND() LIMIT 1;");
 				}
 
 			throw new Exception("Failed to aquire SMTP server parameters from database");
-
 		}
 
 		#region Get[...]ById
