@@ -36,20 +36,23 @@ namespace CommonTypes
 	{
 		public bool UseSSL = false;
 
-		public string Username;
+		public string Login;
 		public string Password;
+
+		public string FromName;
+		public string FromAddr;
 
 		public AuthServerInfo(string host, int port, string username, string password)
 			: base(host, port)
 		{
-			Username = username;
+			Login = username;
 			Password = password;
 		}
 
 		public AuthServerInfo(string host, int port, string username, string password, bool UseSsl)
 			: base(host, port)
 		{
-			this.Username = username;
+			this.Login = username;
 			this.Password = password;
 			this.UseSSL = UseSsl;
 		}
@@ -57,7 +60,7 @@ namespace CommonTypes
 		public AuthServerInfo()
 			: base()
 		{
-			Username = null;
+			Login = null;
 			Password = null;
 		}
 
@@ -71,11 +74,15 @@ namespace CommonTypes
 					return false;
 				if ( asi.Port != this.Port )
 					return false;
-				if ( asi.Username != this.Username )
+				if ( asi.Login != this.Login )
 					return false;
 				if ( asi.Password != this.Password )
 					return false;
 				if ( asi.UseSSL != this.UseSSL )
+					return false;
+				if ( asi.FromAddr != this.FromAddr )
+					return false;
+				if ( asi.FromName != this.FromName )
 					return false;
 
 				return true;
@@ -85,7 +92,42 @@ namespace CommonTypes
 
 		public override string ToString()
 		{
-			// Id:1, user:pass @ smtp.rambler.ru:25, SSL
+			// Idn; host;port; user;pass; SSL "name" <email>
+			// #1; smtp.rambler.ru;25; m27-a;rNY7rIUUd; SSL; "Alex" <m27-a@mail.ru>
+
+			string asString = "";
+
+			if ( Id != 0 )
+				asString += "#" + Id.ToString() + "; ";
+
+			asString += Host + ";" + Port.ToString();
+
+			if ( Login != null )
+			{
+				asString += "; " + Login + ";" + Password + ";";
+			}
+
+			if ( UseSSL )
+				asString += "; SSL";
+
+			if ( FromAddr != null )
+			{
+				if ( FromName != null )
+					asString += "; \"" + FromName + "\" <";
+
+				asString += FromAddr;
+
+				if ( FromName != null )
+					asString += ">";
+			}
+
+			return asString;
+		}
+
+		public string ToStringNoFrom()
+		{
+			// Id:n host:port (name user:pass), SSL
+			// Id:1 smtp.rambler.ru:25 (Alex m27-a:rNY7rIUUd) SSL
 
 			string asString = "";
 
@@ -94,9 +136,9 @@ namespace CommonTypes
 
 			asString += Host + ":" + Port.ToString();
 
-			if ( Username != null )
+			if ( Login != null )
 			{
-				asString += " (" + Username + ":" + Password + ")";
+				asString += " (" + Login + ":" + Password + ")";
 			}
 
 			if ( UseSSL )
@@ -244,7 +286,7 @@ namespace CommonTypes
 		#region const strings
 
 		public const string selectSmtpByIdQuery =
-@"SELECT Host,Port,Login,Password,UseSSL
+@"SELECT Host,Port,Login,Password,UseSSL,Name,Email
 FROM smtpservers
 WHERE Id = ";
 
@@ -406,9 +448,12 @@ WHERE Id=" + Id.ToString() + " LIMIT 1;");
 					servInf.Id = id;
 					servInf.Host = sqlReader.GetString(0);// Host
 					servInf.Port = sqlReader.GetInt32(1);// Port
-					servInf.Username = sqlReader.GetString(2);// login
+					servInf.Login = sqlReader.GetString(2);// login
 					servInf.Password = sqlReader.GetString(3);// Password
 					servInf.UseSSL = sqlReader.GetBoolean(4); // UseSSL
+					if ( !sqlReader.IsDBNull(5) )
+						servInf.FromName = sqlReader.GetString(5); // name
+					servInf.FromAddr = sqlReader.GetString(6); // e-mail
 
 					sqlReader.Close();
 					return servInf;
@@ -565,7 +610,7 @@ WHERE State=" + DbClient.TokenSelected(ClientID);
 		{
 			List<AuthServerInfo> list = new List<AuthServerInfo>();
 			MySqlDataReader sqlReader = GetQueryReader(
-@"SELECT Id,Host,Port,Login,Password,UseSSL
+@"SELECT Id,Host,Port,Login,Password,UseSSL,
 FROM smtpservers");
 			while ( sqlReader.Read() )
 			{
@@ -578,7 +623,7 @@ FROM smtpservers");
 
 				if ( !sqlReader.IsDBNull(3) )
 				{
-					smtpServ.Username = sqlReader.GetString(3);
+					smtpServ.Login = sqlReader.GetString(3);
 					smtpServ.Password = sqlReader.GetString(4);
 				}
 
@@ -651,9 +696,9 @@ WHERE Id={3}", subject, body, letter.IsHtml ? 1 : 0, id));
 
 			user = pass = "NULL";
 
-			if ( !String.IsNullOrEmpty(smtp.Username) )
+			if ( !String.IsNullOrEmpty(smtp.Login) )
 			{
-				user = "'" + smtp.Username + "'";
+				user = "'" + smtp.Login + "'";
 
 				if ( smtp.Password == null )
 					smtp.Password = "";
@@ -741,9 +786,9 @@ SET Subject=" + strFSubject + ",Body=" + strFBody + @",IsHTML={2}",
 
 			user = pass = "NULL";
 
-			if ( !String.IsNullOrEmpty(smtp.Username) )
+			if ( !String.IsNullOrEmpty(smtp.Login) )
 			{
-				user = "'" + smtp.Username + "'";
+				user = "'" + smtp.Login + "'";
 
 				if ( smtp.Password == null )
 					smtp.Password = "";

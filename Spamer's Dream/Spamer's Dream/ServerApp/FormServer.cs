@@ -523,7 +523,7 @@ SET State=NULL");
 				AuthServerInfo asi= listSmtps.SelectedValue as AuthServerInfo;
 				tabSmtps_textHost.Text = asi.Host;
 				tabSmtps_textPort.Text = asi.Port.ToString();
-				tabSmtps_textUser.Text = asi.Username;
+				tabSmtps_textUser.Text = asi.Login;
 				tabSmtps_textPassword.Text = asi.Password;
 				tabSmtps_checkSSL.Checked = asi.UseSSL;
 			}
@@ -661,7 +661,7 @@ SET State=NULL");
 
 			if ( tabSmtps_textUser.Text != "" )
 			{
-				smtp.Username = tabSmtps_textUser.Text;
+				smtp.Login = tabSmtps_textUser.Text;
 				smtp.Password = tabSmtps_textPassword.Text;
 			}
 

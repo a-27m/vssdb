@@ -53,7 +53,7 @@
     <Setting Name="SwitchSmtpOnEveryTask" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ErrorsBeforeSwitchSmtp" Type="System.String" Scope="User">
+    <Setting Name="ErrorsBeforeSwitchSmtp" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3</Value>
     </Setting>
   </Settings>
