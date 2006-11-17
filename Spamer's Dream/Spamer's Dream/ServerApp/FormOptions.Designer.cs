@@ -52,6 +52,15 @@ namespace ServerApp
 			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
 			// 
+			// label1
+			// 
+			label1.AutoSize = true;
+			label1.Location = new System.Drawing.Point(5, 19);
+			label1.Name = "label1";
+			label1.Size = new System.Drawing.Size(98, 13);
+			label1.TabIndex = 2;
+			label1.Text = "Incoming (server\'s):";
+			// 
 			// buttonOk
 			// 
 			this.buttonOk.Location = new System.Drawing.Point(46, 220);
@@ -73,21 +82,12 @@ namespace ServerApp
 			this.buttonCancel.UseVisualStyleBackColor = true;
 			this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
 			// 
-			// label1
-			// 
-			label1.AutoSize = true;
-			label1.Location = new System.Drawing.Point(5, 19);
-			label1.Name = "label1";
-			label1.Size = new System.Drawing.Size(98, 13);
-			label1.TabIndex = 2;
-			label1.Text = "Incoming (server\'s):";
-			// 
 			// textUdpInPort
 			// 
 			this.textUdpInPort.Location = new System.Drawing.Point(9, 35);
 			this.textUdpInPort.Name = "textUdpInPort";
 			this.textUdpInPort.Size = new System.Drawing.Size(100, 20);
-			this.textUdpInPort.TabIndex = 3;
+			this.textUdpInPort.TabIndex = 0;
 			this.textUdpInPort.Text = "?";
 			// 
 			// errorProvider
@@ -100,7 +100,7 @@ namespace ServerApp
 			this.textDbHost.Location = new System.Drawing.Point(9, 32);
 			this.textDbHost.Name = "textDbHost";
 			this.textDbHost.Size = new System.Drawing.Size(100, 20);
-			this.textDbHost.TabIndex = 5;
+			this.textDbHost.TabIndex = 0;
 			this.textDbHost.Text = "?";
 			// 
 			// label2
@@ -117,7 +117,7 @@ namespace ServerApp
 			this.textDbUser.Location = new System.Drawing.Point(9, 81);
 			this.textDbUser.Name = "textDbUser";
 			this.textDbUser.Size = new System.Drawing.Size(100, 20);
-			this.textDbUser.TabIndex = 7;
+			this.textDbUser.TabIndex = 2;
 			this.textDbUser.Text = "?";
 			// 
 			// label3
@@ -134,7 +134,7 @@ namespace ServerApp
 			this.textDbPassword.Location = new System.Drawing.Point(117, 81);
 			this.textDbPassword.Name = "textDbPassword";
 			this.textDbPassword.Size = new System.Drawing.Size(100, 20);
-			this.textDbPassword.TabIndex = 9;
+			this.textDbPassword.TabIndex = 3;
 			this.textDbPassword.UseSystemPasswordChar = true;
 			this.textDbPassword.TextChanged += new System.EventHandler(this.textDbPassword_TextChanged);
 			// 
@@ -152,7 +152,7 @@ namespace ServerApp
 			this.textDbName.Location = new System.Drawing.Point(117, 32);
 			this.textDbName.Name = "textDbName";
 			this.textDbName.Size = new System.Drawing.Size(100, 20);
-			this.textDbName.TabIndex = 11;
+			this.textDbName.TabIndex = 1;
 			this.textDbName.Text = "?";
 			// 
 			// label5
@@ -186,7 +186,7 @@ namespace ServerApp
 			this.textUdpOutPort.Location = new System.Drawing.Point(117, 35);
 			this.textUdpOutPort.Name = "textUdpOutPort";
 			this.textUdpOutPort.Size = new System.Drawing.Size(100, 20);
-			this.textUdpOutPort.TabIndex = 14;
+			this.textUdpOutPort.TabIndex = 1;
 			this.textUdpOutPort.Text = "?";
 			// 
 			// label6

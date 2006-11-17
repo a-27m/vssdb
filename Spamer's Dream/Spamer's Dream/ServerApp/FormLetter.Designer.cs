@@ -71,7 +71,7 @@ namespace ServerApp
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 18F));
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 22F));
 			this.tableLayoutPanel1.Controls.Add(this.textSubject, 1, 2);
 			this.tableLayoutPanel1.Controls.Add(this.textBody, 1, 4);
 			this.tableLayoutPanel1.Controls.Add(this.buttonLoad, 2, 5);
@@ -103,7 +103,7 @@ namespace ServerApp
 			this.textSubject.Location = new System.Drawing.Point(21, 41);
 			this.textSubject.Name = "textSubject";
 			this.textSubject.Size = new System.Drawing.Size(414, 20);
-			this.textSubject.TabIndex = 2;
+			this.textSubject.TabIndex = 0;
 			// 
 			// textBody
 			// 
@@ -113,7 +113,7 @@ namespace ServerApp
 			this.textBody.Multiline = true;
 			this.textBody.Name = "textBody";
 			this.textBody.Size = new System.Drawing.Size(414, 136);
-			this.textBody.TabIndex = 3;
+			this.textBody.TabIndex = 1;
 			// 
 			// buttonLoad
 			// 
@@ -121,7 +121,7 @@ namespace ServerApp
 			this.buttonLoad.Location = new System.Drawing.Point(360, 243);
 			this.buttonLoad.Name = "buttonLoad";
 			this.buttonLoad.Size = new System.Drawing.Size(75, 23);
-			this.buttonLoad.TabIndex = 5;
+			this.buttonLoad.TabIndex = 3;
 			this.buttonLoad.Text = "Load ...";
 			this.buttonLoad.UseVisualStyleBackColor = true;
 			this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
@@ -134,7 +134,7 @@ namespace ServerApp
 			this.checkIsHtml.Location = new System.Drawing.Point(21, 243);
 			this.checkIsHtml.Name = "checkIsHtml";
 			this.checkIsHtml.Size = new System.Drawing.Size(83, 17);
-			this.checkIsHtml.TabIndex = 4;
+			this.checkIsHtml.TabIndex = 2;
 			this.checkIsHtml.Text = "It\'s in HTML";
 			this.checkIsHtml.UseVisualStyleBackColor = true;
 			this.checkIsHtml.CheckedChanged += new System.EventHandler(this.checkIsHtml_CheckedChanged);
@@ -146,7 +146,7 @@ namespace ServerApp
 			this.buttonOK.Location = new System.Drawing.Point(150, 291);
 			this.buttonOK.Name = "buttonOK";
 			this.buttonOK.Size = new System.Drawing.Size(75, 24);
-			this.buttonOK.TabIndex = 2;
+			this.buttonOK.TabIndex = 4;
 			this.buttonOK.Text = "OK";
 			this.buttonOK.UseVisualStyleBackColor = true;
 			this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -158,7 +158,7 @@ namespace ServerApp
 			this.buttonCancel.Location = new System.Drawing.Point(231, 291);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(75, 24);
-			this.buttonCancel.TabIndex = 6;
+			this.buttonCancel.TabIndex = 5;
 			this.buttonCancel.Text = "Cancel";
 			this.buttonCancel.UseVisualStyleBackColor = true;
 			this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);

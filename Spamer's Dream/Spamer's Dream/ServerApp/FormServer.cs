@@ -191,7 +191,7 @@ WHERE
 		private void FormServer_Shown(object sender, EventArgs e)
 		{
 			double msec = 600;
-			double steps = 100;
+			double steps = 30;
 			for ( double i = this.Opacity; i <= 1.0; i += 1.0 / steps )
 			{
 				this.Opacity = i;
@@ -202,7 +202,7 @@ WHERE
 		private void FormServer_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			double msec = 5;
-			double steps = 80;
+			double steps = 40;
 			for ( double i = this.Opacity; i >= 0; i -= 1.0 / steps )
 			{
 				this.Opacity = i;
@@ -262,6 +262,9 @@ SET State=NULL");
 				case "tabSmtps":
 					listSmtps.DataSource = dbClient.GetSmtpsList();
 					break;
+				case "tabRobots":
+					listRobots.DataSource = dbClient.GetRobotsList();
+					break;
 				}
 			}
 			else
@@ -272,6 +275,41 @@ SET State=NULL");
 			}
 		}
 
+		private void tabEmails_listEmails_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if ( listEmails.SelectedItems.Count < 1 )
+			{
+				textMsgID.Clear();
+				return;
+			}
+			// check whether msgids differs for selection
+			SimpleMailTask prevTask = listEmails.SelectedItems[0] as SimpleMailTask;
+
+			bool MsgIdVaries = false;
+
+			foreach ( Object selItem in listEmails.SelectedItems )
+			{
+				SimpleMailTask task = selItem as SimpleMailTask;
+				if ( task.MessageID != prevTask.MessageID )
+				{
+					MsgIdVaries = true;
+					break;
+				}
+				prevTask = task;
+			}
+
+			if ( !MsgIdVaries )
+			{
+				SimpleMailTask task = listEmails.SelectedValue as SimpleMailTask;
+				textMsgID.Text = task.MessageID.ToString();
+			}
+			else
+			{
+				textMsgID.Clear();
+			}
+
+			textMsgIDChanged = false;
+		}
 		private void tabEmails_buttonLoad_Click(object sender, EventArgs e)
 		{
 			if ( openFileDialogEmails.ShowDialog() == DialogResult.OK )
@@ -323,48 +361,10 @@ SET State=NULL");
 				tabControl1_SelectedIndexChanged(sender, e);
 			}
 		}
-
 		private void tabEmails_textMsgID_TextChanged(object sender, EventArgs e)
 		{
 			textMsgIDChanged = true;
 		}
-
-		private void tabEmails_listEmails_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if ( listEmails.SelectedItems.Count < 1 )
-			{
-				textMsgID.Clear();
-				return;
-			}
-			// check whether msgids differs for selection
-			SimpleMailTask prevTask = listEmails.SelectedItems[0] as SimpleMailTask;
-
-			bool MsgIdVaries = false;
-
-			foreach ( Object selItem in listEmails.SelectedItems )
-			{
-				SimpleMailTask task = selItem as SimpleMailTask;
-				if ( task.MessageID != prevTask.MessageID )
-				{
-					MsgIdVaries = true;
-					break;
-				}
-				prevTask = task;
-			}
-
-			if ( !MsgIdVaries )
-			{
-				SimpleMailTask task = listEmails.SelectedValue as SimpleMailTask;
-				textMsgID.Text = task.MessageID.ToString();
-			}
-			else
-			{
-				textMsgID.Clear();
-			}
-
-			textMsgIDChanged = false;
-		}
-
 		private void tabEmails_buttonSet_Click(object sender, EventArgs e)
 		{
 			if ( !textMsgIDChanged )
@@ -398,12 +398,11 @@ SET State=NULL");
 			listEmails.ClearSelected();
 			foreach ( int selIndex in currentSelection )
 				listEmails.SetSelected(selIndex, true);
-			listEmails.SelectedIndexChanged += 
+			listEmails.SelectedIndexChanged +=
 				tabEmails_listEmails_SelectedIndexChanged;
 
 			textMsgIDChanged = false;
 		}
-
 		private void tabEmails_textMsgID_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			if ( e.KeyChar == (char)( Keys.Enter ) )
@@ -431,7 +430,6 @@ SET State=NULL");
 			dbClient.UpdateMessage(letter.Id, letter);
 			listMessages.DataSource = dbClient.GetMessagesList();
 		}
-
 		private void tabMsg_buttonAddLetter_Click(object sender, EventArgs e)
 		{
 			Letter letter;
@@ -444,12 +442,10 @@ SET State=NULL");
 				listMessages.DataSource = dbClient.GetMessagesList();
 			}
 		}
-
 		private void tabMsg_listMessages_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
 			tabMsg_buttonPreview_Click(sender, e);
 		}
-
 		private void tabMsg_buttonRemove_Click(object sender, EventArgs e)
 		{
 			if ( listMessages.SelectedItems.Count == 0 )
@@ -479,7 +475,6 @@ SET State=NULL");
 				listMessages.DataSource = dbClient.GetMessagesList();
 			}
 		}
-
 		private void tabMsg_buttonPreview_Click(object sender, EventArgs e)
 		{
 			if ( listMessages.SelectedItems.Count == 0 )
@@ -501,7 +496,7 @@ SET State=NULL");
 				return;
 			}
 
-			// check whether msgids differs for selection
+			// check whether data differs for selection
 			AuthServerInfo prevItem = listSmtps.SelectedItems[0] as AuthServerInfo;
 
 			bool dataVaries = false;
@@ -509,7 +504,7 @@ SET State=NULL");
 			foreach ( Object selItem in listSmtps.SelectedItems )
 			{
 				AuthServerInfo item = selItem as AuthServerInfo;
-				if(!prevItem.EqualsNoId(item))
+				if ( !prevItem.EqualsNoId(item) )
 				{
 					dataVaries = true;
 					break;
@@ -520,12 +515,14 @@ SET State=NULL");
 
 			if ( !dataVaries )
 			{
-				AuthServerInfo asi= listSmtps.SelectedValue as AuthServerInfo;
+				AuthServerInfo asi = listSmtps.SelectedValue as AuthServerInfo;
 				tabSmtps_textHost.Text = asi.Host;
 				tabSmtps_textPort.Text = asi.Port.ToString();
-				tabSmtps_textUser.Text = asi.Login;
+				tabSmtps_textLogin.Text = asi.Login;
 				tabSmtps_textPassword.Text = asi.Password;
 				tabSmtps_checkSSL.Checked = asi.UseSSL;
+				tabSmtps_textName.Text = asi.FromName;
+				tabSmtps_textEmail.Text = asi.FromAddr;
 			}
 			else
 			{
@@ -534,22 +531,21 @@ SET State=NULL");
 
 			smtpDataChanged = false;
 		}
-
 		private void tabSmtps_ClearSmtpData()
 		{
 			tabSmtps_textHost.Clear();
 			tabSmtps_textPassword.Clear();
 			tabSmtps_textPort.Clear();
-			tabSmtps_textUser.Clear();
+			tabSmtps_textLogin.Clear();
 			tabSmtps_checkSSL.Checked = false;
+			tabSmtps_textName.Clear();
+			tabSmtps_textEmail.Clear();
 			return;
 		}
-
 		private void tabSmtps_smtpDataChanged(object sender, EventArgs e)
 		{
 			smtpDataChanged = true;
 		}
-
 		private void tabSmtps_buttonAdd_Click(object sender, EventArgs e)
 		{
 			AuthServerInfo smtp = _parseSmtpData();
@@ -559,15 +555,14 @@ SET State=NULL");
 			dbClient.AddSmtp(smtp);
 			listSmtps.DataSource = dbClient.GetSmtpsList();
 		}
-
 		private void tabSmtps_buttonSet_Click(object sender, EventArgs e)
 		{
 			if ( !smtpDataChanged )
-			    return;
+				return;
 
 			if ( listSmtps.SelectedItems.Count < 1 )
 				return;
-			
+
 			AuthServerInfo newSmtp = _parseSmtpData();
 
 			if ( newSmtp == null )
@@ -575,10 +570,10 @@ SET State=NULL");
 
 			foreach ( object selItem in listSmtps.SelectedItems )
 			{
-				int curId = (selItem as AuthServerInfo).Id;			
+				int curId = ( selItem as AuthServerInfo ).Id;
 				dbClient.UpdateSmtp(curId, newSmtp);
 			}
-			
+
 			// save current selection
 			int[] currentSelection = new int[listSmtps.SelectedIndices.Count];
 			listSmtps.SelectedIndices.CopyTo(currentSelection, 0);
@@ -587,7 +582,7 @@ SET State=NULL");
 			tabControl1_SelectedIndexChanged(sender, e);
 
 			// suspend SelectedIndexChanged processing
-			listSmtps.SelectedIndexChanged -= 
+			listSmtps.SelectedIndexChanged -=
 				tabSmtps_listSmtps_SelectedIndexChanged;
 
 			// restore previous selection
@@ -601,7 +596,6 @@ SET State=NULL");
 
 			smtpDataChanged = false;
 		}
-
 		private void tabSmtps_buttonRemove_Click(object sender, EventArgs e)
 		{
 			if ( listSmtps.SelectedItems.Count == 0 )
@@ -617,7 +611,7 @@ SET State=NULL");
 				int countRemoved = 0;
 				foreach ( Object selectedItem in listSmtps.SelectedItems )
 				{
-					smtp= selectedItem as AuthServerInfo;
+					smtp = selectedItem as AuthServerInfo;
 					smtp = dbClient.GetSmtpServerById(smtp.Id);
 
 					countRemoved +=
@@ -631,7 +625,6 @@ SET State=NULL");
 				listSmtps.DataSource = dbClient.GetSmtpsList();
 			}
 		}
-
 		private AuthServerInfo _parseSmtpData()
 		{
 			errorProvider.Clear();
@@ -659,15 +652,94 @@ SET State=NULL");
 				return null;
 			}
 
-			if ( tabSmtps_textUser.Text != "" )
+			if ( tabSmtps_textLogin.Text != "" )
 			{
-				smtp.Login = tabSmtps_textUser.Text;
+				smtp.Login = tabSmtps_textLogin.Text;
 				smtp.Password = tabSmtps_textPassword.Text;
 			}
+
+			if ( tabSmtps_textName.Text != "" )
+			{
+				smtp.FromName = tabSmtps_textName.Text;
+			}
+			if ( tabSmtps_textEmail.Text == "" )
+			{
+				errorProvider.SetError(tabSmtps_textEmail, "\"From\" e-mail must to present.");
+				return null;
+			}
+			smtp.FromAddr = tabSmtps_textEmail.Text;
 
 			smtp.UseSSL = tabSmtps_checkSSL.Checked;
 
 			return smtp;
+		}
+
+		private void tabRobots_buttonAdd_Click(object sender, EventArgs e)
+		{
+			tabRobots_textIP.Text.Trim();
+
+			string[] str_octets = tabRobots_textIP.Text.Split('.');
+			if ( str_octets.Length != 4 )
+			{
+				errorProvider.SetError(tabRobots_textIP, "Wrong IP address.");
+			}
+
+			byte[] octets = new byte[4];
+			IPAddress ip;
+
+			try
+			{
+				for ( int i = 0; i < 4; i++ )
+					octets[i] = byte.Parse(str_octets[i]);
+			}
+			catch ( FormatException )
+			{
+				errorProvider.SetError(tabRobots_textIP, "Wrong IP address format," + Environment.NewLine +
+					" please use xxx.xxx.xxx.xxx format.");
+				return;
+			}
+
+			ip = new IPAddress(octets);
+
+			dbClient.AddRobot(ip.ToString());
+			listRobots.DataSource = dbClient.GetRobotsList();
+		}
+		private void tabRobots_buttonRemove_Click(object sender, EventArgs e)
+		{
+			if ( listRobots.SelectedItems.Count == 0 )
+				return;
+
+			Robot robot;
+			if ( MessageBox.Show("Delete selected robot" +
+				( listMessages.SelectedItems.Count > 1 ? "s?" : "?" ),
+				"Confirm remove operation",
+				 MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
+				 == DialogResult.OK )
+			{
+				int countRemoved = 0;
+				foreach ( Object selectedItem in listRobots.SelectedItems )
+				{
+					robot = selectedItem as Robot;
+					robot = dbClient.GetRobotById(robot.Id);
+
+					countRemoved +=
+					   dbClient.DeleteRobot(robot.Id);
+				}
+
+				MessageBox.Show("Deleted " + countRemoved.ToString() +
+					" robot" + ( countRemoved > 1 ? "s." : "." ),
+					"Successfully removed",
+					MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+				listRobots.DataSource = dbClient.GetRobotsList();
+			}
+		}
+		private void tabRobots_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if ( listRobots.SelectedItems.Count != 1 )
+				return;
+
+			tabRobots_textIP.Text = ( listRobots.SelectedValue as Robot ).IP;
 		}
 
 		private void emptyEmailsMenuItem_Click(object sender, EventArgs e)

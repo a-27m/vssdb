@@ -104,7 +104,7 @@ namespace CommonTypes
 
 			if ( Login != null )
 			{
-				asString += "; " + Login + ";" + Password + ";";
+				asString += "; " + Login + ";" + Password;
 			}
 
 			if ( UseSSL )
@@ -211,7 +211,7 @@ namespace CommonTypes
 		}
 	}
 
-	public struct Robot
+	public class Robot
 	{
 		public int Id;
 		public string IP;
@@ -233,6 +233,11 @@ namespace CommonTypes
 			this.Id = Id;
 			this.SmtpId = 0;
 			this.SmtpServer = null;
+		}
+
+		public override string ToString()
+		{
+			return "#" + Id.ToString() + " " + IP;
 		}
 	}
 
@@ -390,7 +395,7 @@ WHERE (IP <> '0.0.0.0') AND (IP <> '255.255.255.255')";
 		public AuthServerInfo GetAnySmtp()
 		{
 			MySqlDataReader sqlReader = GetQueryReader(
-@"SELECT Host,Port,Login,Password,UseSSL
+@"SELECT Host,Port,Login,Password,UseSSL,Name,Email
 FROM smtpservers
 ORDER BY RAND() LIMIT 1;");
 
@@ -403,6 +408,9 @@ ORDER BY RAND() LIMIT 1;");
 						sqlReader.GetString(2),
 						sqlReader.GetString(3),
 						sqlReader.GetBoolean(4));
+					if ( !sqlReader.IsDBNull(5) )
+						serverInfo.FromName = sqlReader.GetString(5);
+					serverInfo.FromAddr = sqlReader.GetString(6);
 
 					sqlReader.Close();
 					return serverInfo;
@@ -416,10 +424,11 @@ ORDER BY RAND() LIMIT 1;");
 		{
 			string ip;
 			int smtpId;
+			int id;
 			Robot robot;
 
 			MySqlDataReader sqlReader = GetQueryReader(
-@"SELECT IP,SmtpID
+@"SELECT IP,SmtpID,Id
 FROM robots
 WHERE Id=" + Id.ToString() + " LIMIT 1;");
 
@@ -428,10 +437,12 @@ WHERE Id=" + Id.ToString() + " LIMIT 1;");
 				{
 					ip = sqlReader.GetString(0);
 					smtpId = sqlReader.GetInt32(1);
+					id = sqlReader.GetInt32(2);
 
 					sqlReader.Close();
 
-					robot = new Robot(ip, smtpId, null);
+					robot = new Robot(id, ip);
+					robot.SmtpId = smtpId;
 					return robot;
 				}
 
@@ -482,6 +493,7 @@ WHERE Id=" + Id.ToString() + " LIMIT 1";
 					return letter;
 				}
 
+			sqlReader.Close();
 			throw new Exception("Letter not found!");
 		}
 		#endregion
@@ -610,25 +622,50 @@ WHERE State=" + DbClient.TokenSelected(ClientID);
 		{
 			List<AuthServerInfo> list = new List<AuthServerInfo>();
 			MySqlDataReader sqlReader = GetQueryReader(
-@"SELECT Id,Host,Port,Login,Password,UseSSL,
+@"SELECT Id,Host,Port,Login,Password,UseSSL,Name,Email
 FROM smtpservers");
 			while ( sqlReader.Read() )
 			{
 				AuthServerInfo smtpServ = new AuthServerInfo();
 
-				smtpServ.Id = sqlReader.GetInt32(0);
-				smtpServ.Host = sqlReader.GetString(1);
-				smtpServ.Port = sqlReader.GetInt32(2);
-				smtpServ.UseSSL = sqlReader.GetBoolean(5);
+				smtpServ.Id = sqlReader.GetInt32(0);// id
+				smtpServ.Host = sqlReader.GetString(1);// host
+				smtpServ.Port = sqlReader.GetInt32(2);// port
+				smtpServ.UseSSL = sqlReader.GetBoolean(5);// SSL
 
-				if ( !sqlReader.IsDBNull(3) )
+				if ( !sqlReader.IsDBNull(3) ) // login
 				{
-					smtpServ.Login = sqlReader.GetString(3);
-					smtpServ.Password = sqlReader.GetString(4);
+					smtpServ.Login = sqlReader.GetString(3); // login
+					smtpServ.Password = sqlReader.GetString(4); // pass
 				}
+				if ( !sqlReader.IsDBNull(6) ) // name
+				{
+					smtpServ.FromName = sqlReader.GetString(6);
+				}
+
+				smtpServ.FromAddr = sqlReader.GetString(7);
 
 				list.Add(smtpServ);
 			}
+			sqlReader.Close();
+
+			return list;
+		}
+		public List<Robot> GetRobotsList()
+		{
+			List<Robot> list = new List<Robot>();
+
+			MySqlDataReader sqlReader =
+				this.GetQueryReader(selectValidHostnamesQuery);
+
+			if ( sqlReader == null )
+				return list;
+
+			while ( sqlReader.Read() )
+				list.Add(new Robot(
+					sqlReader.GetInt32(0),// id
+					sqlReader.GetString(1)));// ip
+
 			sqlReader.Close();
 
 			return list;
@@ -706,12 +743,16 @@ WHERE Id={3}", subject, body, letter.IsHtml ? 1 : 0, id));
 				pass = "'" + smtp.Password + "'";
 			}
 
+			string fname =
+				smtp.FromName == null ? "NULL" : "'{3}'";
+
 			SendQuery(string.Format("UPDATE smtpservers " +
 				"SET Host='{0}',Port={1}," +
 				"Login=" + user + ",Password=" + pass +
-				",UseSSL={2} WHERE Id={3}",
+				",UseSSL={2},Name=" + fname + ",Email='{4}' " +
+				"WHERE Id={5}",
 				smtp.Host, smtp.Port,
-				smtp.UseSSL ? 1 : 0, id));
+				smtp.UseSSL ? 1 : 0, smtp.FromName, smtp.FromAddr, id));
 		}
 
 		public void AddEmail(string email)
@@ -741,13 +782,7 @@ WHERE Id={3}", subject, body, letter.IsHtml ? 1 : 0, id));
 
 		public void AddRobot(string ipStr)
 		{
-			MySqlDataReader sqlReader =
-				GetQueryReader("SELECT * FROM Robots WHERE IP='" + ipStr + "'");
-
-			if ( !sqlReader.Read() )
-				SendQuery(string.Format("INSERT Robots SET IP='{0}'", ipStr));
-
-			sqlReader.Close();
+			SendQuery(string.Format("INSERT Robots SET IP='{0}'", ipStr));
 		}
 		public int DeleteRobot(int robotId)
 		{
@@ -796,10 +831,15 @@ SET Subject=" + strFSubject + ",Body=" + strFBody + @",IsHTML={2}",
 				pass = "'" + smtp.Password + "'";
 			}
 
+			string fname =
+				smtp.FromName == null ? "NULL" : "'{3}'";
+
 			SendQuery(string.Format("INSERT smtpservers " +
 				"SET Host='{0}',Port={1}," +
 				"Login=" + user + ",Password=" + pass +
-				",UseSSL={2}", smtp.Host, smtp.Port, smtp.UseSSL ? 1 : 0));
+				",UseSSL={2},Name=" + fname + ",Email='{4}'",
+				smtp.Host, smtp.Port,
+				smtp.UseSSL ? 1 : 0, smtp.FromName, smtp.FromAddr));
 		}
 		public int DeleteSmtp(int serverId)
 		{

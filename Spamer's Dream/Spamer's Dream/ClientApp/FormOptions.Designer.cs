@@ -48,10 +48,14 @@ namespace ClientApp
 			this.label6 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
 			this.textDoze = new System.Windows.Forms.TextBox();
+			this.label8 = new System.Windows.Forms.Label();
+			this.textErrors = new System.Windows.Forms.TextBox();
+			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			label1 = new System.Windows.Forms.Label();
 			( (System.ComponentModel.ISupportInitialize)( this.errorProvider ) ).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
+			this.groupBox3.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -65,10 +69,10 @@ namespace ClientApp
 			// 
 			// buttonOk
 			// 
-			this.buttonOk.Location = new System.Drawing.Point(303, 146);
+			this.buttonOk.Location = new System.Drawing.Point(129, 234);
 			this.buttonOk.Name = "buttonOk";
 			this.buttonOk.Size = new System.Drawing.Size(75, 23);
-			this.buttonOk.TabIndex = 0;
+			this.buttonOk.TabIndex = 2;
 			this.buttonOk.Text = "&OK";
 			this.buttonOk.UseVisualStyleBackColor = true;
 			this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
@@ -76,10 +80,10 @@ namespace ClientApp
 			// buttonCancel
 			// 
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(303, 175);
+			this.buttonCancel.Location = new System.Drawing.Point(222, 234);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-			this.buttonCancel.TabIndex = 1;
+			this.buttonCancel.TabIndex = 3;
 			this.buttonCancel.Text = "Can&cel";
 			this.buttonCancel.UseVisualStyleBackColor = true;
 			this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -89,7 +93,7 @@ namespace ClientApp
 			this.textUdpInPort.Location = new System.Drawing.Point(9, 35);
 			this.textUdpInPort.Name = "textUdpInPort";
 			this.textUdpInPort.Size = new System.Drawing.Size(100, 20);
-			this.textUdpInPort.TabIndex = 3;
+			this.textUdpInPort.TabIndex = 0;
 			this.textUdpInPort.Text = "?";
 			// 
 			// errorProvider
@@ -102,7 +106,7 @@ namespace ClientApp
 			this.textDbHost.Location = new System.Drawing.Point(9, 32);
 			this.textDbHost.Name = "textDbHost";
 			this.textDbHost.Size = new System.Drawing.Size(100, 20);
-			this.textDbHost.TabIndex = 5;
+			this.textDbHost.TabIndex = 0;
 			this.textDbHost.Text = "?";
 			// 
 			// label2
@@ -119,7 +123,7 @@ namespace ClientApp
 			this.textDbUser.Location = new System.Drawing.Point(9, 81);
 			this.textDbUser.Name = "textDbUser";
 			this.textDbUser.Size = new System.Drawing.Size(100, 20);
-			this.textDbUser.TabIndex = 7;
+			this.textDbUser.TabIndex = 2;
 			this.textDbUser.Text = "?";
 			// 
 			// label3
@@ -136,7 +140,7 @@ namespace ClientApp
 			this.textDbPassword.Location = new System.Drawing.Point(117, 81);
 			this.textDbPassword.Name = "textDbPassword";
 			this.textDbPassword.Size = new System.Drawing.Size(100, 20);
-			this.textDbPassword.TabIndex = 9;
+			this.textDbPassword.TabIndex = 3;
 			this.textDbPassword.UseSystemPasswordChar = true;
 			this.textDbPassword.TextChanged += new System.EventHandler(this.textDbPassword_TextChanged);
 			// 
@@ -154,7 +158,7 @@ namespace ClientApp
 			this.textDbName.Location = new System.Drawing.Point(117, 32);
 			this.textDbName.Name = "textDbName";
 			this.textDbName.Size = new System.Drawing.Size(100, 20);
-			this.textDbName.TabIndex = 11;
+			this.textDbName.TabIndex = 1;
 			this.textDbName.Text = "?";
 			// 
 			// label5
@@ -196,15 +200,16 @@ namespace ClientApp
 			// 
 			// textCacheDepth
 			// 
-			this.textCacheDepth.Location = new System.Drawing.Point(266, 44);
+			this.textCacheDepth.Location = new System.Drawing.Point(9, 41);
 			this.textCacheDepth.Name = "textCacheDepth";
 			this.textCacheDepth.Size = new System.Drawing.Size(123, 20);
-			this.textCacheDepth.TabIndex = 16;
+			this.textCacheDepth.TabIndex = 0;
+			this.textCacheDepth.Text = "?";
 			// 
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(263, 28);
+			this.label6.Location = new System.Drawing.Point(6, 25);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(128, 13);
 			this.label6.TabIndex = 17;
@@ -213,7 +218,7 @@ namespace ClientApp
 			// label7
 			// 
 			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(263, 77);
+			this.label7.Location = new System.Drawing.Point(6, 64);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(78, 13);
 			this.label7.TabIndex = 19;
@@ -221,10 +226,43 @@ namespace ClientApp
 			// 
 			// textDoze
 			// 
-			this.textDoze.Location = new System.Drawing.Point(266, 93);
+			this.textDoze.Location = new System.Drawing.Point(9, 80);
 			this.textDoze.Name = "textDoze";
 			this.textDoze.Size = new System.Drawing.Size(123, 20);
-			this.textDoze.TabIndex = 18;
+			this.textDoze.TabIndex = 1;
+			this.textDoze.Text = "?";
+			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Location = new System.Drawing.Point(6, 103);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(102, 13);
+			this.label8.TabIndex = 21;
+			this.label8.Text = "Attempts per SMTP:";
+			// 
+			// textErrors
+			// 
+			this.textErrors.Location = new System.Drawing.Point(9, 119);
+			this.textErrors.Name = "textErrors";
+			this.textErrors.Size = new System.Drawing.Size(123, 20);
+			this.textErrors.TabIndex = 20;
+			this.textErrors.Text = "?";
+			// 
+			// groupBox3
+			// 
+			this.groupBox3.Controls.Add(this.label6);
+			this.groupBox3.Controls.Add(this.label8);
+			this.groupBox3.Controls.Add(this.textCacheDepth);
+			this.groupBox3.Controls.Add(this.textErrors);
+			this.groupBox3.Controls.Add(this.textDoze);
+			this.groupBox3.Controls.Add(this.label7);
+			this.groupBox3.Location = new System.Drawing.Point(260, 12);
+			this.groupBox3.Name = "groupBox3";
+			this.groupBox3.Size = new System.Drawing.Size(158, 152);
+			this.groupBox3.TabIndex = 22;
+			this.groupBox3.TabStop = false;
+			this.groupBox3.Text = "Miscellaneous";
 			// 
 			// FormOptions
 			// 
@@ -232,11 +270,8 @@ namespace ClientApp
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
-			this.ClientSize = new System.Drawing.Size(401, 213);
-			this.Controls.Add(this.label7);
-			this.Controls.Add(this.textDoze);
-			this.Controls.Add(this.label6);
-			this.Controls.Add(this.textCacheDepth);
+			this.ClientSize = new System.Drawing.Size(430, 268);
+			this.Controls.Add(this.groupBox3);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.buttonCancel);
@@ -253,8 +288,9 @@ namespace ClientApp
 			this.groupBox1.PerformLayout();
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
+			this.groupBox3.ResumeLayout(false);
+			this.groupBox3.PerformLayout();
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
@@ -278,5 +314,8 @@ namespace ClientApp
 		private System.Windows.Forms.TextBox textCacheDepth;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.TextBox textDoze;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.TextBox textErrors;
+		private System.Windows.Forms.GroupBox groupBox3;
 	}
 }

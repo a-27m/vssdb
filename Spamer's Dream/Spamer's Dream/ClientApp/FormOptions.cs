@@ -27,6 +27,7 @@ namespace ClientApp
 
 			textCacheDepth.Text = appSettings.MaxLettersCache.ToString();
 			textDoze.Text = appSettings.LettersDoze.ToString();
+			textErrors.Text = appSettings.ErrorsBeforeSwitchSmtp.ToString();
 
 			textDbHost.Text = appSettings.DbHost;
 			textDbName.Text = appSettings.DbName;
@@ -52,10 +53,16 @@ namespace ClientApp
 			catch ( FormatException )
 			{ errorProvider.SetError(textCacheDepth, "Bad integer number"); return; }
 
+			try { appSettings.ErrorsBeforeSwitchSmtp = int.Parse(textErrors.Text); }
+			catch ( FormatException )
+			{ errorProvider.SetError(textErrors, "Bad integer number"); return; }
+			if ( appSettings.ErrorsBeforeSwitchSmtp < 1 )
+			{ errorProvider.SetError(textErrors, "Number is too small"); return; }
+
 			appSettings["DbHost"] = textDbHost.Text;
 			appSettings["DbName"] = textDbName.Text;
 			appSettings["DbUser"] = textDbUser.Text;
-			if (textDbPassword_Changed)
+			if ( textDbPassword_Changed )
 				appSettings["DbPassword"] = textDbPassword.Text;
 
 			appSettings.Save();

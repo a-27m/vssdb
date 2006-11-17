@@ -20,8 +20,5 @@
     <Setting Name="ServerPort" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">54321</Value>
     </Setting>
-    <Setting Name="DefaultEmail" Type="System.String" Scope="User">
-      <Value Profile="(Default)">w@microsoft.com</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

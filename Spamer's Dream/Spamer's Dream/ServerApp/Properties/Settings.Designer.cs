@@ -94,17 +94,5 @@ namespace ServerApp.Properties {
                 this["ServerPort"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("w@microsoft.com")]
-        public string DefaultEmail {
-            get {
-                return ((string)(this["DefaultEmail"]));
-            }
-            set {
-                this["DefaultEmail"] = value;
-            }
-        }
     }
 }

@@ -32,21 +32,31 @@ namespace ServerApp
 			System.Windows.Forms.Label label1;
 			System.Windows.Forms.SplitContainer splitContainer1;
 			System.Windows.Forms.GroupBox groupBox1;
+			System.Windows.Forms.Label label7;
+			System.Windows.Forms.Label label8;
 			System.Windows.Forms.Label label6;
 			System.Windows.Forms.Label label5;
 			System.Windows.Forms.Label label4;
 			System.Windows.Forms.Label label2;
 			System.Windows.Forms.Label label3;
+			System.Windows.Forms.SplitContainer splitContainer4;
+			System.Windows.Forms.Label label14;
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormServer));
 			this.listSmtps = new System.Windows.Forms.ListBox();
 			this.tabSmtps_buttonRemove = new System.Windows.Forms.Button();
 			this.tabSmtps_buttonAdd = new System.Windows.Forms.Button();
 			this.tabSmtps_buttonSet = new System.Windows.Forms.Button();
+			this.tabSmtps_textName = new System.Windows.Forms.TextBox();
+			this.tabSmtps_textEmail = new System.Windows.Forms.TextBox();
 			this.tabSmtps_checkSSL = new System.Windows.Forms.CheckBox();
 			this.tabSmtps_textHost = new System.Windows.Forms.TextBox();
-			this.tabSmtps_textUser = new System.Windows.Forms.TextBox();
+			this.tabSmtps_textLogin = new System.Windows.Forms.TextBox();
 			this.tabSmtps_textPassword = new System.Windows.Forms.TextBox();
 			this.tabSmtps_textPort = new System.Windows.Forms.TextBox();
+			this.listRobots = new System.Windows.Forms.ListBox();
+			this.tabRobots_textIP = new System.Windows.Forms.TextBox();
+			this.tabRobots_buttonRemove = new System.Windows.Forms.Button();
+			this.tabRobots_buttonAdd = new System.Windows.Forms.Button();
 			this.openFileDialogEmails = new System.Windows.Forms.OpenFileDialog();
 			this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
 			this.textMsgID = new System.Windows.Forms.TextBox();
@@ -81,15 +91,22 @@ namespace ServerApp
 			label1 = new System.Windows.Forms.Label();
 			splitContainer1 = new System.Windows.Forms.SplitContainer();
 			groupBox1 = new System.Windows.Forms.GroupBox();
+			label7 = new System.Windows.Forms.Label();
+			label8 = new System.Windows.Forms.Label();
 			label6 = new System.Windows.Forms.Label();
 			label5 = new System.Windows.Forms.Label();
 			label4 = new System.Windows.Forms.Label();
 			label2 = new System.Windows.Forms.Label();
 			label3 = new System.Windows.Forms.Label();
+			splitContainer4 = new System.Windows.Forms.SplitContainer();
+			label14 = new System.Windows.Forms.Label();
 			splitContainer1.Panel1.SuspendLayout();
 			splitContainer1.Panel2.SuspendLayout();
 			splitContainer1.SuspendLayout();
 			groupBox1.SuspendLayout();
+			splitContainer4.Panel1.SuspendLayout();
+			splitContainer4.Panel2.SuspendLayout();
+			splitContainer4.SuspendLayout();
 			( (System.ComponentModel.ISupportInitialize)( this.errorProvider ) ).BeginInit();
 			this.menuStrip1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -102,6 +119,7 @@ namespace ServerApp
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
 			this.tabSmtps.SuspendLayout();
+			this.tabRobots.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -110,13 +128,14 @@ namespace ServerApp
 			label1.Location = new System.Drawing.Point(7, 75);
 			label1.Name = "label1";
 			label1.Size = new System.Drawing.Size(67, 13);
-			label1.TabIndex = 2;
+			label1.TabIndex = 1;
 			label1.Text = "Message ID:";
 			// 
 			// splitContainer1
 			// 
 			splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
 			splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+			splitContainer1.IsSplitterFixed = true;
 			splitContainer1.Location = new System.Drawing.Point(0, 0);
 			splitContainer1.Name = "splitContainer1";
 			// 
@@ -150,53 +169,89 @@ namespace ServerApp
 			// 
 			// tabSmtps_buttonRemove
 			// 
-			this.tabSmtps_buttonRemove.Location = new System.Drawing.Point(50, 224);
+			this.tabSmtps_buttonRemove.Location = new System.Drawing.Point(49, 285);
 			this.tabSmtps_buttonRemove.Name = "tabSmtps_buttonRemove";
 			this.tabSmtps_buttonRemove.Size = new System.Drawing.Size(122, 23);
-			this.tabSmtps_buttonRemove.TabIndex = 6;
+			this.tabSmtps_buttonRemove.TabIndex = 3;
 			this.tabSmtps_buttonRemove.Text = "Remove selected";
 			this.tabSmtps_buttonRemove.UseVisualStyleBackColor = true;
 			this.tabSmtps_buttonRemove.Click += new System.EventHandler(this.tabSmtps_buttonRemove_Click);
 			// 
 			// tabSmtps_buttonAdd
 			// 
-			this.tabSmtps_buttonAdd.Location = new System.Drawing.Point(33, 184);
+			this.tabSmtps_buttonAdd.Location = new System.Drawing.Point(32, 245);
 			this.tabSmtps_buttonAdd.Name = "tabSmtps_buttonAdd";
 			this.tabSmtps_buttonAdd.Size = new System.Drawing.Size(75, 23);
-			this.tabSmtps_buttonAdd.TabIndex = 5;
+			this.tabSmtps_buttonAdd.TabIndex = 1;
 			this.tabSmtps_buttonAdd.Text = "Add";
 			this.tabSmtps_buttonAdd.UseVisualStyleBackColor = true;
 			this.tabSmtps_buttonAdd.Click += new System.EventHandler(this.tabSmtps_buttonAdd_Click);
 			// 
 			// tabSmtps_buttonSet
 			// 
-			this.tabSmtps_buttonSet.Location = new System.Drawing.Point(114, 184);
+			this.tabSmtps_buttonSet.Location = new System.Drawing.Point(113, 245);
 			this.tabSmtps_buttonSet.Name = "tabSmtps_buttonSet";
 			this.tabSmtps_buttonSet.Size = new System.Drawing.Size(75, 23);
-			this.tabSmtps_buttonSet.TabIndex = 1;
+			this.tabSmtps_buttonSet.TabIndex = 2;
 			this.tabSmtps_buttonSet.Text = "Set";
 			this.tabSmtps_buttonSet.UseVisualStyleBackColor = true;
 			this.tabSmtps_buttonSet.Click += new System.EventHandler(this.tabSmtps_buttonSet_Click);
 			// 
 			// groupBox1
 			// 
+			groupBox1.Controls.Add(label7);
+			groupBox1.Controls.Add(label8);
+			groupBox1.Controls.Add(this.tabSmtps_textName);
+			groupBox1.Controls.Add(this.tabSmtps_textEmail);
 			groupBox1.Controls.Add(label6);
 			groupBox1.Controls.Add(this.tabSmtps_checkSSL);
 			groupBox1.Controls.Add(label5);
 			groupBox1.Controls.Add(this.tabSmtps_textHost);
 			groupBox1.Controls.Add(label4);
 			groupBox1.Controls.Add(label2);
-			groupBox1.Controls.Add(this.tabSmtps_textUser);
+			groupBox1.Controls.Add(this.tabSmtps_textLogin);
 			groupBox1.Controls.Add(this.tabSmtps_textPassword);
 			groupBox1.Controls.Add(this.tabSmtps_textPort);
 			groupBox1.Controls.Add(label3);
 			groupBox1.Location = new System.Drawing.Point(7, 3);
 			groupBox1.Name = "groupBox1";
-			groupBox1.Size = new System.Drawing.Size(207, 175);
+			groupBox1.Size = new System.Drawing.Size(207, 236);
 			groupBox1.TabIndex = 0;
 			groupBox1.TabStop = false;
 			groupBox1.Text = "SMTP data";
 			groupBox1.TextChanged += new System.EventHandler(this.tabSmtps_smtpDataChanged);
+			// 
+			// label7
+			// 
+			label7.AutoSize = true;
+			label7.Location = new System.Drawing.Point(6, 204);
+			label7.Name = "label7";
+			label7.Size = new System.Drawing.Size(73, 13);
+			label7.TabIndex = 17;
+			label7.Text = "\"From\" e-mail:";
+			// 
+			// label8
+			// 
+			label8.AutoSize = true;
+			label8.Location = new System.Drawing.Point(6, 178);
+			label8.Name = "label8";
+			label8.Size = new System.Drawing.Size(72, 13);
+			label8.TabIndex = 16;
+			label8.Text = "\"From\" name:";
+			// 
+			// tabSmtps_textName
+			// 
+			this.tabSmtps_textName.Location = new System.Drawing.Point(84, 175);
+			this.tabSmtps_textName.Name = "tabSmtps_textName";
+			this.tabSmtps_textName.Size = new System.Drawing.Size(100, 20);
+			this.tabSmtps_textName.TabIndex = 5;
+			// 
+			// tabSmtps_textEmail
+			// 
+			this.tabSmtps_textEmail.Location = new System.Drawing.Point(84, 201);
+			this.tabSmtps_textEmail.Name = "tabSmtps_textEmail";
+			this.tabSmtps_textEmail.Size = new System.Drawing.Size(100, 20);
+			this.tabSmtps_textEmail.TabIndex = 6;
 			// 
 			// label6
 			// 
@@ -214,7 +269,7 @@ namespace ServerApp
 			this.tabSmtps_checkSSL.Location = new System.Drawing.Point(84, 146);
 			this.tabSmtps_checkSSL.Name = "tabSmtps_checkSSL";
 			this.tabSmtps_checkSSL.Size = new System.Drawing.Size(15, 14);
-			this.tabSmtps_checkSSL.TabIndex = 12;
+			this.tabSmtps_checkSSL.TabIndex = 4;
 			this.tabSmtps_checkSSL.UseVisualStyleBackColor = true;
 			// 
 			// label5
@@ -231,7 +286,7 @@ namespace ServerApp
 			this.tabSmtps_textHost.Location = new System.Drawing.Point(84, 22);
 			this.tabSmtps_textHost.Name = "tabSmtps_textHost";
 			this.tabSmtps_textHost.Size = new System.Drawing.Size(100, 20);
-			this.tabSmtps_textHost.TabIndex = 8;
+			this.tabSmtps_textHost.TabIndex = 0;
 			this.tabSmtps_textHost.TextChanged += new System.EventHandler(this.tabSmtps_smtpDataChanged);
 			// 
 			// label4
@@ -239,9 +294,9 @@ namespace ServerApp
 			label4.AutoSize = true;
 			label4.Location = new System.Drawing.Point(6, 88);
 			label4.Name = "label4";
-			label4.Size = new System.Drawing.Size(32, 13);
+			label4.Size = new System.Drawing.Size(36, 13);
 			label4.TabIndex = 10;
-			label4.Text = "User:";
+			label4.Text = "Login:";
 			// 
 			// label2
 			// 
@@ -252,20 +307,20 @@ namespace ServerApp
 			label2.TabIndex = 2;
 			label2.Text = "SMTP server:";
 			// 
-			// tabSmtps_textUser
+			// tabSmtps_textLogin
 			// 
-			this.tabSmtps_textUser.Location = new System.Drawing.Point(84, 85);
-			this.tabSmtps_textUser.Name = "tabSmtps_textUser";
-			this.tabSmtps_textUser.Size = new System.Drawing.Size(100, 20);
-			this.tabSmtps_textUser.TabIndex = 6;
-			this.tabSmtps_textUser.TextChanged += new System.EventHandler(this.tabSmtps_smtpDataChanged);
+			this.tabSmtps_textLogin.Location = new System.Drawing.Point(84, 85);
+			this.tabSmtps_textLogin.Name = "tabSmtps_textLogin";
+			this.tabSmtps_textLogin.Size = new System.Drawing.Size(100, 20);
+			this.tabSmtps_textLogin.TabIndex = 2;
+			this.tabSmtps_textLogin.TextChanged += new System.EventHandler(this.tabSmtps_smtpDataChanged);
 			// 
 			// tabSmtps_textPassword
 			// 
 			this.tabSmtps_textPassword.Location = new System.Drawing.Point(84, 111);
 			this.tabSmtps_textPassword.Name = "tabSmtps_textPassword";
 			this.tabSmtps_textPassword.Size = new System.Drawing.Size(100, 20);
-			this.tabSmtps_textPassword.TabIndex = 5;
+			this.tabSmtps_textPassword.TabIndex = 3;
 			this.tabSmtps_textPassword.TextChanged += new System.EventHandler(this.tabSmtps_smtpDataChanged);
 			// 
 			// tabSmtps_textPort
@@ -273,7 +328,7 @@ namespace ServerApp
 			this.tabSmtps_textPort.Location = new System.Drawing.Point(84, 48);
 			this.tabSmtps_textPort.Name = "tabSmtps_textPort";
 			this.tabSmtps_textPort.Size = new System.Drawing.Size(100, 20);
-			this.tabSmtps_textPort.TabIndex = 9;
+			this.tabSmtps_textPort.TabIndex = 1;
 			this.tabSmtps_textPort.TextChanged += new System.EventHandler(this.tabSmtps_smtpDataChanged);
 			// 
 			// label3
@@ -284,6 +339,79 @@ namespace ServerApp
 			label3.Size = new System.Drawing.Size(29, 13);
 			label3.TabIndex = 3;
 			label3.Text = "Port:";
+			// 
+			// splitContainer4
+			// 
+			splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+			splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+			splitContainer4.IsSplitterFixed = true;
+			splitContainer4.Location = new System.Drawing.Point(3, 3);
+			splitContainer4.Name = "splitContainer4";
+			// 
+			// splitContainer4.Panel1
+			// 
+			splitContainer4.Panel1.Controls.Add(this.listRobots);
+			// 
+			// splitContainer4.Panel2
+			// 
+			splitContainer4.Panel2.Controls.Add(this.tabRobots_textIP);
+			splitContainer4.Panel2.Controls.Add(label14);
+			splitContainer4.Panel2.Controls.Add(this.tabRobots_buttonRemove);
+			splitContainer4.Panel2.Controls.Add(this.tabRobots_buttonAdd);
+			splitContainer4.Size = new System.Drawing.Size(486, 345);
+			splitContainer4.SplitterDistance = 338;
+			splitContainer4.TabIndex = 1;
+			// 
+			// listRobots
+			// 
+			this.listRobots.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.listRobots.Font = new System.Drawing.Font("Lucida Sans Unicode", 9.75F);
+			this.listRobots.FormattingEnabled = true;
+			this.listRobots.IntegralHeight = false;
+			this.listRobots.ItemHeight = 16;
+			this.listRobots.Location = new System.Drawing.Point(0, 0);
+			this.listRobots.Name = "listRobots";
+			this.listRobots.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+			this.listRobots.Size = new System.Drawing.Size(338, 345);
+			this.listRobots.TabIndex = 0;
+			this.listRobots.SelectedIndexChanged += new System.EventHandler(this.tabRobots_SelectedIndexChanged);
+			// 
+			// tabRobots_textIP
+			// 
+			this.tabRobots_textIP.Location = new System.Drawing.Point(21, 37);
+			this.tabRobots_textIP.Name = "tabRobots_textIP";
+			this.tabRobots_textIP.Size = new System.Drawing.Size(100, 20);
+			this.tabRobots_textIP.TabIndex = 0;
+			this.tabRobots_textIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			// 
+			// label14
+			// 
+			label14.AutoSize = true;
+			label14.Location = new System.Drawing.Point(18, 21);
+			label14.Name = "label14";
+			label14.Size = new System.Drawing.Size(60, 13);
+			label14.TabIndex = 2;
+			label14.Text = "IP address:";
+			// 
+			// tabRobots_buttonRemove
+			// 
+			this.tabRobots_buttonRemove.Location = new System.Drawing.Point(21, 103);
+			this.tabRobots_buttonRemove.Name = "tabRobots_buttonRemove";
+			this.tabRobots_buttonRemove.Size = new System.Drawing.Size(75, 23);
+			this.tabRobots_buttonRemove.TabIndex = 2;
+			this.tabRobots_buttonRemove.Text = "Remove";
+			this.tabRobots_buttonRemove.UseVisualStyleBackColor = true;
+			this.tabRobots_buttonRemove.Click += new System.EventHandler(this.tabRobots_buttonRemove_Click);
+			// 
+			// tabRobots_buttonAdd
+			// 
+			this.tabRobots_buttonAdd.Location = new System.Drawing.Point(21, 74);
+			this.tabRobots_buttonAdd.Name = "tabRobots_buttonAdd";
+			this.tabRobots_buttonAdd.Size = new System.Drawing.Size(75, 23);
+			this.tabRobots_buttonAdd.TabIndex = 1;
+			this.tabRobots_buttonAdd.Text = "Add";
+			this.tabRobots_buttonAdd.UseVisualStyleBackColor = true;
+			this.tabRobots_buttonAdd.Click += new System.EventHandler(this.tabRobots_buttonAdd_Click);
 			// 
 			// openFileDialogEmails
 			// 
@@ -305,7 +433,7 @@ namespace ServerApp
 			this.textMsgID.Location = new System.Drawing.Point(10, 91);
 			this.textMsgID.Name = "textMsgID";
 			this.textMsgID.Size = new System.Drawing.Size(75, 20);
-			this.textMsgID.TabIndex = 3;
+			this.textMsgID.TabIndex = 2;
 			this.textMsgID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tabEmails_textMsgID_KeyPress);
 			this.textMsgID.TextChanged += new System.EventHandler(this.tabEmails_textMsgID_TextChanged);
 			// 
@@ -433,7 +561,7 @@ namespace ServerApp
 			this.tabEmails.Location = new System.Drawing.Point(4, 22);
 			this.tabEmails.Name = "tabEmails";
 			this.tabEmails.Padding = new System.Windows.Forms.Padding(3);
-			this.tabEmails.Size = new System.Drawing.Size(487, 351);
+			this.tabEmails.Size = new System.Drawing.Size(492, 351);
 			this.tabEmails.TabIndex = 0;
 			this.tabEmails.Text = "E-mails";
 			this.tabEmails.UseVisualStyleBackColor = true;
@@ -456,8 +584,8 @@ namespace ServerApp
 			this.splitContainer2.Panel2.Controls.Add(label1);
 			this.splitContainer2.Panel2.Controls.Add(this.buttonSetId);
 			this.splitContainer2.Panel2.Controls.Add(this.buttonTab1Load);
-			this.splitContainer2.Size = new System.Drawing.Size(481, 345);
-			this.splitContainer2.SplitterDistance = 382;
+			this.splitContainer2.Size = new System.Drawing.Size(486, 345);
+			this.splitContainer2.SplitterDistance = 387;
 			this.splitContainer2.TabIndex = 2;
 			// 
 			// listEmails
@@ -470,8 +598,8 @@ namespace ServerApp
 			this.listEmails.Location = new System.Drawing.Point(0, 0);
 			this.listEmails.Name = "listEmails";
 			this.listEmails.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-			this.listEmails.Size = new System.Drawing.Size(382, 345);
-			this.listEmails.TabIndex = 1;
+			this.listEmails.Size = new System.Drawing.Size(387, 345);
+			this.listEmails.TabIndex = 0;
 			this.listEmails.SelectedIndexChanged += new System.EventHandler(this.tabEmails_listEmails_SelectedIndexChanged);
 			// 
 			// buttonSetId
@@ -479,7 +607,7 @@ namespace ServerApp
 			this.buttonSetId.Location = new System.Drawing.Point(10, 116);
 			this.buttonSetId.Name = "buttonSetId";
 			this.buttonSetId.Size = new System.Drawing.Size(75, 23);
-			this.buttonSetId.TabIndex = 1;
+			this.buttonSetId.TabIndex = 3;
 			this.buttonSetId.Text = "Set";
 			this.buttonSetId.UseVisualStyleBackColor = true;
 			this.buttonSetId.Click += new System.EventHandler(this.tabEmails_buttonSet_Click);
@@ -500,7 +628,7 @@ namespace ServerApp
 			this.tabMessages.Location = new System.Drawing.Point(4, 22);
 			this.tabMessages.Name = "tabMessages";
 			this.tabMessages.Padding = new System.Windows.Forms.Padding(3);
-			this.tabMessages.Size = new System.Drawing.Size(487, 351);
+			this.tabMessages.Size = new System.Drawing.Size(492, 351);
 			this.tabMessages.TabIndex = 1;
 			this.tabMessages.Text = "Messages";
 			this.tabMessages.UseVisualStyleBackColor = true;
@@ -523,8 +651,8 @@ namespace ServerApp
 			this.splitContainer3.Panel2.Controls.Add(this.buttonAddLetter);
 			this.splitContainer3.Panel2.Controls.Add(this.buttonPreview);
 			this.splitContainer3.Panel2.Controls.Add(this.buttonTabMsgEdit);
-			this.splitContainer3.Size = new System.Drawing.Size(481, 345);
-			this.splitContainer3.SplitterDistance = 382;
+			this.splitContainer3.Size = new System.Drawing.Size(486, 345);
+			this.splitContainer3.SplitterDistance = 387;
 			this.splitContainer3.TabIndex = 3;
 			// 
 			// listMessages
@@ -537,8 +665,8 @@ namespace ServerApp
 			this.listMessages.Location = new System.Drawing.Point(0, 0);
 			this.listMessages.Name = "listMessages";
 			this.listMessages.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-			this.listMessages.Size = new System.Drawing.Size(382, 345);
-			this.listMessages.TabIndex = 1;
+			this.listMessages.Size = new System.Drawing.Size(387, 345);
+			this.listMessages.TabIndex = 0;
 			this.listMessages.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tabMsg_listMessages_MouseDoubleClick);
 			// 
 			// tabMsg_buttonRemove
@@ -556,7 +684,7 @@ namespace ServerApp
 			this.buttonAddLetter.Location = new System.Drawing.Point(10, 17);
 			this.buttonAddLetter.Name = "buttonAddLetter";
 			this.buttonAddLetter.Size = new System.Drawing.Size(75, 23);
-			this.buttonAddLetter.TabIndex = 2;
+			this.buttonAddLetter.TabIndex = 0;
 			this.buttonAddLetter.Text = "Add...";
 			this.buttonAddLetter.UseVisualStyleBackColor = true;
 			this.buttonAddLetter.Click += new System.EventHandler(this.tabMsg_buttonAddLetter_Click);
@@ -566,7 +694,7 @@ namespace ServerApp
 			this.buttonPreview.Location = new System.Drawing.Point(10, 83);
 			this.buttonPreview.Name = "buttonPreview";
 			this.buttonPreview.Size = new System.Drawing.Size(75, 23);
-			this.buttonPreview.TabIndex = 1;
+			this.buttonPreview.TabIndex = 2;
 			this.buttonPreview.Text = "Preview";
 			this.buttonPreview.UseVisualStyleBackColor = true;
 			this.buttonPreview.Click += new System.EventHandler(this.tabMsg_buttonPreview_Click);
@@ -576,7 +704,7 @@ namespace ServerApp
 			this.buttonTabMsgEdit.Location = new System.Drawing.Point(10, 50);
 			this.buttonTabMsgEdit.Name = "buttonTabMsgEdit";
 			this.buttonTabMsgEdit.Size = new System.Drawing.Size(75, 23);
-			this.buttonTabMsgEdit.TabIndex = 0;
+			this.buttonTabMsgEdit.TabIndex = 1;
 			this.buttonTabMsgEdit.Text = "Edit...";
 			this.buttonTabMsgEdit.UseVisualStyleBackColor = true;
 			this.buttonTabMsgEdit.Click += new System.EventHandler(this.tabMsg_buttonEdit_Click);
@@ -593,6 +721,7 @@ namespace ServerApp
 			// 
 			// tabRobots
 			// 
+			this.tabRobots.Controls.Add(splitContainer4);
 			this.tabRobots.Location = new System.Drawing.Point(4, 22);
 			this.tabRobots.Name = "tabRobots";
 			this.tabRobots.Padding = new System.Windows.Forms.Padding(3);
@@ -622,6 +751,10 @@ namespace ServerApp
 			splitContainer1.ResumeLayout(false);
 			groupBox1.ResumeLayout(false);
 			groupBox1.PerformLayout();
+			splitContainer4.Panel1.ResumeLayout(false);
+			splitContainer4.Panel2.ResumeLayout(false);
+			splitContainer4.Panel2.PerformLayout();
+			splitContainer4.ResumeLayout(false);
 			( (System.ComponentModel.ISupportInitialize)( this.errorProvider ) ).EndInit();
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
@@ -636,6 +769,7 @@ namespace ServerApp
 			this.splitContainer3.Panel2.ResumeLayout(false);
 			this.splitContainer3.ResumeLayout(false);
 			this.tabSmtps.ResumeLayout(false);
+			this.tabRobots.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -675,7 +809,7 @@ namespace ServerApp
 		private System.Windows.Forms.TabPage tabSmtps;
 		private System.Windows.Forms.ListBox listSmtps;
 		private System.Windows.Forms.TextBox tabSmtps_textHost;
-		private System.Windows.Forms.TextBox tabSmtps_textUser;
+		private System.Windows.Forms.TextBox tabSmtps_textLogin;
 		private System.Windows.Forms.TextBox tabSmtps_textPassword;
 		private System.Windows.Forms.TextBox tabSmtps_textPort;
 		private System.Windows.Forms.CheckBox tabSmtps_checkSSL;
@@ -683,6 +817,12 @@ namespace ServerApp
 		private System.Windows.Forms.Button tabSmtps_buttonRemove;
 		private System.Windows.Forms.Button tabSmtps_buttonAdd;
 		private System.Windows.Forms.TabPage tabRobots;
+		private System.Windows.Forms.TextBox tabSmtps_textName;
+		private System.Windows.Forms.TextBox tabSmtps_textEmail;
+		private System.Windows.Forms.ListBox listRobots;
+		private System.Windows.Forms.Button tabRobots_buttonRemove;
+		private System.Windows.Forms.Button tabRobots_buttonAdd;
+		private System.Windows.Forms.TextBox tabRobots_textIP;
 
 	}
 }
