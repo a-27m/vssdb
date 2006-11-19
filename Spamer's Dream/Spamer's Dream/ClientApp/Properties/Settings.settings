@@ -21,10 +21,10 @@
       <Value Profile="(Default)">127.0.0.1</Value>
     </Setting>
     <Setting Name="SpamServerPort" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">54321</Value>
+      <Value Profile="(Default)">3001</Value>
     </Setting>
     <Setting Name="RobotPort" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">54320</Value>
+      <Value Profile="(Default)">3000</Value>
     </Setting>
     <Setting Name="MaxLettersCache" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>

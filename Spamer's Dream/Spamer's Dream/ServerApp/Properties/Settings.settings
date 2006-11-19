@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="RobotUdpPort" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">54320</Value>
+      <Value Profile="(Default)">3000</Value>
     </Setting>
     <Setting Name="DbHost" Type="System.String" Scope="User">
       <Value Profile="(Default)">localhost</Value>
@@ -18,7 +18,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="ServerPort" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">54321</Value>
+      <Value Profile="(Default)">3001</Value>
     </Setting>
   </Settings>
 </SettingsFile>

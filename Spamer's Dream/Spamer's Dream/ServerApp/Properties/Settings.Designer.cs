@@ -25,7 +25,7 @@ namespace ServerApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("54320")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3000")]
         public int RobotUdpPort {
             get {
                 return ((int)(this["RobotUdpPort"]));
@@ -85,7 +85,7 @@ namespace ServerApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("54321")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3001")]
         public int ServerPort {
             get {
                 return ((int)(this["ServerPort"]));

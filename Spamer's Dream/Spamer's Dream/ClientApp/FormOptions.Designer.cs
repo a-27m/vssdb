@@ -63,13 +63,13 @@ namespace ClientApp
 			label1.AutoSize = true;
 			label1.Location = new System.Drawing.Point(5, 19);
 			label1.Name = "label1";
-			label1.Size = new System.Drawing.Size(98, 13);
+			label1.Size = new System.Drawing.Size(93, 13);
 			label1.TabIndex = 2;
-			label1.Text = "Incoming (server\'s):";
+			label1.Text = "Incoming (robot\'s):";
 			// 
 			// buttonOk
 			// 
-			this.buttonOk.Location = new System.Drawing.Point(129, 234);
+			this.buttonOk.Location = new System.Drawing.Point(46, 141);
 			this.buttonOk.Name = "buttonOk";
 			this.buttonOk.Size = new System.Drawing.Size(75, 23);
 			this.buttonOk.TabIndex = 2;
@@ -80,7 +80,7 @@ namespace ClientApp
 			// buttonCancel
 			// 
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(222, 234);
+			this.buttonCancel.Location = new System.Drawing.Point(129, 141);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
 			this.buttonCancel.TabIndex = 3;
@@ -191,12 +191,13 @@ namespace ClientApp
 			// 
 			this.groupBox2.Controls.Add(label1);
 			this.groupBox2.Controls.Add(this.textUdpInPort);
-			this.groupBox2.Location = new System.Drawing.Point(12, 132);
+			this.groupBox2.Location = new System.Drawing.Point(56, 200);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Size = new System.Drawing.Size(121, 69);
 			this.groupBox2.TabIndex = 15;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "UDP ports";
+			this.groupBox2.Visible = false;
 			// 
 			// textCacheDepth
 			// 
@@ -257,7 +258,7 @@ namespace ClientApp
 			this.groupBox3.Controls.Add(this.textErrors);
 			this.groupBox3.Controls.Add(this.textDoze);
 			this.groupBox3.Controls.Add(this.label7);
-			this.groupBox3.Location = new System.Drawing.Point(260, 12);
+			this.groupBox3.Location = new System.Drawing.Point(244, 12);
 			this.groupBox3.Name = "groupBox3";
 			this.groupBox3.Size = new System.Drawing.Size(158, 152);
 			this.groupBox3.TabIndex = 22;
@@ -270,7 +271,7 @@ namespace ClientApp
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
-			this.ClientSize = new System.Drawing.Size(430, 268);
+			this.ClientSize = new System.Drawing.Size(414, 181);
 			this.Controls.Add(this.groupBox3);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);

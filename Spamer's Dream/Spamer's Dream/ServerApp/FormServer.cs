@@ -1,20 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
-using MySql.Data;
-using MySql.Data.MySqlClient;
 using ServerApp.Properties;
 using CommonTypes;
-using System.IO;
-using System.Threading;
-using System.Net.Mail;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ServerApp
 {
@@ -232,6 +224,36 @@ SET State=NULL");
 				MessageBox.Show("Database is not connected");
 		}
 
+		private void emptyEmailsMenuItem_Click(object sender, EventArgs e)
+		{
+			if ( !DbAvailable )
+				MessageBox.Show("Database is not connected");
+
+			if ( ( MessageBox.Show(
+				"You are about to delete all the target e-mall addresses" +
+				Environment.NewLine +
+				"from current database '" + sets.DbName + "'. New e-mails can be" +
+				Environment.NewLine +
+				"added later with \"Load...\" button on the \"Emails\" tab",
+				"Delete all e-mail addresses from database?",
+				MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK ) &&
+
+				( MessageBox.Show(
+				"This operation cannot be undone!",
+				"Confirm delete operation",
+				MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK ) )
+
+				dbClient.ClearEmails();
+
+		}
+
+		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			dbClient.CloseConnection();
+			this.DialogResult = DialogResult.OK;
+			Application.Exit();
+		}
+
 		private void buttonStartAll_Click(object sender, EventArgs e)
 		{
 			if ( DbAvailable )
@@ -249,29 +271,28 @@ SET State=NULL");
 
 		private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if ( DbAvailable )
-			{
-				switch ( tabControl1.SelectedTab.Name )
-				{
-				case "tabEmails":
-					listEmails.DataSource = dbClient.GetEmailsList();
-					break;
-				case "tabMessages":
-					listMessages.DataSource = dbClient.GetMessagesList();
-					break;
-				case "tabSmtps":
-					listSmtps.DataSource = dbClient.GetSmtpsList();
-					break;
-				case "tabRobots":
-					listRobots.DataSource = dbClient.GetRobotsList();
-					break;
-				}
-			}
-			else
+			if ( !DbAvailable )
 			{
 				foreach ( Control ctrl in tabControl1.SelectedTab.Controls )
 					ctrl.Enabled = false;
 				MessageBox.Show("Database is not connected");
+				return;
+			}
+
+			switch ( tabControl1.SelectedTab.Name )
+			{
+			case "tabEmails":
+				listEmails.DataSource = dbClient.GetEmailsList();
+				break;
+			case "tabMessages":
+				listMessages.DataSource = dbClient.GetMessagesList();
+				break;
+			case "tabSmtps":
+				listSmtps.DataSource = dbClient.GetSmtpsList();
+				break;
+			case "tabRobots":
+				listRobots.DataSource = dbClient.GetRobotsList();
+				break;
 			}
 		}
 
@@ -677,6 +698,7 @@ SET State=NULL");
 		private void tabRobots_buttonAdd_Click(object sender, EventArgs e)
 		{
 			tabRobots_textIP.Text.Trim();
+			errorProvider.Clear();
 
 			string[] str_octets = tabRobots_textIP.Text.Split('.');
 			if ( str_octets.Length != 4 )
@@ -692,7 +714,7 @@ SET State=NULL");
 				for ( int i = 0; i < 4; i++ )
 					octets[i] = byte.Parse(str_octets[i]);
 			}
-			catch ( FormatException )
+			catch
 			{
 				errorProvider.SetError(tabRobots_textIP, "Wrong IP address format," + Environment.NewLine +
 					" please use xxx.xxx.xxx.xxx format.");
@@ -740,32 +762,6 @@ SET State=NULL");
 				return;
 
 			tabRobots_textIP.Text = ( listRobots.SelectedValue as Robot ).IP;
-		}
-
-		private void emptyEmailsMenuItem_Click(object sender, EventArgs e)
-		{
-			if ( ( MessageBox.Show(
-				"You are about to delete all the target e-mall addresses" +
-				Environment.NewLine +
-				"from current database '" + sets.DbName + "'. New e-mails can be" +
-				Environment.NewLine +
-				"added later with \"Load...\" button on the \"Emails\" tab",
-				"Delete all e-mail addresses from database?",
-				MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK ) &&
-
-				( MessageBox.Show(
-				"This operation cannot be undone!",
-				"Confirm delete operation",
-				MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK ) )
-
-				dbClient.ClearEmails();
-		}
-
-		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			dbClient.CloseConnection();
-			this.DialogResult = DialogResult.OK;
-			Application.Exit();
 		}
 
 		#endregion

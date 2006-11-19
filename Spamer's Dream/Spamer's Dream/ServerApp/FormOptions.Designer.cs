@@ -63,7 +63,7 @@ namespace ServerApp
 			// 
 			// buttonOk
 			// 
-			this.buttonOk.Location = new System.Drawing.Point(46, 220);
+			this.buttonOk.Location = new System.Drawing.Point(46, 146);
 			this.buttonOk.Name = "buttonOk";
 			this.buttonOk.Size = new System.Drawing.Size(75, 23);
 			this.buttonOk.TabIndex = 0;
@@ -74,7 +74,7 @@ namespace ServerApp
 			// buttonCancel
 			// 
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(129, 220);
+			this.buttonCancel.Location = new System.Drawing.Point(129, 146);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
 			this.buttonCancel.TabIndex = 1;
@@ -204,12 +204,13 @@ namespace ServerApp
 			this.groupBox2.Controls.Add(this.textUdpOutPort);
 			this.groupBox2.Controls.Add(this.textUdpInPort);
 			this.groupBox2.Controls.Add(this.label6);
-			this.groupBox2.Location = new System.Drawing.Point(12, 132);
+			this.groupBox2.Location = new System.Drawing.Point(12, 214);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Size = new System.Drawing.Size(226, 69);
 			this.groupBox2.TabIndex = 15;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "UDP ports";
+			this.groupBox2.Visible = false;
 			// 
 			// FormOptions
 			// 
@@ -217,7 +218,7 @@ namespace ServerApp
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
-			this.ClientSize = new System.Drawing.Size(251, 262);
+			this.ClientSize = new System.Drawing.Size(251, 183);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.buttonCancel);

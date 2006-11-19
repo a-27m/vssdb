@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System.Configuration;
 using System.Windows.Forms;
 using ClientApp.Properties;
-using System.Configuration;
-using System.IO;
 
 namespace ClientApp
 {
@@ -44,14 +38,20 @@ namespace ClientApp
 			try { appSettings.RobotPort = int.Parse(textUdpInPort.Text); }
 			catch ( FormatException )
 			{ errorProvider.SetError(textUdpInPort, "Bad port number"); return; }
+			if ( ( appSettings.RobotPort < 1 ) || ( appSettings.RobotPort > 65535 ) )
+			{ errorProvider.SetError(textUdpInPort, "Must be in range 1-65535"); return; }
 
 			try { appSettings.LettersDoze = int.Parse(textDoze.Text); }
 			catch ( FormatException )
 			{ errorProvider.SetError(textDoze, "Bad integer number"); return; }
+			if ( appSettings.LettersDoze < 1 )
+			{ errorProvider.SetError(textDoze, "Number is too small"); return; }
 
 			try { appSettings.MaxLettersCache = int.Parse(textCacheDepth.Text); }
 			catch ( FormatException )
 			{ errorProvider.SetError(textCacheDepth, "Bad integer number"); return; }
+			if ( appSettings.MaxLettersCache < 0 )
+			{ errorProvider.SetError(textCacheDepth, "Number is too small"); return; }
 
 			try { appSettings.ErrorsBeforeSwitchSmtp = int.Parse(textErrors.Text); }
 			catch ( FormatException )
