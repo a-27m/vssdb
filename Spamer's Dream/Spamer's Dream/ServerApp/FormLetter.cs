@@ -22,8 +22,9 @@ namespace ServerApp
 		{
 			if ( openFileDialog.ShowDialog() == DialogResult.OK )
 			{
-				StreamReader f = new StreamReader(openFileDialog.FileName);
+				StreamReader f = new StreamReader(openFileDialog.FileName, Encoding.Default);
 				textBody.Text = f.ReadToEnd();
+				checkIsHtml.Checked = openFileDialog.FilterIndex == 1;
 			}
 		}
 

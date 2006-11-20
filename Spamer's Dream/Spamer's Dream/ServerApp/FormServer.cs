@@ -87,8 +87,11 @@ WHERE
 			switch ( verb )
 			{
 			case SpamLanguage.KnockKnock:
-				string ipStr = remoteIPEndPoint.Address.ToString();
-				dbClient.AddRobot(ipStr);
+				if ( DbAvailable )
+				{
+					string ipStr = remoteIPEndPoint.Address.ToString();
+					dbClient.AddRobot(ipStr);
+				}
 				break;
 
 			default:
@@ -282,15 +285,20 @@ SET State=NULL");
 			switch ( tabControl1.SelectedTab.Name )
 			{
 			case "tabEmails":
-				listEmails.DataSource = dbClient.GetEmailsList();
+				this.MinimumSize = new System.Drawing.Size(this.MinimumSize.Width, 270);
+				listEmails.DataSource = 
+					dbClient.GetEmailsList(!tabEmails_checkPendingOnly.Checked);
 				break;
 			case "tabMessages":
+				this.MinimumSize = new System.Drawing.Size(this.MinimumSize.Width, 240);
 				listMessages.DataSource = dbClient.GetMessagesList();
 				break;
 			case "tabSmtps":
+				this.MinimumSize = new System.Drawing.Size(this.MinimumSize.Width, 400);
 				listSmtps.DataSource = dbClient.GetSmtpsList();
 				break;
 			case "tabRobots":
+				this.MinimumSize = new System.Drawing.Size(this.MinimumSize.Width, 225);
 				listRobots.DataSource = dbClient.GetRobotsList();
 				break;
 			}
@@ -430,6 +438,11 @@ SET State=NULL");
 			{
 				tabEmails_buttonSet_Click(sender, e);
 			}
+		}
+		private void tabEmails_checkPendingOnly_CheckedChanged(object sender, EventArgs e)
+		{
+			listEmails.DataSource =
+				dbClient.GetEmailsList(!tabEmails_checkPendingOnly.Checked);
 		}
 
 		private void tabMsg_buttonEdit_Click(object sender, EventArgs e)

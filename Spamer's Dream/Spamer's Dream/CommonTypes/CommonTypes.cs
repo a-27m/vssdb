@@ -552,10 +552,13 @@ WHERE State=" + DbClient.TokenSelected(ClientID);
 
 			yield break;
 		}
-		public List<SimpleMailTask> GetEmailsList()
+		public List<SimpleMailTask> GetEmailsList(bool showAll)
 		{
+			string query = "select Id,Username,email,MsgId from emails";
+			if ( !showAll )
+				query += " where State is NULL";
 			List<SimpleMailTask> list = new List<SimpleMailTask>();
-			MySqlDataReader sqlReader = GetQueryReader("select Id,Username,email,MsgId from emails");
+			MySqlDataReader sqlReader = GetQueryReader(query);
 			while ( sqlReader.Read() )
 			{
 				SimpleMailTask task;
