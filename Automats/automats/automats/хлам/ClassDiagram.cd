@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="automats.AutomatException" Collapsed="true">
+    <Position X="25.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Automats\Automat.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="automats.Automat" HideInheritanceLine="true">
+    <Position X="11.5" Y="1.75" Width="2.75" />
+    <TypeIdentifier>
+      <FileName>Automats\Automat.cs</FileName>
+      <HashCode>AAAAAAAAAAAABAAAAAACAIAAAAAAAAAgEIAAJRCAAAE=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="automats.AutomatMili">
+    <Position X="11.5" Y="10.25" Width="4.25" />
+    <TypeIdentifier>
+      <FileName>Automats\AutomatMili.cs</FileName>
+      <HashCode>AAAAAAAEAAAABAAAAAACQIAgAAAAAAIAAAgAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="automats.AutomatMura">
+    <Position X="16.5" Y="10.25" Width="4.25" />
+    <TypeIdentifier>
+      <FileName>Automats\AutomatMura.cs</FileName>
+      <HashCode>AAAAAAAEAAAABAAAAAACQIAgAAAAAAIAAAgAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="automats.MMAutomat">
+    <Position X="5" Y="6.25" Width="5.75" />
+    <TypeIdentifier>
+      <FileName>Automats\MMAutomat.cs</FileName>
+      <HashCode>IAAAABIAAGAABAICAgACAIBAAAAAACAAIgAAAEIAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="rules" />
+    </ShowAsAssociation>
+    <NestedTypes>
+      <Delegate Name="automats.MMAutomat.MMStepDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Automats\MMAutomat.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+  </Class>
+  <Class Name="automats.TerminalAutomat">
+    <Position X="13.75" Y="6.25" Width="5" />
+    <TypeIdentifier>
+      <FileName>Automats\TerminalAutomat.cs</FileName>
+      <HashCode>AAAAABIEAAAAAAAAAgAAEAAACBAAAAKAIAgCAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="automats.Form1" Collapsed="true">
+    <Position X="5.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Main\Form1.cs</FileName>
+      <HashCode>BACCAAMAACEAIAAIAEGIwEkiCIgAgAABAwAAQkCBAAQ=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="minimizationShower" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="automats.MDIChildTemplate">
+    <Position X="20" Y="2.25" Width="4.75" />
+    <TypeIdentifier>
+      <FileName>Main\MDIChildTemplate.cs</FileName>
+      <HashCode>AAIAAAEQgCIAABAIAACFFIoGBABAAQgYqAIAAGAAACA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="machine" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="automats.Main.MinimizationPiClasses">
+    <Position X="5.75" Y="13.25" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>Main\MinimizationPiClasses.cs</FileName>
+      <HashCode>AAgAAAEAACAAAAAAAACAAAACAAAAAAAAAAAAAABAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="automats.MMAutomatAct">
+    <Position X="6" Y="3.75" Width="4" />
+    <TypeIdentifier>
+      <FileName>Automats\MMAutomat.cs</FileName>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="type" />
+    </ShowAsAssociation>
+  </Struct>
+  <Interface Name="automats.IPlayableMDIChild" Collapsed="true">
+    <Position X="25.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Main\IPlayable.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="automats.StepResult" Collapsed="true">
+    <Position X="25.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Automats\Automat.cs</FileName>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="automats.MMAutomatActTypes">
+    <Position X="7" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Automats\MMAutomat.cs</FileName>
+      <HashCode>AIAABAAAAAAAAAgAAAAAAAAAAAiAAAAAAAAAAAAACKA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="automats.TerminalStepDelegate" Collapsed="true">
+    <Position X="27.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Automats\TerminalAutomat.cs</FileName>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAAAAAAEAAAACAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="automats.ClassesChangedHandler" Collapsed="true">
+    <Position X="25.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Automats\TerminalAutomat.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAABAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+</ClassDiagram>

@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+        <h1>
+            <span style="text-decoration: underline">Automat Files Format</span><br />
+        </h1>
+        <br />
+        This application can read standart comma-separated files (*.csv), and cvs extended
+        with C++ style comments ("//").<br />
+        File format described on two following examples.<br />
+        <br />
+        <span style="font-family: Monospace">
+            <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; height: 100%; border-right: black thin solid; border-top: black thin solid; border-left: black thin solid; border-bottom: black thin solid;">
+                <tr>
+                    <td style="width: 349px; height: 39px; border-right: gray thin solid;" valign="bottom">
+                        <span style="font-size:larger">
+                        Mura automat file example</span></td>
+                    <td style="height: 39px" valign="top">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 349px; height: 41px; border-right: gray thin solid;" valign="top">
+                        <span style="font-size: small; font-family: Lucida Console">
+            Mura;<br />
+            ;d;+;-;.;e;|;<br />
+            ;0;1;;;<br />
+            ;S0;S1;Spt;Sptd;Se;Se+-;Se+-d;Sok;e;<br />
+            ;1;8;1;2;8;8;<br />
+            ;1;8;8;2;8;8;<br />
+            ;3;8;8;8;8;8;<br />
+            ;3;8;8;8;4;7;<br />
+            ;8;5;5;8;8;8;<br />
+            ;6;8;8;8;8;8;<br />
+            ;6;8;8;8;8;7;<br />
+            ;8;8;8;8;8;8;<br />
+            ;8;8;8;8;8;8;<br />
+            ;0;0;0;0;0;0;0;1;0;;;<br />
+            ;;;;;;<br />
+            ±ddd . dddd [e±dddd];&nbsp;</span></td>
+                    <td style="height: 196px" valign="top">
+                        <span style="font-size: small; font-family: Times New Roman"><strong>First line</strong>
+                            contains one keywords, defining the type of automat: <em>Mili, Mura, MM.<br />
+                            </em><strong>Line 2</strong> difines set A, e.g. alphabet of incoming symbols, <strong>
+                                line 3 </strong>difines set Z (outgoing symbols alphabet), <strong>line 4</strong>
+                            difines set S (states alphabet).<br />
+                            <br />
+                            Next lines represents Transfers Table in which number of columns equal to power
+                            of set S, number of rows is equal to power of set A. Elements of the table are indexes
+                            of elements from set S (indexes assumed according to order of appearence elements
+                            in line 4).<br />
+                            <br />
+                            Next lines contains the Outs Table, it's column number is equal to power of set
+                            S, it's row number depends on type of automat. See <span style="color: #ff3300">Automats
+                                Types</span> for details. Elements of the table are indexes of elements from
+                            set Z<br />
+                            <br />
+                            Any next lines are ignored and may contain any custom data.<br />
+                            Empty elements (";;") are ignored also in compatibility with MS Excel© reasons.</span></td>
+                </tr>
+                <tr>
+                    <td style="width: 349px; height: 41px; border-right: gray thin solid; border-top: black thin double;" valign="bottom">
+                        <span style="font-size:larger">Stack-memory example</span></td>
+                    <td style="height: 41px; border-right: black thin double; border-top: black thin double; width: 352px; border-left: black thin double; border-top: black thin double;" valign="top">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 349px; border-right: gray thin solid; height: 41px;" valign="top">
+                        <span style="font-size: small; font-family: Lucida Console">
+            ;MM;<br />
+// A<br />
+;a;b;c;|;<br />
+// Z<br />
+                            ;Reject;Allow;<br />
+// S
+;S0;<br />
+// M0 1   2   3  4 5<br />
+            ;&lt;S&gt;;&lt;A&gt;;&lt;B&gt;;&lt;C&gt;;c;*;<br />
+// Managing table for S0<br />
+;1;1;1;1;<br />
+;2;5;7;7;
+            <br />
+;7;3;5;7;
+            <br />
+;7;7;4;5;
+            <br />
+;7;7;6;7;
+            <br />
+;7;7;7;8;
+            <br />
+            <br />
+// Rules...
+            <br />
+
+;Rule;0;<br />
+Replace;2;1;0;
+            <br />
+            Hold<br />
+            <br />
+            Rule 1<br />
+            Replace 3 2 1<br />
+Hold<br />
+            <br />
+            Rule 2<br />
+            Replace 1<br />
+            Shift<br />
+            <br />
+            Rule 3<br />
+            Replace 4 2<br />
+            Shift<br />
+            <br />
+            Rule 4<br />
+replace 3<br />
+            shift<br />
+            <br />
+            Rule 5<br />
+Pop<br />
+hold<br />
+            <br />
+
+Rule 6<br />
+pop
+shift<br />
+            <br />
+
+Rule 7<br />
+Reject<br />
+            <br />
+
+Rule 8<br />
+Accept</span></td>
+                    <td valign="top">
+                        <span style="font-family: Times New Roman"><strong>First line</strong> still aytomat
+                            type keyword. MM responds stack memory automat.</span><span style="font-family: Times New Roman"><em><br />
+                                </em><strong>Line 2</strong> difines set A<br />
+          <strong>Line 3 </strong>difines set Z<br />
+          <strong>Line 4</strong>
+                                difines set S<br />
+          <strong>Line 5</strong> defines set M (stack-symblos alphabet)<br />
+          <br />
+          <br />
+                                <br />
+                                Next lines represents Managing Table(s): columns number is equal to power of set
+          A, number of rows is equal to power of set M. Elements of the table are indexes
+          of rules specifed below. There are so many tables as power of set S.<br />
+          <br />
+                                <br />
+                                Next lines deines rules. See <span style="color: #ff3300">Stack-memory automats rules</span> for rules specification. Rule format:<br />
+          — keyword "Rule", then title of rule, separated from keyword by comma or space.<br />
+          — &lt;keyword&gt;{space|comma}&lt;parameter&gt;<br />
+          <br />
+          File parsing ends with last rule, so it must <em>not </em>contain trash text.</span><span
+              style="font-family: Times New Roman"><br />
+              Empty elements (";;") are ignored.</span></td>
+                </tr>
+            </table>
+            <br />
+
+        </span>
+	
+	</body>
+</html>

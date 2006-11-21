@@ -1,0 +1,11 @@
+We have to do:
+
++	minimization
++	ensure minmization works with Mur's type of automat
+
++	pause/continue bn action
++	timeout setup
+
++	cols headers alignment (make MidCntr)
+
++	move highlighting of current state to Automat as abstract fn
