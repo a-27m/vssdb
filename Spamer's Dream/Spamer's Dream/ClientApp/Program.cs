@@ -14,11 +14,10 @@ namespace ClientApp
 		static void Main()
 		{
 			bool createdNew;
-			Mutex mu = new Mutex(false,"ClientApplicationMutex",
+			Mutex mu = new Mutex(false, "ClientApplicationMutex",
 				out createdNew);
 			if ( !createdNew )
 			{
-				MessageBox.Show("Another copy of the Client Application is already running!");
 				Application.Exit();
 				return;
 			}
@@ -27,13 +26,10 @@ namespace ClientApp
 			Application.SetCompatibleTextRenderingDefault(false);
 
 			FormClient frmClient = new FormClient();
-			if ( Environment.CommandLine
-				.ToLower()
-				.Contains(@"/hide") )
-			{
+			if ( Environment.CommandLine.ToLower().Contains(@"/hide") )
 				Application.Run();
-			}
-			Application.Run(frmClient);
+			else
+				Application.Run(frmClient);
 
 			//mu.ReleaseMutex();
 			mu.Close();
