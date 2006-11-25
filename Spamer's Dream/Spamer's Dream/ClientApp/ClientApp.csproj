@@ -65,9 +65,6 @@
     <Compile Include="FormClient.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormClient.Designer.cs">
-      <DependentUpon>FormClient.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormKnock.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -82,10 +79,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FormClient.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>FormClient.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="FormKnock.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormKnock.cs</DependentUpon>

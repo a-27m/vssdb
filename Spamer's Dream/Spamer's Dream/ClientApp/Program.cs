@@ -22,9 +22,6 @@ namespace ClientApp
 				return;
 			}
 
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
-
 			FormClient frmClient = new FormClient();
 			if ( Environment.CommandLine.ToLower().Contains(@"/hide") )
 				Application.Run();
