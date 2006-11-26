@@ -61,10 +61,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientLogic.cs" />
-    <Compile Include="FormClient.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="FormKnock.cs">
       <SubType>Form</SubType>
     </Compile>
