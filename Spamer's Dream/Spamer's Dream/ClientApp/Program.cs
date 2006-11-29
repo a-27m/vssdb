@@ -1,23 +1,28 @@
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Sockets;
 using System.Threading;
+using System.Windows.Forms;
+using CommonTypes;
+using ClientApp.Properties;
 
 namespace ClientApp
 {
 	static class Program
 	{
-				UdpClient udpClient;
-		Settings sets = new Settings();
+		static UdpClient udpClient;
+		static Settings sets = new Settings();
 
 		static DbClient dbClient;
 		static List<Letter> messages;
-		Thread threadProcess;
-		bool dbAvailable = false;
+		static Thread threadProcess;
+		static bool dbAvailable = false;
 
-		bool inProcess = false;
+		static bool inProcess = false;
 
-		public bool InProcess
+		static bool InProcess
 		{
 			get { return inProcess; }
 			set
@@ -40,7 +45,7 @@ namespace ClientApp
 			}
 		}
 
-		private void UdpReceived(IAsyncResult iar)
+		static void UdpReceived(IAsyncResult iar)
 		{
 			IPEndPoint remoteIPEndPoint = null;
 
@@ -54,9 +59,6 @@ namespace ClientApp
 				{
 					sets.RobotId = BitConverter.ToInt32(bytes, 1);
 				}
-				sets.SpamServerHost = remoteIPEndPoint.Address.ToString();
-				sets.SpamServerPort = remoteIPEndPoint.Port;
-				sets.Save();
 
 				if ( !InProcess )
 					InProcess = true;
@@ -64,23 +66,19 @@ namespace ClientApp
 
 			case SpamLanguage.Stop:
 				InProcess = false;
-				if ( remoteIPEndPoint.Address.ToString() ==
-					sets.SpamServerHost )
-					LogAddText("Stopped by server");
-				else
-					LogAddText("Stopped by robot");
-
-				break;
-			default:
-				LogAddText("Unsupported command received");
 				break;
 			}
 
 			udpClient.BeginReceive(UdpReceived, iar);
 		}
 
-		private void ProcessTask()
+		static void ProcessTask()
 		{
+			/*			
+			 * Thread.Sleep(0);
+			 * if ( !inProcess )
+			 * break;
+			 */
 			List<SimpleMailTask> simpleTasks = new List<SimpleMailTask>();
 
 			while ( inProcess )
@@ -107,9 +105,8 @@ namespace ClientApp
 					{
 						try
 						{ letterToSend = dbClient.GetMessageById(task.MessageID); }
-						catch ( Exception exc )
+						catch ( Exception )
 						{
-							LogAddText("Getting letter: " + exc.Message);
 							break;
 						}
 
@@ -125,33 +122,23 @@ namespace ClientApp
 					{
 						// pick smtp
 						try { tempSmtp = dbClient.GetAnySmtp(); }
-						catch ( Exception e )
+						catch ( Exception )
 						{
-							LogAddText("Attempt #" + ( i + 1 ).ToString() +
-								". Unable to pick up a SMTP server! " + e.Message);
 							Thread.Sleep(1500);
 							continue;
 						}
 
 						if ( SendMail(task.Address, letterToSend, tempSmtp, task.TaskId) )
-						{ LogAddText("Message sent."); break; } // exit from `for` loop
-						else
-						{
-							LogAddText("Attempt #" + ( i + 1 ).ToString() +
-										". SMTP server "+tempSmtp.Host+
-										" failed to send mail. Task ID = "+task.TaskId.ToString());
-						}
+						{ break; } // exit from `for` loop
 					}
 				}
 
 				if ( !inProcess )
 					break;
 			}
-
-			LogAddText("All done. (No more tasks in database " + sets.DbName + ")");
 		}
 
-		protected bool SendMail(MailAddress targetEmail,
+		static bool SendMail(MailAddress targetEmail,
 			Letter letter, AuthServerInfo smtpServer, int TaskId)
 		{
 			MailAddress from;
@@ -176,10 +163,8 @@ namespace ClientApp
 			sc.EnableSsl = smtpServer.UseSSL;
 
 			try { sc.Send(msg); }
-			catch ( Exception exc )
+			catch ( Exception )
 			{
-				LogAddText("Sending failed: " + exc.Message);
-
 				string Query =
 	@"UPDATE emails
 SET State=NULL
@@ -199,24 +184,23 @@ WHERE Id=" + TaskId.ToString();
 			string DoneMessage = "Task with id = " + TaskId.ToString() +
 				" is done";
 
-			LogAddText(DoneMessage);
 			return true;
 		}
 
 		/// <summary>
 		/// Sends command to the Settings.SpamServerHost:Settings.SpamServerPort
 		/// </summary>
-		private void Say(SpamLanguage cmd)
+		static void Say(SpamLanguage cmd)
 		{
 			Say(sets.SpamServerHost, sets.SpamServerPort, cmd);
 		}
 
-		private void Say(string Host, int Port, SpamLanguage cmd)
+		static void Say(string Host, int Port, SpamLanguage cmd)
 		{
 			Say(Host, Port, cmd, new byte[0]);
 		}
 
-		private void Say(string Host, int Port,
+		static void Say(string Host, int Port,
 			SpamLanguage cmd, byte[] attachment)
 		{
 			byte[] dgrm = new byte[attachment.Length + 1];
@@ -242,7 +226,7 @@ WHERE Id=" + TaskId.ToString();
 			finally { if ( uclient != null ) uclient.Close(); }
 		}
 
-		private void buttonKnock_Click(object sender, EventArgs e)
+		static void buttonKnock_Click(object sender, EventArgs e)
 		{
 			FormKnock fKnock = new FormKnock();
 			fKnock.serverInfo = new ServerInfo(sets.SpamServerHost, sets.SpamServerPort);
@@ -255,7 +239,7 @@ WHERE Id=" + TaskId.ToString();
 			}
 		}
 
-		private void bnOptions_Click(object sender, EventArgs e)
+		static void bnOptions_Click(object sender, EventArgs e)
 		{
 			FormOptions fOpts = new FormOptions();
 			fOpts.Show();
@@ -275,7 +259,6 @@ WHERE Id=" + TaskId.ToString();
 				Application.Exit();
 				return;
 			}
-
 
 			try
 			{
