@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Lab_06
@@ -9,13 +10,25 @@ namespace Lab_06
 		public Form06()
 		{
 			InitializeComponent();
-			richTextBox1.Rtf = @"";
+			try
+			{
+				StreamReader rtfFile = new StreamReader("task6.rtf");
+				this.richTextBox1.Rtf = rtfFile.ReadToEnd();
+				rtfFile.Close();
+			}
+			catch
+			{ }
 		}
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			for ( int i=0;i<10 ; i++)
+			for ( int i = 0; i < 10; i++ )
 				;
+		}
+
+		private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			MessageBox.Show("Test");
 		}
 	}
 }
