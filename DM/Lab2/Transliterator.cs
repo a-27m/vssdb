@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using MyTypes;
+using System.Collections;
 
 namespace Lab2
 {
     public class Transliterator
     {
+        static bool skip_garbage = false;
+
         public class TranslitResult : IAsyncResult
         {
             private Lexema[] m_result;
@@ -87,12 +90,26 @@ namespace Lab2
 
         public static Lexema[] Do(string input, bool SkipGarbage)
         {
+            Transliterator.skip_garbage = SkipGarbage;
+
             int len = input.Length;
-            Lexema[] result = new Lexema[len];
+            List<Lexema> result = new List<Lexema>(len);
 
             for (int pos = 0; pos < len; pos++)
             {
-                KindOfSymbol kind = Kind(input[pos]);
+                KindOfSymbol kind;
+                try
+                {
+                    kind = Kind(input[pos]);
+                }
+                catch (Exception e)
+                {
+                    if (!skip_garbage)
+                        throw e;
+                    else
+                        continue;
+                }
+
                 Object value;
 
                 if (kind == KindOfSymbol.Digit)
@@ -104,9 +121,9 @@ namespace Lab2
                     value = input[pos];
                 }
 
-                result[pos] = new Lexema(kind, value);
+                result.Add(new Lexema(kind, value));
             }
-            return result;
+            return result.ToArray();
         }
 
         /// <summary>

@@ -19,8 +19,6 @@ namespace Lab2
 
         public override StepResult ProcessOne(int indexA, out int new_state_index, out int output_index)
         {
-            //output_index = TOuts[StateIndex];
-
             try
             {
                 (S[TStates[StateIndex, indexA]] as ActionOnLexem)((CurrentInputSymbol as Lexema), ref Ð×, ref  ÐÏ, ref  ÐÑ, ref  ÐÇ, out  new_state_index);

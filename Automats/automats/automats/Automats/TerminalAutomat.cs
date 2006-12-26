@@ -144,10 +144,12 @@ namespace automats
         
         #endregion
 
-        protected object CurrentInputSymbol = null;	
+        public object CurrentInputSymbol = null;	
 
         public virtual void Process(object[] input, out object[] states, out object[] output)
         {
+            if (input == null)
+                throw new ArgumentNullException("input");
             int new_state = StateIndex;
             int outed = -1;
             int queuedLength = input.Length;
