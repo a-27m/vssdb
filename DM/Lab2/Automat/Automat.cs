@@ -27,7 +27,6 @@ namespace automats
             }
             set
             {
-                // value as typeof(s[0]);
                 int t = Array.IndexOf(s, value);
                 if (t != -1)
                     stateIndex = t;

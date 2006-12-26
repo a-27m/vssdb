@@ -63,7 +63,7 @@ namespace automats
             return TOuts[i1] == TOuts[i2];
         }
 
-        protected override TerminalAutomat GetAutomatFromPiClasses(List<List<int>> classes)
+        protected override TerminalAutomat BuildAutomatFromPiClasses(List<List<int>> classes)
         {
             #region  copy new states
 

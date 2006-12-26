@@ -44,7 +44,7 @@ namespace automats
             }
 
             //Building new automat
-            return GetAutomatFromPiClasses(classes);
+            return BuildAutomatFromPiClasses(classes);
         }
 
 
@@ -140,7 +140,7 @@ namespace automats
         }
 
         protected abstract bool EqOuts(int i1, int i2);
-        protected abstract TerminalAutomat GetAutomatFromPiClasses(List<List<int>> classes);
+        protected abstract TerminalAutomat BuildAutomatFromPiClasses(List<List<int>> classes);
 
         public virtual void Process(object[] input, out object[] states, out object[] output)
         {
