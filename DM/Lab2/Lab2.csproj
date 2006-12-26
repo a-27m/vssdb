@@ -40,6 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Automat\Automat.cs" />
+    <Compile Include="Automat\AutomatMura.cs" />
+    <Compile Include="Automat\AutomatNumConst.cs" />
+    <Compile Include="Automat\TerminalAutomat.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>

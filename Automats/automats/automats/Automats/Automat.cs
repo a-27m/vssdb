@@ -60,7 +60,7 @@ namespace automats
             }
             protected set
             {
-                Set(value, ref a);
+                Copy(value, ref a);
             }
         }
 
@@ -73,7 +73,7 @@ namespace automats
             }
             protected set
             {
-                Set(value, ref s);
+                Copy(value, ref s);
             }
         }
 
@@ -86,11 +86,11 @@ namespace automats
             }
             protected set
             {
-                Set(value, ref z);
+                Copy(value, ref z);
             }
         }
 
-        protected void Set(object[] value, ref object[] to)
+        protected void Copy(object[] value, ref object[] to)
         {
             if (value == null)
                 return;

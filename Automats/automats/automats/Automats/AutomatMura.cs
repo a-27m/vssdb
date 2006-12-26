@@ -7,19 +7,13 @@ namespace automats
 {
     public class AutomatMura : TerminalAutomat
     {
-     protected   int[] TOuts;
-      protected  int[,] TStates;
+        protected int[] TOuts;
+        protected int[,] TStates;
 
         public AutomatMura(object[] A, object[] Z, object[] S,
             int[,] nju, int[] zeta)
             : base(A, Z, S)
         {
-            if ((nju.GetLength(0) != S.Length) ||
-                (nju.GetLength(1) != A.Length))
-                throw new AutomatException("Wrong nju table size!");
-            if (zeta.Length != S.Length)
-                throw new AutomatException("Wrong zeta table size!");
-
             TStates = (int[,])nju.Clone();
             TOuts = (int[])zeta.Clone();
 
@@ -42,8 +36,16 @@ namespace automats
             StateIndex = 0;
         }
 
-        /// <summary>validating tables</summary>
-        protected override void CheckAutomatConsistency()
+        protected void CheckTables()
+        {
+            if ((TStates.GetLength(0) != S.Length) ||
+                (TStates.GetLength(1) != A.Length))
+                throw new AutomatException("Wrong nju table size!");
+            if (TOuts.Length != S.Length)
+                throw new AutomatException("Wrong zeta table size!");
+        }
+
+        protected void CheckIndices()
         {
             for (int i = 0; i < S.Length; i++)
             {
@@ -56,6 +58,13 @@ namespace automats
                         throw new AutomatException("Wrong state index!");
                 }
             }
+        }
+
+        /// <summary>validating tables</summary>
+        protected override void CheckAutomatConsistency()
+        {
+            CheckTables();
+            CheckIndices();
         }
 
         protected override bool EqOuts(int i1, int i2)
@@ -77,7 +86,7 @@ namespace automats
                 {
                     NewTStates[currentPiClassIndex, j] = TStates[PiClass[0], j];
                 }
-                    NewTOuts[currentPiClassIndex] = TOuts[PiClass[0]];
+                NewTOuts[currentPiClassIndex] = TOuts[PiClass[0]];
                 currentPiClassIndex++;
             }
             #endregion
@@ -93,9 +102,9 @@ namespace automats
                             if (cs == NewTStates[i, j])
                                 goto found;
                 found:
-                    NewTStates[i, j] =ci;
+                    NewTStates[i, j] = ci;
                 }
-        
+
             #endregion
 
             object[] NewS = new object[classes.Count];

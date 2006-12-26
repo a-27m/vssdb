@@ -13,11 +13,12 @@ namespace automats
 
         public event TerminalStepDelegate Step;
 
-        protected TerminalAutomat(object[] A, object[] Z, object[] S)
+        public TerminalAutomat(object[] A, object[] Z, object[] S)
             : base(A, Z, S)
         {
         }
 
+        #region Minimization
         public TerminalAutomat GetMinimized()
         {
             List<List<int>> classes = new List<List<int>>();
@@ -46,7 +47,6 @@ namespace automats
             //Building new automat
             return BuildAutomatFromPiClasses(classes);
         }
-
 
         private void PlaceInList(ref List<List<int>> cls, int state)
         {
@@ -141,6 +141,10 @@ namespace automats
 
         protected abstract bool EqOuts(int i1, int i2);
         protected abstract TerminalAutomat BuildAutomatFromPiClasses(List<List<int>> classes);
+        
+        #endregion
+
+        protected object CurrentInputSymbol = null;	
 
         public virtual void Process(object[] input, out object[] states, out object[] output)
         {
@@ -152,13 +156,17 @@ namespace automats
             output = new object[queuedLength];
 
             int di = 1;
+
             for (int i = 0; i < queuedLength; i += di)
             {
+                CurrentInputSymbol = input[i];
+
                 int indexA = Array.IndexOf(A, input[i]);
                 if (indexA != -1)
                 {
                     di = ProcessOne(indexA, out new_state, out outed)
                         == StepResult.Success ? 1 : 0;
+
                     states[i] = S[new_state];
                     output[i] = Z[outed];
                     OnStep(indexA, new_state, outed);
@@ -180,6 +188,7 @@ namespace automats
                     return;
                     #endregion
                 }
+
             }
         }
 
