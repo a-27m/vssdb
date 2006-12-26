@@ -7,8 +7,8 @@ namespace automats
 {
     public class AutomatMura : TerminalAutomat
     {
-        int[] TOuts;
-        int[,] TStates;
+     protected   int[] TOuts;
+      protected  int[,] TStates;
 
         public AutomatMura(object[] A, object[] Z, object[] S,
             int[,] nju, int[] zeta)
