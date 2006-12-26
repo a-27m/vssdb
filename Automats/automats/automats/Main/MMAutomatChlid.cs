@@ -82,7 +82,6 @@ namespace automats
         protected object[] ss;
         protected object[] oo;
         protected object[] stst;
-        bool paused = false;
 
         private void MDIChildTemplate_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -173,7 +172,6 @@ namespace automats
 
         public void Step()
         {
-            paused = true;
             Play();
             //throw new Exception("Need it? Write it!");
         }

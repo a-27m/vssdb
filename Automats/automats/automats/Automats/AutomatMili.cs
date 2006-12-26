@@ -94,7 +94,7 @@ namespace automats
             return true;
         }
 
-        protected override TerminalAutomat GetAutomatFromPiClasses(List<List<int>> classes)
+        protected override TerminalAutomat BuildAutomatFromPiClasses(List<List<int>> classes)
         {
             #region  copy new states
 

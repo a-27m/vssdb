@@ -33,12 +33,14 @@ namespace automats
         }
         protected object[] ss;
         protected object[] oo;
-        bool machine_OnStep(int inIndex, int newStateIndex, int outSymbolIndex)
+        bool machine_OnStep(object inSymbol, int newStateIndex, int outSymbolIndex)
         {
             if (pos < strs.Length)
                 pos++;
             else
                 return false;
+
+            int inIndex = Array.IndexOf(machine.A, inSymbol);
 
             //progressBar.PerformStep();
             if (inIndex != -1)
