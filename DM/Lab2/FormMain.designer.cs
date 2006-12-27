@@ -149,7 +149,6 @@ namespace Lab2
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Step,
             this.Symbol,
@@ -171,14 +170,14 @@ namespace Lab2
             this.Step.HeaderText = "Шаг";
             this.Step.Name = "Step";
             this.Step.ReadOnly = true;
-            this.Step.Width = 50;
+            this.Step.Width = 52;
             // 
             // Symbol
             // 
             this.Symbol.HeaderText = "Символ";
             this.Symbol.Name = "Symbol";
             this.Symbol.ReadOnly = true;
-            this.Symbol.Width = 69;
+            this.Symbol.Width = 71;
             // 
             // RCh
             // 
@@ -186,7 +185,7 @@ namespace Lab2
             this.RCh.HeaderText = "РЧ";
             this.RCh.Name = "RCh";
             this.RCh.ReadOnly = true;
-            this.RCh.Width = 45;
+            this.RCh.Width = 47;
             // 
             // RP
             // 
@@ -194,7 +193,7 @@ namespace Lab2
             this.RP.HeaderText = "РП";
             this.RP.Name = "RP";
             this.RP.ReadOnly = true;
-            this.RP.Width = 45;
+            this.RP.Width = 47;
             // 
             // RS
             // 
@@ -202,7 +201,7 @@ namespace Lab2
             this.RS.HeaderText = "РС";
             this.RS.Name = "RS";
             this.RS.ReadOnly = true;
-            this.RS.Width = 44;
+            this.RS.Width = 46;
             // 
             // RZ
             // 
@@ -210,14 +209,14 @@ namespace Lab2
             this.RZ.HeaderText = "РЗ";
             this.RZ.Name = "RZ";
             this.RZ.ReadOnly = true;
-            this.RZ.Width = 44;
+            this.RZ.Width = 46;
             // 
             // State
             // 
             this.State.HeaderText = "Состояние";
             this.State.Name = "State";
             this.State.ReadOnly = true;
-            this.State.Width = 84;
+            this.State.Width = 86;
             // 
             // FormMain
             // 
