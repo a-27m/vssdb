@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab1", "labs\lab1.csproj", "{6D7F83CF-747C-474E-BBAA-A81207A36588}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProc", "DataProc\DataProc.csproj", "{C2E7C2C2-879D-41A8-B1E5-A953092B1FAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{6D7F83CF-747C-474E-BBAA-A81207A36588}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D7F83CF-747C-474E-BBAA-A81207A36588}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D7F83CF-747C-474E-BBAA-A81207A36588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2E7C2C2-879D-41A8-B1E5-A953092B1FAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2E7C2C2-879D-41A8-B1E5-A953092B1FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2E7C2C2-879D-41A8-B1E5-A953092B1FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2E7C2C2-879D-41A8-B1E5-A953092B1FAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
