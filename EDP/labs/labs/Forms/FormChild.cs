@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using DataProc;
 
 namespace lab1 {
 	struct GridsRow {
@@ -19,14 +20,14 @@ namespace lab1 {
 	}
 
 	public partial class FormChild : Form {
-		private DataSet dataSet;
+		private RawDataSet dataSet;
 
 		public double[] Data {
 			get {
 				return dataSet.Data.Clone() as double[];
 			}
 			set {
-				dataSet = new DataSet(value);
+				dataSet = new RawDataSet(value);
 				if ( Visible )
 					UpdateGrid();
 			}
