@@ -86,7 +86,7 @@ namespace lab1 {
 						( i + 1 ).ToString());
 
 				dataGridDataSet.Rows.Add(1);
-				dataGridDataSet.Rows[0].HeaderCell.Value = "Исх. выборка";
+				dataGridDataSet.Rows[0].HeaderCell.Value = "Выборка";
 
 				for ( int i = 0; i < dataSet.Length; i++ )
 					dataGridDataSet[i, 0].Value = dataSet[i];
