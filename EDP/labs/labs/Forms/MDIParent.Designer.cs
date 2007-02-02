@@ -79,6 +79,12 @@ namespace lab1
             this.buttonDoIntervalRow = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonDoNumCharacteristics = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonDoCorelation = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolDropDownCheck = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolDropDownCheckRnd = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonCheckRndSeries = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonCheckRndUpDownSeries = new System.Windows.Forms.ToolStripMenuItem();
+            this.соответствиеЗаконамToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.засоренностьрезковыделяющимисяЗначениямиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripPanel1 = new System.Windows.Forms.ToolStripPanel();
             this.toolStripPanel2 = new System.Windows.Forms.ToolStripPanel();
             this.toolStripPanel3 = new System.Windows.Forms.ToolStripPanel();
@@ -104,7 +110,7 @@ namespace lab1
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.MdiWindowListItem = this.windowsMenu;
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(492, 24);
+            this.menuStrip.Size = new System.Drawing.Size(401, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "MenuStrip";
             // 
@@ -337,9 +343,9 @@ namespace lab1
             this.openToolStripButton,
             this.saveToolStripButton,
             this.helpToolStripButton});
-            this.toolStripStandart.Location = new System.Drawing.Point(3, 24);
+            this.toolStripStandart.Location = new System.Drawing.Point(346, 24);
             this.toolStripStandart.Name = "toolStripStandart";
-            this.toolStripStandart.Size = new System.Drawing.Size(132, 25);
+            this.toolStripStandart.Size = new System.Drawing.Size(55, 25);
             this.toolStripStandart.TabIndex = 1;
             this.toolStripStandart.Text = "ToolStrip";
             // 
@@ -365,10 +371,11 @@ namespace lab1
             // 
             // saveToolStripButton
             // 
+            this.saveToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.saveToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripButton.Image")));
             this.saveToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.saveToolStripButton.Name = "saveToolStripButton";
-            this.saveToolStripButton.Size = new System.Drawing.Size(51, 22);
+            this.saveToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.saveToolStripButton.Text = "Save";
             this.saveToolStripButton.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
             // 
@@ -378,8 +385,9 @@ namespace lab1
             this.helpToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("helpToolStripButton.Image")));
             this.helpToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.helpToolStripButton.Name = "helpToolStripButton";
-            this.helpToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.helpToolStripButton.Size = new System.Drawing.Size(23, 20);
             this.helpToolStripButton.Text = "Help";
+            this.helpToolStripButton.Visible = false;
             // 
             // buttonAllAnalysis
             // 
@@ -392,10 +400,11 @@ namespace lab1
             this.toolStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolDropDownGenerate,
             this.toolDropDownDraw,
-            this.toolDropDownDo});
-            this.toolStripMain.Location = new System.Drawing.Point(135, 24);
+            this.toolDropDownDo,
+            this.toolDropDownCheck});
+            this.toolStripMain.Location = new System.Drawing.Point(3, 24);
             this.toolStripMain.Name = "toolStripMain";
-            this.toolStripMain.Size = new System.Drawing.Size(243, 25);
+            this.toolStripMain.Size = new System.Drawing.Size(343, 25);
             this.toolStripMain.TabIndex = 9;
             this.toolStripMain.Text = "toolStrip3";
             // 
@@ -563,6 +572,56 @@ namespace lab1
             this.buttonDoCorelation.Text = "Коэффициент корреляции выборок…";
             this.buttonDoCorelation.Click += new System.EventHandler(this.buttonCorelation_Click);
             // 
+            // toolDropDownCheck
+            // 
+            this.toolDropDownCheck.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolDropDownCheck.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolDropDownCheckRnd,
+            this.соответствиеЗаконамToolStripMenuItem,
+            this.засоренностьрезковыделяющимисяЗначениямиToolStripMenuItem});
+            this.toolDropDownCheck.Image = ((System.Drawing.Image)(resources.GetObject("toolDropDownCheck.Image")));
+            this.toolDropDownCheck.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolDropDownCheck.Name = "toolDropDownCheck";
+            this.toolDropDownCheck.Size = new System.Drawing.Size(69, 22);
+            this.toolDropDownCheck.Text = "Проверка";
+            // 
+            // toolDropDownCheckRnd
+            // 
+            this.toolDropDownCheckRnd.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.buttonCheckRndSeries,
+            this.buttonCheckRndUpDownSeries});
+            this.toolDropDownCheckRnd.Name = "toolDropDownCheckRnd";
+            this.toolDropDownCheckRnd.Size = new System.Drawing.Size(201, 22);
+            this.toolDropDownCheckRnd.Text = "Случайность";
+            // 
+            // buttonCheckRndSeries
+            // 
+            this.buttonCheckRndSeries.Name = "buttonCheckRndSeries";
+            this.buttonCheckRndSeries.Size = new System.Drawing.Size(307, 22);
+            this.buttonCheckRndSeries.Text = "Критерий серий";
+            this.buttonCheckRndSeries.Click += new System.EventHandler(this.buttonCheckRndSeries_Click);
+            // 
+            // buttonCheckRndUpDownSeries
+            // 
+            this.buttonCheckRndUpDownSeries.Name = "buttonCheckRndUpDownSeries";
+            this.buttonCheckRndUpDownSeries.Size = new System.Drawing.Size(307, 22);
+            this.buttonCheckRndUpDownSeries.Text = "Критерий восходящих и нисходящих серий";
+            this.buttonCheckRndUpDownSeries.Click += new System.EventHandler(this.buttonCheckRndUpDownSeries_Click);
+            // 
+            // соответствиеЗаконамToolStripMenuItem
+            // 
+            this.соответствиеЗаконамToolStripMenuItem.Name = "соответствиеЗаконамToolStripMenuItem";
+            this.соответствиеЗаконамToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.соответствиеЗаконамToolStripMenuItem.Text = "Соответствие законам";
+            this.соответствиеЗаконамToolStripMenuItem.Click += new System.EventHandler(this.соответствиеЗаконамToolStripMenuItem_Click);
+            // 
+            // засоренностьрезковыделяющимисяЗначениямиToolStripMenuItem
+            // 
+            this.засоренностьрезковыделяющимисяЗначениямиToolStripMenuItem.Name = "засоренностьрезковыделяющимисяЗначениямиToolStripMenuItem";
+            this.засоренностьрезковыделяющимисяЗначениямиToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.засоренностьрезковыделяющимисяЗначениямиToolStripMenuItem.Text = "Засоренность";
+            this.засоренностьрезковыделяющимисяЗначениямиToolStripMenuItem.Click += new System.EventHandler(this.buttonCheckOutstanding);
+            // 
             // toolStripPanel1
             // 
             this.toolStripPanel1.Controls.Add(this.menuStrip);
@@ -573,12 +632,12 @@ namespace lab1
             this.toolStripPanel1.Name = "toolStripPanel1";
             this.toolStripPanel1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             this.toolStripPanel1.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.toolStripPanel1.Size = new System.Drawing.Size(492, 49);
+            this.toolStripPanel1.Size = new System.Drawing.Size(401, 49);
             // 
             // toolStripPanel2
             // 
             this.toolStripPanel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.toolStripPanel2.Location = new System.Drawing.Point(492, 49);
+            this.toolStripPanel2.Location = new System.Drawing.Point(401, 49);
             this.toolStripPanel2.Name = "toolStripPanel2";
             this.toolStripPanel2.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.toolStripPanel2.RowMargin = new System.Windows.Forms.Padding(0, 3, 0, 0);
@@ -591,7 +650,7 @@ namespace lab1
             this.toolStripPanel3.Name = "toolStripPanel3";
             this.toolStripPanel3.Orientation = System.Windows.Forms.Orientation.Horizontal;
             this.toolStripPanel3.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.toolStripPanel3.Size = new System.Drawing.Size(492, 0);
+            this.toolStripPanel3.Size = new System.Drawing.Size(401, 0);
             // 
             // toolStripPanel4
             // 
@@ -606,7 +665,7 @@ namespace lab1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(492, 337);
+            this.ClientSize = new System.Drawing.Size(401, 337);
             this.Controls.Add(this.toolStripPanel4);
             this.Controls.Add(this.toolStripPanel3);
             this.Controls.Add(this.toolStripPanel2);
@@ -683,6 +742,12 @@ namespace lab1
         private System.Windows.Forms.ToolStripPanel toolStripPanel2;
         private System.Windows.Forms.ToolStripPanel toolStripPanel3;
         private System.Windows.Forms.ToolStripPanel toolStripPanel4;
+        private System.Windows.Forms.ToolStripDropDownButton toolDropDownCheck;
+        private System.Windows.Forms.ToolStripMenuItem toolDropDownCheckRnd;
+        private System.Windows.Forms.ToolStripMenuItem buttonCheckRndSeries;
+        private System.Windows.Forms.ToolStripMenuItem buttonCheckRndUpDownSeries;
+        private System.Windows.Forms.ToolStripMenuItem соответствиеЗаконамToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem засоренностьрезковыделяющимисяЗначениямиToolStripMenuItem;
     }
 }
 

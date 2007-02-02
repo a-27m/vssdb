@@ -8,12 +8,12 @@ using System.Windows.Forms;
 using DataProc;
 
 namespace lab1.Forms {
-	public partial class FormAskRavnomParams : Form {
+	public partial class FormAskZnSelection : Form {
 
 		public double a = 0, b = 0;
 		public int n = 0;
 
-		public FormAskRavnomParams() {
+		public FormAskZnSelection() {
 			InitializeComponent();
 		}
 
