@@ -39,11 +39,11 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\FormAskZnSelection.cs">
+    <Compile Include="Forms\FormAskLawSelection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormAskZnSelection.Designer.cs">
-      <DependentUpon>FormAskZnSelection.cs</DependentUpon>
+    <Compile Include="Forms\FormAskLawSelection.Designer.cs">
+      <DependentUpon>FormAskLawSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormAskExpParams.cs">
       <SubType>Form</SubType>
@@ -83,9 +83,9 @@
     </Compile>
     <Compile Include="misc\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\FormAskZnSelection.resx">
-      <DependentUpon>FormAskZnSelection.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormAskLawSelection.resx">
       <SubType>Designer</SubType>
+      <DependentUpon>FormAskLawSelection.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormAskExpParams.resx">
       <SubType>Designer</SubType>
