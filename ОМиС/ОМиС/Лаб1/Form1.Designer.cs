@@ -28,12 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Text = "Form1";
+			this.SuspendLayout();
+			// 
+			// Form1
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.Color.LightGray;
+			this.ClientSize = new System.Drawing.Size(467, 344);
+			this.DoubleBuffered = true;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.MaximizeBox = false;
+			this.Name = "Form1";
+			this.Opacity = 0.85;
+			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+			this.Text = "ОМиС, лаб. 1, \"Моделирование измерений\"";
+			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
+			this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClick);
+			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
+			this.ResumeLayout(false);
+
         }
 
         #endregion
-    }
+
+	}
 }
 
