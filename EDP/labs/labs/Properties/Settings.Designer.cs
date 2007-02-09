@@ -22,5 +22,17 @@ namespace lab1.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public uint ShownDigits {
+            get {
+                return ((uint)(this["ShownDigits"]));
+            }
+            set {
+                this["ShownDigits"] = value;
+            }
+        }
     }
 }

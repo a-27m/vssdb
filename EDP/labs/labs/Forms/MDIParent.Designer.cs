@@ -101,8 +101,8 @@ namespace lab1
             this.menuStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileMenu,
-            this.editMenu,
             this.viewMenu,
+            this.editMenu,
             this.toolsMenu,
             this.windowsMenu,
             this.helpMenu});
@@ -110,7 +110,7 @@ namespace lab1
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.MdiWindowListItem = this.windowsMenu;
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(403, 24);
+            this.menuStrip.Size = new System.Drawing.Size(496, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "MenuStrip";
             // 
@@ -257,13 +257,13 @@ namespace lab1
             this.toolsMenu.Name = "toolsMenu";
             this.toolsMenu.Size = new System.Drawing.Size(44, 20);
             this.toolsMenu.Text = "&Tools";
-            this.toolsMenu.Visible = false;
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
+            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
             // windowsMenu
             // 
@@ -402,9 +402,9 @@ namespace lab1
             this.toolDropDownDraw,
             this.toolDropDownDo,
             this.toolDropDownCheck});
-            this.toolStripMain.Location = new System.Drawing.Point(84, 24);
+            this.toolStripMain.Location = new System.Drawing.Point(92, 24);
             this.toolStripMain.Name = "toolStripMain";
-            this.toolStripMain.Size = new System.Drawing.Size(319, 25);
+            this.toolStripMain.Size = new System.Drawing.Size(312, 25);
             this.toolStripMain.TabIndex = 9;
             this.toolStripMain.Text = "toolStrip3";
             // 
@@ -582,7 +582,7 @@ namespace lab1
             this.toolDropDownCheck.Image = ((System.Drawing.Image)(resources.GetObject("toolDropDownCheck.Image")));
             this.toolDropDownCheck.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolDropDownCheck.Name = "toolDropDownCheck";
-            this.toolDropDownCheck.Size = new System.Drawing.Size(69, 17);
+            this.toolDropDownCheck.Size = new System.Drawing.Size(69, 22);
             this.toolDropDownCheck.Text = "Проверка";
             // 
             // toolDropDownCheckRnd
@@ -632,12 +632,12 @@ namespace lab1
             this.toolStripPanel1.Name = "toolStripPanel1";
             this.toolStripPanel1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             this.toolStripPanel1.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.toolStripPanel1.Size = new System.Drawing.Size(403, 49);
+            this.toolStripPanel1.Size = new System.Drawing.Size(496, 49);
             // 
             // toolStripPanel2
             // 
             this.toolStripPanel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.toolStripPanel2.Location = new System.Drawing.Point(403, 49);
+            this.toolStripPanel2.Location = new System.Drawing.Point(496, 49);
             this.toolStripPanel2.Name = "toolStripPanel2";
             this.toolStripPanel2.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.toolStripPanel2.RowMargin = new System.Windows.Forms.Padding(0, 3, 0, 0);
@@ -650,7 +650,7 @@ namespace lab1
             this.toolStripPanel3.Name = "toolStripPanel3";
             this.toolStripPanel3.Orientation = System.Windows.Forms.Orientation.Horizontal;
             this.toolStripPanel3.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.toolStripPanel3.Size = new System.Drawing.Size(403, 0);
+            this.toolStripPanel3.Size = new System.Drawing.Size(496, 0);
             // 
             // toolStripPanel4
             // 
@@ -665,7 +665,7 @@ namespace lab1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(403, 368);
+            this.ClientSize = new System.Drawing.Size(496, 368);
             this.Controls.Add(this.toolStripPanel4);
             this.Controls.Add(this.toolStripPanel3);
             this.Controls.Add(this.toolStripPanel2);

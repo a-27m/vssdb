@@ -39,6 +39,12 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\FormAskDocuments.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormAskDocuments.Designer.cs">
+      <DependentUpon>FormAskDocuments.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormAskLawSelection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,6 +81,12 @@
     <Compile Include="Forms\FormDiagram.Designer.cs">
       <DependentUpon>FormDiagram.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormOptions.Designer.cs">
+      <DependentUpon>FormOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MDIParent.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,6 +95,10 @@
     </Compile>
     <Compile Include="misc\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\FormAskDocuments.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormAskDocuments.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormAskLawSelection.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormAskLawSelection.cs</DependentUpon>
@@ -107,6 +123,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>FormDiagram.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormOptions.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormOptions.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MDIParent.resx">
       <SubType>Designer</SubType>
       <DependentUpon>MDIParent.cs</DependentUpon>
@@ -121,6 +141,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

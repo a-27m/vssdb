@@ -7,135 +7,166 @@ using System.Text;
 using System.Windows.Forms;
 using DataProc;
 
-namespace lab1 {
-	struct GridsRow {
-		public string Title;
-		public Array Content;
+namespace lab1.Forms
+{
+    public partial class FormChild : Form
+    {
+        private RawDataSet dataSet;
 
-		public GridsRow(string Title, Array Content) {
-			this.Content = Content;
-			this.Title = Title;
-		}
+        public double[] Data
+        {
+            get
+            {
+                return dataSet.Data.Clone() as double[];
+            }
+            set
+            {
+                dataSet = new RawDataSet(value);
+                if (Visible)
+                    UpdateGrid();
+            }
+        }
 
-	}
+        List<GridsRow> rows = null;
+        int maxGridRowLen = 0;
 
-	public partial class FormChild : Form {
-		private RawDataSet dataSet;
+        protected bool changed = false;
 
-		public double[] Data {
-			get {
-				return dataSet.Data.Clone() as double[];
-			}
-			set {
-				dataSet = new RawDataSet(value);
-				if ( Visible )
-					UpdateGrid();
-			}
-		}
+        public FormChild(double[] data)
+        {
+            InitializeComponent();
+            Data = data;
+        }
 
-		List<GridsRow> rows = null;
-		int maxGridRowLen = 0;
+        public FormChild()
+        {
+            InitializeComponent();
+        }
 
-		protected bool changed = false;
+        private void FormChld_Shown(object sender, EventArgs e)
+        {
+            UpdateGrid();
+        }
+        public void AddRow(Array data)
+        {
+            AddRow("Х", data);
+        }
 
-		public FormChild(double[] data) {
-			InitializeComponent();
-			Data = data;
-		}
+        public void AddRow(string Title, Array data)
+        {
+            if (rows == null)
+                rows = new List<GridsRow>();
 
-		public FormChild() {
-			InitializeComponent();
-		}
+            GridsRow grRow;
+            grRow.Title = Title;
+            grRow.Content = data;
 
-		void FormChild_Shown(object sender, EventArgs e) {
-			UpdateGrid();
-		}
+            rows.Add(grRow);
+            UpdateGrid();
+        }
 
-		public void AddRow(Array data) {
-			AddRow("Х", data);
-		}
+        public void PrintLine(string str)
+        {
+            PrintLine(str, false);
+        }
+        public void PrintLine(string str, bool InsertDivAfter)
+        {
+            textBox1.Text += str + "\r\n";
+            if (InsertDivAfter)
+                textBox1.Text += "ЧЧЧ\r\n";
+        }
 
-		public void AddRow(string Title, Array data) {
-			if ( rows == null )
-				rows = new List<GridsRow>();
+        public void ClearLines()
+        {
+            textBox1.Clear();
+        }
 
-			GridsRow grRow;
-			grRow.Title = Title;
-			grRow.Content = data;
+        public void UpdateGrid()
+        {
+            uint digits = lab1.Properties.Settings.Default.ShownDigits;
 
-			rows.Add(grRow);
-			UpdateGrid();
-		}
+            dataGridDataSet.SuspendLayout();
+            if ((dataSet.Length > 0)
+                && (dataGridDataSet != null))
+            {
+                dataGridDataSet.Rows.Clear();
+                dataGridDataSet.Columns.Clear();
 
-		public void PrintLine(string str) {
-			textBox1.Text += str + "\r\n";
-		}
+                for (int i = 0; i < dataSet.Length; i++)
+                    dataGridDataSet.Columns.Add("column" + i.ToString(),
+                        (i + 1).ToString());
 
-		public void ClearLines() {
-			textBox1.Clear();
-		}
+                dataGridDataSet.Rows.Add(1);
+                dataGridDataSet.Rows[0].HeaderCell.Value = "¬ыборка";
 
-		public void UpdateGrid() {
-			if ( ( dataSet.Length > 0 )
-				&& ( dataGridDataSet != null ) ) {
-				dataGridDataSet.Rows.Clear();
-				dataGridDataSet.Columns.Clear();
+                for (int i = 0; i < dataSet.Length; i++)
+                    dataGridDataSet[i, 0].Value = Math.Round(dataSet[i],(int)digits);
 
-				for ( int i = 0; i < dataSet.Length; i++ )
-					dataGridDataSet.Columns.Add("column" + i.ToString(),
-						( i + 1 ).ToString());
+                dataGridDataSet.AutoResizeColumns();
+                dataGridDataSet.AutoResizeRows();
+            }
+            dataGridDataSet.ResumeLayout(false);
 
-				dataGridDataSet.Rows.Add(1);
-				dataGridDataSet.Rows[0].HeaderCell.Value = "¬ыборка";
+            dataGridAnalysis.SuspendLayout();
+            if ((rows == null)
+                || (rows.Count == 0)
+                || (dataGridAnalysis == null)
+                )
+                return;
 
-				for ( int i = 0; i < dataSet.Length; i++ )
-					dataGridDataSet[i, 0].Value = dataSet[i];
+            dataGridAnalysis.Rows.Clear();
+            dataGridAnalysis.Columns.Clear();
 
-				dataGridDataSet.AutoResizeColumns();
-				dataGridDataSet.AutoResizeRows();
-			}
+            rows.ForEach(FindMax);
 
-			if ( ( rows == null )
-				|| ( rows.Count == 0 )
-				|| ( dataGridAnalysis == null )
-				)
-				return;
+            for (int i = 0; i < maxGridRowLen; i++)
+                dataGridAnalysis.Columns.Add("column" + i.ToString(),
+                    (i + 1).ToString());
 
-			dataGridAnalysis.Rows.Clear();
-			dataGridAnalysis.Columns.Clear();
+            dataGridAnalysis.Rows.Add(rows.Count);
 
-			rows.ForEach(FindMax);
+            for (int j = 0; j < rows.Count; j++)
+            {
+                dataGridAnalysis.Rows[j].HeaderCell.Value =
+                    rows[j].Title;
 
-			for ( int i = 0; i < maxGridRowLen; i++ )
-				dataGridAnalysis.Columns.Add("column" + i.ToString(),
-					( i + 1 ).ToString());
+                Array tmp = rows[j].Content;
 
-			dataGridAnalysis.Rows.Add(rows.Count);
+                for (int i = 0; i < tmp.Length; i++)
+                {
+                    if (tmp.GetValue(i) is double ||
+                        tmp.GetValue(i) is float)
+                        dataGridAnalysis[i, j].Value =
+                            Math.Round((double)(tmp.GetValue(i)), (int)digits);
+                    else
+                        dataGridAnalysis[i, j].Value = tmp.GetValue(i);
+                }
+            }
 
-			for ( int j = 0; j < rows.Count; j++ ) {
-				dataGridAnalysis.Rows[j].HeaderCell.Value =
-					rows[j].Title;
+            dataGridAnalysis.AutoResizeColumns();
+            dataGridAnalysis.AutoResizeRows();
 
-				Array tmp = rows[j].Content;
+            dataGridAnalysis.ResumeLayout(false);
+        }
 
-				for ( int i = 0; i < tmp.Length; i++ )
-					dataGridAnalysis[i, j].Value = tmp.GetValue(i).ToString();
-			}
+        void FindMax(GridsRow gr)
+        {
+            if (gr.Content.Length > maxGridRowLen)
+                maxGridRowLen = gr.Content.Length;
+        }
 
-			dataGridAnalysis.AutoResizeColumns();
-			dataGridAnalysis.AutoResizeRows();
-		}
+    }
 
-		void FindMax(GridsRow gr) {
-			if ( gr.Content.Length > maxGridRowLen )
-				maxGridRowLen = gr.Content.Length;
-		}
+    struct GridsRow
+    {
+        public string Title;
+        public Array Content;
 
-		private void contextMenuAdd_Click(object sender, EventArgs e) {
-			changed = true;
-			double d = 0;
-			dataSet.Add(d);
-			UpdateGrid();
-		}
-	}
+        public GridsRow(string Title, Array Content)
+        {
+            this.Content = Content;
+            this.Title = Title;
+        }
+
+    }
 }
