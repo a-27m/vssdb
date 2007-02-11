@@ -42,7 +42,7 @@ namespace lab1
             this.buttonOK.Location = new System.Drawing.Point(27, 151);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 7;
+            this.buttonOK.TabIndex = 1;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -55,7 +55,7 @@ namespace lab1
             this.groupBox1.Location = new System.Drawing.Point(13, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(191, 124);
-            this.groupBox1.TabIndex = 14;
+            this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Модели распределения";
             // 
@@ -67,7 +67,7 @@ namespace lab1
             this.checkBoxNormal.Location = new System.Drawing.Point(25, 76);
             this.checkBoxNormal.Name = "checkBoxNormal";
             this.checkBoxNormal.Size = new System.Drawing.Size(125, 17);
-            this.checkBoxNormal.TabIndex = 0;
+            this.checkBoxNormal.TabIndex = 2;
             this.checkBoxNormal.Text = "Нормальный закон";
             this.checkBoxNormal.UseVisualStyleBackColor = true;
             this.checkBoxNormal.CheckedChanged += new System.EventHandler(this.checkBox_CheckedChanged);
@@ -80,7 +80,7 @@ namespace lab1
             this.checkBoxExponential.Location = new System.Drawing.Point(25, 53);
             this.checkBoxExponential.Name = "checkBoxExponential";
             this.checkBoxExponential.Size = new System.Drawing.Size(140, 17);
-            this.checkBoxExponential.TabIndex = 0;
+            this.checkBoxExponential.TabIndex = 1;
             this.checkBoxExponential.Text = "Показательный закон";
             this.checkBoxExponential.UseVisualStyleBackColor = true;
             this.checkBoxExponential.CheckedChanged += new System.EventHandler(this.checkBox_CheckedChanged);
@@ -104,7 +104,7 @@ namespace lab1
             this.buttonCancel.Location = new System.Drawing.Point(114, 151);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 15;
+            this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);

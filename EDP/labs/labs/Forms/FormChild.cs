@@ -29,7 +29,6 @@ namespace lab1.Forms
 
         List<GridsRow> rows = null;
         int maxGridRowLen = 0;
-
         protected bool changed = false;
 
         public FormChild(double[] data)
@@ -37,7 +36,6 @@ namespace lab1.Forms
             InitializeComponent();
             Data = data;
         }
-
         public FormChild()
         {
             InitializeComponent();
@@ -154,7 +152,6 @@ namespace lab1.Forms
             if (gr.Content.Length > maxGridRowLen)
                 maxGridRowLen = gr.Content.Length;
         }
-
     }
 
     struct GridsRow

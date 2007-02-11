@@ -34,5 +34,29 @@ namespace lab1.Properties {
                 this["ShownDigits"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10, 0")]
+        public global::System.Drawing.Point toolStripMainLoc {
+            get {
+                return ((global::System.Drawing.Point)(this["toolStripMainLoc"]));
+            }
+            set {
+                this["toolStripMainLoc"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point toolStripStandartLoc {
+            get {
+                return ((global::System.Drawing.Point)(this["toolStripStandartLoc"]));
+            }
+            set {
+                this["toolStripStandartLoc"] = value;
+            }
+        }
     }
 }

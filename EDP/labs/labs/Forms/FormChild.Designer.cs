@@ -108,7 +108,7 @@ namespace lab1.Forms
             this.dataGridAnalysis.ShowCellToolTips = false;
             this.dataGridAnalysis.ShowEditingIcon = false;
             this.dataGridAnalysis.Size = new System.Drawing.Size(509, 158);
-            this.dataGridAnalysis.TabIndex = 1;
+            this.dataGridAnalysis.TabIndex = 0;
             // 
             // textBox1
             // 
@@ -120,7 +120,7 @@ namespace lab1.Forms
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBox1.Size = new System.Drawing.Size(509, 122);
-            this.textBox1.TabIndex = 2;
+            this.textBox1.TabIndex = 0;
             // 
             // FormChild
             // 

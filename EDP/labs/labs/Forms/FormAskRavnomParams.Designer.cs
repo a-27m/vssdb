@@ -43,7 +43,7 @@ namespace lab1.Forms {
             this.buttonOK.Location = new System.Drawing.Point(25, 157);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 0;
+            this.buttonOK.TabIndex = 1;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -53,7 +53,7 @@ namespace lab1.Forms {
             this.textA.Location = new System.Drawing.Point(44, 19);
             this.textA.Name = "textA";
             this.textA.Size = new System.Drawing.Size(100, 20);
-            this.textA.TabIndex = 1;
+            this.textA.TabIndex = 0;
             this.textA.Text = "-2";
             // 
             // textB
@@ -61,7 +61,7 @@ namespace lab1.Forms {
             this.textB.Location = new System.Drawing.Point(44, 45);
             this.textB.Name = "textB";
             this.textB.Size = new System.Drawing.Size(100, 20);
-            this.textB.TabIndex = 2;
+            this.textB.TabIndex = 1;
             this.textB.Text = "5";
             // 
             // label1
@@ -96,7 +96,7 @@ namespace lab1.Forms {
             this.textN.Location = new System.Drawing.Point(44, 84);
             this.textN.Name = "textN";
             this.textN.Size = new System.Drawing.Size(100, 20);
-            this.textN.TabIndex = 6;
+            this.textN.TabIndex = 2;
             this.textN.Text = "10";
             // 
             // errorProvider1
@@ -115,7 +115,7 @@ namespace lab1.Forms {
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(183, 125);
-            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Равномерное распределение";
             // 
@@ -125,7 +125,7 @@ namespace lab1.Forms {
             this.buttonCancel.Location = new System.Drawing.Point(106, 157);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 8;
+            this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);

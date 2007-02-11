@@ -30,50 +30,15 @@ namespace DataProc
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-            this.buttonOk = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
             this.labelPrompt = new System.Windows.Forms.Label();
+            this.buttonCancel = new System.Windows.Forms.Button();
+            this.buttonOk = new System.Windows.Forms.Button();
             this.textBoxValue = new System.Windows.Forms.TextBox();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // buttonOk
-            // 
-            this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOk.Location = new System.Drawing.Point(97, 133);
-            this.buttonOk.Name = "buttonOk";
-            this.buttonOk.Size = new System.Drawing.Size(75, 24);
-            this.buttonOk.TabIndex = 0;
-            this.buttonOk.Text = "ОК";
-            this.buttonOk.UseVisualStyleBackColor = true;
-            this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
-            // 
-            // buttonCancel
-            // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(188, 133);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 24);
-            this.buttonCancel.TabIndex = 1;
-            this.buttonCancel.Text = "Отмена";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            // 
-            // labelPrompt
-            // 
-            tableLayoutPanel1.SetColumnSpan(this.labelPrompt, 3);
-            this.labelPrompt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelPrompt.Location = new System.Drawing.Point(13, 10);
-            this.labelPrompt.Name = "labelPrompt";
-            this.labelPrompt.Size = new System.Drawing.Size(334, 65);
-            this.labelPrompt.TabIndex = 2;
-            this.labelPrompt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel1
             // 
@@ -82,7 +47,7 @@ namespace DataProc
             tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 10F));
             tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 10F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 11F));
             tableLayoutPanel1.Controls.Add(this.labelPrompt, 1, 1);
             tableLayoutPanel1.Controls.Add(this.buttonCancel, 3, 5);
             tableLayoutPanel1.Controls.Add(this.buttonOk, 1, 5);
@@ -101,6 +66,41 @@ namespace DataProc
             tableLayoutPanel1.Size = new System.Drawing.Size(361, 170);
             tableLayoutPanel1.TabIndex = 3;
             // 
+            // labelPrompt
+            // 
+            tableLayoutPanel1.SetColumnSpan(this.labelPrompt, 3);
+            this.labelPrompt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelPrompt.Location = new System.Drawing.Point(13, 10);
+            this.labelPrompt.Name = "labelPrompt";
+            this.labelPrompt.Size = new System.Drawing.Size(334, 65);
+            this.labelPrompt.TabIndex = 2;
+            this.labelPrompt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancel.Location = new System.Drawing.Point(188, 133);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 24);
+            this.buttonCancel.TabIndex = 2;
+            this.buttonCancel.Text = "Отмена";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
+            // buttonOk
+            // 
+            this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOk.Location = new System.Drawing.Point(97, 133);
+            this.buttonOk.Name = "buttonOk";
+            this.buttonOk.Size = new System.Drawing.Size(75, 24);
+            this.buttonOk.TabIndex = 1;
+            this.buttonOk.Text = "ОК";
+            this.buttonOk.UseVisualStyleBackColor = true;
+            this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
+            // 
             // textBoxValue
             // 
             tableLayoutPanel1.SetColumnSpan(this.textBoxValue, 3);
@@ -108,7 +108,7 @@ namespace DataProc
             this.textBoxValue.Location = new System.Drawing.Point(13, 83);
             this.textBoxValue.Name = "textBoxValue";
             this.textBoxValue.Size = new System.Drawing.Size(334, 20);
-            this.textBoxValue.TabIndex = 3;
+            this.textBoxValue.TabIndex = 0;
             this.textBoxValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // errorProvider1
