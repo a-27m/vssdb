@@ -89,6 +89,8 @@ namespace lab1
             this.toolStripPanel2 = new System.Windows.Forms.ToolStripPanel();
             this.toolStripPanel3 = new System.Windows.Forms.ToolStripPanel();
             this.toolStripPanel4 = new System.Windows.Forms.ToolStripPanel();
+            this.buttonRefresh = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip.SuspendLayout();
             this.toolStripStandart.SuspendLayout();
             this.toolStripMain.SuspendLayout();
@@ -342,10 +344,12 @@ namespace lab1
             this.newToolStripButton,
             this.openToolStripButton,
             this.saveToolStripButton,
-            this.helpToolStripButton});
-            this.toolStripStandart.Location = new System.Drawing.Point(361, 24);
+            this.helpToolStripButton,
+            this.toolStripSeparator1,
+            this.buttonRefresh});
+            this.toolStripStandart.Location = new System.Drawing.Point(3, 24);
             this.toolStripStandart.Name = "toolStripStandart";
-            this.toolStripStandart.Size = new System.Drawing.Size(81, 25);
+            this.toolStripStandart.Size = new System.Drawing.Size(164, 25);
             this.toolStripStandart.TabIndex = 1;
             this.toolStripStandart.Text = "ToolStrip";
             // 
@@ -402,7 +406,7 @@ namespace lab1
             this.toolDropDownDraw,
             this.toolDropDownDo,
             this.toolDropDownCheck});
-            this.toolStripMain.Location = new System.Drawing.Point(49, 24);
+            this.toolStripMain.Location = new System.Drawing.Point(184, 24);
             this.toolStripMain.Name = "toolStripMain";
             this.toolStripMain.Size = new System.Drawing.Size(312, 25);
             this.toolStripMain.TabIndex = 2;
@@ -661,6 +665,21 @@ namespace lab1
             this.toolStripPanel4.RowMargin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.toolStripPanel4.Size = new System.Drawing.Size(0, 319);
             // 
+            // buttonRefresh
+            // 
+            this.buttonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.buttonRefresh.Image = ((System.Drawing.Image)(resources.GetObject("buttonRefresh.Image")));
+            this.buttonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.Size = new System.Drawing.Size(23, 22);
+            this.buttonRefresh.Text = "ќбновить";
+            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
             // mdiParent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -749,6 +768,8 @@ namespace lab1
         private System.Windows.Forms.ToolStripMenuItem buttonCheckRndUpDownSeries;
         private System.Windows.Forms.ToolStripMenuItem buttonCheckZn;
         private System.Windows.Forms.ToolStripMenuItem засоренностьрезковыдел€ющимис€«начени€миToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton buttonRefresh;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
 
