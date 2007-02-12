@@ -22,7 +22,7 @@ namespace lab1.Forms
             set
             {
                 dataSet = new RawDataSet(value);
-                if (Visible)
+                if (this.Visible)
                     UpdateGrid();
             }
         }
@@ -105,7 +105,6 @@ namespace lab1.Forms
             }
             dataGridDataSet.ResumeLayout(false);
 
-            dataGridAnalysis.SuspendLayout();
             if ((rows == null)
                 || (rows.Count == 0)
                 || (dataGridAnalysis == null)
@@ -143,8 +142,6 @@ namespace lab1.Forms
 
             dataGridAnalysis.AutoResizeColumns();
             dataGridAnalysis.AutoResizeRows();
-
-            dataGridAnalysis.ResumeLayout(false);
         }
 
         void FindMax(GridsRow gr)
