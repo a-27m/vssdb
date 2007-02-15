@@ -11,7 +11,7 @@ namespace lab1.Forms
 {
     public partial class FormChild : Form
     {
-        private RawDataSet dataSet;
+        protected RawDataSet dataSet;
 
         public double[] Data
         {
