@@ -38,7 +38,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataSet.cs" />
     <Compile Include="Diagram.cs" />
     <Compile Include="FormAskTableValue.cs">
       <SubType>Form</SubType>

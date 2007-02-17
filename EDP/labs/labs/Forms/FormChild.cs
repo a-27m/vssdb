@@ -11,17 +11,35 @@ namespace lab1.Forms
 {
     public partial class FormChild : Form
     {
-        protected RawDataSet dataSet;
+        protected double[][] dataSet;
 
-        public double[] Data
+        public double[] DataAsRow
         {
             get
             {
-                return dataSet.Data.Clone() as double[];
+                //List<double> res = new List<double>();
+                //foreach (double[] dim in dataSet)
+                //    foreach (double el in dim)
+                //    res.Add(el);
+                //return res.ToArray();
+                return dataSet[0];
             }
             set
             {
-                dataSet = new RawDataSet(value);
+                dataSet[0] = value;
+                if (this.Visible)
+                    UpdateGrid();
+            }
+        }
+        public double[][] DataAsMatrix
+        {
+            get
+            {
+               return dataSet;
+            }
+            set
+            {
+                dataSet = value;
                 if (this.Visible)
                     UpdateGrid();
             }
@@ -31,10 +49,15 @@ namespace lab1.Forms
         int maxGridRowLen = 0;
         protected bool changed = false;
 
+        public FormChild(double[][] data)
+        {
+            InitializeComponent();
+            DataAsRow = data[0];
+        }
         public FormChild(double[] data)
         {
             InitializeComponent();
-            Data = data;
+            DataAsRow = data;
         }
         public FormChild()
         {
@@ -83,27 +106,27 @@ namespace lab1.Forms
         {
             uint digits = lab1.Properties.Settings.Default.ShownDigits;
 
-            dataGridDataSet.SuspendLayout();
-            if ((dataSet.Length > 0)
-                && (dataGridDataSet != null))
-            {
-                dataGridDataSet.Rows.Clear();
-                dataGridDataSet.Columns.Clear();
+            //dataGridDataSet.SuspendLayout();
+            //if ((dataSet.Length > 0)
+            //    && (dataGridDataSet != null))
+            //{
+            //    dataGridDataSet.Rows.Clear();
+            //    dataGridDataSet.Columns.Clear();
 
-                for (int i = 0; i < dataSet.Length; i++)
-                    dataGridDataSet.Columns.Add("column" + i.ToString(),
-                        (i + 1).ToString());
+            //    for (int i = 0; i < dataSet.Length; i++)
+            //        dataGridDataSet.Columns.Add("column" + i.ToString(),
+            //            (i + 1).ToString());
 
-                dataGridDataSet.Rows.Add(1);
-                dataGridDataSet.Rows[0].HeaderCell.Value = "Выборка";
+            //    dataGridDataSet.Rows.Add(1);
+            //    dataGridDataSet.Rows[0].HeaderCell.Value = "Выборка";
 
-                for (int i = 0; i < dataSet.Length; i++)
-                    dataGridDataSet[i, 0].Value = Math.Round(dataSet[i],(int)digits);
+            //    for (int i = 0; i < dataSet.Length; i++)
+            //        dataGridDataSet[i, 0].Value = Math.Round(dataSet[i],(int)digits);
 
-                dataGridDataSet.AutoResizeColumns();
-                dataGridDataSet.AutoResizeRows();
-            }
-            dataGridDataSet.ResumeLayout(false);
+            //    dataGridDataSet.AutoResizeColumns();
+            //    dataGridDataSet.AutoResizeRows();
+            //}
+            //dataGridDataSet.ResumeLayout(false);
 
             if ((rows == null)
                 || (rows.Count == 0)
@@ -161,6 +184,5 @@ namespace lab1.Forms
             this.Content = Content;
             this.Title = Title;
         }
-
     }
 }
