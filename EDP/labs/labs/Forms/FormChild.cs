@@ -26,6 +26,7 @@ namespace lab1.Forms
             }
             set
             {
+                if (dataSet==null) dataSet = new double[1][];
                 dataSet[0] = value;
                 if (this.Visible)
                     UpdateGrid();
