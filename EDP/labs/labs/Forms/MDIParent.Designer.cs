@@ -86,7 +86,14 @@ namespace lab1
             this.buttonCheckRndSeries = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonCheckRndUpDownSeries = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonCheckZn = new System.Windows.Forms.ToolStripMenuItem();
-            this.засоренностьрезковыдел€ющимис€«начени€миToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonCheckWorthless = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolDropDownFacAnal = new System.Windows.Forms.ToolStripDropDownButton();
+            this.buttonFacAnal_R = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonFacAnal_R1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonFacAnal_R2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonFacAnal_D = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonFacAnal_D1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonFacAnal_D2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripPanel1 = new System.Windows.Forms.ToolStripPanel();
             this.toolStripPanel2 = new System.Windows.Forms.ToolStripPanel();
             this.toolStripPanel3 = new System.Windows.Forms.ToolStripPanel();
@@ -112,7 +119,7 @@ namespace lab1
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.MdiWindowListItem = this.windowsMenu;
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(496, 24);
+            this.menuStrip.Size = new System.Drawing.Size(652, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "MenuStrip";
             // 
@@ -339,7 +346,7 @@ namespace lab1
             // 
             // toolStripStandart
             // 
-            this.toolStripStandart.Dock = System.Windows.Forms.DockStyle.Left;
+            this.toolStripStandart.Dock = System.Windows.Forms.DockStyle.None;
             this.toolStripStandart.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripButton,
             this.openToolStripButton,
@@ -415,15 +422,16 @@ namespace lab1
             // 
             // toolStripMain
             // 
-            this.toolStripMain.Dock = System.Windows.Forms.DockStyle.Left;
+            this.toolStripMain.Dock = System.Windows.Forms.DockStyle.None;
             this.toolStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolDropDownGenerate,
             this.toolDropDownDraw,
             this.toolDropDownDo,
-            this.toolDropDownCheck});
-            this.toolStripMain.Location = new System.Drawing.Point(130, 24);
+            this.toolDropDownCheck,
+            this.toolDropDownFacAnal});
+            this.toolStripMain.Location = new System.Drawing.Point(3, 49);
             this.toolStripMain.Name = "toolStripMain";
-            this.toolStripMain.Size = new System.Drawing.Size(312, 25);
+            this.toolStripMain.Size = new System.Drawing.Size(459, 25);
             this.toolStripMain.TabIndex = 2;
             this.toolStripMain.Text = "toolStrip3";
             // 
@@ -597,7 +605,7 @@ namespace lab1
             this.toolDropDownCheck.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolDropDownCheckRnd,
             this.buttonCheckZn,
-            this.засоренностьрезковыдел€ющимис€«начени€миToolStripMenuItem});
+            this.buttonCheckWorthless});
             this.toolDropDownCheck.Image = ((System.Drawing.Image)(resources.GetObject("toolDropDownCheck.Image")));
             this.toolDropDownCheck.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolDropDownCheck.Name = "toolDropDownCheck";
@@ -634,33 +642,91 @@ namespace lab1
             this.buttonCheckZn.Text = "—оответствие законам";
             this.buttonCheckZn.Click += new System.EventHandler(this.buttonCheckZn_Click);
             // 
-            // засоренностьрезковыдел€ющимис€«начени€миToolStripMenuItem
+            // buttonCheckWorthless
             // 
-            this.засоренностьрезковыдел€ющимис€«начени€миToolStripMenuItem.Name = "засоренностьрезковыдел€ющимис€«начени€миToolStripMenuItem";
-            this.засоренностьрезковыдел€ющимис€«начени€миToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.засоренностьрезковыдел€ющимис€«начени€миToolStripMenuItem.Text = "«асоренность";
-            this.засоренностьрезковыдел€ющимис€«начени€миToolStripMenuItem.Click += new System.EventHandler(this.buttonCheckOutstanding);
+            this.buttonCheckWorthless.Name = "buttonCheckWorthless";
+            this.buttonCheckWorthless.Size = new System.Drawing.Size(201, 22);
+            this.buttonCheckWorthless.Text = "«асоренность";
+            this.buttonCheckWorthless.Click += new System.EventHandler(this.buttonCheckOutstanding);
+            // 
+            // toolDropDownFacAnal
+            // 
+            this.toolDropDownFacAnal.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolDropDownFacAnal.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.buttonFacAnal_R,
+            this.buttonFacAnal_D});
+            this.toolDropDownFacAnal.Image = ((System.Drawing.Image)(resources.GetObject("toolDropDownFacAnal.Image")));
+            this.toolDropDownFacAnal.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolDropDownFacAnal.Name = "toolDropDownFacAnal";
+            this.toolDropDownFacAnal.Size = new System.Drawing.Size(116, 22);
+            this.toolDropDownFacAnal.Text = "‘акторный анализ";
+            // 
+            // buttonFacAnal_R
+            // 
+            this.buttonFacAnal_R.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.buttonFacAnal_R1,
+            this.buttonFacAnal_R2});
+            this.buttonFacAnal_R.Name = "buttonFacAnal_R";
+            this.buttonFacAnal_R.Size = new System.Drawing.Size(165, 22);
+            this.buttonFacAnal_R.Text = "–анговый";
+            // 
+            // buttonFacAnal_R1
+            // 
+            this.buttonFacAnal_R1.Name = "buttonFacAnal_R1";
+            this.buttonFacAnal_R1.Size = new System.Drawing.Size(249, 22);
+            this.buttonFacAnal_R1.Text = "ќднофакторный (с уточнением)";
+            this.buttonFacAnal_R1.Click += new System.EventHandler(this.buttonFacAnal_R1_Click);
+            // 
+            // buttonFacAnal_R2
+            // 
+            this.buttonFacAnal_R2.Name = "buttonFacAnal_R2";
+            this.buttonFacAnal_R2.Size = new System.Drawing.Size(249, 22);
+            this.buttonFacAnal_R2.Text = "ƒвухфакторный";
+            this.buttonFacAnal_R2.Click += new System.EventHandler(this.buttonFacAnal_R2_Click);
+            // 
+            // buttonFacAnal_D
+            // 
+            this.buttonFacAnal_D.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.buttonFacAnal_D1,
+            this.buttonFacAnal_D2});
+            this.buttonFacAnal_D.Name = "buttonFacAnal_D";
+            this.buttonFacAnal_D.Size = new System.Drawing.Size(165, 22);
+            this.buttonFacAnal_D.Text = "ƒисперсионный";
+            // 
+            // buttonFacAnal_D1
+            // 
+            this.buttonFacAnal_D1.Name = "buttonFacAnal_D1";
+            this.buttonFacAnal_D1.Size = new System.Drawing.Size(170, 22);
+            this.buttonFacAnal_D1.Text = "ќднофакторный";
+            this.buttonFacAnal_D1.Click += new System.EventHandler(this.buttonFacAnal_D1_Click);
+            // 
+            // buttonFacAnal_D2
+            // 
+            this.buttonFacAnal_D2.Name = "buttonFacAnal_D2";
+            this.buttonFacAnal_D2.Size = new System.Drawing.Size(170, 22);
+            this.buttonFacAnal_D2.Text = "ƒвухфакторный";
+            this.buttonFacAnal_D2.Click += new System.EventHandler(this.buttonFacAnal_D2_Click);
             // 
             // toolStripPanel1
             // 
             this.toolStripPanel1.Controls.Add(this.menuStrip);
-            this.toolStripPanel1.Controls.Add(this.toolStripStandart);
             this.toolStripPanel1.Controls.Add(this.toolStripMain);
+            this.toolStripPanel1.Controls.Add(this.toolStripStandart);
             this.toolStripPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.toolStripPanel1.Location = new System.Drawing.Point(0, 0);
             this.toolStripPanel1.Name = "toolStripPanel1";
             this.toolStripPanel1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             this.toolStripPanel1.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.toolStripPanel1.Size = new System.Drawing.Size(496, 49);
+            this.toolStripPanel1.Size = new System.Drawing.Size(652, 74);
             // 
             // toolStripPanel2
             // 
             this.toolStripPanel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.toolStripPanel2.Location = new System.Drawing.Point(496, 49);
+            this.toolStripPanel2.Location = new System.Drawing.Point(652, 74);
             this.toolStripPanel2.Name = "toolStripPanel2";
             this.toolStripPanel2.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.toolStripPanel2.RowMargin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.toolStripPanel2.Size = new System.Drawing.Size(0, 319);
+            this.toolStripPanel2.Size = new System.Drawing.Size(0, 294);
             // 
             // toolStripPanel3
             // 
@@ -669,22 +735,22 @@ namespace lab1
             this.toolStripPanel3.Name = "toolStripPanel3";
             this.toolStripPanel3.Orientation = System.Windows.Forms.Orientation.Horizontal;
             this.toolStripPanel3.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.toolStripPanel3.Size = new System.Drawing.Size(496, 0);
+            this.toolStripPanel3.Size = new System.Drawing.Size(652, 0);
             // 
             // toolStripPanel4
             // 
             this.toolStripPanel4.Dock = System.Windows.Forms.DockStyle.Left;
-            this.toolStripPanel4.Location = new System.Drawing.Point(0, 49);
+            this.toolStripPanel4.Location = new System.Drawing.Point(0, 74);
             this.toolStripPanel4.Name = "toolStripPanel4";
             this.toolStripPanel4.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.toolStripPanel4.RowMargin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.toolStripPanel4.Size = new System.Drawing.Size(0, 319);
+            this.toolStripPanel4.Size = new System.Drawing.Size(0, 294);
             // 
             // mdiParent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(496, 368);
+            this.ClientSize = new System.Drawing.Size(652, 368);
             this.Controls.Add(this.toolStripPanel4);
             this.Controls.Add(this.toolStripPanel3);
             this.Controls.Add(this.toolStripPanel2);
@@ -767,9 +833,16 @@ namespace lab1
         private System.Windows.Forms.ToolStripMenuItem buttonCheckRndSeries;
         private System.Windows.Forms.ToolStripMenuItem buttonCheckRndUpDownSeries;
         private System.Windows.Forms.ToolStripMenuItem buttonCheckZn;
-        private System.Windows.Forms.ToolStripMenuItem засоренностьрезковыдел€ющимис€«начени€миToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem buttonCheckWorthless;
         private System.Windows.Forms.ToolStripButton buttonRefresh;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripDropDownButton toolDropDownFacAnal;
+        private System.Windows.Forms.ToolStripMenuItem buttonFacAnal_R;
+        private System.Windows.Forms.ToolStripMenuItem buttonFacAnal_R1;
+        private System.Windows.Forms.ToolStripMenuItem buttonFacAnal_D;
+        private System.Windows.Forms.ToolStripMenuItem buttonFacAnal_R2;
+        private System.Windows.Forms.ToolStripMenuItem buttonFacAnal_D1;
+        private System.Windows.Forms.ToolStripMenuItem buttonFacAnal_D2;
     }
 }
 

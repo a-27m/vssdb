@@ -229,6 +229,27 @@ namespace lab1.Forms
                 maxGridRowLen = gr.Content.Length;
         }
 
+        /// <param>
+        /// <param name="newRowsNumber">Zero if no changes needed</param>
+        /// <param name="RowWithColumnChangesIndex">Index of row with pending length changes</param>
+        /// <param name="newColumnsNumber">Zero if no changes needed</param>
+        /// </param>
+        public void ResizeData(int newRowsNumber, int RowWithLengthChangesIndex, int newColumnsNumber)
+        {
+            if (newRowsNumber != 0)
+            {
+                int rowsCountOld = dataSet.GetLength(0);
+
+                Array.Resize<double[]>(ref dataSet, newRowsNumber);
+
+                for (int i = rowsCountOld; i < dataSet.GetLength(0); dataSet[i++] = new double[1])
+                    ;
+            }
+
+            if (newColumnsNumber != 0)
+                Array.Resize<double>(ref dataSet[RowWithLengthChangesIndex], newColumnsNumber);
+        }
+
         private void dataSetContextComboSizeChanged(object sender, EventArgs e)
         {
             dataSetSetSize.Text = string.Format("Новый размер: {0}x{1}", dataSetComboWidth.Text, dataSetComboHeigth.Text);
@@ -239,14 +260,8 @@ namespace lab1.Forms
 
         }
 
-        private void dataGridDataSet_UserAddedRow(object sender, DataGridViewRowEventArgs e)
-        {
-
-        }
-
         private void dataGridDataSet_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
         {
-
         }
 
         private void dataGridDataSet_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -262,22 +277,33 @@ namespace lab1.Forms
                 ourCell.ErrorText = "Неправильный формат числа!";
                 return;
             }
-            
-                int rowsCountOld = dataSet.GetLength(0);
-                if (rowsCountOld < e.RowIndex + 1)
-                {
-                    Array.Resize<double[]>(ref dataSet, e.RowIndex + 1);
 
-                    for (int i = rowsCountOld; i < dataSet.GetLength(0); dataSet[i++] = new double[1])
-                        ;
-                }
+            int rowsCountOld = dataSet.GetLength(0);
+            int newRowsCount = 0;
+            int newColsCount = 0;
 
-            if (dataSet[e.RowIndex].GetLength(0) < e.ColumnIndex+1)
-                Array.Resize<double>(ref dataSet[e.RowIndex], e.ColumnIndex+1);
-            
+            if (rowsCountOld < e.RowIndex + 1)
+                newRowsCount = e.RowIndex + 1;
+
+            ResizeData(newRowsCount, 0, 0);
+
+            if (dataSet[e.RowIndex].GetLength(0) < e.ColumnIndex + 1)
+                newColsCount = e.ColumnIndex + 1;
+
+            ResizeData(0, e.RowIndex, newColsCount);
+
             dataSet[e.RowIndex][e.ColumnIndex] = value;
 
             dataGridDataSet.AutoResizeColumns();
+        }
+
+        private void dataSetComboWidth_Opened(object sender, EventArgs e)
+        {
+        }
+
+        private void dataSetContextRemoveRow_Click(object sender, EventArgs e)
+        {
+            return;
         }
     }
 
