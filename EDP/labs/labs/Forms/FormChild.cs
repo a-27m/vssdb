@@ -17,17 +17,12 @@ namespace lab1.Forms
         {
             get
             {
-                //List<double> res = new List<double>();
-                //foreach (double[] dim in dataSet)
-                //    foreach (double el in dim)
-                //    res.Add(el);
-                //return res.ToArray();
-                return dataSet[0];
+                return dataSet[0].Clone() as double[];
             }
             set
             {
                 if (dataSet==null) dataSet = new double[1][];
-                dataSet[0] = value;
+                dataSet[0] = value.Clone() as double[];
                 if (this.Visible)
                     UpdateGrid();
             }
@@ -36,11 +31,11 @@ namespace lab1.Forms
         {
             get
             {
-               return dataSet;
+               return dataSet.Clone() as double[][];
             }
             set
             {
-                dataSet = value;
+                dataSet = value.Clone() as double[][];
                 if (this.Visible)
                     UpdateGrid();
             }
@@ -53,7 +48,7 @@ namespace lab1.Forms
         public FormChild(double[][] data)
         {
             InitializeComponent();
-            DataAsRow = data[0];
+            dataSet = data;
         }
         public FormChild(double[] data)
         {
@@ -69,10 +64,6 @@ namespace lab1.Forms
         {
             UpdateGrid();
         }
-        public void AddRow(Array data)
-        {
-            AddRow("Х", data);
-        }
 
         public void AddRow(string Title, Array data)
         {
@@ -80,10 +71,41 @@ namespace lab1.Forms
                 rows = new List<GridsRow>();
 
             GridsRow grRow;
-            grRow.Title = Title;
+            grRow.Title = Title == null ? "Х" : Title;
             grRow.Content = data;
 
             rows.Add(grRow);
+            UpdateGrid();
+        }
+        public void AddTable(string Header, string[] RowTitles, Array data)
+        {
+            if (data.Rank > 2)
+                throw new ArgumentException("Array has too many dimensions. Rank = " + data.Rank.ToString() + ".");
+            if (data.Rank == 1)
+            {
+                AddRow(RowTitles[0], data);
+                return;
+            }
+
+            if (rows == null)
+                rows = new List<GridsRow>();
+
+            int _need_header = (Header == null ? 0 : 1);
+
+            GridsRow[] grRows = new GridsRow[data.GetLength(0)+_need_header];
+            if (_need_header == 1)
+            {
+                grRows[0].Title = "";
+                grRows[0].Content = new string[] { Header };
+            }
+            bool hasTitles = RowTitles==null;
+            for (int i = _need_header; i < data.GetLength(0)+_need_header; i++)
+            {
+                grRows[i].Title = hasTitles ? RowTitles[i] : "Х";
+                grRows[i].Content = (Array)data.GetValue(i);
+                rows.Add(grRows[i]);
+            }
+
             UpdateGrid();
         }
 
@@ -107,27 +129,39 @@ namespace lab1.Forms
         {
             uint digits = lab1.Properties.Settings.Default.ShownDigits;
 
-            //dataGridDataSet.SuspendLayout();
-            //if ((dataSet.Length > 0)
-            //    && (dataGridDataSet != null))
-            //{
-            //    dataGridDataSet.Rows.Clear();
-            //    dataGridDataSet.Columns.Clear();
+            if (dataSet != null)
+            {
+                dataGridDataSet.SuspendLayout();
+                dataGridDataSet.Rows.Clear();
+                dataGridDataSet.Columns.Clear();
 
-            //    for (int i = 0; i < dataSet.Length; i++)
-            //        dataGridDataSet.Columns.Add("column" + i.ToString(),
-            //            (i + 1).ToString());
+                DataGridViewRow[] dgvr = new DataGridViewRow[dataSet.GetLength(0)];
+                maxGridRowLen = 0;
+                for (int i = 0; i < dataSet.GetLength(0); i++)
+                {
+                    dgvr[i] = new DataGridViewRow();
+                    dgvr[i].CreateCells(dataGridDataSet);
+                    dgvr[i].SetValues(dataSet[i]);
+                    if (dataSet[i].GetLength(0) > maxGridRowLen)
+                        maxGridRowLen = dataSet[i].GetLength(0);
+                }
+                for (int i = 0; i < maxGridRowLen; i++)
+                    dataGridDataSet.Columns.Add("column" + i.ToString(),
+                        (i + 1).ToString());
 
-            //    dataGridDataSet.Rows.Add(1);
-            //    dataGridDataSet.Rows[0].HeaderCell.Value = "¬ыборка";
+                dataGridDataSet.Rows.AddRange(dgvr);
 
-            //    for (int i = 0; i < dataSet.Length; i++)
-            //        dataGridDataSet[i, 0].Value = Math.Round(dataSet[i],(int)digits);
+                dataGridDataSet.Rows[0].HeaderCell.Value = "¬ыборка";
 
-            //    dataGridDataSet.AutoResizeColumns();
-            //    dataGridDataSet.AutoResizeRows();
-            //}
-            //dataGridDataSet.ResumeLayout(false);
+                for (int i = 0; i < dataSet.GetLength(0); i++)
+                    for (int j = 0; j < dataSet[i].GetLength(0); j++)
+                    dataGridDataSet[j, i].Value = Math.Round(dataSet[i][j], (int)digits);
+
+                dataGridDataSet.AutoResizeColumns();
+                dataGridDataSet.AutoResizeRows();
+                dataGridDataSet.AutoResizeRowHeadersWidth( DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders);
+                dataGridDataSet.ResumeLayout(false);
+            }
 
             if ((rows == null)
                 || (rows.Count == 0)
@@ -166,6 +200,7 @@ namespace lab1.Forms
 
             dataGridAnalysis.AutoResizeColumns();
             dataGridAnalysis.AutoResizeRows();
+                dataGridDataSet.AutoResizeRowHeadersWidth( DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders);
         }
 
         void FindMax(GridsRow gr)
