@@ -143,28 +143,23 @@ namespace lab1.Forms
                 dataGridDataSet.Rows.Clear();
                 dataGridDataSet.Columns.Clear();
 
-                DataGridViewRow[] dgvr = new DataGridViewRow[dataSet.GetLength(0)];
                 maxGridRowLen = 0;
                 for (int i = 0; i < dataSet.GetLength(0); i++)
-                {
-                    dgvr[i] = new DataGridViewRow();
-                    dgvr[i].CreateCells(dataGridDataSet);
-                    dgvr[i].SetValues(dataSet[i]);
                     if (dataSet[i].GetLength(0) > maxGridRowLen)
                         maxGridRowLen = dataSet[i].GetLength(0);
-                }
+
                 for (int i = 0; i < maxGridRowLen; i++)
                     dataGridDataSet.Columns.Add("column" + i.ToString(),
                         (i + 1).ToString());
 
-                dataGridDataSet.Rows.AddRange(dgvr);
-
-                dataGridDataSet.Rows[0].HeaderCell.Value = "Данные";
+                dataGridDataSet.Rows.Add(dataSet.GetLength(0));
 
                 for (int i = 0; i < dataSet.GetLength(0); i++)
+                {
                     for (int j = 0; j < dataSet[i].GetLength(0); j++)
-                        dataGridDataSet[j, i].Value = Math.Round(dataSet[i][j], (int)digits);
-
+                        dataGridDataSet[j, i].Value = Math.Round(dataSet[i][j], (int)digits).ToString();
+                    dataGridDataSet.Rows[i].HeaderCell.Value = (i+1).ToString();
+                }
                 AddEmptyColumn();
                 AddEmptyRow();
 
@@ -226,6 +221,7 @@ namespace lab1.Forms
         private void AddEmptyRow()
         {
             dataGridDataSet.Rows.Add();
+            dataGridDataSet.Rows[dataGridDataSet.RowCount - 1].HeaderCell.Value = dataGridDataSet.RowCount.ToString();
         }
 
         private void FindMax(GridsRow gr)
@@ -255,16 +251,6 @@ namespace lab1.Forms
                 Array.Resize<double>(ref dataSet[RowWithLengthChangesIndex], newColumnsNumber);
         }
 
-        private void dataSetContextComboSizeChanged(object sender, EventArgs e)
-        {
-            dataSetSetSize.Text = string.Format("Новый размер: {0}x{1}", dataSetComboWidth.Text, dataSetComboHeigth.Text);
-        }
-
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void dataGridDataSet_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
         {
         }
@@ -276,6 +262,7 @@ namespace lab1.Forms
             try
             {
                 value = double.Parse(ourCell.Value as String);
+                ourCell.ErrorText = "";
             }
             catch
             {
@@ -308,7 +295,21 @@ namespace lab1.Forms
 
         private void dataSetContextRemoveRow_Click(object sender, EventArgs e)
         {
-            return;
+            //            while (dataGridDataSet.SelectedCells.Count > 0)
+            //          {
+            foreach (DataGridViewCell cell in dataGridDataSet.SelectedCells)
+            {
+                int i = cell.RowIndex;
+                for (; i < dataSet.GetLength(0); i++)
+                {
+
+                }
+                if (i > cell.RowIndex)
+                {
+                    // удалить лишние строки
+                }
+            }
+            dataGridDataSet.Rows.RemoveAt(2);
         }
 
         private void dataGridDataSet_SelectionChanged(object sender, EventArgs e)
@@ -327,12 +328,6 @@ namespace lab1.Forms
                 }
             }
         }
-
-        private void dataGridDataSet_MouseClick(object sender, MouseEventArgs e)
-        {
-
-        }
-
     }
 
     struct GridsRow

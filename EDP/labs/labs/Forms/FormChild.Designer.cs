@@ -33,14 +33,9 @@ namespace lab1.Forms
             System.Windows.Forms.SplitContainer splitContainer2;
             this.dataGridDataSet = new System.Windows.Forms.DataGridView();
             this.dataSetComboWidth = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
-            this.dataSetComboHeigth = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.dataSetSetSize = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.dataSetContextRemoveRow = new System.Windows.Forms.ToolStripMenuItem();
             this.dataSetContextRemoveColumn = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataSetContextRemoveCell = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridAnalysis = new System.Windows.Forms.DataGridView();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
@@ -49,6 +44,7 @@ namespace lab1.Forms
             this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.LeftToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
+            this.dataSetContextClear = new System.Windows.Forms.ToolStripMenuItem();
             splitContainer1 = new System.Windows.Forms.SplitContainer();
             splitContainer2 = new System.Windows.Forms.SplitContainer();
             splitContainer1.Panel1.SuspendLayout();
@@ -104,64 +100,33 @@ namespace lab1.Forms
             // dataSetComboWidth
             // 
             this.dataSetComboWidth.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripSeparator2,
-            this.toolStripComboBox1,
-            this.dataSetComboHeigth,
-            this.toolStripSeparator1,
-            this.dataSetSetSize,
-            this.toolStripSeparator3,
             this.dataSetContextRemoveRow,
-            this.dataSetContextRemoveColumn});
+            this.dataSetContextRemoveColumn,
+            this.dataSetContextRemoveCell,
+            this.dataSetContextClear});
             this.dataSetComboWidth.Name = "dataSetComboWidth";
-            this.dataSetComboWidth.Size = new System.Drawing.Size(182, 138);
+            this.dataSetComboWidth.Size = new System.Drawing.Size(174, 92);
             this.dataSetComboWidth.Opened += new System.EventHandler(this.dataSetComboWidth_Opened);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(178, 6);
-            // 
-            // toolStripComboBox1
-            // 
-            this.toolStripComboBox1.Name = "toolStripComboBox1";
-            this.toolStripComboBox1.Size = new System.Drawing.Size(121, 21);
-            this.toolStripComboBox1.TextUpdate += new System.EventHandler(this.dataSetContextComboSizeChanged);
-            // 
-            // dataSetComboHeigth
-            // 
-            this.dataSetComboHeigth.Name = "dataSetComboHeigth";
-            this.dataSetComboHeigth.Size = new System.Drawing.Size(121, 21);
-            this.dataSetComboHeigth.TextUpdate += new System.EventHandler(this.dataSetContextComboSizeChanged);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(178, 6);
-            // 
-            // dataSetSetSize
-            // 
-            this.dataSetSetSize.Name = "dataSetSetSize";
-            this.dataSetSetSize.Size = new System.Drawing.Size(181, 22);
-            this.dataSetSetSize.Text = "toolStripMenuItem1";
-            this.dataSetSetSize.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(178, 6);
             // 
             // dataSetContextRemoveRow
             // 
             this.dataSetContextRemoveRow.Name = "dataSetContextRemoveRow";
-            this.dataSetContextRemoveRow.Size = new System.Drawing.Size(181, 22);
+            this.dataSetContextRemoveRow.Size = new System.Drawing.Size(173, 22);
             this.dataSetContextRemoveRow.Text = "”далить строку";
             this.dataSetContextRemoveRow.Click += new System.EventHandler(this.dataSetContextRemoveRow_Click);
             // 
             // dataSetContextRemoveColumn
             // 
             this.dataSetContextRemoveColumn.Name = "dataSetContextRemoveColumn";
-            this.dataSetContextRemoveColumn.Size = new System.Drawing.Size(181, 22);
+            this.dataSetContextRemoveColumn.Size = new System.Drawing.Size(173, 22);
             this.dataSetContextRemoveColumn.Text = "”далить столбец";
+            // 
+            // dataSetContextRemoveCell
+            // 
+            this.dataSetContextRemoveCell.Name = "dataSetContextRemoveCell";
+            this.dataSetContextRemoveCell.Size = new System.Drawing.Size(173, 22);
+            this.dataSetContextRemoveCell.Text = "”далить €чейки";
+            this.dataSetContextRemoveCell.ToolTipText = "”далить выделенные €чейки со сдвигом влево";
             // 
             // splitContainer2
             // 
@@ -188,6 +153,7 @@ namespace lab1.Forms
             this.dataGridAnalysis.AllowUserToAddRows = false;
             this.dataGridAnalysis.AllowUserToDeleteRows = false;
             this.dataGridAnalysis.AllowUserToResizeRows = false;
+            this.dataGridAnalysis.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dataGridAnalysis.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridAnalysis.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridAnalysis.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -254,6 +220,12 @@ namespace lab1.Forms
             // 
             this.ContentPanel.Size = new System.Drawing.Size(484, 355);
             // 
+            // dataSetContextClear
+            // 
+            this.dataSetContextClear.Name = "dataSetContextClear";
+            this.dataSetContextClear.Size = new System.Drawing.Size(173, 22);
+            this.dataSetContextClear.Text = "ќчистить";
+            // 
             // FormChild
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -281,12 +253,6 @@ namespace lab1.Forms
         #endregion
 
         private System.Windows.Forms.ContextMenuStrip dataSetComboWidth;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
-        private System.Windows.Forms.ToolStripComboBox dataSetComboHeigth;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem dataSetSetSize;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem dataSetContextRemoveRow;
         private System.Windows.Forms.ToolStripMenuItem dataSetContextRemoveColumn;
         private System.Windows.Forms.ErrorProvider errorProvider1;
@@ -298,5 +264,7 @@ namespace lab1.Forms
         private System.Windows.Forms.ToolStripPanel RightToolStripPanel;
         private System.Windows.Forms.ToolStripPanel LeftToolStripPanel;
         private System.Windows.Forms.ToolStripContentPanel ContentPanel;
+        private System.Windows.Forms.ToolStripMenuItem dataSetContextRemoveCell;
+        private System.Windows.Forms.ToolStripMenuItem dataSetContextClear;
     }
 }
