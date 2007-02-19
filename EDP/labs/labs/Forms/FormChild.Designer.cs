@@ -85,6 +85,7 @@ namespace lab1.Forms
             // 
             // dataGridDataSet
             // 
+            this.dataGridDataSet.AllowUserToAddRows = false;
             this.dataGridDataSet.AllowUserToResizeRows = false;
             this.dataGridDataSet.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridDataSet.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
@@ -98,6 +99,7 @@ namespace lab1.Forms
             this.dataGridDataSet.TabIndex = 0;
             this.dataGridDataSet.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridDataSet_UserDeletedRow);
             this.dataGridDataSet.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridDataSet_CellEndEdit);
+            this.dataGridDataSet.SelectionChanged += new System.EventHandler(this.dataGridDataSet_SelectionChanged);
             // 
             // dataSetComboWidth
             // 
@@ -111,7 +113,7 @@ namespace lab1.Forms
             this.dataSetContextRemoveRow,
             this.dataSetContextRemoveColumn});
             this.dataSetComboWidth.Name = "dataSetComboWidth";
-            this.dataSetComboWidth.Size = new System.Drawing.Size(182, 160);
+            this.dataSetComboWidth.Size = new System.Drawing.Size(182, 138);
             this.dataSetComboWidth.Opened += new System.EventHandler(this.dataSetComboWidth_Opened);
             // 
             // toolStripSeparator2

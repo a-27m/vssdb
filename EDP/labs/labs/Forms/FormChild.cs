@@ -166,6 +166,7 @@ namespace lab1.Forms
                         dataGridDataSet[j, i].Value = Math.Round(dataSet[i][j], (int)digits);
 
                 AddEmptyColumn();
+                AddEmptyRow();
 
                 dataGridDataSet.AutoResizeColumns();
                 dataGridDataSet.AutoResizeRows();
@@ -183,6 +184,7 @@ namespace lab1.Forms
             dataGridAnalysis.Rows.Clear();
             dataGridAnalysis.Columns.Clear();
 
+            maxGridRowLen = 0;
             rows.ForEach(FindMax);
 
             for (int i = 0; i < maxGridRowLen; i++)
@@ -217,10 +219,13 @@ namespace lab1.Forms
 
         private void AddEmptyColumn()
         {
-            dataGridDataSet.Columns.Add(new DataGridViewColumn(
-                dataGridDataSet.Columns.GetLastColumn(
-                DataGridViewElementStates.None,
-                DataGridViewElementStates.None).CellTemplate));
+            dataGridDataSet.Columns.Add("col", (dataGridDataSet.ColumnCount+1).ToString());
+
+            dataGridDataSet.AutoResizeColumn(dataGridDataSet.ColumnCount-1);
+        }
+        private void AddEmptyRow()
+        {
+            dataGridDataSet.Rows.Add();
         }
 
         private void FindMax(GridsRow gr)
@@ -305,6 +310,29 @@ namespace lab1.Forms
         {
             return;
         }
+
+        private void dataGridDataSet_SelectionChanged(object sender, EventArgs e)
+        {
+            foreach (DataGridViewCell cell in dataGridDataSet.SelectedCells)
+            {
+                if (cell.ColumnIndex == dataGridDataSet.ColumnCount - 1)
+                {
+                    AddEmptyColumn();
+                    break;
+                }
+                if (cell.RowIndex == dataGridDataSet.RowCount- 1)
+                {
+                    AddEmptyRow();
+                    return;
+                }
+            }
+        }
+
+        private void dataGridDataSet_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
     }
 
     struct GridsRow

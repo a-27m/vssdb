@@ -112,8 +112,8 @@ namespace lab1
             this.fileMenu,
             this.viewMenu,
             this.editMenu,
-            this.windowsMenu,
             this.toolsMenu,
+            this.windowsMenu,
             this.helpMenu});
             this.menuStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
@@ -170,7 +170,6 @@ namespace lab1
             this.saveAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.saveAsToolStripMenuItem.Text = "&Save As";
-            this.saveAsToolStripMenuItem.Visible = false;
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
@@ -325,7 +324,7 @@ namespace lab1
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
@@ -341,7 +340,7 @@ namespace lab1
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "&About ...";
             // 
             // toolStripStandart
@@ -387,7 +386,7 @@ namespace lab1
             this.saveToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.saveToolStripButton.Name = "saveToolStripButton";
             this.saveToolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.saveToolStripButton.Text = "Save";
+            this.saveToolStripButton.Text = "Save As…";
             this.saveToolStripButton.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
             // 
             // helpToolStripButton
@@ -431,7 +430,7 @@ namespace lab1
             this.toolDropDownFacAnal});
             this.toolStripMain.Location = new System.Drawing.Point(3, 49);
             this.toolStripMain.Name = "toolStripMain";
-            this.toolStripMain.Size = new System.Drawing.Size(459, 25);
+            this.toolStripMain.Size = new System.Drawing.Size(428, 25);
             this.toolStripMain.TabIndex = 2;
             this.toolStripMain.Text = "toolStrip3";
             // 
@@ -710,8 +709,8 @@ namespace lab1
             // toolStripPanel1
             // 
             this.toolStripPanel1.Controls.Add(this.menuStrip);
-            this.toolStripPanel1.Controls.Add(this.toolStripMain);
             this.toolStripPanel1.Controls.Add(this.toolStripStandart);
+            this.toolStripPanel1.Controls.Add(this.toolStripMain);
             this.toolStripPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.toolStripPanel1.Location = new System.Drawing.Point(0, 0);
             this.toolStripPanel1.Name = "toolStripPanel1";
@@ -758,7 +757,7 @@ namespace lab1
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "mdiParent";
-            this.Text = "ОЭД: Лабораторная работа №1, №2";
+            this.Text = "ОЭД: Лабораторная работа №1, №2, №3";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.mdiParent_FormClosed);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
