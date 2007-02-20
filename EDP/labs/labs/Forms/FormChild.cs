@@ -295,21 +295,19 @@ namespace lab1.Forms
 
         private void dataSetContextRemoveRow_Click(object sender, EventArgs e)
         {
-            //            while (dataGridDataSet.SelectedCells.Count > 0)
-            //          {
-            foreach (DataGridViewCell cell in dataGridDataSet.SelectedCells)
+            while (dataGridDataSet.SelectedCells.Count > 1)
             {
+                DataGridViewCell cell = dataGridDataSet.SelectedCells[0];
                 int i = cell.RowIndex;
-                for (; i < dataSet.GetLength(0); i++)
+                for (; i < dataSet.GetLength(0)-1; i++)
                 {
+                    dataSet[i] = dataSet[i + 1];
+                }
+                Array.Resize<double[]>(ref dataSet, dataSet.GetLength(0) - 1);
 
-                }
-                if (i > cell.RowIndex)
-                {
-                    // удалить лишние строки
-                }
+                dataGridDataSet.Rows.RemoveAt(cell.RowIndex);
+                dataGridDataSet.Update();
             }
-            dataGridDataSet.Rows.RemoveAt(2);
         }
 
         private void dataGridDataSet_SelectionChanged(object sender, EventArgs e)

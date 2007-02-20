@@ -36,6 +36,7 @@ namespace lab1.Forms
             this.dataSetContextRemoveRow = new System.Windows.Forms.ToolStripMenuItem();
             this.dataSetContextRemoveColumn = new System.Windows.Forms.ToolStripMenuItem();
             this.dataSetContextRemoveCell = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataSetContextClear = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridAnalysis = new System.Windows.Forms.DataGridView();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
@@ -44,7 +45,6 @@ namespace lab1.Forms
             this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.LeftToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
-            this.dataSetContextClear = new System.Windows.Forms.ToolStripMenuItem();
             splitContainer1 = new System.Windows.Forms.SplitContainer();
             splitContainer2 = new System.Windows.Forms.SplitContainer();
             splitContainer1.Panel1.SuspendLayout();
@@ -105,7 +105,7 @@ namespace lab1.Forms
             this.dataSetContextRemoveCell,
             this.dataSetContextClear});
             this.dataSetComboWidth.Name = "dataSetComboWidth";
-            this.dataSetComboWidth.Size = new System.Drawing.Size(174, 92);
+            this.dataSetComboWidth.Size = new System.Drawing.Size(174, 114);
             this.dataSetComboWidth.Opened += new System.EventHandler(this.dataSetComboWidth_Opened);
             // 
             // dataSetContextRemoveRow
@@ -120,6 +120,7 @@ namespace lab1.Forms
             this.dataSetContextRemoveColumn.Name = "dataSetContextRemoveColumn";
             this.dataSetContextRemoveColumn.Size = new System.Drawing.Size(173, 22);
             this.dataSetContextRemoveColumn.Text = "”далить столбец";
+            this.dataSetContextRemoveColumn.Visible = false;
             // 
             // dataSetContextRemoveCell
             // 
@@ -127,6 +128,14 @@ namespace lab1.Forms
             this.dataSetContextRemoveCell.Size = new System.Drawing.Size(173, 22);
             this.dataSetContextRemoveCell.Text = "”далить €чейки";
             this.dataSetContextRemoveCell.ToolTipText = "”далить выделенные €чейки со сдвигом влево";
+            this.dataSetContextRemoveCell.Visible = false;
+            // 
+            // dataSetContextClear
+            // 
+            this.dataSetContextClear.Name = "dataSetContextClear";
+            this.dataSetContextClear.Size = new System.Drawing.Size(173, 22);
+            this.dataSetContextClear.Text = "ќчистить";
+            this.dataSetContextClear.Visible = false;
             // 
             // splitContainer2
             // 
@@ -219,12 +228,6 @@ namespace lab1.Forms
             // ContentPanel
             // 
             this.ContentPanel.Size = new System.Drawing.Size(484, 355);
-            // 
-            // dataSetContextClear
-            // 
-            this.dataSetContextClear.Name = "dataSetContextClear";
-            this.dataSetContextClear.Size = new System.Drawing.Size(173, 22);
-            this.dataSetContextClear.Text = "ќчистить";
             // 
             // FormChild
             // 
