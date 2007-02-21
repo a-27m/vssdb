@@ -164,7 +164,6 @@ namespace lab1.Forms
             this.dataSetContextClear});
             this.dataSetComboWidth.Name = "dataSetComboWidth";
             this.dataSetComboWidth.Size = new System.Drawing.Size(174, 92);
-            this.dataSetComboWidth.Opened += new System.EventHandler(this.dataSetComboWidth_Opened);
             // 
             // dataSetContextRemoveRow
             // 

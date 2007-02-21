@@ -289,32 +289,6 @@ namespace lab1.Forms
             dataGridDataSet.AutoResizeColumns();
         }
 
-        private void dataSetComboWidth_Opened(object sender, EventArgs e)
-        {
-        }
-
-        private void dataSetContextRemoveRow_Click(object sender, EventArgs e)
-        {
-            DataGridViewCell[] selection = new DataGridViewCell[dataGridDataSet.SelectedCells.Count];
-            dataGridDataSet.SelectedCells.CopyTo(selection, 0);
-
-            foreach (DataGridViewCell cell in selection)
-            {
-                if (!dataGridDataSet.SelectedCells.Contains(cell))
-                    continue;
-
-                int i = cell.RowIndex;
-                for (; i < dataSet.GetLength(0) - 1; i++)
-                {
-                    dataSet[i] = dataSet[i + 1];
-                }
-                if (i != cell.RowIndex)
-                    Array.Resize<double[]>(ref dataSet, dataSet.GetLength(0) - 1);
-
-                dataGridDataSet.Rows.RemoveAt(cell.RowIndex);
-            }
-        }
-
         private void dataGridDataSet_SelectionChanged(object sender, EventArgs e)
         {
             foreach (DataGridViewCell cell in dataGridDataSet.SelectedCells)
@@ -332,6 +306,29 @@ namespace lab1.Forms
             }
         }
 
+        private void dataSetContextRemoveRow_Click(object sender, EventArgs e)
+        {
+            DataGridViewCell[] selection = new DataGridViewCell[dataGridDataSet.SelectedCells.Count];
+            dataGridDataSet.SelectedCells.CopyTo(selection, 0);
+
+            foreach (DataGridViewCell cell in selection)
+            {
+                if (!dataGridDataSet.SelectedCells.Contains(cell))
+                    continue;
+
+                if (cell.RowIndex < dataSet.GetLength(0) - 1)
+                {                    
+                    for (int i = cell.RowIndex; i < dataSet.GetLength(0) - 1; i++)
+                        dataSet[i] = dataSet[i + 1];
+                    Array.Resize<double[]>(ref dataSet, dataSet.GetLength(0) - 1);
+                }
+                else if (cell.RowIndex == dataSet.GetLength(0) - 1)
+                    Array.Resize<double[]>(ref dataSet, dataSet.GetLength(0) - 1);
+
+                dataGridDataSet.Rows.RemoveAt(cell.RowIndex);
+            }
+        }
+
         private void dataSetContextRemoveColumn_Click(object sender, EventArgs e)
         {
             DataGridViewCell[] selection = new DataGridViewCell[dataGridDataSet.SelectedCells.Count];
@@ -345,10 +342,13 @@ namespace lab1.Forms
                 int j;// = cell.ColumnIndex;
                 for (int i = 0; i < dataSet.GetLength(0); i++)
                 {
-                    for (j = cell.ColumnIndex; j < dataSet[i].GetLength(0) -1; j++)
-                        dataSet[i][j] = dataSet[i][j + 1];
-
-                    if (j != cell.ColumnIndex)
+                    if (cell.ColumnIndex < dataSet[i].GetLength(0) - 1)
+                    {
+                        for (j = cell.ColumnIndex; j < dataSet[i].GetLength(0) - 1; j++)
+                            dataSet[i][j] = dataSet[i][j + 1];
+                        Array.Resize<double>(ref dataSet[i], dataSet[i].GetLength(0) - 1);
+                    }
+                    else if (cell.ColumnIndex == dataSet[i].GetLength(0) - 1)
                         Array.Resize<double>(ref dataSet[i], dataSet[i].GetLength(0) - 1);
                 }
 
@@ -428,28 +428,29 @@ namespace lab1.Forms
             {
                 case ChildFormPanel.DataView:
                     D = !D;
-                    splitContainer1.Panel1Collapsed = !D;
-                    splitContainer1.Panel2Collapsed = !(splitContainer1.Panel2Collapsed && !D);
                     break;
                 case ChildFormPanel.AnalysisTableView:
-                    splitContainer1.Panel1Collapsed = !(D || (A && !T));
-                    splitContainer1.Panel2Collapsed = !(A || T || !D);
-                    splitContainer2.Panel1Collapsed = A;
+                    A = !A;
                     break;
                 case ChildFormPanel.AnalysisTextView:
-                    splitContainer1.Panel1Collapsed = !(D || (!A && T));
-                    splitContainer1.Panel2Collapsed = !(A || !T || !D);
-                    splitContainer2.Panel2Collapsed = T;
+                    T = !T;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("changed");
             }
 
-            toolStripShowData.Checked = !splitContainer1.Panel1Collapsed;
-            toolStripShowAnal.Checked = !splitContainer2.Panel1Collapsed && !splitContainer1.Panel2Collapsed;
-            toolStripShowText.Checked = !splitContainer2.Panel2Collapsed && !splitContainer1.Panel2Collapsed;
+            D = D || (!A && !T);
+            A = A || (!D && !T);
+            T = T || (!A && !D);
 
-            //MessageBox.Show(string.Format("{0} {1} {2}", D, A, T));
+            splitContainer1.Panel1Collapsed = !D;
+            splitContainer1.Panel2Collapsed = !(A || T || !D);
+            splitContainer2.Panel1Collapsed = !A;
+            splitContainer2.Panel2Collapsed = !T;
+
+            toolStripShowData.Checked = D;
+            toolStripShowAnal.Checked = A;
+            toolStripShowText.Checked = T;
         }
     }
 
