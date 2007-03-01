@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SimplexMethod
 {
-    public class SimplexSolver<T>    
+    public class SimplexSolver
     {
         int n = 0;
 
