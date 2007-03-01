@@ -116,7 +116,6 @@ namespace Fractions
                 m_numerator = value;
             }
         }
-
         public long Denominator
         {
             get
@@ -136,7 +135,6 @@ namespace Fractions
                 }
             }
         }
-
         public long Integer
         {
             get
@@ -150,8 +148,13 @@ namespace Fractions
             long gcd = GCD(Math.Abs(m_numerator), m_denominator);
             m_numerator /= gcd;
             m_denominator /= gcd;
+
+            if (m_denominator < m_numerator)
+                m_integer = Math.DivRem(m_numerator, m_denominator, out m_numerator);
+
             m_syraja = false;
         }
+
         public static Fraction Add(Fraction a, Fraction b)
         {
             long lcm = LCM(a.m_denominator, b.m_denominator);
@@ -207,7 +210,6 @@ namespace Fractions
             }
             return a; // == b
         }
-
         public static long LCM(long a, long b)
         {
             return a * b / GCD(a, b);
@@ -234,7 +236,7 @@ namespace Fractions
 
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            throw new Exception("The method or operation is not implemented.");
+            formatProvider.GetFormat(Type.GetType("string"));
         }
     }
 }
