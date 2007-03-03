@@ -2,55 +2,12 @@ using System;
 
 namespace Fractions
 {
-    /*
-    public interface IMy
-    {
-        string SomeFunction(int a);
-    }
-
-    public class MyClassI : IMy
-    {
-        public string SomeFunction(int a)
-        {
-            return "OK" + a.ToString();
-        }
-    }
-
-    public class MyClassNoI
-    {
-        public string SomeFunction(int a)
-        {
-            return "OK"+a.ToString();
-        }
-    }
-
-    public class TargetClass<T> where T : IMy
-    {
-        T t;
-        public TargetClass(int p)
-        {
-          Console.WriteLine("Test "+t.SomeFunction(5));
-        }
-    }
-
-    public class TestIt
-    {
-        static void Main()
-        {
-            MyClassNoI;
-            TargetClass<MyClassI> rules;
-            TargetClass<MyClassNoI> doubts;
-        }
-    }
-    */
-
+    [Serializable()]
     public class Fraction : ICloneable, IComparable, IFormattable
     {
         long m_integer;
         long m_numerator;
         long m_denominator;
-
-       // bool m_syraja = true;
 
         public Fraction(long integer, long numerator, long denominator)
         {
@@ -66,7 +23,6 @@ namespace Fractions
             }
             //m_syraja = true;
         }
-
         public Fraction(long numerator, long denominator)
         {
             if (denominator >= 0)
@@ -80,6 +36,10 @@ namespace Fractions
                 this.m_denominator = -denominator;
             }
             //m_syraja = true;
+        }
+        public Fraction(Decimal value)
+        {
+            this.Value = value;
         }
 
         public Decimal Value
@@ -228,7 +188,6 @@ namespace Fractions
         {
             return new Fraction(this.m_numerator, this.m_denominator);
         }
-
         public int CompareTo(Object other)
         {
             if (other is Fraction)
@@ -242,7 +201,6 @@ namespace Fractions
 
             throw new ArgumentException("Comparsion between Fractions and " + other.GetType().Name + " is not implemented yet");
         }
-
         public override bool Equals(object obj)
         {
             if (obj is Fraction)
@@ -260,19 +218,33 @@ namespace Fractions
 
             throw new ArgumentException("Cannot compare arguments");
         }
-
         public override int GetHashCode()
         {
             return Value.GetHashCode();
         }
 
+        public override string ToString()
+        {
+            return this.ToString("R");
+        }
+        public string ToString(string format)
+        {
+            if (format.ToUpper().StartsWith("R"))
+                return string.Format("{0}{1} {2}/{3}",
+                    m_numerator > 0 ? "-" : "",
+                    m_integer != 0 ? m_integer.ToString() : "",
+                    m_numerator,
+                    m_denominator);
+            if (format.ToUpper().StartsWith("W"))
+                return string.Format("{0}{1}/{2}",
+                    m_numerator > 0 ? "-" : "",
+                    m_integer * m_numerator + m_numerator,
+                    m_denominator);
+            throw new ArgumentException("Specifed format is not valid, use 'Right' or 'Wrong'.");
+        }
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            if (format.StartsWith("R"))
-                return string.Format("{0} {1}{2}/{3}", m_integer, m_numerator > 0 ? "-" : "", m_numerator, m_denominator);
-            if (format.StartsWith("W"))
-                return string.Format("{0}{1}/{2}", m_numerator > 0 ? "-" : "", m_integer * m_numerator, m_denominator);
-            throw new ArgumentException("Specifed format is not valid, use 'Right' or 'Wrong'.");
+            return this.ToString(format);
         }
 
         public static Fraction operator -(Fraction f)
@@ -375,7 +347,7 @@ namespace Fractions
         //     f2 is zero.
         public static Fraction operator /(Fraction f1, Fraction f2)
         {
-           return  Divide(f1, f2);
+            return Divide(f1, f2);
         }
         //
         // Summary:
@@ -518,6 +490,363 @@ namespace Fractions
         public static bool operator >=(Fraction f1, Fraction f2)
         {
             return (f1 - f2).Value >= 0;
+        }
+
+        //
+        // Summary:
+        //     Converts a Fraction to a single-precision floating-point number.
+        //
+        // Parameters:
+        //   value:
+        //     A Fraction to convert.
+        //
+        // Returns:
+        //     A single-precision floating-point number that represents the converted Fraction.
+        public static explicit operator float(Fraction value)
+        {
+            return (float)value.Value;
+        }
+        //
+        // Summary:
+        //     Converts a Fraction to a double-precision floating-point number.
+        //
+        // Parameters:
+        //   value:
+        //     A Fraction to convert.
+        //
+        // Returns:
+        //     A double-precision floating-point number that represents the converted Fraction.
+        public static explicit operator double(Fraction value)
+        {
+            return (double)value.Value;
+        }
+        //
+        // Summary:
+        //     Converts a Fraction to a Unicode character.
+        //
+        // Parameters:
+        //   value:
+        //     A Fraction to convert.
+        //
+        // Returns:
+        //     A Unicode character that represents the converted Fraction.
+        //
+        // Exceptions:
+        //   System.OverflowException:
+        //     value is less than System.Int16.MinValue or greater than System.Int16.MaxValue.
+        public static explicit operator char(Fraction value)
+        {
+            return (char)value.Value;
+        }
+        //
+        // Summary:
+        //     Converts a Fraction to a 64-bit signed integer.
+        //
+        // Parameters:
+        //   value:
+        //     A Fraction to convert.
+        //
+        // Returns:
+        //     A 64-bit signed integer that represents the converted Fraction.
+        //
+        // Exceptions:
+        //   System.OverflowException:
+        //     value is less than System.Int64.MinValue or greater than System.Int64.MaxValue.
+        public static explicit operator long(Fraction value)
+        {
+            return (long)value.Value;
+        }
+        //
+        // Summary:
+        //     Converts a Fraction to a 64-bit unsigned integer.
+        //
+        // Parameters:
+        //   value:
+        //     A Fraction to convert.
+        //
+        // Returns:
+        //     A 64-bit unsigned integer that represents the converted Fraction.
+        //
+        // Exceptions:
+        //   System.OverflowException:
+        //     value is negative or greater than System.UInt64.MaxValue.
+        public static explicit operator ulong(Fraction value)
+        {
+            return (ulong)value.Value;
+        }
+        //
+        // Summary:
+        //     Converts a Fraction to a 32-bit unsigned integer.
+        //
+        // Parameters:
+        //   value:
+        //     A Fraction to convert.
+        //
+        // Returns:
+        //     A 32-bit unsigned integer that represents the converted Fraction.
+        //
+        // Exceptions:
+        //   System.OverflowException:
+        //     value is negative or greater than System.UInt32.MaxValue.
+        public static explicit operator uint(Fraction value)
+        {
+            return (uint)value.Value;
+        }
+        //
+        // Summary:
+        //     Converts a Fraction to an 8-bit unsigned integer.
+        //
+        // Parameters:
+        //   value:
+        //     A Fraction to convert.
+        //
+        // Returns:
+        //     An 8-bit unsigned integer that represents the converted Fraction.
+        //
+        // Exceptions:
+        //   System.OverflowException:
+        //     value is less than System.Byte.MinValue or greater than System.Byte.MaxValue.
+        public static explicit operator byte(Fraction value)
+        {
+            return (byte)value.Value;
+        }
+        //
+        // Summary:
+        //     Converts a Fraction to an 8-bit signed integer.
+        //
+        // Parameters:
+        //   value:
+        //     A Fraction to convert.
+        //
+        // Returns:
+        //     An 8-bit signed integer that represents the converted Fraction.
+        //
+        // Exceptions:
+        //   System.OverflowException:
+        //     value is less than System.SByte.MinValue or greater than System.SByte.MaxValue.
+        public static explicit operator sbyte(Fraction value)
+        {
+            return (sbyte)value.Value;
+        }
+        //
+        // Summary:
+        //     Converts a Fraction to a 32-bit signed integer.
+        //
+        // Parameters:
+        //   value:
+        //     A Fraction to convert.
+        //
+        // Returns:
+        //     A 32-bit signed integer that represents the converted Fraction.
+        //
+        // Exceptions:
+        //   System.OverflowException:
+        //     value is less than System.Int32.MinValue or greater than System.Int32.MaxValue.
+        public static explicit operator int(Fraction value)
+        {
+            return (int)value.Value;
+        }
+        //
+        // Summary:
+        //     Converts a Fraction to a 16-bit signed integer.
+        //
+        // Parameters:
+        //   value:
+        //     A Fraction to convert.
+        //
+        // Returns:
+        //     A 16-bit signed integer that represents the converted Fraction.
+        //
+        // Exceptions:
+        //   System.OverflowException:
+        //     value is less than System.Int16.MinValue or greater than System.Int16.MaxValue.
+        public static explicit operator short(Fraction value)
+        {
+            return (short)value.Value;
+        }
+        //
+        // Summary:
+        //     Converts a Fraction to a 16-bit unsigned integer.
+        //
+        // Parameters:
+        //   value:
+        //     A Fraction to convert.
+        //
+        // Returns:
+        //     A 16-bit unsigned integer that represents the converted Fraction.
+        //
+        // Exceptions:
+        //   System.OverflowException:
+        //     value is greater than System.UInt16.MaxValue or less than System.UInt16.MinValue.
+        public static explicit operator ushort(Fraction value)
+        {
+            return (ushort)value.Value;
+        }
+        //
+        // Summary:
+        //     Converts a double-precision floating-point number to a Fraction.
+        //
+        // Parameters:
+        //   value:
+        //     A double-precision floating-point number.
+        //
+        // Returns:
+        //     A Fraction that represents the converted double-precision floating
+        //     point number.
+        //
+        // Exceptions:
+        //   System.OverflowException:
+        //     value is less than Fraction.MinValue or greater than Fraction.MaxValue.-or-
+        //     value is System.Double.NaN, System.Double.PositiveInfinity, or System.Double.NegativeInfinity.
+        public static explicit operator Fraction(double value)
+        {
+            return new Fraction((decimal)value);
+        }
+        //
+        // Summary:
+        //     Converts a single-precision floating-point number to a Fraction.
+        //
+        // Parameters:
+        //   value:
+        //     A single-precision floating-point number.
+        //
+        // Returns:
+        //     A Fraction that represents the converted single-precision floating
+        //     point number.
+        //
+        // Exceptions:
+        //   System.OverflowException:
+        //     value is less than Fraction.MinValue or greater than Fraction.MaxValue.-or-
+        //     value is System.Single.NaN, System.Single.PositiveInfinity, or System.Single.NegativeInfinity.
+        public static explicit operator Fraction(float value)
+        {
+            return new Fraction((decimal)value);
+        }
+        //
+        // Summary:
+        //     Converts an 8-bit unsigned integer to a Fraction.
+        //
+        // Parameters:
+        //   value:
+        //     An 8-bit unsigned integer.
+        //
+        // Returns:
+        //     A Fraction that represents the converted 8-bit unsigned integer.
+        public static implicit operator Fraction(byte value)
+        {
+            return new Fraction((decimal)value);
+        }
+        //
+        // Summary:
+        //     Converts a Unicode character to a Fraction.
+        //
+        // Parameters:
+        //   value:
+        //     A Unicode character.
+        //
+        // Returns:
+        //     A Fraction that represents the converted Unicode character.
+        public static implicit operator Fraction(char value)
+        {
+            return new Fraction((decimal)value);
+        }
+        //
+        // Summary:
+        //     Converts a 32-bit signed integer to a Fraction.
+        //
+        // Parameters:
+        //   value:
+        //     A 32-bit signed integer.
+        //
+        // Returns:
+        //     A Fraction that represents the converted 32-bit signed integer.
+        public static implicit operator Fraction(int value)
+        {
+            return new Fraction((decimal)value);
+        }
+        //
+        // Summary:
+        //     Converts a 64-bit signed integer to a Fraction.
+        //
+        // Parameters:
+        //   value:
+        //     A 64-bit signed integer.
+        //
+        // Returns:
+        //     A Fraction that represents the converted 64-bit signed integer.
+        public static implicit operator Fraction(long value)
+        {
+            return new Fraction((decimal)value);
+        }
+        //
+        // Summary:
+        //     Converts an 8-bit signed integer to a Fraction.
+        //
+        // Parameters:
+        //   value:
+        //     An 8-bit signed integer.
+        //
+        // Returns:
+        //     A Fraction that represents the converted 8-bit signed integer.
+        public static implicit operator Fraction(sbyte value)
+        {
+            return new Fraction((decimal)value);
+        }
+        //
+        // Summary:
+        //     Converts a 16-bit signed integer to a Fraction.
+        //
+        // Parameters:
+        //   value:
+        //     A 16-bit signed integer.
+        //
+        // Returns:
+        //     A Fraction that represents the converted 16-bit signed integer.
+        public static implicit operator Fraction(short value)
+        {
+            return new Fraction((decimal)value);
+        }
+        //
+        // Summary:
+        //     Converts a 32-bit unsigned integer to a Fraction.
+        //
+        // Parameters:
+        //   value:
+        //     A 32-bit unsigned integer.
+        //
+        // Returns:
+        //     A Fraction that represents the converted 32-bit unsigned integer.
+        public static implicit operator Fraction(uint value)
+        {
+            return new Fraction((decimal)value);
+        }
+        //
+        // Summary:
+        //     Converts a 64-bit unsigned integer to a Fraction.
+        //
+        // Parameters:
+        //   value:
+        //     A 64-bit unsigned integer.
+        //
+        // Returns:
+        //     A Fraction that represents the converted 64-bit unsigned integer.
+        public static implicit operator Fraction(ulong value)
+        {
+            return new Fraction((decimal)value);
+        }
+        //
+        // Summary:
+        //     Converts a 16-bit unsigned integer to a Fraction.
+        //
+        // Parameters:
+        //   value:
+        //     A 16-bit unsigned integer.
+        //
+        // Returns:
+        //     A Fraction that represents the converted 16-bit unsigned integer.
+        public static implicit operator Fraction(ushort value)
+        {
+            return new Fraction((decimal)value);
         }
     }
 }

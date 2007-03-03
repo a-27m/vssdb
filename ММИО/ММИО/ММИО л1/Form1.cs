@@ -8,19 +8,7 @@ namespace ММИО_л1
 {
 	public partial class Form1 : Form
 	{
-		int n = 0, m = 0;
-
-		public int N
-		{
-			get { return n; }
-			set { n = value; numericUpDownN.Value = value; }
-		}
-
-		public int M
-		{
-			get { return m; }
-			set { m = value; numericUpDownM.Value = value; }
-		}
+        protected bool IsNewDocument = true;
 
 		public Form1()
 		{
@@ -29,23 +17,11 @@ namespace ММИО_л1
 
 		private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
 		{
+            if (e.ColumnIndex > -1)
 			dataGridView1.AutoResizeColumn(e.ColumnIndex);
 		}
 
-		private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-		{
-			this.M = dataGridView1.RowCount-1;
-		}
-
-		private void buttonOK_Click(object sender, EventArgs e)
-		{
-			N = (int)(numericUpDownN.Value);
-			M = (int)(numericUpDownM.Value);
-			GridMyResize(N, M);
-			dataGridView1.Select();
-		}
-
-		private void GridMyResize(int vars, int conds)
+        private void GridMyResize(int vars, int conds)
 		{
 			dataGridView1.Columns.Clear();
 			dataGridView1.Rows.Clear();
@@ -58,15 +34,46 @@ namespace ММИО_л1
 				dataGridView1.Columns.Add(col);
 			}
 
-			dataGridView1.Columns.Add(new DataGridViewColumn(SignCol.CellTemplate));
+            col = new DataGridViewColumn(SignCol.CellTemplate);
+            col.HeaderText = SignCol.HeaderText;
+			dataGridView1.Columns.Add(col);
 
 			col = new DataGridViewColumn(CoefCol0.CellTemplate);
 			col.HeaderText = "b";
 			dataGridView1.Columns.Add(col);
 
-			dataGridView1.Rows.Add(conds + 1);
+			dataGridView1.Rows.Add();
+            dataGridView1.Rows[0].HeaderCell.Value = "F = ";
+
+            for (int i = 1; i <= conds; i++)
+            {
+                dataGridView1.Rows.Add();
+                dataGridView1.Rows[i].HeaderCell.Value = "(" + i.ToString() + ")";
+            }
 
 			dataGridView1.AutoResizeColumns();
-		}
-	}
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            if (this.IsNewDocument)
+            {
+                FormAskDim fad = new FormAskDim();
+                if (fad.ShowDialog(this) != DialogResult.OK)
+                    Close();
+                GridMyResize(fad.N, fad.M);
+                dataGridView1.Select();
+            }
+        }
+
+        private void Form1_Activated(object sender, EventArgs e)
+        {
+            this.Opacity = 1d;
+        }
+
+        private void Form1_Deactivate(object sender, EventArgs e)
+        {
+            this.Opacity = 0.7d;
+        }
+    }
 }

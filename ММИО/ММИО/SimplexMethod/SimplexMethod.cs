@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Fractions;
 
 namespace SimplexMethod
 {
@@ -8,14 +9,14 @@ namespace SimplexMethod
     {
         int n = 0;
 
-        List<double[]> la;
-        double[] m_c;
+        List<Fraction[]> la;
+        Fraction[] m_c;
 
-        public static void GGaussProcess(ref double[,] a, uint Row, uint Col)
+        public static void GGaussProcess(ref Fraction[,] a, uint Row, uint Col)
         {
             int m = a.GetLength(0);
             int n = a.GetLength(1);
-            double x = a[Row, Col];
+            Fraction x = a[Row, Col];
             for (int j = 0; j < n; j++)
                 a[Row, j] /= x;
 
@@ -29,32 +30,32 @@ namespace SimplexMethod
             }
         }
 
-        public void AddLimtation(double[] a, short sign, double b)
+        public void AddLimtation(Fraction[] a, short sign, Fraction b)
         {
             if (sign != 1 && sign != 0 && sign != -1)
                 throw new ArgumentOutOfRangeException("sign", "Sign has to be -1 or 0 or 1.");
 
             if (la == null)
-                la = new List<double[]>();
+                la = new List<Fraction[]>();
 
-            double[] tmp;
+            Fraction[] tmp;
 
             if (sign != 0)
             {
-                tmp = new double[n + 2];
+                tmp = new Fraction[n + 2];
                 a[n] = sign;
                 n++;
             }
             else
             {
-                tmp = new double[n + 1];
+                tmp = new Fraction[n + 1];
                 n = (a.Length > n ? a.Length : n);
             }
 
             a.CopyTo(tmp, 1);
             tmp[0] = b;
             la.Add(a);
-    }
+        }
 
         public void RemoveLimitation(uint index)
         {
@@ -66,40 +67,46 @@ namespace SimplexMethod
         //    throw new Exception("This method is not implemented yet");
         //}
 
-        void SetTargetFunctionCoefficients(double[] c)
+        void SetTargetFunctionCoefficients(Fraction[] c)
         {
             if (c.Length > n)
                 throw new ArgumentException("Array 'c' is too long");
             m_c = c;
         }
 
-        double[] Solve()
+        Fraction[] Solve()
         {
-            double[,] simplexTab = new double[la.Count, n];
+            Fraction[,] simplexTab = new Fraction[la.Count, n];
             int[] basisIndices = FindBasis(simplexTab);
             throw new Exception();
         }
 
-        protected int[] FindBasis(double[,] tab)
+        protected int[] FindBasis(Fraction[,] tab)
         {
-            int  n= tab.GetLength(0);
-            int m =tab.GetLength(1);
+            int n = tab.GetLength(0);
+            int m = tab.GetLength(1);
             List<int> li = new List<int>();
-            
+
             for (int j = 0; j < m; j++)
             {
                 int count1 = 0;
                 int count0 = 0;
                 for (int i = 0; i < n; i++)
                 {
-                    if (tab[i, j] == (double)1)
+                    if (tab[i, j] == (Fraction)1)
                         count1++;
-                    if (tab[i, j] == (double)0)
+                    if (tab[i, j] == (Fraction)0)
                         count0++;
                 }
 
                 if ((count0 == (n - 1)) && count1 == 1)
                     li.Add(j);
+            }
+
+            List<int>.Enumerator enumer = li.GetEnumerator();
+            for (; enumer.MoveNext(); )
+            {
+
             }
             return li.ToArray();
         }

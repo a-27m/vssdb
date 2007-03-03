@@ -34,8 +34,10 @@
   <ItemGroup>
     <Reference Include="Dekart, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Form1.cs">
@@ -44,11 +46,37 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormAskDim.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAskDim.Designer.cs">
+      <DependentUpon>FormAskDim.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMdiParent.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMdiParent.Designer.cs">
+      <DependentUpon>FormMdiParent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Dekart.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAskDim.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormAskDim.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMdiParent.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormMdiParent.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

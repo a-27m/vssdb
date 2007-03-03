@@ -28,164 +28,135 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-			this.dataGridView1 = new System.Windows.Forms.DataGridView();
-			this.CoefCol0 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.SignCol = new System.Windows.Forms.DataGridViewComboBoxColumn();
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.button1 = new System.Windows.Forms.Button();
-			this.numericUpDownM = new System.Windows.Forms.NumericUpDown();
-			this.numericUpDownN = new System.Windows.Forms.NumericUpDown();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label1 = new System.Windows.Forms.Label();
-			tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			tableLayoutPanel1.SuspendLayout();
-			( (System.ComponentModel.ISupportInitialize)( this.dataGridView1 ) ).BeginInit();
-			this.groupBox1.SuspendLayout();
-			( (System.ComponentModel.ISupportInitialize)( this.numericUpDownM ) ).BeginInit();
-			( (System.ComponentModel.ISupportInitialize)( this.numericUpDownN ) ).BeginInit();
-			this.SuspendLayout();
-			// 
-			// tableLayoutPanel1
-			// 
-			tableLayoutPanel1.ColumnCount = 1;
-			tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			tableLayoutPanel1.Controls.Add(this.dataGridView1, 0, 1);
-			tableLayoutPanel1.Controls.Add(this.groupBox1, 0, 0);
-			tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-			tableLayoutPanel1.Name = "tableLayoutPanel1";
-			tableLayoutPanel1.RowCount = 2;
-			tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 66F));
-			tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			tableLayoutPanel1.Size = new System.Drawing.Size(424, 270);
-			tableLayoutPanel1.TabIndex = 0;
-			// 
-			// dataGridView1
-			// 
-			this.dataGridView1.AllowUserToOrderColumns = true;
-			this.dataGridView1.AllowUserToResizeRows = false;
-			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.CoefCol0 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SignCol = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.оптимизироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.menuStrip1.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridView1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.CoefCol0,
             this.SignCol});
-			this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dataGridView1.Location = new System.Drawing.Point(3, 69);
-			this.dataGridView1.Name = "dataGridView1";
-			this.dataGridView1.Size = new System.Drawing.Size(418, 198);
-			this.dataGridView1.TabIndex = 0;
-			this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsAdded);
-			this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
-			// 
-			// CoefCol0
-			// 
-			this.CoefCol0.HeaderText = "x";
-			this.CoefCol0.Name = "CoefCol0";
-			this.CoefCol0.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			this.CoefCol0.Visible = false;
-			// 
-			// SignCol
-			// 
-			this.SignCol.HeaderText = "Знак";
-			this.SignCol.Items.AddRange(new object[] {
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Trebuchet MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.GridColor = System.Drawing.SystemColors.ControlLight;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 24);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dataGridView1.Size = new System.Drawing.Size(340, 301);
+            this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
+            // 
+            // CoefCol0
+            // 
+            this.CoefCol0.HeaderText = "x";
+            this.CoefCol0.Name = "CoefCol0";
+            this.CoefCol0.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.CoefCol0.Visible = false;
+            // 
+            // SignCol
+            // 
+            this.SignCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Trebuchet MS", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle5.NullValue = "=";
+            this.SignCol.DefaultCellStyle = dataGridViewCellStyle5;
+            this.SignCol.DisplayStyleForCurrentCellOnly = true;
+            this.SignCol.HeaderText = "#";
+            this.SignCol.Items.AddRange(new object[] {
             "≤",
             "=",
             "≥"});
-			this.SignCol.MaxDropDownItems = 5;
-			this.SignCol.Name = "SignCol";
-			this.SignCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-			this.SignCol.Visible = false;
-			this.SignCol.Width = 50;
-			// 
-			// groupBox1
-			// 
-			this.groupBox1.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom ) ) );
-			this.groupBox1.Controls.Add(this.button1);
-			this.groupBox1.Controls.Add(this.numericUpDownM);
-			this.groupBox1.Controls.Add(this.numericUpDownN);
-			this.groupBox1.Controls.Add(this.label2);
-			this.groupBox1.Controls.Add(this.label1);
-			this.groupBox1.Location = new System.Drawing.Point(3, 3);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(418, 60);
-			this.groupBox1.TabIndex = 1;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Размерность задачи";
-			// 
-			// button1
-			// 
-			this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.button1.Location = new System.Drawing.Point(332, 23);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 4;
-			this.button1.Text = "OK";
-			this.button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.buttonOK_Click);
-			// 
-			// numericUpDownM
-			// 
-			this.numericUpDownM.Location = new System.Drawing.Point(262, 26);
-			this.numericUpDownM.Name = "numericUpDownM";
-			this.numericUpDownM.Size = new System.Drawing.Size(52, 20);
-			this.numericUpDownM.TabIndex = 3;
-			// 
-			// numericUpDownN
-			// 
-			this.numericUpDownN.Location = new System.Drawing.Point(105, 26);
-			this.numericUpDownN.Name = "numericUpDownN";
-			this.numericUpDownN.Size = new System.Drawing.Size(52, 20);
-			this.numericUpDownN.TabIndex = 2;
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(163, 28);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(93, 13);
-			this.label2.TabIndex = 1;
-			this.label2.Text = "Ограничений (m):";
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(9, 28);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(90, 13);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Переменных (n):";
-			// 
-			// Form1
-			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(424, 270);
-			this.Controls.Add(tableLayoutPanel1);
-			this.MinimumSize = new System.Drawing.Size(432, 150);
-			this.Name = "Form1";
-			this.Text = "ММИО л1";
-			tableLayoutPanel1.ResumeLayout(false);
-			( (System.ComponentModel.ISupportInitialize)( this.dataGridView1 ) ).EndInit();
-			this.groupBox1.ResumeLayout(false);
-			this.groupBox1.PerformLayout();
-			( (System.ComponentModel.ISupportInitialize)( this.numericUpDownM ) ).EndInit();
-			( (System.ComponentModel.ISupportInitialize)( this.numericUpDownN ) ).EndInit();
-			this.ResumeLayout(false);
+            this.SignCol.MaxDropDownItems = 5;
+            this.SignCol.Name = "SignCol";
+            this.SignCol.Visible = false;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(340, 24);
+            this.menuStrip1.TabIndex = 1;
+            this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.Visible = false;
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.оптимизироватьToolStripMenuItem});
+            this.toolsToolStripMenuItem.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.toolsToolStripMenuItem.Text = "&Tools";
+            // 
+            // оптимизироватьToolStripMenuItem
+            // 
+            this.оптимизироватьToolStripMenuItem.Name = "оптимизироватьToolStripMenuItem";
+            this.оптимизироватьToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.оптимизироватьToolStripMenuItem.Text = "Оптимизировать";
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(340, 325);
+            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(8, 150);
+            this.Name = "Form1";
+            this.Text = "л2";
+            this.Deactivate += new System.EventHandler(this.Form1_Deactivate);
+            this.Shown += new System.EventHandler(this.Form1_Shown);
+            this.Activated += new System.EventHandler(this.Form1_Activated);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.DataGridView dataGridView1;
-		private System.Windows.Forms.DataGridViewTextBoxColumn CoefCol0;
-		private System.Windows.Forms.DataGridViewComboBoxColumn SignCol;
-		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.NumericUpDown numericUpDownM;
-		private System.Windows.Forms.NumericUpDown numericUpDownN;
-		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CoefCol0;
+        private System.Windows.Forms.DataGridViewComboBoxColumn SignCol;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem оптимизироватьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
 	}
 }
 
