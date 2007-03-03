@@ -106,7 +106,8 @@ namespace SimplexMethod
             List<int>.Enumerator enumer = li.GetEnumerator();
             for (; enumer.MoveNext(); )
             {
-
+                for(int j = 0;j<m;j++)
+                    if (tab[enumer.Current, j] == 1)
             }
             return li.ToArray();
         }

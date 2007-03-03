@@ -11,7 +11,9 @@ namespace Fractions
 
         public Fraction(long integer, long numerator, long denominator)
         {
-            if (denominator >= 0)
+            if (denominator == 0)
+                throw new NotFiniteNumberException("Denominator is zero!", denominator);
+            if (denominator > 0)
             {
                 this.m_numerator = numerator;
                 this.m_denominator = denominator;
@@ -25,7 +27,9 @@ namespace Fractions
         }
         public Fraction(long numerator, long denominator)
         {
-            if (denominator >= 0)
+            if (denominator == 0)
+                throw new NotFiniteNumberException("Denominator is zero!", denominator);
+            if (denominator > 0)
             {
                 this.m_numerator = numerator;
                 this.m_denominator = denominator;
@@ -46,7 +50,7 @@ namespace Fractions
         {
             get
             {
-                return (Decimal)m_numerator / m_denominator + m_integer;
+                return (Decimal)m_numerator / m_denominator + m_integer*Math.Sign(m_numerator);
             }
             set
             {
@@ -105,7 +109,7 @@ namespace Fractions
 
         public virtual void Simplify()
         {
-            Fraction f = Simplify(this);
+            Fraction f = Fraction.Simplify(this);
             this.m_integer = f.m_integer;
             this.m_numerator = f.m_numerator;
             this.m_denominator = f.m_denominator;
@@ -117,7 +121,10 @@ namespace Fractions
             long lcm = LCM(a.m_denominator, b.m_denominator);
             long d_a = lcm / a.m_denominator;
             long d_b = lcm / b.m_denominator;
-            Fraction sum = new Fraction(a.m_integer + b.m_integer, a.m_numerator * d_a + b.m_numerator * d_b, lcm);
+            Fraction sum = new Fraction(
+                a.m_integer * Math.Sign(a.m_numerator) + b.m_integer * Math.Sign(b.m_numerator),
+                a.m_numerator * d_a + b.m_numerator * d_b,
+                lcm);
             sum.Simplify();
             return sum;
         }
@@ -127,18 +134,14 @@ namespace Fractions
         }
         public static Fraction Substract(Fraction a, Fraction b)
         {
-            long lcm = LCM(a.m_denominator, b.m_denominator);
-            long d_a = lcm / a.m_denominator;
-            long d_b = lcm / b.m_denominator;
-            Fraction sum = new Fraction(a.m_integer - b.m_integer, a.m_numerator * d_a - b.m_numerator * d_b, lcm);
-            sum.Simplify();
-            return sum;
+            return Add(a, Negate(b));
+            // Fraction sum = new Fraction(a.m_integer - b.m_integer, a.m_numerator * d_a - b.m_numerator * d_b, lcm);
         }
         public static Fraction Multiply(Fraction a, Fraction b)
         {
             Fraction mul = new Fraction(
-                (a.m_integer * a.m_denominator + a.m_numerator) *
-                (b.m_integer * b.m_denominator + b.m_numerator),
+                (a.m_integer * a.m_denominator * Math.Sign(a.m_numerator) + a.m_numerator) *
+                (b.m_integer * b.m_denominator * Math.Sign(b.m_numerator) + b.m_numerator),
                 a.m_denominator * b.m_denominator);
             mul.Simplify();
             return mul;
@@ -146,8 +149,8 @@ namespace Fractions
         public static Fraction Divide(Fraction a, Fraction b)
         {
             Fraction div = new Fraction(
-                (a.m_integer * a.m_denominator + a.m_numerator) * b.m_denominator,
-                (b.m_integer * b.m_denominator + b.m_numerator) * a.m_denominator);
+                (a.m_integer * a.m_denominator * Math.Sign(a.m_numerator) + a.m_numerator) * b.m_denominator,
+                (b.m_integer * b.m_denominator * Math.Sign(b.m_numerator) + b.m_numerator) * a.m_denominator);
             div.Simplify();
             return div;
         }
@@ -160,6 +163,8 @@ namespace Fractions
             if (a.m_denominator < a.m_numerator)
                 a.m_integer = Math.DivRem(a.m_numerator, a.m_denominator, out a.m_numerator);
             //a.m_syraja = false;
+            if (a.m_denominator == 0)
+                    throw new NotFiniteNumberException("Denominator is set to zero while simplifying the fraction: "+a.ToString());
 
             return a;
         }
@@ -186,7 +191,8 @@ namespace Fractions
 
         public object Clone()
         {
-            return new Fraction(this.m_numerator, this.m_denominator);
+            return this.MemberwiseClone();
+//            return new Fraction(this.m_integer, this.m_numerator, this.m_denominator);
         }
         public int CompareTo(Object other)
         {
@@ -229,6 +235,12 @@ namespace Fractions
         }
         public string ToString(string format)
         {
+            if (this.m_integer * this.m_denominator * Math.Sign(this.m_numerator) + this.m_numerator == 0)
+                return "0";
+            if (this.m_integer * this.m_denominator * Math.Sign(this.m_numerator) + this.m_numerator == m_denominator)
+                return "1";
+            if (this.m_integer * this.m_denominator * Math.Sign(this.m_numerator) + this.m_numerator == -m_denominator)
+                return "-1";
             if (format.ToUpper().StartsWith("R"))
                 return string.Format("{0}{1} {2}/{3}",
                     m_numerator > 0 ? "-" : "",
@@ -238,7 +250,7 @@ namespace Fractions
             if (format.ToUpper().StartsWith("W"))
                 return string.Format("{0}{1}/{2}",
                     m_numerator > 0 ? "-" : "",
-                    m_integer * m_numerator + m_numerator,
+                    m_integer * m_denominator * Math.Sign(m_numerator) + m_numerator,
                     m_denominator);
             throw new ArgumentException("Specifed format is not valid, use 'Right' or 'Wrong'.");
         }
