@@ -36,8 +36,8 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownM)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownN)).BeginInit();
@@ -60,6 +60,11 @@
             // numericUpDownM
             // 
             this.numericUpDownM.Location = new System.Drawing.Point(132, 45);
+            this.numericUpDownM.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownM.Name = "numericUpDownM";
             this.numericUpDownM.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownM.TabIndex = 3;
@@ -72,6 +77,11 @@
             // numericUpDownN
             // 
             this.numericUpDownN.Location = new System.Drawing.Point(132, 19);
+            this.numericUpDownN.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDownN.Name = "numericUpDownN";
             this.numericUpDownN.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownN.TabIndex = 2;
@@ -133,19 +143,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Оптимизация";
             // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(15, 20);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(80, 17);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "Максимум";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
@@ -158,6 +155,19 @@
             this.checkBox2.TabIndex = 1;
             this.checkBox2.Text = "Минимум";
             this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Enabled = false;
+            this.checkBox1.Location = new System.Drawing.Point(15, 20);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(80, 17);
+            this.checkBox1.TabIndex = 0;
+            this.checkBox1.Text = "Максимум";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // FormAskDim
             // 

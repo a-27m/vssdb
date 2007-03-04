@@ -27,5 +27,28 @@ namespace ММИО_л1
         {
             newToolStripMenuItem_Click(sender, e);
         }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Form1 childForm = new Form1();
+                childForm.MdiParent = this;
+                childForm.WindowState = FormWindowState.Maximized;
+                childForm.LoadData(openFileDialog1.FileName);
+                childForm.Show();
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ActiveMdiChild is Form1)
+            {
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    (ActiveMdiChild as Form1).SaveData(saveFileDialog1.FileName);
+                }
+            }
+        }
     }
 }

@@ -5,12 +5,22 @@ using Fractions;
 
 namespace SimplexMethod
 {
+    public delegate void DebugSimplexTableHandler(Fraction[,] table);
+
     public class SimplexSolver
     {
         int n = 0;
 
         List<Fraction[]> la;
         Fraction[] m_c;
+
+        public event DebugSimplexTableHandler DebugNewSimplexTable;
+
+        protected void OnNewSimplexTable(Fraction[,] table)
+        {
+            if (DebugNewSimplexTable != null)
+                DebugNewSimplexTable(table);
+        }
 
         public static void GGaussProcess(ref Fraction[,] a, uint Row, uint Col)
         {
@@ -32,34 +42,42 @@ namespace SimplexMethod
 
         public void AddLimtation(Fraction[] a, short sign, Fraction b)
         {
-            if (sign != 1 && sign != 0 && sign != -1)
+            if (Math.Abs(sign) > 1)
                 throw new ArgumentOutOfRangeException("sign", "Sign has to be -1 or 0 or 1.");
 
             if (la == null)
                 la = new List<Fraction[]>();
 
             Fraction[] tmp;
+            n = (a.Length > n ? a.Length : n);
 
             if (sign != 0)
             {
                 tmp = new Fraction[n + 2];
-                a[n] = sign;
+                for (int k = a.Length - 1; k < n + 2 - 1; k++)
+                    tmp[k] = 0;
+                tmp[n + 2 - 1] = -sign;
                 n++;
             }
             else
             {
                 tmp = new Fraction[n + 1];
-                n = (a.Length > n ? a.Length : n);
             }
 
             a.CopyTo(tmp, 1);
             tmp[0] = b;
-            la.Add(a);
+            la.Add(tmp);
         }
 
         public void RemoveLimitation(uint index)
         {
             la.RemoveAt((int)index);
+            n = 0;
+            foreach (Fraction[] cond in la)
+            {
+                if (n < cond.Length)
+                    n = cond.Length;
+            }
         }
 
         //void SetLimtations(double[,] a, double b)
@@ -67,48 +85,82 @@ namespace SimplexMethod
         //    throw new Exception("This method is not implemented yet");
         //}
 
-        void SetTargetFunctionCoefficients(Fraction[] c)
+        public void SetTargetFunctionCoefficients(Fraction[] c)
         {
             if (c.Length > n)
                 throw new ArgumentException("Array 'c' is too long");
             m_c = c;
         }
 
-        Fraction[] Solve()
+        public Fraction[] Solve()
         {
-            Fraction[,] simplexTab = new Fraction[la.Count, n];
-            int[] basisIndices = FindBasis(simplexTab);
-            throw new Exception();
+            // looking for basis vectors in out limitations
+            int[] basisIndices = FindBasis(la);
+            if (basisIndices.Length < n)
+                /* add artifical basis*/;
+
+
+            int m = la.Count;
+            // create new simplex-table
+            Fraction[,] simplexTab = new Fraction[m + 1 + 1, n + 1];
+
+            // fill table with limitations in List<Fraction[]> la
+            // and the coefficients m_c
+            for (int j = 0; j < m_c.Length; j++)
+                simplexTab[0, j + 1] = m_c[j];
+           for (int j = 0; j < m_c.Length; j++)
+                simplexTab[0, j + 1] = m_c[j];
+
+            List<Fraction[]>.Enumerator enumer = la.GetEnumerator();
+            for (int i = 1; enumer.MoveNext(); i++)
+            {
+                int j = 0;
+                for (; j < enumer.Current.Length; j++)
+                    simplexTab[i, j] = enumer.Current[j];
+                for (; j <= n; j++)
+                    simplexTab[i, j] = new Fraction(0);
+            }
+
+            Fraction[] solution = new Fraction[n];
+            for (int i = 0; i < n; solution[i++] = new Fraction())
+                ;
+            return solution;
         }
 
-        protected int[] FindBasis(Fraction[,] tab)
-        {
-            int n = tab.GetLength(0);
-            int m = tab.GetLength(1);
-            List<int> li = new List<int>();
+        private delegate bool MyDel(int i, int j);
 
-            for (int j = 0; j < m; j++)
+        protected int[] FindBasis(List<Fraction[]> conds)
+        {
+            MyDel del1 = new MyDel(delegate(int i, int j)
             {
-                int count1 = 0;
                 int count0 = 0;
-                for (int i = 0; i < n; i++)
+                List<Fraction[]>.Enumerator enumerB;
+                enumerB = conds.GetEnumerator();
+                for (int ik = 1; enumerB.MoveNext(); ik++)
                 {
-                    if (tab[i, j] == (Fraction)1)
-                        count1++;
-                    if (tab[i, j] == (Fraction)0)
+                    if (ik == i)
+                        continue;
+                    if (j < enumerB.Current.Length)
+                    {
+                        if (enumerB.Current[j] == (Fraction)0)
+                            count0++;
+                    }
+                    else
                         count0++;
                 }
+                enumerB.Dispose();
 
-                if ((count0 == (n - 1)) && count1 == 1)
-                    li.Add(j);
-            }
+                return count0 == (n - 1);
+            });
 
-            List<int>.Enumerator enumer = li.GetEnumerator();
-            for (; enumer.MoveNext(); )
-            {
-                for(int j = 0;j<m;j++)
-                    if (tab[enumer.Current, j] == 1)
-            }
+            List<int> li = new List<int>();
+
+            List<Fraction[]>.Enumerator enumerA = conds.GetEnumerator();
+            for (int i = 1; enumerA.MoveNext(); i++)
+                for (int j = 0; j < enumerA.Current.Length; j++)
+                    if (enumerA.Current[j] == new Fraction(1,1))
+                        if (del1(i, j))
+                            li.Add(j);
             return li.ToArray();
         }
     }

@@ -78,6 +78,12 @@
       <DependentUpon>FormMdiParent.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SimplexMethod\SimplexMethod.csproj">
+      <Project>{27FF1204-81C9-455D-BD8C-773414C3AFB3}</Project>
+      <Name>SimplexMethod</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
