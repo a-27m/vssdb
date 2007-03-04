@@ -11,6 +11,8 @@ namespace SimplexMethod
     {
         int n = 0;
 
+        public static Fraction M = new Fraction(0, 1000000, 1);
+
         List<Fraction[]> la;
         Fraction[] m_c;
 
@@ -53,19 +55,19 @@ namespace SimplexMethod
 
             if (sign != 0)
             {
-                tmp = new Fraction[n + 2];
-                for (int k = a.Length - 1; k < n + 2 - 1; k++)
-                    tmp[k] = 0;
-                tmp[n + 2 - 1] = -sign;
                 n++;
+                tmp = new Fraction[n + 1];
+                for (int k = a.Length - 1; k < n; k++)
+                    tmp[k] = 0;
+                tmp[n] = -sign;
             }
             else
             {
                 tmp = new Fraction[n + 1];
             }
 
-            a.CopyTo(tmp, 1);
             tmp[0] = b;
+            a.CopyTo(tmp, 1);
             la.Add(tmp);
         }
 
@@ -94,35 +96,64 @@ namespace SimplexMethod
 
         public Fraction[] Solve()
         {
+            int m = la.Count;
+            int k = 0;
             // looking for basis vectors in out limitations
             int[] basisIndices = FindBasis(la);
-            if (basisIndices.Length < n)
-                /* add artifical basis*/;
 
+            int oldMcLen = m_c.Length;
+            Array.Resize<Fraction>(ref m_c, n);
+            for (int j = oldMcLen; j < n; m_c[j++] = 0)
+                ;
 
-            int m = la.Count;
+            if (basisIndices.Length < m)
+            {
+                // add art-bases
+                int b = basisIndices.Length;
+                k = m - b;
+                Array.Resize<Fraction>(ref m_c, n + k);
+                Array.Resize<int>(ref basisIndices, b + k);
+                for (int j = n; j < n + k; m_c[j++] = -M)
+                    basisIndices[b + j - n] = j + 1;
+
+                n += k;
+            }
+
             // create new simplex-table
-            Fraction[,] simplexTab = new Fraction[m + 1 + 1, n + 1];
+            Fraction[,] simplexTab = new Fraction[m + 1, n + 1];
 
-            // fill table with limitations in List<Fraction[]> la
-            // and the coefficients m_c
-            for (int j = 0; j < m_c.Length; j++)
-                simplexTab[0, j + 1] = m_c[j];
-           for (int j = 0; j < m_c.Length; j++)
-                simplexTab[0, j + 1] = m_c[j];
+            ////// fill table with the coefficients m_c …
+            //// for (int j = 0; j < m_c.Length; j++)
+            ////    simplexTab[0, j + 1] = m_c[j];
 
+            // …and limitations in List<Fraction[]> la
             List<Fraction[]>.Enumerator enumer = la.GetEnumerator();
-            for (int i = 1; enumer.MoveNext(); i++)
+            for (int i = 0; enumer.MoveNext(); i++)
             {
                 int j = 0;
                 for (; j < enumer.Current.Length; j++)
                     simplexTab[i, j] = enumer.Current[j];
                 for (; j <= n; j++)
-                    simplexTab[i, j] = new Fraction(0);
+                    simplexTab[i, j] = 0;
             }
 
+            // restore art. 1s in s-table
+            for (int i = 0; i <k; i++)
+                simplexTab[i, basisIndices[basisIndices.Length - k + i]] = 1;
+
+            // fill m+1st row with deltas
+            for (int j = 1; j <= n; j++)
+            {
+                Fraction delta = 0;
+                for (int t = 0; t < m; t++)
+                    delta += m_c[basisIndices[t]-1] * simplexTab[t, j];
+                simplexTab[m, j] = delta - m_c[j - 1];
+            }
+
+            OnNewSimplexTable(simplexTab);
+
             Fraction[] solution = new Fraction[n];
-            for (int i = 0; i < n; solution[i++] = new Fraction())
+            for (int i = 0; i < n; solution[i++] = 0)
                 ;
             return solution;
         }
@@ -150,7 +181,7 @@ namespace SimplexMethod
                 }
                 enumerB.Dispose();
 
-                return count0 == (n - 1);
+                return count0 == (conds.Count - 1);
             });
 
             List<int> li = new List<int>();
@@ -158,9 +189,12 @@ namespace SimplexMethod
             List<Fraction[]>.Enumerator enumerA = conds.GetEnumerator();
             for (int i = 1; enumerA.MoveNext(); i++)
                 for (int j = 0; j < enumerA.Current.Length; j++)
-                    if (enumerA.Current[j] == new Fraction(1,1))
+                    if (enumerA.Current[j] == new Fraction(1, 1))
                         if (del1(i, j))
+                        {
                             li.Add(j);
+                            break;
+                        }
             return li.ToArray();
         }
     }

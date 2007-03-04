@@ -225,9 +225,13 @@ namespace Fractions
             {
                 Fraction _f1 = Simplify(this);
                 Fraction _f2 = Simplify(obj as Fraction);
-                return _f1.m_integer == _f2.m_integer &&
-                    _f1.m_numerator == _f2.m_numerator &&
-                    _f1.m_denominator == _f2.m_denominator;
+                return
+                    _f1.m_integer * _f1.m_denominator * MySign(_f1.m_numerator) + _f1.m_numerator ==
+                    _f2.m_integer * _f2.m_denominator * MySign(_f2.m_numerator) + _f2.m_numerator;
+
+                    //_f1.m_integer == _f2.m_integer &&
+                    //_f1.m_numerator == _f2.m_numerator &&
+                    //_f1.m_denominator == _f2.m_denominator;
             }
             if (obj is decimal)
             {
