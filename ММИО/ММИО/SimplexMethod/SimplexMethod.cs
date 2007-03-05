@@ -177,12 +177,12 @@ namespace SimplexMethod
 
                 iterationsCount++;
 
-                List<int> negativeColumns = CheckMPlusOneRow(simplexTab);
+                List<int> negativeColumns = new List<int>(CheckMPlusOneRow(simplexTab));
 
                 // its awefull, i know
                 if (!((haveANegativeDelta = (negativeColumns != null))))
                     break;
-                
+
                 int i, j;
                 if (FindBestNewVector(simplexTab, negativeColumns.ToArray(), out i, out j))
                 {
@@ -200,7 +200,7 @@ namespace SimplexMethod
             if (haveANegativeDelta)
             {
                 solution = new Fraction[originalN];
-                for (int i = 0; i < n; solution[i++] = -M)
+                for (int i = 0; i < originalN; solution[i++] = -M)
                     ;
                 return solution;
             }
@@ -210,31 +210,71 @@ namespace SimplexMethod
                 for (int i = 0; i < originalN; solution[i++] = 0)
                     if (i == basisIndicesJ[i] - 1)
                         solution[i] = simplexTab[i, 0];
-                    else solution[i] = 0;
+                    else
+                        solution[i] = 0;
 
             }
             return solution;
 
         }
 
-        private bool FindBestNewVector(Fraction[,] simplexTab, int[] negInds, out int i, out int j)
+        private bool FindBestNewVector(Fraction[,] simplexTab, int[] negInds, out int row, out int col)
         {
+            // teta = min(xi/xij)
+            // delta-F = -delta*teta;
+
+            row = -1;
+            col = -1;
+            int m = simplexTab.GetLength(0);
+            decimal[] θ = new decimal[m];
+            int[] iθ = new int[m];
+            decimal deltaFmax = -1;
+
             // enumerate columns
             for (int k = 0; k < negInds.GetLength(0); k++)
             {
+                θ[k] = -1;
+                for (int i = 0; i < m; i++)
+                {
+                    if (simplexTab[i, k] <= 0)
+                        continue;
+                    Fraction div =
+                        simplexTab[i, 0] / simplexTab[i, k];
+                    if (div.Value < θ[k])
+                    {
+                        θ[k] = div.Value;
+                        iθ[k] = i;
+                    }
+                }
 
-                for (int i = 0; i < simplexTab.GetLength(0); i++)
-                { 
+                if (θ[k] == -1)
+                {
+                    // no new `good` vector, panic!
+                    return false;
+                }
+
+                decimal deltaF = -simplexTab[m - 1, k].Value * θ[k];
+
+                if (deltaF > deltaFmax)
+                {
+                    deltaFmax = deltaF;
+                    col = k;
                 }
             }
+
+            if (col == -1)
+                return false;
+            row = iθ[col];
+            return true;
         }
 
-        private List<int> CheckMPlusOneRow(Fraction[,] simplexTab)
+        private IEnumerable<int> CheckMPlusOneRow(Fraction[,] simplexTab)
         {
-            int m1 = simplexTab.GetLength(0)-1;
-            for (int j = 0; j < simplexTab.GetLength(1); j++) 
-                if (simplexTab[m1, j]< 0) yield return j;
-            return null;
+            int m1 = simplexTab.GetLength(0) - 1;
+            for (int j = 0; j < simplexTab.GetLength(1); j++)
+                if (simplexTab[m1, j] < 0)
+                    yield return j;
+            yield break;
         }
 
         private delegate bool MyDelegate(int i, int j);

@@ -132,8 +132,9 @@ namespace Fractions
             long d_a = lcm / a.m_denominator;
             long d_b = lcm / b.m_denominator;
             Fraction sum = new Fraction(
-                a.m_integer * MySign(a.m_numerator) + b.m_integer * MySign(b.m_numerator),
-                a.m_numerator * d_a + b.m_numerator * d_b,
+                 //+ b.m_integer * MySign(b.m_numerator),
+                (a.m_integer * MySign(a.m_numerator) * a.m_denominator) + a.m_numerator * d_a +
+                (b.m_integer * MySign(b.m_numerator) * b.m_denominator) + b.m_numerator * d_b,
                 lcm);
             sum.Simplify();
             return sum;
@@ -166,6 +167,9 @@ namespace Fractions
         }
         public static Fraction Simplify(Fraction a)
         {
+            //if (a.m_integer < 0)
+            //    if (a.m_numerator > 0)
+
             long gcd = GCD(Math.Abs(a.m_numerator), a.m_denominator);
             a.m_numerator /= gcd;
             a.m_denominator /= gcd;
