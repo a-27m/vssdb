@@ -84,11 +84,6 @@ namespace SimplexMethod
             }
         }
 
-        //void SetLimtations(double[,] a, double b)
-        //{
-        //    throw new Exception("This method is not implemented yet");
-        //}
-
         public void SetTargetFunctionCoefficients(Fraction[] c)
         {
             if (c.Length > n)
@@ -171,51 +166,75 @@ namespace SimplexMethod
                 simplexTab[m, j] = delta - m_c[j - 1];
             }
 
-            OnNewSimplexTable(basisIndicesJ, m_c, simplexTab);
+            //OnNewSimplexTable(basisIndicesJ, m_c, simplexTab);
 
             // пока есть отрицательные оценки, вводить в базис новый вектор.
+            int iterationsCount = 0;
             bool haveANegativeDelta = true;
             while (iterationsCount < 1000)
             {
-                haveANegativeDelta = CheckMPlusOneRow(simplexTab);
-                if (!haveANegativeDelta)
+                OnNewSimplexTable(basisIndicesJ, m_c, simplexTab);
+
+                iterationsCount++;
+
+                List<int> negativeColumns = CheckMPlusOneRow(simplexTab);
+
+                // its awefull, i know
+                if (!((haveANegativeDelta = (negativeColumns != null))))
                     break;
-
+                
                 int i, j;
-                if (FindBestNewVector(simplexTab, out i, out j))
+                if (FindBestNewVector(simplexTab, negativeColumns.ToArray(), out i, out j))
                 {
-                    GGaussProcess(ref simplexTab, i, j);
+                    GGaussProcess(ref simplexTab, (uint)i, (uint)j);
 
-                    basisIndicesJ[basisIndicesI[j]] = j;
-                    basisIndicesI[]= i;
+                    // fix basis changes
+                    basisIndicesI[i] = i;
+                    basisIndicesJ[i] = j;
                 }
                 else
                     break;
             }
 
+            Fraction[] solution;
             if (haveANegativeDelta)
             {
-                Fraction[] solution = new Fraction[originalN];
+                solution = new Fraction[originalN];
                 for (int i = 0; i < n; solution[i++] = -M)
                     ;
                 return solution;
             }
+            else
+            {
+                solution = new Fraction[originalN];
+                for (int i = 0; i < originalN; solution[i++] = 0)
+                    if (i == basisIndicesJ[i] - 1)
+                        solution[i] = simplexTab[i, 0];
+                    else solution[i] = 0;
 
-            Fraction[] solution = new Fraction[originalN];
-            for (int i = 0; i < n; solution[i++] = 0)
-                ;
+            }
             return solution;
 
         }
 
-        private bool FindBestNewVector(Fraction[,] simplexTab, out int i, out int j)
+        private bool FindBestNewVector(Fraction[,] simplexTab, int[] negInds, out int i, out int j)
         {
-            throw new Exception("The method or operation is not implemented.");
+            // enumerate columns
+            for (int k = 0; k < negInds.GetLength(0); k++)
+            {
+
+                for (int i = 0; i < simplexTab.GetLength(0); i++)
+                { 
+                }
+            }
         }
 
-        private bool CheckMPlusOneRow(Fraction[,] simplexTab)
+        private List<int> CheckMPlusOneRow(Fraction[,] simplexTab)
         {
-            throw new Exception("The method or operation is not implemented.");
+            int m1 = simplexTab.GetLength(0)-1;
+            for (int j = 0; j < simplexTab.GetLength(1); j++) 
+                if (simplexTab[m1, j]< 0) yield return j;
+            return null;
         }
 
         private delegate bool MyDelegate(int i, int j);

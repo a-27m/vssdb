@@ -58,7 +58,7 @@ namespace ММИО_л1
         void UpdateGrid()
         {
             dataGridView1.Rows.Clear();
-            for (int i = dataGridView1.ColumnCount; i <= maxCols + 4; i++)
+            for (int i = dataGridView1.ColumnCount; i < maxCols + 4; i++)
             {
                 dataGridView1.Columns.Add((DataGridViewColumn)(colA0.Clone()));
                 dataGridView1.Columns.GetLastColumn(DataGridViewElementStates.None,
