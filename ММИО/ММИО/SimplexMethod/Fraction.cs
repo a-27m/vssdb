@@ -238,7 +238,8 @@ namespace Fractions
                 return Value.Equals((obj as Fraction).Value);
             }
 
-            throw new ArgumentException("Cannot compare arguments");
+            return base.Equals(obj);
+            //throw new ArgumentException("Cannot compare arguments");
         }
         public override int GetHashCode()
         {
