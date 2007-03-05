@@ -20,7 +20,7 @@ namespace ММИО_л1
         short[] S;
 
         private int n, m;
-
+        FormSTables formTables;
 
         public Form1()
         {
@@ -49,7 +49,6 @@ namespace ММИО_л1
 
             IsNewDocument = false;
         }
-
 
         public void SaveData(string FileName)
         {
@@ -187,18 +186,17 @@ namespace ММИО_л1
             }
 
             SimplexSolver solver = new SimplexSolver();
-
             for (int i = 0; i < m; i++)
                 solver.AddLimtation(A[i], S[i], B[i]);
-
             solver.SetTargetFunctionCoefficients(C);
+            solver.DebugNewSimplexTable += new DebugSimplexTableHandler(solver_DebugNewSimplexTable);
 
             Fraction[] solution = solver.Solve();
 
-            string msg = "";
-            for (int j = 0; j < solution.Length; j++)
-                msg += solution[j].ToString() + "\t";
-            MessageBox.Show(msg);
+            //string msg = "";
+            //for (int j = 0; j < solution.Length; j++)
+            //    msg += solution[j].ToString() + "\t";
+            //MessageBox.Show(msg);
 
             //string msg = "";
             //    for (int i = 0; i < m; i++)
@@ -212,6 +210,14 @@ namespace ММИО_л1
             //}
 
             //MessageBox.Show(msg);
+        }
+
+        void solver_DebugNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
+        {
+            if (formTables == null)            
+                formTables = new FormSTables();
+            formTables.AddTable(table);
+            formTables.Show();
         }
     }
 }

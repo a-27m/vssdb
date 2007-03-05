@@ -5,7 +5,7 @@ using Fractions;
 
 namespace SimplexMethod
 {
-    public delegate void DebugSimplexTableHandler(Fraction[,] table);
+    public delegate void DebugSimplexTableHandler(int[] basis, Fraction[] c, Fraction[,] table);
 
     public class SimplexSolver
     {
@@ -18,10 +18,10 @@ namespace SimplexMethod
 
         public event DebugSimplexTableHandler DebugNewSimplexTable;
 
-        protected void OnNewSimplexTable(Fraction[,] table)
+        protected void OnNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
         {
             if (DebugNewSimplexTable != null)
-                DebugNewSimplexTable(table);
+                DebugNewSimplexTable(basis, c, table);
         }
 
         public static void GGaussProcess(ref Fraction[,] a, uint Row, uint Col)
@@ -150,7 +150,7 @@ namespace SimplexMethod
                 simplexTab[m, j] = delta - m_c[j - 1];
             }
 
-            OnNewSimplexTable(simplexTab);
+            OnNewSimplexTable(basisIndices, m_c, simplexTab);
 
             Fraction[] solution = new Fraction[n];
             for (int i = 0; i < n; solution[i++] = 0)
