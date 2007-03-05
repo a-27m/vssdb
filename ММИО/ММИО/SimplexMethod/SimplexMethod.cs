@@ -9,7 +9,7 @@ namespace SimplexMethod
 
     public class SimplexSolver
     {
-        int n = 0;
+        int n = 0, originalN = 0;
 
         public static Fraction M = new Fraction(0, 1000000, 1);
 
@@ -28,7 +28,9 @@ namespace SimplexMethod
         {
             int m = a.GetLength(0);
             int n = a.GetLength(1);
+
             Fraction x = a[Row, Col];
+
             for (int j = 0; j < n; j++)
                 a[Row, j] /= x;
 
@@ -91,6 +93,7 @@ namespace SimplexMethod
         {
             if (c.Length > n)
                 throw new ArgumentException("Array 'c' is too long");
+            originalN = c.Length;
             m_c = c;
         }
 
@@ -110,9 +113,9 @@ namespace SimplexMethod
 
             int b = basisIndicesJ.Length;
 
+            // add art-bases
             if (basisIndicesJ.Length < m)
             {
-                // add art-bases
                 k = m - b;
 
                 Array.Resize<Fraction>(ref m_c, n + k);
@@ -128,16 +131,15 @@ namespace SimplexMethod
                 {
                     bool rowHasBasis = false;
                     for (int I = 0; I < b; I++)
-                        if (basisIndicesI[I] == i+1)
+                        if (basisIndicesI[I] == i + 1)
                         // there is some basis, no art.needed
                         {
                             rowHasBasis = true;
                             break;
                         }
                     if (!rowHasBasis)
-                        basisIndicesI[b + t++] = i+1;
+                        basisIndicesI[b + t++] = i + 1;
                 }
-
                 n += k;
             }
 
@@ -155,11 +157,9 @@ namespace SimplexMethod
                     simplexTab[i, j] = 0;
             }
 
-            //// restore art. 1s in s-table
-            //for (int i = 0; i <basisIndicesI.Length; i++)
-            //    simplexTab[i, basisIndicesJ[basisIndicesJ.Length - k + i]] = 1;
+            // restore art. 1s in the s-table
             for (int i = b; i < m; i++)
-                simplexTab[basisIndicesI[i]-1, basisIndicesJ[i]] = 1;
+                simplexTab[basisIndicesI[i] - 1, basisIndicesJ[i]] = 1;
 
             // fill m+1st row with deltas
             simplexTab[m, 0] = 0;
@@ -173,17 +173,56 @@ namespace SimplexMethod
 
             OnNewSimplexTable(basisIndicesJ, m_c, simplexTab);
 
-            Fraction[] solution = new Fraction[n];
+            // пока есть отрицательные оценки, вводить в базис новый вектор.
+            bool haveANegativeDelta = true;
+            while (iterationsCount < 1000)
+            {
+                haveANegativeDelta = CheckMPlusOneRow(simplexTab);
+                if (!haveANegativeDelta)
+                    break;
+
+                int i, j;
+                if (FindBestNewVector(simplexTab, out i, out j))
+                {
+                    GGaussProcess(ref simplexTab, i, j);
+
+                    basisIndicesJ[basisIndicesI[j]] = j;
+                    basisIndicesI[]= i;
+                }
+                else
+                    break;
+            }
+
+            if (haveANegativeDelta)
+            {
+                Fraction[] solution = new Fraction[originalN];
+                for (int i = 0; i < n; solution[i++] = -M)
+                    ;
+                return solution;
+            }
+
+            Fraction[] solution = new Fraction[originalN];
             for (int i = 0; i < n; solution[i++] = 0)
                 ;
             return solution;
+
         }
 
-        private delegate bool MyDel(int i, int j);
+        private bool FindBestNewVector(Fraction[,] simplexTab, out int i, out int j)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        private bool CheckMPlusOneRow(Fraction[,] simplexTab)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        private delegate bool MyDelegate(int i, int j);
 
         protected int[] FindBasis(List<Fraction[]> conds, out int[] ii)
         {
-            MyDel del1 = new MyDel(delegate(int i, int j)
+            MyDelegate IsE_Vector = new MyDelegate(delegate(int i, int j)
             {
                 int count0 = 0;
                 List<Fraction[]>.Enumerator enumerB;
@@ -212,7 +251,7 @@ namespace SimplexMethod
             for (int i = 1; enumerA.MoveNext(); i++)
                 for (int j = 0; j < enumerA.Current.Length; j++)
                     if (enumerA.Current[j] == new Fraction(1, 1))
-                        if (del1(i, j))
+                        if (IsE_Vector(i, j))
                         {
                             li.Add(i);
                             lj.Add(j);

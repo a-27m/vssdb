@@ -215,7 +215,7 @@ namespace ММИО_л1
         void solver_DebugNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
         {
             if (formTables == null)            
-                formTables = new FormSTables(table.GetLength(1));
+                formTables = new FormSTables();
             formTables.AddTable(basis, c, table);
             formTables.Show();
         }

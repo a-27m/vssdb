@@ -41,6 +41,7 @@
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridView1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -64,7 +65,7 @@
             this.colIteration.Name = "colIteration";
             this.colIteration.ReadOnly = true;
             this.colIteration.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.colIteration.Width = 60;
+            this.colIteration.Width = 79;
             // 
             // colRowIndex
             // 
@@ -72,7 +73,7 @@
             this.colRowIndex.Name = "colRowIndex";
             this.colRowIndex.ReadOnly = true;
             this.colRowIndex.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colRowIndex.Width = 20;
+            this.colRowIndex.Width = 13;
             // 
             // colBasis
             // 
@@ -80,7 +81,7 @@
             this.colBasis.Name = "colBasis";
             this.colBasis.ReadOnly = true;
             this.colBasis.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colBasis.Width = 40;
+            this.colBasis.Width = 42;
             // 
             // colCBasis
             // 
@@ -88,7 +89,7 @@
             this.colCBasis.Name = "colCBasis";
             this.colCBasis.ReadOnly = true;
             this.colCBasis.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colCBasis.Width = 30;
+            this.colCBasis.Width = 24;
             // 
             // colA0
             // 
@@ -96,7 +97,7 @@
             this.colA0.Name = "colA0";
             this.colA0.ReadOnly = true;
             this.colA0.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colA0.Width = 30;
+            this.colA0.Width = 18;
             // 
             // FormSTables
             // 
@@ -106,6 +107,8 @@
             this.Controls.Add(this.dataGridView1);
             this.Name = "FormSTables";
             this.Text = "Отчет";
+            this.Shown += new System.EventHandler(this.FormSTables_Shown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSTables_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 

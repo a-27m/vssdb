@@ -170,8 +170,8 @@ namespace Fractions
             a.m_numerator /= gcd;
             a.m_denominator /= gcd;
 
-            if (a.m_denominator < a.m_numerator)
-                a.m_integer += Math.DivRem(a.m_numerator, a.m_denominator, out a.m_numerator);
+            if (a.m_denominator < Math.Abs(a.m_numerator))
+                a.m_integer += Math.DivRem(a.m_numerator, a.m_denominator, out a.m_numerator) * MySign(a.m_numerator);
             //a.m_syraja = false;
             if (a.m_denominator == 0)
                 throw new NotFiniteNumberException("Denominator is set to zero while simplifying the fraction: " + a.ToString());
