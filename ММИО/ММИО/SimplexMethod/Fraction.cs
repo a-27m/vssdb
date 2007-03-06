@@ -11,39 +11,33 @@ namespace Fractions
         long m_integer;
         long m_numerator;
         long m_denominator;
+        sbyte m_sign;
 
         public Fraction(long integer, long numerator, long denominator)
         {
-            m_integer = integer;
             if (denominator == 0)
                 throw new NotFiniteNumberException("Denominator is zero!", denominator);
-            if (denominator > 0)
-            {
-                this.m_numerator = numerator;
-                this.m_denominator = denominator;
-            }
-            else
-            {
-                this.m_numerator = -numerator;
-                this.m_denominator = -denominator;
-            }
-            //m_syraja = true;
+
+            this.m_sign = (sbyte)(MySign(numerator) * MySign(denominator));
+            if (MySign(integer) != m_sign)
+                m_sign *= MySign(integer);
+
+            this.m_integer = Math.Abs(integer);
+            this.m_numerator = Math.Abs(numerator);
+            this.m_denominator = Math.Abs(denominator);
+
         }
         public Fraction(long numerator, long denominator)
         {
             if (denominator == 0)
                 throw new NotFiniteNumberException("Denominator is zero!", denominator);
-            if (denominator > 0)
-            {
-                this.m_numerator = numerator;
-                this.m_denominator = denominator;
-            }
-            else
-            {
-                this.m_numerator = -numerator;
-                this.m_denominator = -denominator;
-            }
-            //m_syraja = true;
+
+            this.m_sign = (sbyte)(MySign(numerator) * MySign(denominator));
+
+            this.m_integer = 0;
+            this.m_numerator = Math.Abs(numerator);
+            this.m_denominator = Math.Abs(denominator);
+
         }
         public Fraction(Decimal value)
         {
@@ -51,6 +45,7 @@ namespace Fractions
         }
         public Fraction()
         {
+            m_sign = 1;
             m_integer = 0;
             m_numerator = 0;
             m_denominator = 1;
@@ -60,10 +55,16 @@ namespace Fractions
         {
             get
             {
-                return (Decimal)m_numerator / m_denominator + m_integer * Math.Sign(m_numerator);
+                return ((decimal)m_numerator / m_denominator + m_integer) * m_sign;
             }
             set
             {
+                m_sign = (sbyte)Math.Sign(value);
+                if (m_sign == 0)
+                    m_sign = 1;
+
+                value = Math.Abs(value);
+
                 int digitsCount = 0;
                 Decimal decfrac = value - Math.Truncate(value);
                 while (!decfrac.Equals(Math.Truncate(decfrac)))
@@ -83,11 +84,14 @@ namespace Fractions
         {
             get
             {
-                return m_numerator;
+                return (m_numerator + m_integer * m_denominator) * m_sign;
             }
             set
             {
-                m_numerator = value;
+                m_sign = MySign(value);
+                m_numerator = Math.Abs(value);
+                m_integer = 0;
+                Simplify();
             }
         }
         public long Denominator
@@ -98,13 +102,13 @@ namespace Fractions
             }
             set
             {
-                if (m_numerator > 0)
+                if (value > 0)
                 {
                     m_denominator = value;
                 }
                 else
                 {
-                    m_numerator = -m_numerator;
+                    m_sign *= -1;
                     m_denominator = -value;
                 }
             }
@@ -113,17 +117,30 @@ namespace Fractions
         {
             get
             {
-                return m_integer;
+                return m_integer * m_sign;
             }
         }
 
         public virtual void Simplify()
         {
-            Fraction f = Fraction.Simplify(this);
-            this.m_integer = f.m_integer;
-            this.m_numerator = f.m_numerator;
-            this.m_denominator = f.m_denominator;
-            //this.m_syraja = false;
+            if (m_numerator == 0)
+                m_denominator = 1;
+
+            m_sign = MySign(m_sign * (m_numerator + m_integer * m_denominator));
+            m_integer = Math.Abs(m_integer);
+            m_numerator = Math.Abs(m_numerator);
+            m_denominator = Math.Abs(m_denominator);
+
+            long gcd = GCD(m_numerator, m_denominator);
+
+            m_numerator /= gcd;
+            m_denominator /= gcd;
+
+            if (m_denominator == 0)
+                throw new NotFiniteNumberException("Denominator is set to zero while simplifying the fraction: " + this.ToString());
+
+            if (m_denominator < m_numerator)
+                m_integer += Math.DivRem(m_numerator, m_denominator, out m_numerator);
         }
 
         public static Fraction Add(Fraction a, Fraction b)
@@ -131,22 +148,21 @@ namespace Fractions
             long lcm = LCM(a.m_denominator, b.m_denominator);
             long d_a = lcm / a.m_denominator;
             long d_b = lcm / b.m_denominator;
-            Fraction sum = new Fraction(
-                 //+ b.m_integer * MySign(b.m_numerator),
-                (a.m_integer * MySign(a.m_numerator) * a.m_denominator) + a.m_numerator * d_a +
-                (b.m_integer * MySign(b.m_numerator) * b.m_denominator) + b.m_numerator * d_b,
-                lcm);
+
+            Fraction sum = new Fraction(a.m_integer * a.m_sign + b.m_integer * b.m_sign,
+                a.m_numerator * d_a * a.m_sign + b.m_numerator * d_b * b.m_sign, lcm);
+
             sum.Simplify();
             return sum;
         }
         public static Fraction Negate(Fraction a)
         {
-            return new Fraction(a.m_integer, -a.m_numerator, a.m_denominator);
+            a.m_sign *= -1;
+            return a;
         }
         public static Fraction Substract(Fraction a, Fraction b)
         {
             return Add(a, Negate(b));
-            // Fraction sum = new Fraction(a.m_integer - b.m_integer, a.m_numerator * d_a - b.m_numerator * d_b, lcm);
         }
         public static Fraction Multiply(Fraction a, Fraction b)
         {
@@ -167,25 +183,13 @@ namespace Fractions
         }
         public static Fraction Simplify(Fraction a)
         {
-            //if (a.m_integer < 0)
-            //    if (a.m_numerator > 0)
-
-            long gcd = GCD(Math.Abs(a.m_numerator), a.m_denominator);
-            a.m_numerator /= gcd;
-            a.m_denominator /= gcd;
-
-            if (a.m_denominator < Math.Abs(a.m_numerator))
-                a.m_integer += Math.DivRem(a.m_numerator, a.m_denominator, out a.m_numerator) * MySign(a.m_numerator);
-            //a.m_syraja = false;
-            if (a.m_denominator == 0)
-                throw new NotFiniteNumberException("Denominator is set to zero while simplifying the fraction: " + a.ToString());
-
+            a.Simplify();
             return a;
         }
 
         public static long GCD(long a, long b)
         {
-            if (a < 1 || b < 1)
+            if (a <= 1 || b <= 1)
                 return 1;
             // Алгоритм Евклида для поиска НОД
             while (a != b)
@@ -227,15 +231,15 @@ namespace Fractions
         {
             if (obj is Fraction)
             {
-                Fraction _f1 = Simplify(this);
-                Fraction _f2 = Simplify(obj as Fraction);
+                Fraction _f1 = /*Simplify(*/this;
+                Fraction _f2 = /*Simplify(*/obj as Fraction;
                 return
                     _f1.m_integer * _f1.m_denominator * MySign(_f1.m_numerator) + _f1.m_numerator ==
                     _f2.m_integer * _f2.m_denominator * MySign(_f2.m_numerator) + _f2.m_numerator;
 
-                    //_f1.m_integer == _f2.m_integer &&
-                    //_f1.m_numerator == _f2.m_numerator &&
-                    //_f1.m_denominator == _f2.m_denominator;
+                //_f1.m_integer == _f2.m_integer &&
+                //_f1.m_numerator == _f2.m_numerator &&
+                //_f1.m_denominator == _f2.m_denominator;
             }
             if (obj is decimal)
             {
@@ -298,19 +302,19 @@ namespace Fractions
 
                 iSlash = s.IndexOf('/');
 
-                if (iSlash == s.Length-1)
+                if (iSlash == s.Length - 1)
                     throw new FormatException("Please, check the fraction format.");
 
                 long denominator;
-                if (!long.TryParse(s.Substring(iSlash+1), out denominator))
+                if (!long.TryParse(s.Substring(iSlash + 1), out denominator))
                     throw new FormatException("Please, check the denominator format.");
 
                 string[] sIntAndNum;
                 sIntAndNum = s.Substring(0, iSlash).Split(
                     new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                long numerator=0;
-                long integer=0;
+                long numerator = 0;
+                long integer = 0;
                 if (sIntAndNum.Length >= 1)
                 {
                     //if (sIntAndNum[0] == "")
@@ -390,25 +394,27 @@ namespace Fractions
         }
         public string ToString(string format)
         {
-            if (this.m_integer * this.m_denominator * MySign(this.m_numerator) + this.m_numerator == 0)
+            if ((this.m_integer * this.m_denominator + this.m_numerator) == 0)
                 return "0";
-            if (this.m_integer * this.m_denominator * MySign(this.m_numerator) + this.m_numerator == m_denominator)
-                return "1";
-            if (this.m_integer * this.m_denominator * MySign(this.m_numerator) + this.m_numerator == -m_denominator)
-                return "-1";
+            if (this.m_integer * this.m_denominator + this.m_numerator == m_denominator)
+                return m_sign.ToString();
+
             if (this.m_denominator == 1)
-                return (m_integer * MySign(m_numerator) + m_numerator).ToString();
+                return ((m_integer + m_numerator) * m_sign).ToString();
+
             if (format.ToUpper().StartsWith("R"))
                 return string.Format("{0}{1} {2}/{3}",
-                    m_numerator > 0 ? "" : "-",
+                    m_sign > 0 ? "" : "-",
                     m_integer != 0 ? m_integer.ToString() : "",
-                    Math.Abs(m_numerator),
+                    m_numerator,
                     m_denominator);
+
             if (format.ToUpper().StartsWith("W"))
                 return string.Format("{0}{1}/{2}",
                     m_numerator > 0 ? "-" : "",
-                    m_integer * m_denominator * MySign(m_numerator) + m_numerator,
+                    (m_integer * m_denominator + m_numerator) * m_sign,
                     m_denominator);
+
             throw new ArgumentException("Specifed format is not valid, use 'Right' or 'Wrong'.");
         }
         public string ToString(string format, IFormatProvider formatProvider)

@@ -24,26 +24,6 @@ namespace SimplexMethod
                 DebugNewSimplexTable(basis, c, table);
         }
 
-        public static void GGaussProcess(ref Fraction[,] a, uint Row, uint Col)
-        {
-            int m = a.GetLength(0);
-            int n = a.GetLength(1);
-
-            Fraction x = a[Row, Col];
-
-            for (int j = 0; j < n; j++)
-                a[Row, j] /= x;
-
-            for (int i = 0; i < m; i++)
-            {
-                if (i == Row)
-                    continue;
-                x = a[i, Col];
-                for (int j = 0; j < n; j++)
-                    a[i, j] += -a[Row, j] * x;
-            }
-        }
-
         public void AddLimtation(Fraction[] a, short sign, Fraction b)
         {
             if (Math.Abs(sign) > 1)
@@ -218,6 +198,58 @@ namespace SimplexMethod
 
         }
 
+        private delegate bool MyDelegate(int i, int j);
+
+        protected int[] FindBasis(List<Fraction[]> conds, out int[] ii)
+        {
+            MyDelegate IsE_Vector = new MyDelegate(delegate(int i, int j)
+            {
+                int count0 = 0;
+                List<Fraction[]>.Enumerator enumerB;
+                enumerB = conds.GetEnumerator();
+                for (int ik = 1; enumerB.MoveNext(); ik++)
+                {
+                    if (ik == i)
+                        continue;
+                    if (j < enumerB.Current.Length)
+                    {
+                        if (enumerB.Current[j] == (Fraction)0)
+                            count0++;
+                    }
+                    else
+                        count0++;
+                }
+                enumerB.Dispose();
+
+                return count0 == (conds.Count - 1);
+            });
+
+            List<int> li = new List<int>();
+            List<int> lj = new List<int>();
+
+            List<Fraction[]>.Enumerator enumerA = conds.GetEnumerator();
+            for (int i = 1; enumerA.MoveNext(); i++)
+                for (int j = 0; j < enumerA.Current.Length; j++)
+                    if (enumerA.Current[j] == new Fraction(1, 1))
+                        if (IsE_Vector(i, j))
+                        {
+                            li.Add(i);
+                            lj.Add(j);
+                            break;
+                        }
+            ii = li.ToArray();
+            return lj.ToArray();
+        }
+
+        private IEnumerable<int> CheckMPlusOneRow(Fraction[,] simplexTab)
+        {
+            int m1 = simplexTab.GetLength(0) - 1;
+            for (int j = 0; j < simplexTab.GetLength(1); j++)
+                if (simplexTab[m1, j] < 0)
+                    yield return j;
+            yield break;
+        }
+
         private bool FindBestNewVector(Fraction[,] simplexTab, int[] negInds, out int row, out int col)
         {
             // teta = min(xi/xij)
@@ -268,56 +300,24 @@ namespace SimplexMethod
             return true;
         }
 
-        private IEnumerable<int> CheckMPlusOneRow(Fraction[,] simplexTab)
+        public static void GGaussProcess(ref Fraction[,] a, uint Row, uint Col)
         {
-            int m1 = simplexTab.GetLength(0) - 1;
-            for (int j = 0; j < simplexTab.GetLength(1); j++)
-                if (simplexTab[m1, j] < 0)
-                    yield return j;
-            yield break;
-        }
+            int m = a.GetLength(0);
+            int n = a.GetLength(1);
 
-        private delegate bool MyDelegate(int i, int j);
+            Fraction x = a[Row, Col];
 
-        protected int[] FindBasis(List<Fraction[]> conds, out int[] ii)
-        {
-            MyDelegate IsE_Vector = new MyDelegate(delegate(int i, int j)
+            for (int j = 0; j < n; j++)
+                a[Row, j] /= x;
+
+            for (int i = 0; i < m; i++)
             {
-                int count0 = 0;
-                List<Fraction[]>.Enumerator enumerB;
-                enumerB = conds.GetEnumerator();
-                for (int ik = 1; enumerB.MoveNext(); ik++)
-                {
-                    if (ik == i)
-                        continue;
-                    if (j < enumerB.Current.Length)
-                    {
-                        if (enumerB.Current[j] == (Fraction)0)
-                            count0++;
-                    }
-                    else
-                        count0++;
-                }
-                enumerB.Dispose();
-
-                return count0 == (conds.Count - 1);
-            });
-
-            List<int> li = new List<int>();
-            List<int> lj = new List<int>();
-
-            List<Fraction[]>.Enumerator enumerA = conds.GetEnumerator();
-            for (int i = 1; enumerA.MoveNext(); i++)
-                for (int j = 0; j < enumerA.Current.Length; j++)
-                    if (enumerA.Current[j] == new Fraction(1, 1))
-                        if (IsE_Vector(i, j))
-                        {
-                            li.Add(i);
-                            lj.Add(j);
-                            break;
-                        }
-            ii = li.ToArray();
-            return lj.ToArray();
+                if (i == Row)
+                    continue;
+                x = a[i, Col];
+                for (int j = 0; j < n; j++)
+                    a[i, j] += -a[Row, j] * x;
+            }
         }
     }
 }
