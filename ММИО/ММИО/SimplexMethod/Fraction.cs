@@ -13,18 +13,22 @@ namespace Fractions
         long m_denominator;
         sbyte m_sign;
 
-        public Fraction(long integer, long numerator, long denominator)
+        /// <summary>
+        /// Constructs new fraction number. Integer part contains sign,
+        /// numerator and denominator are passed as unsigned numbers.
+        /// </summary>
+        /// <param name="integer">Integer part of a fraction number</param>
+        /// <param name="numerator">The numerator of a new fraction number</param>
+        /// <param name="denominator">The denominator of a new fraction number</param>
+        public Fraction(long integer, uint numerator, uint denominator)
         {
             if (denominator == 0)
                 throw new NotFiniteNumberException("Denominator is zero!", denominator);
 
-            this.m_sign = (sbyte)(MySign(numerator) * MySign(denominator));
-            if (MySign(integer) != m_sign)
-                m_sign *= MySign(integer);
-
-            this.m_integer = Math.Abs(integer);
-            this.m_numerator = Math.Abs(numerator);
-            this.m_denominator = Math.Abs(denominator);
+            this.m_sign = (sbyte)MySign(integer);
+            this.m_integer = integer;
+            this.m_numerator = numerator;
+            this.m_denominator = denominator;
 
         }
         public Fraction(long numerator, long denominator)
@@ -59,9 +63,7 @@ namespace Fractions
             }
             set
             {
-                m_sign = (sbyte)Math.Sign(value);
-                if (m_sign == 0)
-                    m_sign = 1;
+                m_sign = (sbyte)MySign(value);
 
                 value = Math.Abs(value);
 
@@ -108,7 +110,7 @@ namespace Fractions
                 }
                 else
                 {
-                    m_sign *= -1;
+                    m_sign = ((decimal)m_numerator / value + m_integer) * m_sign;
                     m_denominator = -value;
                 }
             }
@@ -118,6 +120,11 @@ namespace Fractions
             get
             {
                 return m_integer * m_sign;
+            }
+            set
+            {
+                m_sign = ((decimal)m_numerator / m_denominator + value) * m_sign;
+                m_integer = Math.Abs(value);
             }
         }
 
@@ -136,8 +143,8 @@ namespace Fractions
             m_numerator /= gcd;
             m_denominator /= gcd;
 
-            if (m_denominator == 0)
-                throw new NotFiniteNumberException("Denominator is set to zero while simplifying the fraction: " + this.ToString());
+            //if (m_denominator == 0)
+            //    throw new NotFiniteNumberException("Denominator is set to zero while simplifying the fraction: " + this.ToString());
 
             if (m_denominator < m_numerator)
                 m_integer += Math.DivRem(m_numerator, m_denominator, out m_numerator);
@@ -149,11 +156,36 @@ namespace Fractions
             long d_a = lcm / a.m_denominator;
             long d_b = lcm / b.m_denominator;
 
-            Fraction sum = new Fraction(a.m_integer * a.m_sign + b.m_integer * b.m_sign,
-                a.m_numerator * d_a * a.m_sign + b.m_numerator * d_b * b.m_sign, lcm);
+            long i, n;
+            sbyte s;
 
-            sum.Simplify();
-            return sum;
+            i = a.m_integer * a.m_sign + b.m_integer * b.m_sign;
+            n = a.m_numerator * d_a * a.m_sign + b.m_numerator * d_b * b.m_sign;
+            s = MySign(i);
+
+//            if (MySign(i) == MySign(n) == 1)
+//                ;
+            if (MySign(i) == MySign(n) == -1)
+            {
+                i = -i;
+                n = -n;
+            }
+            if (MySign(i) == -1 && MySign(n) == 1)
+            {
+                i = -i - 1;
+                n = lcm + n;
+            }
+            if (MySign(i) == 1 && MySign(n) == -1)
+            {
+                i = i - 1;
+                n = lcm - n;
+            }
+
+            long gcd = GCD(n, lcm);
+            n /= gcd;
+            lcm /= gcd;
+
+            return new Fraction(i, n, lcm);
         }
         public static Fraction Negate(Fraction a)
         {
