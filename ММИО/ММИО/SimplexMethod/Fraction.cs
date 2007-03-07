@@ -63,7 +63,9 @@ namespace Fractions
             }
             set
             {
-                m_sign = (sbyte)MySign(value);
+                m_sign = (sbyte)Math.Sign(value);
+                if (m_sign == 0)
+                    m_sign = 1;
 
                 value = Math.Abs(value);
 
@@ -110,7 +112,7 @@ namespace Fractions
                 }
                 else
                 {
-                    m_sign = ((decimal)m_numerator / value + m_integer) * m_sign;
+                    m_sign = MySign(((decimal)m_numerator / value + m_integer) * m_sign);
                     m_denominator = -value;
                 }
             }
@@ -123,7 +125,7 @@ namespace Fractions
             }
             set
             {
-                m_sign = ((decimal)m_numerator / m_denominator + value) * m_sign;
+                m_sign = MySign(((decimal)m_numerator / m_denominator + value) * m_sign);
                 m_integer = Math.Abs(value);
             }
         }
@@ -163,9 +165,9 @@ namespace Fractions
             n = a.m_numerator * d_a * a.m_sign + b.m_numerator * d_b * b.m_sign;
             s = MySign(i);
 
-//            if (MySign(i) == MySign(n) == 1)
-//                ;
-            if (MySign(i) == MySign(n) == -1)
+            //            if (MySign(i) == MySign(n) == 1)
+            //                ;
+            if (MySign(i) == -1 && MySign(n) == -1)
             {
                 i = -i;
                 n = -n;
@@ -185,7 +187,7 @@ namespace Fractions
             n /= gcd;
             lcm /= gcd;
 
-            return new Fraction(i, n, lcm);
+            return new Fraction(i, (uint)n, (uint)lcm);
         }
         public static Fraction Negate(Fraction a)
         {
@@ -198,12 +200,22 @@ namespace Fractions
         }
         public static Fraction Multiply(Fraction a, Fraction b)
         {
-            Fraction mul = new Fraction(
-                (a.m_integer * a.m_denominator * MySign(a.m_numerator) + a.m_numerator) *
-                (b.m_integer * b.m_denominator * MySign(b.m_numerator) + b.m_numerator),
-                a.m_denominator * b.m_denominator);
-            mul.Simplify();
-            return mul;
+            long d = a.m_denominator * b.m_denominator;
+            long t, i, n;
+
+            i = a.m_integer * b.m_integer + Math.DivRem(a.m_integer * b.m_numerator, b.m_denominator, out t);
+            n = a.m_numerator * b.m_numerator + t;
+
+            i += Math.DivRem(b.m_integer * a.m_numerator, a.m_denominator, out t);
+            n += t;
+
+            long gcd = GCD(n, d);
+            n /= gcd;
+            d /= gcd;
+
+            i += Math.DivRem(n, d, out n);
+
+            return new Fraction(i * a.m_sign * b.m_sign, (uint)n, (uint)d);
         }
         public static Fraction Divide(Fraction a, Fraction b)
         {
@@ -373,11 +385,11 @@ namespace Fractions
                     throw new FormatException("Bad integer part or numerator format.");
 
 
-                return Fraction.Simplify(new Fraction(integer, numerator * sign, denominator));
+                return Fraction.Simplify(new Fraction(integer * sign, (uint)numerator, (uint)denominator));
             }
             else
             {
-                return new Fraction(0, long.Parse(s), 1);
+                return new Fraction(long.Parse(s), 0, 1);
             }
         }
         //
@@ -1061,6 +1073,11 @@ namespace Fractions
         }
 
         protected static sbyte MySign(long num)
+        {
+            int sign = Math.Sign(num);
+            return sign == 0 ? (sbyte)1 : (sbyte)sign;
+        }
+        protected static sbyte MySign(decimal num)
         {
             int sign = Math.Sign(num);
             return sign == 0 ? (sbyte)1 : (sbyte)sign;
