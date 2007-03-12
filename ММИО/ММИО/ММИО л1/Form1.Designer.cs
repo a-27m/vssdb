@@ -37,6 +37,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.оптимизироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.выделитьБазисМатрицыAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -69,11 +70,11 @@
             this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.GridColor = System.Drawing.SystemColors.ControlLight;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.Location = new System.Drawing.Point(0, 24);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(340, 325);
+            this.dataGridView1.Size = new System.Drawing.Size(340, 301);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             // 
@@ -115,7 +116,8 @@
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.оптимизироватьToolStripMenuItem});
+            this.оптимизироватьToolStripMenuItem,
+            this.выделитьБазисМатрицыAToolStripMenuItem});
             this.toolsToolStripMenuItem.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -124,9 +126,16 @@
             // оптимизироватьToolStripMenuItem
             // 
             this.оптимизироватьToolStripMenuItem.Name = "оптимизироватьToolStripMenuItem";
-            this.оптимизироватьToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.оптимизироватьToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.оптимизироватьToolStripMenuItem.Text = "Оптимизировать";
             this.оптимизироватьToolStripMenuItem.Click += new System.EventHandler(this.оптимизироватьToolStripMenuItem_Click);
+            // 
+            // выделитьБазисМатрицыAToolStripMenuItem
+            // 
+            this.выделитьБазисМатрицыAToolStripMenuItem.Name = "выделитьБазисМатрицыAToolStripMenuItem";
+            this.выделитьБазисМатрицыAToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.выделитьБазисМатрицыAToolStripMenuItem.Text = "Выделить базис матрицы A";
+            this.выделитьБазисМатрицыAToolStripMenuItem.Click += new System.EventHandler(this.выделитьБазисМатрицыAToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -156,6 +165,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem оптимизироватьToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem выделитьБазисМатрицыAToolStripMenuItem;
 	}
 }
 

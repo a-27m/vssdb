@@ -202,5 +202,40 @@ namespace ММИО_л1
             formTables.AddTable(basis, c, table);
             formTables.Show();
         }
+
+        private void выделитьБазисМатрицыAToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DowndateGrid();
+            }
+            catch
+            {
+                return;
+            }
+
+            int maxJ = 0;
+            for (int i = 0; i < A.Length; i++)
+                if (A[i].Length > maxJ)
+                    maxJ = A[i].Length;
+            Fraction[,] a = new Fraction[A.Length, maxJ];
+            for (int i = 0; i < A.Length; i++)
+                for (int j = 0; j < A[i].Length; j++)
+                    a[i, j] = A[i][j];
+
+
+            if (formTables == null)
+                formTables = new FormSTables();
+
+            formTables.AddTable(a);
+            for (uint i = 0; i < (a.GetLength(0) < a.GetLength(1) ? a.GetLength(0) : a.GetLength(1)); i++)
+            {
+                SimplexSolver.GGaussProcess(ref a, i, i);
+                formTables.AddTable(a);
+            }
+
+            formTables.Show();
+
+        }
     }
 }

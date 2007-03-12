@@ -34,7 +34,7 @@ namespace ММИО_л1
             }
 
             string[] line;
-            for (int i = 0; i < table.GetLength(0)-1; i++)
+            for (int i = 0; i < table.GetLength(0) - 1; i++)
             {
                 line = new string[table.GetLength(1) + 4];
                 line[0] = tableCount.ToString();
@@ -66,7 +66,7 @@ namespace ММИО_л1
             {
                 dataGridView1.Columns.Add((DataGridViewColumn)(colA0.Clone()));
                 dataGridView1.Columns.GetLastColumn(DataGridViewElementStates.None,
-                    DataGridViewElementStates.None).HeaderText = "A" + (dataGridView1.ColumnCount-5).ToString();
+                    DataGridViewElementStates.None).HeaderText = "A" + (dataGridView1.ColumnCount - 5).ToString();
             }
 
             dataGridView1.Rows.Add(dataToPopulate.Count);
@@ -90,6 +90,29 @@ namespace ММИО_л1
         {
             UpdateGrid();
             Size = dataGridView1.GetPreferredSize(Size);
+        }
+
+        public void AddTable(Fraction[,] table)
+        {
+            ++tableCount;
+
+            maxCols = table.GetLength(1) > maxCols ? table.GetLength(1) : maxCols;
+
+            string[] line;
+            for (int i = 0; i < table.GetLength(0); i++)
+            {
+                line = new string[table.GetLength(1) + 4];
+                line[0] = tableCount.ToString();
+                line[1] = (i + 1).ToString();
+                line[2] = "";
+                line[3] = "";
+                for (int j = 0; j < table.GetLength(1); j++)
+                    line[j + 4] = table[i, j].ToString(frFormat);
+
+                dataToPopulate.Add(line);
+            }
+
+            dataToPopulate.Add(new string[] { "" });
         }
     }
 }
