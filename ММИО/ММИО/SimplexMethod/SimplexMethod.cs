@@ -138,6 +138,9 @@ namespace SimplexMethod
 
             // fill m+1st row with deltas
             simplexTab[m, 0] = 0;
+            for (int t = 0; t < m; t++)
+                simplexTab[m, 0] += m_c[basisIndicesJ[t] - 1] * simplexTab[t, 0];
+
             for (int j = 1; j <= n; j++)
             {
                 Fraction delta = 0;
@@ -151,7 +154,7 @@ namespace SimplexMethod
             // пока есть отрицательные оценки, вводить в базис новый вектор.
             int iterationsCount = 0;
             bool haveANegativeDelta = true;
-            while (iterationsCount < 1000)
+            while (iterationsCount < m+2)
             {
                 OnNewSimplexTable(basisIndicesJ, m_c, simplexTab);
 
@@ -169,8 +172,22 @@ namespace SimplexMethod
                     GGaussProcess(ref simplexTab, (uint)i, (uint)j);
 
                     // fix basis changes
-                    basisIndicesI[i] = i;
+                    basisIndicesI[i] = i+1;
                     basisIndicesJ[i] = j;
+
+                    //// fill m+1st row with deltas
+                    //simplexTab[m, 0] = 0;
+                    //for (int t = 0; t < m; t++)
+                    //    simplexTab[m, 0] += m_c[basisIndicesJ[t] - 1] * simplexTab[t, 0];
+
+                    //for (j = 1; j <= n; j++)
+                    //{
+                    //    Fraction delta = 0;
+                    //    for (int t = 0; t < m; t++)
+                    //        delta += m_c[basisIndicesJ[t] - 1] * simplexTab[t, j];
+                    //    simplexTab[m, j] = delta - m_c[j - 1];
+                    //}
+
                 }
                 else
                     break;
@@ -244,7 +261,7 @@ namespace SimplexMethod
         private IEnumerable<int> CheckMPlusOneRow(Fraction[,] simplexTab)
         {
             int m1 = simplexTab.GetLength(0) - 1;
-            for (int j = 0; j < simplexTab.GetLength(1); j++)
+            for (int j = 1; j < simplexTab.GetLength(1); j++)
                 if (simplexTab[m1, j] < 0)
                     yield return j;
             yield break;
@@ -258,20 +275,20 @@ namespace SimplexMethod
             row = -1;
             col = -1;
             int m = simplexTab.GetLength(0);
-            decimal[] θ = new decimal[m];
-            int[] iθ = new int[m];
+            decimal[] θ = new decimal[negInds.Length];
+            int[] iθ = new int[negInds.Length];
             decimal deltaFmax = -1;
 
             // enumerate columns
             for (int k = 0; k < negInds.GetLength(0); k++)
             {
-                θ[k] = -1;
-                for (int i = 0; i < m; i++)
+                θ[k] = decimal.MaxValue;
+                for (int i = 0; i < m-1; i++)
                 {
-                    if (simplexTab[i, k] <= 0)
+                    if (simplexTab[i, negInds[k]] <= 0)
                         continue;
                     Fraction div =
-                        simplexTab[i, 0] / simplexTab[i, k];
+                        simplexTab[i, 0] / simplexTab[i, negInds[k]];
                     if (div.Value < θ[k])
                     {
                         θ[k] = div.Value;
@@ -279,24 +296,25 @@ namespace SimplexMethod
                     }
                 }
 
-                if (θ[k] == -1)
+                if (θ[k] == decimal.MaxValue)
                 {
                     // no new `good` vector, panic!
                     return false;
                 }
 
-                decimal deltaF = -simplexTab[m - 1, k].Value * θ[k];
+                decimal deltaF = -simplexTab[m-1, negInds[k]].Value * θ[k];
 
-                if (deltaF > deltaFmax)
+                if ((deltaF > deltaFmax) ||
+                    ((deltaF == deltaFmax) && (m_c[negInds[k]-1] > m_c[col-1])))
                 {
                     deltaFmax = deltaF;
-                    col = k;
+                    col = negInds[k];
                 }
             }
 
             if (col == -1)
                 return false;
-            row = iθ[col];
+            row =iθ[Array.IndexOf<int>(negInds, col)];
             return true;
         }
 

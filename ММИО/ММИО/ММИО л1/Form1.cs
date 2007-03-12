@@ -36,6 +36,7 @@ namespace ММИО_л1
             B = (Fraction[])formatter.Deserialize(zipStream);
             C = (Fraction[])formatter.Deserialize(zipStream);
             S = (short[])formatter.Deserialize(zipStream);
+
             zipStream.Close();
 
             n = A[0].Length;
@@ -56,7 +57,7 @@ namespace ММИО_л1
             {
                 DowndateGrid();
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 MessageBox.Show(exc.Message, "Ошибка в данных",
                     MessageBoxButtons.OK, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1);
@@ -190,31 +191,13 @@ namespace ММИО_л1
                 solver.AddLimtation(A[i], S[i], B[i]);
             solver.SetTargetFunctionCoefficients(C);
             solver.DebugNewSimplexTable += new DebugSimplexTableHandler(solver_DebugNewSimplexTable);
-
+            formTables = null;
             Fraction[] solution = solver.Solve();
-
-            //string msg = "";
-            //for (int j = 0; j < solution.Length; j++)
-            //    msg += solution[j].ToString() + "\t";
-            //MessageBox.Show(msg);
-
-            //string msg = "";
-            //    for (int i = 0; i < m; i++)
-            //    {
-            //    string str = "";
-            //for (int j = 0; j < n; j++)
-            //{
-            //        str += A[i][j].ToString() + "\t";
-            //    }
-            //    msg += str + "\r\n";
-            //}
-
-            //MessageBox.Show(msg);
         }
 
         void solver_DebugNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
         {
-            if (formTables == null)            
+            if (formTables == null)
                 formTables = new FormSTables();
             formTables.AddTable(basis, c, table);
             formTables.Show();

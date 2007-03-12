@@ -8,6 +8,8 @@ namespace ММИО_л1
 {
     public partial class FormSTables : Form
     {
+        string frFormat = "W";
+
         int tableCount = 0;
         List<string[]> dataToPopulate;
         int maxCols;
@@ -26,8 +28,9 @@ namespace ММИО_л1
             {
                 string[] lineC = new string[c.Length + 5];
                 for (int j = 5; j < c.Length + 5; j++)
-                    lineC[j] = c[j - 5].ToString();
+                    lineC[j] = c[j - 5].ToString(frFormat);
                 dataToPopulate.Add(lineC);
+                dataToPopulate.Add(new string[] { "" });
             }
 
             string[] line;
@@ -37,9 +40,9 @@ namespace ММИО_л1
                 line[0] = tableCount.ToString();
                 line[1] = (i + 1).ToString();
                 line[2] = "A" + basis[i].ToString();
-                line[3] = c[basis[i] - 1].ToString();
+                line[3] = c[basis[i] - 1].ToString(frFormat);
                 for (int j = 0; j < table.GetLength(1); j++)
-                    line[j + 4] = table[i, j].ToString();
+                    line[j + 4] = table[i, j].ToString(frFormat);
 
                 dataToPopulate.Add(line);
             }
@@ -50,9 +53,10 @@ namespace ММИО_л1
             line[2] = "—";
             line[3] = "Δj:";
             for (int j = 0; j < table.GetLength(1); j++)
-                line[j + 4] = table[table.GetLength(0)-1, j].ToString();
+                line[j + 4] = table[table.GetLength(0) - 1, j].ToString(frFormat);
 
             dataToPopulate.Add(line);
+            dataToPopulate.Add(new string[] { "" });
         }
 
         void UpdateGrid()
@@ -85,6 +89,7 @@ namespace ММИО_л1
         private void FormSTables_Shown(object sender, EventArgs e)
         {
             UpdateGrid();
+            Size = dataGridView1.GetPreferredSize(Size);
         }
     }
 }
