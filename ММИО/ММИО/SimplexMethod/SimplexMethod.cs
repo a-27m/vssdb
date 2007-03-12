@@ -6,23 +6,15 @@ using Fractions;
 namespace SimplexMethod
 {
     public delegate void DebugSimplexTableHandler(int[] basis, Fraction[] c, Fraction[,] table);
+    public delegate bool MyDelegate(int i, int j);
 
-    public class SimplexSolver
+    public abstract class Solver
     {
-        int n = 0, originalN = 0;
-
+        protected int n = 0, originalN = 0;
         public static Fraction M = new Fraction(0, 1000000, 1);
+        protected List<Fraction[]> la;
+        protected Fraction[] m_c;
 
-        List<Fraction[]> la;
-        Fraction[] m_c;
-
-        public event DebugSimplexTableHandler DebugNewSimplexTable;
-
-        protected void OnNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
-        {
-            if (DebugNewSimplexTable != null)
-                DebugNewSimplexTable(basis, c, table);
-        }
 
         public void AddLimtation(Fraction[] a, short sign, Fraction b)
         {
@@ -52,7 +44,6 @@ namespace SimplexMethod
             a.CopyTo(tmp, 1);
             la.Add(tmp);
         }
-
         public void RemoveLimitation(uint index)
         {
             la.RemoveAt((int)index);
@@ -63,7 +54,6 @@ namespace SimplexMethod
                     n = cond.Length;
             }
         }
-
         public void SetTargetFunctionCoefficients(Fraction[] c)
         {
             if (c.Length > n)
@@ -72,8 +62,40 @@ namespace SimplexMethod
             m_c = c;
         }
 
-        public Fraction[] Solve()
+        public abstract Fraction[] Solve();
+        public static void GGaussProcess(ref Fraction[,] a, uint Row, uint Col)
         {
+            int m = a.GetLength(0);
+            int n = a.GetLength(1);
+
+            Fraction x = a[Row, Col];
+
+            for (int j = 0; j < n; j++)
+                a[Row, j] /= x;
+
+            for (int i = 0; i < m; i++)
+            {
+                if (i == Row)
+                    continue;
+                x = a[i, Col];
+                for (int j = 0; j < n; j++)
+                    a[i, j] += -a[Row, j] * x;
+            }
+        }
+    }
+
+    public class SimplexSolver : Solver
+    {
+        public event DebugSimplexTableHandler DebugNewSimplexTable;
+
+        protected void OnNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
+        {
+            if (DebugNewSimplexTable != null)
+                DebugNewSimplexTable(basis, c, table);
+        }
+
+        public override Fraction[]  Solve()
+{
             int m = la.Count;
             int k = 0;
 
@@ -154,7 +176,7 @@ namespace SimplexMethod
             // пока есть отрицательные оценки, вводить в базис новый вектор.
             int iterationsCount = 0;
             bool haveANegativeDelta = true;
-            while (iterationsCount < m+2)
+            while (iterationsCount < m + 2)
             {
                 OnNewSimplexTable(basisIndicesJ, m_c, simplexTab);
 
@@ -169,25 +191,25 @@ namespace SimplexMethod
                 int i, j;
                 if (FindBestNewVector(simplexTab, negativeColumns.ToArray(), out i, out j))
                 {
-                    GGaussProcess(ref simplexTab, (uint)i, (uint)j);
+                    Solver.GGaussProcess(ref simplexTab, (uint)i, (uint)j);
 
                     // fix basis changes
-                    basisIndicesI[i] = i+1;
+                    basisIndicesI[i] = i + 1;
                     basisIndicesJ[i] = j;
 
-                    //// fill m+1st row with deltas
-                    //simplexTab[m, 0] = 0;
-                    //for (int t = 0; t < m; t++)
-                    //    simplexTab[m, 0] += m_c[basisIndicesJ[t] - 1] * simplexTab[t, 0];
 
-                    //for (j = 1; j <= n; j++)
-                    //{
-                    //    Fraction delta = 0;
-                    //    for (int t = 0; t < m; t++)
-                    //        delta += m_c[basisIndicesJ[t] - 1] * simplexTab[t, j];
-                    //    simplexTab[m, j] = delta - m_c[j - 1];
-                    //}
+                    // fill m+1st row with deltas
+                    simplexTab[m, 0] = 0;
+                    for (int t = 0; t < m; t++)
+                        simplexTab[m, 0] += m_c[basisIndicesJ[t] - 1] * simplexTab[t, 0];
 
+                    for (j = 1; j <= n; j++)
+                    {
+                        Fraction delta = 0;
+                        for (int t = 0; t < m; t++)
+                            delta += m_c[basisIndicesJ[t] - 1] * simplexTab[t, j];
+                        simplexTab[m, j] = delta - m_c[j - 1];
+                    }
                 }
                 else
                     break;
@@ -214,8 +236,6 @@ namespace SimplexMethod
             return solution;
 
         }
-
-        private delegate bool MyDelegate(int i, int j);
 
         protected int[] FindBasis(List<Fraction[]> conds, out int[] ii)
         {
@@ -283,7 +303,7 @@ namespace SimplexMethod
             for (int k = 0; k < negInds.GetLength(0); k++)
             {
                 θ[k] = decimal.MaxValue;
-                for (int i = 0; i < m-1; i++)
+                for (int i = 0; i < m - 1; i++)
                 {
                     if (simplexTab[i, negInds[k]] <= 0)
                         continue;
@@ -302,10 +322,10 @@ namespace SimplexMethod
                     return false;
                 }
 
-                decimal deltaF = -simplexTab[m-1, negInds[k]].Value * θ[k];
+                decimal deltaF = -simplexTab[m - 1, negInds[k]].Value * θ[k];
 
                 if ((deltaF > deltaFmax) ||
-                    ((deltaF == deltaFmax) && (m_c[negInds[k]-1] > m_c[col-1])))
+                    ((deltaF == deltaFmax) && (m_c[negInds[k] - 1] > m_c[col - 1])))
                 {
                     deltaFmax = deltaF;
                     col = negInds[k];
@@ -314,28 +334,116 @@ namespace SimplexMethod
 
             if (col == -1)
                 return false;
-            row =iθ[Array.IndexOf<int>(negInds, col)];
+            row = iθ[Array.IndexOf<int>(negInds, col)];
             return true;
         }
-
-        public static void GGaussProcess(ref Fraction[,] a, uint Row, uint Col)
-        {
-            int m = a.GetLength(0);
-            int n = a.GetLength(1);
-
-            Fraction x = a[Row, Col];
-
-            for (int j = 0; j < n; j++)
-                a[Row, j] /= x;
-
-            for (int i = 0; i < m; i++)
-            {
-                if (i == Row)
-                    continue;
-                x = a[i, Col];
-                for (int j = 0; j < n; j++)
-                    a[i, j] += -a[Row, j] * x;
-            }
-        }
     }
+
+    //public class GraphicSolver : Solver
+    //{
+    //    int n = 0;
+
+    //    public static Fraction M = new Fraction(0, 1000000, 1);
+
+    //    List<Fraction[]> la;
+    //    Fraction[] m_c;
+
+    //    //public event DebugSimplexTableHandler DebugNewSimplexTable;
+
+    //    //protected void OnNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
+    //    //{
+    //    //    if (DebugNewSimplexTable != null)
+    //    //        DebugNewSimplexTable(basis, c, table);
+    //    //}
+
+    //    public void AddLimtation(Fraction[] a, short sign, Fraction b)
+    //    {
+    //        if (Math.Abs(sign) > 1)
+    //            throw new ArgumentOutOfRangeException("sign", "Sign has to be -1 or 0 or 1.");
+
+    //        if (la == null)
+    //            la = new List<Fraction[]>();
+
+    //        Fraction[] tmp;
+    //        n = (a.Length > n ? a.Length : n);
+
+    //        if (sign != 0)
+    //        {
+    //            n++;
+    //            tmp = new Fraction[n + 1];
+    //            for (int k = a.Length - 1; k < n; k++)
+    //                tmp[k] = 0;
+    //            tmp[n] = -sign;
+    //        }
+    //        else
+    //        {
+    //            tmp = new Fraction[n + 1];
+    //        }
+
+    //        tmp[0] = b;
+    //        a.CopyTo(tmp, 1);
+    //        la.Add(tmp);
+    //    }
+
+    //    public void RemoveLimitation(uint index)
+    //    {
+    //        la.RemoveAt((int)index);
+    //        n = 0;
+    //        foreach (Fraction[] cond in la)
+    //        {
+    //            if (n < cond.Length)
+    //                n = cond.Length;
+    //        }
+    //    }
+
+    //    public void SetTargetFunctionCoefficients(Fraction[] c)
+    //    {
+    //        if (c.Length > n)
+    //            throw new ArgumentException("Array 'c' is too long");
+    //        originalN = c.Length;
+    //        m_c = c;
+    //    }
+
+    //    public Fraction[] Solve()
+    //    {
+    //        int m = la.Count;
+    //        if (n - m != 2)
+    //            throw new InvalidOperationException("Condition 'n-m == 2' is false.");
+
+    //        int oldMcLen = m_c.Length;
+    //        Array.Resize<Fraction>(ref m_c, n);
+    //        for (int j = oldMcLen; j < n; j++)
+    //            m_c[j] = 0;
+
+    //        int b = basisIndicesJ.Length;
+
+    //        // create new matrix
+    //        Fraction[,] simplexTab = new Fraction[m, n];
+
+    //        // …and limitations in List<Fraction[]> la
+    //        List<Fraction[]>.Enumerator enumer = la.GetEnumerator();
+    //        for (int i = 0; enumer.MoveNext(); i++)
+    //        {
+    //            int j = 0;
+    //            for (; j < enumer.Current.Length; j++)
+    //                simplexTab[i, j] = enumer.Current[j];
+    //            for (; j <= n; j++)
+    //                simplexTab[i, j] = 0;
+    //        }
+
+    //        // пока есть отрицательные оценки, вводить в базис новый вектор.
+    //        int iterationsCount = 0;
+    //        bool haveANegativeDelta = true;
+
+    //        Fraction[] solution;
+    //        solution = new Fraction[originalN];
+    //        for (int i = 0; i < originalN; solution[i++] = 0)
+    //            if (i == basisIndicesJ[i] - 1)
+    //                solution[i] = simplexTab[i, 0];
+    //            else
+    //                solution[i] = 0;
+
+    //        return solution;
+    //    }
+    //}
 }
