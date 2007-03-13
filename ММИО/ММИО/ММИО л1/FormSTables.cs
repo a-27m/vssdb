@@ -114,5 +114,26 @@ namespace ММИО_л1
 
             dataToPopulate.Add(new string[] { "" });
         }
+
+        public void AddLine(string Title, Fraction[] table)
+        {
+            //++tableCount;
+
+            maxCols = table.Length+1 > maxCols ? table.Length+1 : maxCols;
+
+            string[] line;
+            line = new string[table.Length + 5];
+            line[0] = Title;
+            line[1] = "";
+            line[2] = "";
+            line[3] = "";
+            line[4] = "";
+            for (int j = 0; j < table.Length; j++)
+                line[j + 5] = table[j].ToString(frFormat);
+
+            dataToPopulate.Add(line);
+
+            dataToPopulate.Add(new string[] { "" });
+        }
     }
 }

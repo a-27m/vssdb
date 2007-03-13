@@ -168,19 +168,21 @@ namespace Fractions
                 {
                     i = -i;
                     n = -n;
-                } else
-                if (Math.Sign(i) == -1 && MySign(n) == 1)
-                {
-                    long k =Math.DivRem(n, lcm, out n);
-                    i = -i - (k == 0 ? 1 : k);
-                    n = (n == 0 ? 0 : lcm + n);
-                } else
-                if (Math.Sign(i) == 1 && MySign(n) == -1)
-                {
-                    long k =Math.DivRem(n, lcm, out n);
-                    i = i - (k == 0 ? 1 : k);
-                    n = (n == 0 ? 0 : lcm + n);
                 }
+                else
+                    if (Math.Sign(i) == -1 && MySign(n) == 1)
+                    {
+                        long k = Math.DivRem(n, lcm, out n);
+                        i = -i - (k == 0 ? 1 : k);
+                        n = (n == 0 ? 0 : lcm + n);
+                    }
+                    else
+                        if (Math.Sign(i) == 1 && MySign(n) == -1)
+                        {
+                            long k = Math.DivRem(n, lcm, out n);
+                            i = i - (k == 0 ? 1 : k);
+                            n = (n == 0 ? 0 : lcm + n);
+                        }
 
                 long gcd = GCD(n, lcm);
                 n /= gcd;
@@ -189,7 +191,7 @@ namespace Fractions
             if (i == 0)
                 return new Fraction(n, lcm);
             else
-                return new Fraction(Math.Abs(i)*s, (uint)n, (uint)lcm);
+                return new Fraction(Math.Abs(i) * s, (uint)n, (uint)lcm);
         }
         public static Fraction Negate(Fraction a)
         {
@@ -209,10 +211,10 @@ namespace Fractions
             long t, i, n;
 
             i = a.m_integer * b.m_integer + Math.DivRem(a.m_integer * b.m_numerator, b.m_denominator, out t);
-            n = a.m_numerator * b.m_numerator + t*a.m_denominator;//t*lklkl??
+            n = a.m_numerator * b.m_numerator + t * a.m_denominator;//t*lklkl??
 
             i += Math.DivRem(b.m_integer * a.m_numerator, a.m_denominator, out t);
-            n += t*b.m_denominator;
+            n += t * b.m_denominator;
 
             long gcd = GCD(n, d);
             n /= gcd;
@@ -227,7 +229,7 @@ namespace Fractions
         }
         public static Fraction Divide(Fraction a, Fraction b)
         {
-            return Fraction.Multiply(a, new Fraction(b.m_denominator*b.m_sign, b.m_integer * b.m_denominator + b.m_numerator));
+            return Fraction.Multiply(a, new Fraction(b.m_denominator * b.m_sign, b.m_integer * b.m_denominator + b.m_numerator));
             //Fraction div = new Fraction(
             //    (a.m_integer * a.m_denominator * MySign(a.m_numerator) + a.m_numerator) * b.m_denominator,
             //    (b.m_integer * b.m_denominator * MySign(b.m_numerator) + b.m_numerator) * a.m_denominator);
@@ -249,7 +251,7 @@ namespace Fractions
             {
                 if (a > b)
                 {
-                    a = a-b;
+                    a = a - b;
                     if (a > b)
                     {
                         Math.DivRem(a, b, out a);
@@ -260,7 +262,7 @@ namespace Fractions
                 }
                 if (b > a)
                 {
-                    b = b-a;
+                    b = b - a;
                     if (b > a)
                     {
                         Math.DivRem(b, a, out b);
@@ -308,9 +310,9 @@ namespace Fractions
                     (decimal)_f2.m_numerator / _f2.m_denominator + _f2.m_integer);
 
                 //_f1.m_sign == _f2.m_sign &&
-                    //_f1.m_integer == _f2.m_integer &&
-                    //_f1.m_numerator == _f2.m_numerator &&
-                    //_f1.m_denominator == _f2.m_denominator;
+                //_f1.m_integer == _f2.m_integer &&
+                //_f1.m_numerator == _f2.m_numerator &&
+                //_f1.m_denominator == _f2.m_denominator;
             }
             if (obj is decimal)
             {
@@ -469,7 +471,7 @@ namespace Fractions
             if ((this.m_integer == 0) && (this.m_numerator == 0))
                 return "0";
             if (this.m_numerator == 0)
-                return (this.m_integer*this.m_sign).ToString();
+                return (this.m_integer * this.m_sign).ToString();
             //if (this.m_integer * this.m_denominator + this.m_numerator == m_denominator)
             //    return m_sign.ToString();
 
@@ -479,7 +481,7 @@ namespace Fractions
             if (format.ToUpper().StartsWith("R"))
                 return string.Format("{0}{1} {2}/{3}",
                     m_sign > 0 ? "" : "-",
-                    (m_integer != 0 ? m_integer.ToString() : "")+" ",
+                    (m_integer != 0 ? m_integer.ToString() : "") + " ",
                     m_numerator,
                     m_denominator);
 

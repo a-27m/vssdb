@@ -186,13 +186,43 @@ namespace ММИО_л1
                 return;
             }
 
+            Fraction F;
+            Fraction[] solution;
             SimplexSolver solver = new SimplexSolver();
+
+            solver.DebugNewSimplexTable += new DebugSimplexTableHandler(solver_DebugNewSimplexTable);
+            formTables = null;
+
             for (int i = 0; i < m; i++)
                 solver.AddLimtation(A[i], S[i], B[i]);
             solver.SetTargetFunctionCoefficients(C);
-            solver.DebugNewSimplexTable += new DebugSimplexTableHandler(solver_DebugNewSimplexTable);
-            formTables = null;
-            Fraction[] solution = solver.Solve();
+            
+            // решаем
+            solution = solver.Solve();
+
+            formTables.AddLine("Решение (max):", solution);
+
+            F = 0;
+            for (int i = 0; i < C.Length; i++)
+                F += C[i] * solution[i];
+
+            formTables.AddLine("Значение Fmax:", new Fraction[] { F });
+
+            // переделываем под минимизацию
+            for (int i = 0; i < C.Length; i++)
+                C[i]=-C[i];
+            solver.SetTargetFunctionCoefficients(C);
+
+            // снова решаем
+            solution = solver.Solve();
+
+            formTables.AddLine("Решение (min):", solution);
+
+            F = 0;
+            for (int i = 0; i < C.Length; i++)
+                F -= C[i] * solution[i];
+
+            formTables.AddLine("Значение Fmax:", new Fraction[] { F });
         }
 
         void solver_DebugNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
