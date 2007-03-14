@@ -165,13 +165,13 @@ namespace SimplexMethod
             // fill m+1st row with deltas
             simplexTab[m, 0] = 0;
             for (int t = 0; t < m; t++)
-                simplexTab[m, 0] += m_c[basisIndicesJ[t] - 1] * simplexTab[t, 0];
+                simplexTab[m, 0] += m_c[basisIndicesJ[t] - 1] * simplexTab[basisIndicesI[t] - 1, 0];
 
             for (int j = 1; j <= n; j++)
             {
                 Fraction delta = 0;
                 for (int t = 0; t < m; t++)
-                    delta += m_c[basisIndicesJ[t] - 1] * simplexTab[t, j];
+                    delta += m_c[basisIndicesJ[t] - 1] * simplexTab[basisIndicesI[t]-1, j];
                 simplexTab[m, j] = delta - m_c[j - 1];
             }
 
@@ -204,20 +204,6 @@ namespace SimplexMethod
                     // fix basis changes
                     basisIndicesI[i] = i + 1;
                     basisIndicesJ[i] = j;
-
-
-                    // fill m+1st row with deltas
-                    simplexTab[m, 0] = 0;
-                    for (int t = 0; t < m; t++)
-                        simplexTab[m, 0] += m_c[basisIndicesJ[t] - 1] * simplexTab[t, 0];
-
-                    for (j = 1; j <= n; j++)
-                    {
-                        Fraction delta = 0;
-                        for (int t = 0; t < m; t++)
-                            delta += m_c[basisIndicesJ[t] - 1] * simplexTab[t, j];
-                        simplexTab[m, j] = delta - m_c[j - 1];
-                    }
                 }
                 else
                     break;

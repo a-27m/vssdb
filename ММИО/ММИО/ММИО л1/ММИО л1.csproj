@@ -95,7 +95,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="samples\" />
+    <None Include="samples\large.mmiol2" />
+    <None Include="samples\masha.mmiol2" />
+    <None Include="samples\small.mmiol2" />
+    <None Include="samples\temp%27.mmiol2" />
+    <None Include="samples\temp.mmiol2" />
+    <None Include="samples\testSerialize.mmiol2" />
+    <None Include="samples\v9.mmiol2" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
