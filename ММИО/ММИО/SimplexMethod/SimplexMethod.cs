@@ -175,9 +175,9 @@ namespace SimplexMethod
                 simplexTab[m, j] = delta - m_c[j - 1];
             }
 
-            //OnNewSimplexTable(basisIndicesJ, m_c, simplexTab);
-
+            //
             // пока есть отрицательные оценки, вводить в базис новый вектор.
+            //
             int iterationsCount = 0;
             bool haveANegativeDelta = true;
             while (iterationsCount < m + 20)
@@ -193,7 +193,6 @@ namespace SimplexMethod
                 else
                     haveANegativeDelta = false;
 
-                // its awefull, i know
                 if (!haveANegativeDelta)
                     break;
 
@@ -249,7 +248,6 @@ namespace SimplexMethod
             Array.Resize<Fraction>(ref m_c, oldMcLen);
             n -= k;
             return solution;
-
         }
 
         protected int[] FindBasis(List<Fraction[]> conds, out int[] ii)
