@@ -65,7 +65,7 @@
             this.colIteration.Name = "colIteration";
             this.colIteration.ReadOnly = true;
             this.colIteration.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.colIteration.Width = 79;
+            this.colIteration.Width = 81;
             // 
             // colRowIndex
             // 
@@ -73,7 +73,7 @@
             this.colRowIndex.Name = "colRowIndex";
             this.colRowIndex.ReadOnly = true;
             this.colRowIndex.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colRowIndex.Width = 13;
+            this.colRowIndex.Width = 15;
             // 
             // colBasis
             // 
@@ -81,7 +81,7 @@
             this.colBasis.Name = "colBasis";
             this.colBasis.ReadOnly = true;
             this.colBasis.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colBasis.Width = 42;
+            this.colBasis.Width = 44;
             // 
             // colCBasis
             // 
@@ -89,15 +89,15 @@
             this.colCBasis.Name = "colCBasis";
             this.colCBasis.ReadOnly = true;
             this.colCBasis.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colCBasis.Width = 24;
+            this.colCBasis.Width = 26;
             // 
             // colA0
             // 
-            this.colA0.HeaderText = "A";
+            this.colA0.HeaderText = "A0";
             this.colA0.Name = "colA0";
             this.colA0.ReadOnly = true;
             this.colA0.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colA0.Width = 18;
+            this.colA0.Width = 26;
             // 
             // FormSTables
             // 

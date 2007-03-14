@@ -175,6 +175,14 @@ namespace ММИО_л1
             }
         }
 
+        void solver_DebugNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
+        {
+            if (formTables == null)
+                formTables = new FormSTables();
+            formTables.AddTable(basis, c, table);
+            formTables.Show();
+        }
+
         private void оптимизироватьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -200,12 +208,11 @@ namespace ММИО_л1
             // решаем
             solution = solver.Solve();
 
-            formTables.AddLine("Решение (max):", solution);
-
             F = 0;
             for (int i = 0; i < C.Length; i++)
                 F += C[i] * solution[i];
 
+            formTables.AddLine("Решение (max):", solution);
             formTables.AddLine("Значение Fmax:", new Fraction[] { F });
 
             // переделываем под минимизацию
@@ -213,24 +220,17 @@ namespace ММИО_л1
                 C[i]=-C[i];
             solver.SetTargetFunctionCoefficients(C);
 
+            formTables.ResetIterationCounter();
+
             // снова решаем
             solution = solver.Solve();
-
-            formTables.AddLine("Решение (min):", solution);
 
             F = 0;
             for (int i = 0; i < C.Length; i++)
                 F -= C[i] * solution[i];
 
-            formTables.AddLine("Значение Fmax:", new Fraction[] { F });
-        }
-
-        void solver_DebugNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
-        {
-            if (formTables == null)
-                formTables = new FormSTables();
-            formTables.AddTable(basis, c, table);
-            formTables.Show();
+            formTables.AddLine("Решение (min):", solution);
+            formTables.AddLine("Значение Fmin:", new Fraction[] { F });
         }
 
         private void выделитьБазисМатрицыAToolStripMenuItem_Click(object sender, EventArgs e)
@@ -266,6 +266,24 @@ namespace ММИО_л1
 
             formTables.Show();
 
+        }
+
+        private void графическийМетодToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DowndateGrid();
+            }
+            catch
+            {
+                return;
+            }
+
+            DekartForm df = new DekartForm(100,100, 100,100);
+            df.AddPolygon(Color.Black, DrawModes.DrawLines, new PointF(0,0), new PointF(1,1));
+            df.Text = this.Text + " - графическое решение";
+            df.Show();
+            df.Update2();
         }
     }
 }

@@ -20,6 +20,8 @@ namespace ММИО_л1
             dataToPopulate = new List<string[]>();
         }
 
+        public void ResetIterationCounter() { tableCount = 0; }
+
         public void AddTable(int[] basis, Fraction[] c, Fraction[,] table)
         {
             maxCols = table.GetLength(1) > maxCols ? table.GetLength(1) : maxCols;
@@ -132,7 +134,6 @@ namespace ММИО_л1
                 line[j + 5] = table[j].ToString(frFormat);
 
             dataToPopulate.Add(line);
-
             dataToPopulate.Add(new string[] { "" });
         }
     }

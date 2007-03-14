@@ -39,6 +39,7 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.оптимизироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.выделитьБазисМатрицыAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.графическийМетодToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -126,7 +127,8 @@
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.оптимизироватьToolStripMenuItem,
-            this.выделитьБазисМатрицыAToolStripMenuItem});
+            this.выделитьБазисМатрицыAToolStripMenuItem,
+            this.графическийМетодToolStripMenuItem});
             this.toolsToolStripMenuItem.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -145,6 +147,13 @@
             this.выделитьБазисМатрицыAToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.выделитьБазисМатрицыAToolStripMenuItem.Text = "Выделить базис матрицы A";
             this.выделитьБазисМатрицыAToolStripMenuItem.Click += new System.EventHandler(this.выделитьБазисМатрицыAToolStripMenuItem_Click);
+            // 
+            // графическийМетодToolStripMenuItem
+            // 
+            this.графическийМетодToolStripMenuItem.Name = "графическийМетодToolStripMenuItem";
+            this.графическийМетодToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.графическийМетодToolStripMenuItem.Text = "Графический метод";
+            this.графическийМетодToolStripMenuItem.Click += new System.EventHandler(this.графическийМетодToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -175,6 +184,7 @@
         private System.Windows.Forms.ToolStripMenuItem оптимизироватьToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem выделитьБазисМатрицыAToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem графическийМетодToolStripMenuItem;
 	}
 }
 

@@ -98,8 +98,8 @@ namespace SimplexMethod
                 DebugNewSimplexTable(basis, c, table);
         }
 
-        public override Fraction[]  Solve()
-{
+        public override Fraction[] Solve()
+        {
             int m = la.Count;
             int k = 0;
 
@@ -180,7 +180,7 @@ namespace SimplexMethod
             // пока есть отрицательные оценки, вводить в базис новый вектор.
             int iterationsCount = 0;
             bool haveANegativeDelta = true;
-            while (iterationsCount < m + 2)
+            while (iterationsCount < m + 20)
             {
                 OnNewSimplexTable(basisIndicesJ, m_c, simplexTab);
 
@@ -240,11 +240,14 @@ namespace SimplexMethod
                 for (int j = 0; j < basisIndicesJ.Length; j++)
                 {
                     int index = basisIndicesJ[j] - 1;
-                    if (index <= originalN)
+                    if (index < originalN)
                         solution[index] = simplexTab[j, 0];
                 }
-                
+
             }
+
+            Array.Resize<Fraction>(ref m_c, oldMcLen);
+            n -= k;
             return solution;
 
         }
@@ -348,6 +351,31 @@ namespace SimplexMethod
                 return false;
             row = iθ[Array.IndexOf<int>(negInds, col)];
             return true;
+        }
+    }
+
+    public class GraphicSolver : Solver
+    {
+        /*
+         * 0) привести к каноническому виду;
+         * 1) выразить все другие через две, F тоже;
+         * 2) получить прямые с усл. атрибутом "ниже"/"выше" (типа знак);
+         * 3) область
+         * 4) мин/макс
+         */
+
+        public override Fraction[] Solve()
+        {
+            int m = this.la.Count;
+
+            Fraction[,] table = LayLaDownIntoMatrix(la);
+
+            throw new Exception();
+        }
+
+        protected Fraction[,] LayLaDownIntoMatrix(List<Fraction[]> la)
+        {
+            throw new Exception("The method or operation is not implemented.");
         }
     }
 }
