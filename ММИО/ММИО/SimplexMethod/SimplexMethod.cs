@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using Fractions;
+using System.Drawing;
 
 namespace SimplexMethod
 {
     public delegate void DebugSimplexTableHandler(int[] basis, Fraction[] c, Fraction[,] table);
-    public delegate bool MyDelegate(int i, int j);
+    public delegate bool DelegateBoolIntInt(int i, int j);
+//    public delegate double DelegateDouble(double x, int j);
 
     public abstract class Solver
     {
@@ -238,7 +240,7 @@ namespace SimplexMethod
 
         protected int[] FindBasis(List<Fraction[]> conds, out int[] ii)
         {
-            MyDelegate IsE_Vector = new MyDelegate(delegate(int i, int j)
+            DelegateBoolIntInt IsE_Vector = new DelegateBoolIntInt(delegate(int i, int j)
             {
                 int count0 = 0;
                 List<Fraction[]>.Enumerator enumerB;
@@ -348,6 +350,68 @@ namespace SimplexMethod
          * 4) мин/макс
          */
 
+        protected double ro0(FractionPoint p1)
+        {
+            return Math.Sqrt((double)(p1.X * p1.X + p1.Y * p1.Y).Value);
+        }
+
+        protected void GetMinMax(FractionPoint[] A, Fraction Xn, Fraction Yn, out int maxIndex, out int minIndex)
+        {
+            const int C = 5;
+
+            double max = -1d, min = double.MaxValue;
+            maxIndex = -1;
+            minIndex = -1;
+
+            int p = A.Length;
+
+            double angle = Math.Abs((double)(Yn / Xn));
+
+            for (int t = 0; t < p; t++)
+            {
+                double currAngle = Math.Abs((double)(A[t].Y / A[t].X).Value);
+
+                if (Math.Round(angle, C) == Math.Round(currAngle, C))
+                {
+                    double d = ro0(A[t]);
+                    if (d > max)
+                    {
+                        max = d;
+                        maxIndex = t;
+                    }
+                    if (d < min)
+                    {
+                        min = d;
+                        minIndex = t;
+                    }
+                }
+            }
+
+
+        }
+
+        public static FractionPoint _infinity;
+
+        public static FractionPoint[] GetEmbracingPolygon(FractionPoint[] pts)
+        {
+            decimal[] tans = new decimal[pts.Length];
+
+            Fraction max = -1;int max_i=-1;
+            for(int i=0;i<pts.Length;i++)
+            if (pts[i].X > max) {max = pts[i].X; max_i = i;}
+
+            for (int i = 0; i < tans.Length; i++)
+            {
+                if (i == max_i)
+                    continue;
+                //findmintan(new ArraySegment<FractionPoint>(pts, i, pts.Length - i));
+                tans[i] = (pts[i].Y / pts[i].X).Value;
+            }
+            Array.Sort<decimal, FractionPoint>(tans, pts);
+
+            return pts;
+        }
+
         public override Fraction[] Solve()
         {
             int m = this.la.Count;
@@ -355,6 +419,40 @@ namespace SimplexMethod
             Fraction[,] table = LayLaDownIntoMatrix(la);
 
             throw new Exception();
+        }
+
+        protected FractionPoint[] GetCornerPoints(Fraction[,] a)
+        {
+            int m = a.GetLength(0);
+            
+            List<FractionPoint> la = new List<FractionPoint>();
+
+            for (int i = 0; i < m; i++)
+                for (int j = 0; j < m; j++)
+                {
+                    if (i == j)
+                        continue;
+
+                    Fraction det = a[i, 1] * a[j, 2] - a[i, 2] * a[j, 1];
+
+                    if (det == 0)
+                        continue;
+
+                    Fraction x, y;
+                    x = (a[i, 0] * a[j, 2] - a[i, 2] * a[j, 0]) / det;
+                    y = (a[i, 1] * a[j, 0] - a[i, 0] * a[j, 1]) / det;
+
+                    la.Add(new FractionPoint(x, y));
+                }                
+
+            // check validity for all points
+            List<FractionPoint>.Enumerator eptsList = la.GetEnumerator();
+            while (eptsList.MoveNext())
+                for (int i = 0; i < m; i++)
+                    if (a[i, 1] * eptsList.Current.X + a[i, 2] * eptsList.Current.Y != a[i, 0])
+                        la.Remove(eptsList.Current);
+
+            return la.ToArray();
         }
 
         protected Fraction[,] LayLaDownIntoMatrix(List<Fraction[]> la)

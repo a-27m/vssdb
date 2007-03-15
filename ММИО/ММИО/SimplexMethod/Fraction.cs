@@ -1115,4 +1115,140 @@ namespace Fractions
             return sign == 0 ? (sbyte)1 : (sbyte)sign;
         }
     }
+
+    public struct FractionPoint
+    {
+        private Fraction x, y;
+
+        //
+        // Summary:
+        //     Initializes a new instance of the FractionPoint class with the specified
+        //     coordinates.
+        //
+        // Parameters:
+        //   y:
+        //     The vertical position of the point.
+        //
+        //   x:
+        //     The horizontal position of the point.
+        public FractionPoint(Fraction x, Fraction y)
+        {
+            if (x == null)
+                throw new ArgumentNullException("x");
+            if (y == null)
+                throw new ArgumentNullException("y");
+
+            this.x = (Fraction)x.Clone();
+            this.y = (Fraction)y.Clone();
+        }
+
+        //
+        // Summary:
+        //     Determines whether the coordinates of the specified points are not equal.
+        //
+        // Parameters:
+        //   right:
+        //     A FractionPoint to compare.
+        //
+        //   left:
+        //     A FractionPoint to compare.
+        //
+        // Returns:
+        //     true to indicate the FractionPoint.X and FractionPoint.Y
+        //     values of left and right are not equal; otherwise, false.
+        public static bool operator !=(FractionPoint left, FractionPoint right)
+        {
+            return !(left == right);                
+        }
+        //
+        // Summary:
+        //     Compares two FractionPoint structures. The result specifies whether
+        //     the values of the FractionPoint.X and FractionPoint.Y properties
+        //     of the two FractionPoint structures are equal.
+        //
+        // Parameters:
+        //   right:
+        //     A FractionPoint to compare.
+        //
+        //   left:
+        //     A FractionPoint to compare.
+        //
+        // Returns:
+        //     true if the FractionPoint.X and FractionPoint.Y values of
+        //     the left and right FractionPoint structures are equal; otherwise,
+        //     false.
+        public static bool operator ==(FractionPoint left, FractionPoint right)
+        {
+            if ((left == null) && (right == null))
+                return true;
+            else if ((left == null) || (right == null))
+                return false;
+
+            return ((left.x == right.x) && (left.y == left.y));
+        }
+
+        //
+        // Summary:
+        //     Gets or sets the x-coordinate of this FractionPoint.
+        //
+        // Returns:
+        //     The x-coordinate of this FractionPoint.
+        public Fraction X
+        {
+            get
+            {
+                return (Fraction)this.x.Clone();
+            }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("x");
+
+                x = (Fraction)value.Clone();
+            }
+        }
+        //
+        // Summary:
+        //     Gets or sets the y-coordinate of this System.Drawing.FractionPoint.
+        //
+        // Returns:
+        //     The y-coordinate of this System.Drawing.FractionPoint.
+        public Fraction Y
+        {
+            get
+            {
+                return (Fraction)this.y.Clone();
+            }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("y");
+
+                y = (Fraction)value.Clone();
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is FractionPoint)
+                return this == (FractionPoint)obj;
+            else
+                throw new ArgumentException("Object is not a Fraction");
+        }
+        //
+        // Summary:
+        //     Returns a hash code for this System.Drawing.FractionPoint structure.
+        //
+        // Returns:
+        //     An integer value that specifies a hash value for this System.Drawing.FractionPoint
+        //     structure.
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+        public override string ToString()
+        {
+            return string.Format("X:{0}, Y:{1}", x, y);
+        }
+    }
 }
