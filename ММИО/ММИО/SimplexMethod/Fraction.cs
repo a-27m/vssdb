@@ -1184,7 +1184,7 @@ namespace Fractions
             else if ((left == null) || (right == null))
                 return false;
 
-            return ((left.x == right.x) && (left.y == left.y));
+            return ((left.x == right.x) && (left.y == right.y));
         }
 
         //

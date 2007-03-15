@@ -390,8 +390,6 @@ namespace SimplexMethod
 
         }
 
-        public static FractionPoint _infinity;
-
         public static FractionPoint[] GetEmbracingPolygon(FractionPoint[] pts)
         {
             decimal[] tans = new decimal[pts.Length];
@@ -416,7 +414,7 @@ namespace SimplexMethod
         {
             int m = this.la.Count;
 
-            Fraction[,] table = LayLaDownIntoMatrix(la);
+            Fraction[,] table;
 
             throw new Exception();
         }
@@ -445,19 +443,17 @@ namespace SimplexMethod
                     la.Add(new FractionPoint(x, y));
                 }                
 
-            // check validity for all points
+            // check up validity for all points
             List<FractionPoint>.Enumerator eptsList = la.GetEnumerator();
             while (eptsList.MoveNext())
                 for (int i = 0; i < m; i++)
-                    if (a[i, 1] * eptsList.Current.X + a[i, 2] * eptsList.Current.Y != a[i, 0])
+                    if (a[i, 1] * eptsList.Current.X + a[i, 2] * eptsList.Current.Y >= a[i, 0])
+                        la.Remove(eptsList.Current);
+
+            if (a[i, 1] * M + a[i, 2] * M != a[i, 0])
                         la.Remove(eptsList.Current);
 
             return la.ToArray();
-        }
-
-        protected Fraction[,] LayLaDownIntoMatrix(List<Fraction[]> la)
-        {
-            throw new Exception("The method or operation is not implemented.");
         }
     }
 }
