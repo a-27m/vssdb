@@ -181,7 +181,7 @@ namespace DekartGraphic
 		/// adds graph of parametrically defined 2D function
 		/// </summary>
 		/// <param name="f">Real function of DoubleFunction</param>
-		/// <param name="drawMode">Weather join nodes with lines</param>
+		/// <param name="drawMode">Whether to join nodes with lines</param>
 		/// <returns>Zero-based index (ID) of newly added graphic</returns>
 		public int AddGraphic(DoubleFunction fx, DoubleFunction fy, float t1, float t2,
 			DrawModes drawMode, Color penColor)
