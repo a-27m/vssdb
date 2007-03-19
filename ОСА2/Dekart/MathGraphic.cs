@@ -180,6 +180,8 @@ namespace DekartGraphic
                     pen1.Width = 2f / m_zoom;
                     foreach (PointF[] segment in graphic)
                     {
+                        if (segment.Length < 2)
+                            continue;
                         g.FillPolygon(brush, segment, FillMode.Alternate);
                         g.DrawPolygon(pen1, segment);
                     }

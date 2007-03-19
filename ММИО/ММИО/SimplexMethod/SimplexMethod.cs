@@ -6,58 +6,17 @@ using System.Drawing;
 
 namespace SimplexMethod
 {
-    public delegate void DebugSimplexTableHandler(int[] basis, Fraction[] c, Fraction[,] table);
-    public delegate bool DelegateBoolIntInt(int i, int j);
-//    public delegate double DelegateDouble(double x, int j);
 
     public abstract class Solver
     {
         protected int n = 0, originalN = 0;
-        public static Fraction M = new Fraction(0, 1000000, 1);
+        public static Fraction M = new Fraction(1000000, 1);
         protected List<Fraction[]> la;
         protected Fraction[] m_c;
 
 
-        public void AddLimtation(Fraction[] a, short sign, Fraction b)
-        {
-            if (Math.Abs(sign) > 1)
-                throw new ArgumentOutOfRangeException("sign", "Sign has to be -1 or 0 or 1.");
-
-            if (la == null)
-                la = new List<Fraction[]>();
-
-            Fraction[] tmp;
-            n = (a.Length > n ? a.Length : n);
-
-            if (sign != 0)
-            {
-                n++;
-                tmp = new Fraction[n + 1];
-                for (int k = a.Length - 1; k < n; k++)
-                    tmp[k] = 0;
-                tmp[n] = -sign;
-            }
-            else
-            {
-                tmp = new Fraction[n + 1];
-                for (int i = 0; i < tmp.Length; tmp[i++] = 0)
-                    ;
-            }
-
-            tmp[0] = b;
-            a.CopyTo(tmp, 1);
-            la.Add(tmp);
-        }
-        public void RemoveLimitation(uint index)
-        {
-            la.RemoveAt((int)index);
-            n = 0;
-            foreach (Fraction[] cond in la)
-            {
-                if (n < cond.Length)
-                    n = cond.Length;
-            }
-        }
+        public abstract void AddLimtation(Fraction[] a, short sign, Fraction b);
+        public abstract void RemoveLimitation(uint index);
         public void SetTargetFunctionCoefficients(Fraction[] c)
         {
             if (c.Length > n)
@@ -92,6 +51,8 @@ namespace SimplexMethod
 
     public class SimplexSolver : Solver
     {
+        public delegate void DebugSimplexTableHandler(int[] basis, Fraction[] c, Fraction[,] table);
+        public delegate bool DelegateBoolIntInt(int i, int j);
         public event DebugSimplexTableHandler DebugNewSimplexTable;
 
         protected void OnNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
@@ -100,6 +61,46 @@ namespace SimplexMethod
                 DebugNewSimplexTable(basis, c, table);
         }
 
+        public override void AddLimtation(Fraction[] a, short sign, Fraction b)
+        {
+            if (Math.Abs(sign) > 1)
+                throw new ArgumentOutOfRangeException("sign", "Sign has to be -1 or 0 or 1.");
+
+            if (la == null)
+                la = new List<Fraction[]>();
+
+            Fraction[] tmp;
+            n = (a.Length > n ? a.Length : n);
+
+            if (sign != 0)
+            {
+                n++;
+                tmp = new Fraction[n + 1];
+                for (int k = a.Length - 1; k < n; k++)
+                    tmp[k] = 0;
+                tmp[n] = -sign;
+            }
+            else
+            {
+                tmp = new Fraction[n + 1];
+                for (int i = 0; i < tmp.Length; tmp[i++] = 0)
+                    ;
+            }
+
+            tmp[0] = b;
+            a.CopyTo(tmp, 1);
+            la.Add(tmp);
+        }
+        public override void RemoveLimitation(uint index)
+        {
+            la.RemoveAt((int)index);
+            n = 0;
+            foreach (Fraction[] cond in la)
+            {
+                if (n < cond.Length)
+                    n = cond.Length;
+            }
+        }
         public override Fraction[] Solve()
         {
             int m = la.Count;
@@ -149,7 +150,7 @@ namespace SimplexMethod
             // create new simplex-table
             Fraction[,] simplexTab = new Fraction[m + 1, n + 1];
 
-            // …and limitations in List<Fraction[]> la
+            // copy limitations in List<Fraction[]> la
             List<Fraction[]>.Enumerator enumer = la.GetEnumerator();
             for (int i = 0; enumer.MoveNext(); i++)
             {
@@ -173,7 +174,7 @@ namespace SimplexMethod
             {
                 Fraction delta = 0;
                 for (int t = 0; t < m; t++)
-                    delta += m_c[basisIndicesJ[t] - 1] * simplexTab[basisIndicesI[t]-1, j];
+                    delta += m_c[basisIndicesJ[t] - 1] * simplexTab[basisIndicesI[t] - 1, j];
                 simplexTab[m, j] = delta - m_c[j - 1];
             }
 
@@ -342,13 +343,11 @@ namespace SimplexMethod
 
     public class GraphicSolver : Solver
     {
-        /*
-         * 0) привести к каноническому виду;
-         * 1) выразить все другие через две, F тоже;
-         * 2) получить прямые с усл. атрибутом "ниже"/"выше" (типа знак);
-         * 3) область
-         * 4) мин/макс
-         */
+        public delegate void DebugPolygonEventDelegate(FractionPoint[] polygon);
+        public event DebugPolygonEventDelegate DebugPolygonEvent; 
+
+        protected short[] signs;
+        Fraction[,] a;
 
         protected double ro0(FractionPoint p1)
         {
@@ -386,26 +385,26 @@ namespace SimplexMethod
                     }
                 }
             }
-
-
         }
 
         public static FractionPoint[] GetEmbracingPolygon(FractionPoint[] pts)
         {
-            decimal[] tans = new decimal[pts.Length];
+            double[] keys = new double[pts.Length];
 
-            Fraction max = -1;int max_i=-1;
-            for(int i=0;i<pts.Length;i++)
-            if (pts[i].X > max) {max = pts[i].X; max_i = i;}
-
-            for (int i = 0; i < tans.Length; i++)
+           FractionPoint center = new FractionPoint(1, 1);
+            for (int i = 0; i < pts.Length; i++)
             {
-                if (i == max_i)
-                    continue;
-                //findmintan(new ArraySegment<FractionPoint>(pts, i, pts.Length - i));
-                tans[i] = (pts[i].Y / pts[i].X).Value;
+                center.X *= pts[i].X;
+                center.Y *= pts[i].Y;
             }
-            Array.Sort<decimal, FractionPoint>(tans, pts);
+            center.X = new Fraction((decimal)Math.Pow(center.X, 1d / pts.Length));
+            center.Y = new Fraction((decimal)Math.Pow(center.Y, 1d / pts.Length));
+
+            for (int i = 0; i < keys.Length; i++)
+                // fill keys with angles relative to center-point
+                keys[i] = Math.Atan2(pts[i].Y - center.Y , pts[i].X - center.X);
+
+            Array.Sort<double, FractionPoint>(keys, pts);
 
             return pts;
         }
@@ -414,46 +413,146 @@ namespace SimplexMethod
         {
             int m = this.la.Count;
 
-            Fraction[,] table;
+            if (n - m != 2)
+                throw new InvalidOperationException("Graphical method applicable only when n-m equals 2");
 
-            throw new Exception();
+            #region la to matrix a
+            a = new Fraction[m, n+1];
+
+            List<Fraction[]>.Enumerator enumer = la.GetEnumerator();
+            for (int i = 0; enumer.MoveNext(); i++)
+            {
+                int j = 0;
+                for (; j < enumer.Current.Length; j++)
+                    a[i, j] = enumer.Current[j];
+                for (; j <= n; j++)
+                    a[i, j] = 0;
+            }
+            #endregion
+
+            #region make some basis
+
+            for (uint k = 0; k < m; k++)
+            {
+                // find row with the min or max element in position k,k
+                uint k_min = k;
+                Fraction min = a[k, n-k];
+                for (uint i = k; i < m; i++)
+                {
+                    if (Fraction.Abs(a[i, n-i]) < min)
+                    {
+                        min = a[i, n-i];
+                        k_min = i;
+                    }
+                }
+
+                if (min == (Fraction)0)
+                    continue;
+
+                // ok, swap row #k with row #k_min
+                for (uint j = 0; j < n + 1; j++)
+                {
+                    Fraction t = a[k, j];
+                    a[k, j] = a[k_min, j];
+                    a[k_min, j] = t;
+                }
+
+                GGaussProcess(ref a, k, (uint)n-k);
+            }
+
+            #endregion
+
+            FractionPoint[] cornerPoints;
+            cornerPoints = GetCornerPoints();// only valid ones are returned
+
+            OnPolygon(GetEmbracingPolygon(cornerPoints));
+
+            int i_max, i_min;
+            GetMinMax(cornerPoints, m_c[1], m_c[0], out i_max, out i_min);
+                       
+            return new Fraction[] { cornerPoints[i_max].X, cornerPoints[i_max].Y  };
+        }
+        public override void AddLimtation(Fraction[] a, short sign, Fraction b)
+        {
+            if (Math.Abs(sign) > 1)
+                throw new ArgumentOutOfRangeException("sign", "Sign has to be -1 or 0 or 1.");
+
+            if (la == null)
+                la = new List<Fraction[]>();
+            if (signs == null)
+                signs = new short[0];
+
+            n = (a.Length > n ? a.Length : n);
+
+            Fraction[] row = new Fraction[n + 1];
+            for (int i = 0; i < row.Length; row[i++] = 0)
+                ;
+
+            row[0] = b;
+            a.CopyTo(row, 1);
+            la.Add(row);
+
+            Array.Resize<short>(ref signs, signs.Length + 1);
+            signs[signs.Length - 1] = sign;
+        }
+        public override void RemoveLimitation(uint index)
+        {
+            la.RemoveAt((int)index);
+            n = 0;
+            foreach (Fraction[] cond in la)
+            {
+                if (n < cond.Length)
+                    n = cond.Length;
+            }
+
+            for (uint i = index; i < signs.Length - 1; i++)
+                signs[i] = signs[i + 1];
+            Array.Resize<short>(ref signs, signs.Length - 1);
         }
 
-        protected FractionPoint[] GetCornerPoints(Fraction[,] a)
+        protected FractionPoint[] GetCornerPoints()
         {
             int m = a.GetLength(0);
-            
+
             List<FractionPoint> la = new List<FractionPoint>();
 
             for (int i = 0; i < m; i++)
-                for (int j = 0; j < m; j++)
+                for (int j = i+1; j < m; j++)
                 {
-                    if (i == j)
-                        continue;
-
                     Fraction det = a[i, 1] * a[j, 2] - a[i, 2] * a[j, 1];
 
                     if (det == 0)
                         continue;
-
                     Fraction x, y;
                     x = (a[i, 0] * a[j, 2] - a[i, 2] * a[j, 0]) / det;
                     y = (a[i, 1] * a[j, 0] - a[i, 0] * a[j, 1]) / det;
 
                     la.Add(new FractionPoint(x, y));
-                }                
-
+                }
             // check up validity for all points
+            List<FractionPoint> corners = new List<FractionPoint>();
             List<FractionPoint>.Enumerator eptsList = la.GetEnumerator();
             while (eptsList.MoveNext())
-                for (int i = 0; i < m; i++)
-                    if (a[i, 1] * eptsList.Current.X + a[i, 2] * eptsList.Current.Y >= a[i, 0])
-                        la.Remove(eptsList.Current);
+            {
+                bool ptIsValid = true;
+                for (int i = 0; i < m && ptIsValid; i++)
+                {
+                    Decimal t = (a[i, 1] * eptsList.Current.X +
+                    a[i, 2] * eptsList.Current.Y - a[i, 0]).Value;
+                    if (((short)Math.Sign(t) != signs[i]) && ((short)Math.Sign(t) != 0))
+                        ptIsValid = false;
+                }
 
-            if (a[i, 1] * M + a[i, 2] * M != a[i, 0])
-                        la.Remove(eptsList.Current);
+                if (ptIsValid)
+                    corners.Add(eptsList.Current);
+            }
+            return corners.ToArray();
+        }
 
-            return la.ToArray();
+        protected void OnPolygon(FractionPoint[]pts)
+        {
+            if (DebugPolygonEvent != null)
+                DebugPolygonEvent(pts);
         }
     }
 }

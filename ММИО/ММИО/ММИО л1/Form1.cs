@@ -198,7 +198,7 @@ namespace ММИО_л1
             Fraction[] solution;
             SimplexSolver solver = new SimplexSolver();
 
-            solver.DebugNewSimplexTable += new DebugSimplexTableHandler(solver_DebugNewSimplexTable);
+            solver.DebugNewSimplexTable += new SimplexSolver.DebugSimplexTableHandler(solver_DebugNewSimplexTable);
             formTables = null;
 
             for (int i = 0; i < m; i++)
@@ -279,8 +279,36 @@ namespace ММИО_л1
                 return;
             }
 
-            DekartForm df = new DekartForm(100,100, 100,100);
-            df.AddPolygon(Color.Black, DrawModes.DrawLines, new PointF(0,0), new PointF(1,1));
+            GraphicSolver solver = new GraphicSolver();
+            solver.DebugPolygonEvent += new GraphicSolver.DebugPolygonEventDelegate(solver_DebugPolygonEvent);
+
+            for (int i = 0; i < A.Length; i++)
+                solver.AddLimtation(A[i], S[i], B[i]);
+            solver.SetTargetFunctionCoefficients(C);
+
+            try
+            {
+                solver.Solve();
+            }
+            catch (InvalidOperationException exc)
+            {
+                MessageBox.Show(exc.Message,"Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
+
+        }
+
+        void solver_DebugPolygonEvent(FractionPoint[] polygon)
+        {
+            PointF[] pts = new PointF[polygon.Length/*+1*/];
+            for (int i = 0; i < polygon.Length; i++)
+                pts[i] = new PointF((float)polygon[i].X.Value, (float)polygon[i].Y.Value);
+            //pts[polygon.Length] = pts[0];
+
+            DekartForm df = new DekartForm(100, 100, 100, 100);
+            df.AddPolygon(Color.Green, DrawModes.DrawFilledPolygon, pts);
             df.Text = this.Text + " - графическое решение";
             df.Show();
             df.Update2();
