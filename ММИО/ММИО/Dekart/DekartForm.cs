@@ -29,7 +29,7 @@ namespace DekartGraphic
 		BufferedGraphics grBuf;
 		BufferedGraphicsContext grCntxt;
 
-		public bool Use_IsVisible = false;
+		public bool Use_IsVisible = true;
 
 		public class Zoom
 		{
