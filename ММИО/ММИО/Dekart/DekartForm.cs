@@ -29,7 +29,7 @@ namespace DekartGraphic
 		BufferedGraphics grBuf;
 		BufferedGraphicsContext grCntxt;
 
-		public bool Use_IsVisible = true;
+		public bool Use_IsVisible = false;
 
 		public class Zoom
 		{
@@ -276,13 +276,13 @@ namespace DekartGraphic
 		public void Update2()
 		{
 			DrawAllGraphicsToTheBuffer();
-			//Render();
-			Refresh();
+            Render();
+            //Refresh();
 		}
 
 		protected void Render()
 		{
-			Graphics g = CreateGraphics();
+            Graphics g = this.toolStripContainer1.ContentPanel.CreateGraphics();
 			grBuf.Render(g);
 		}
 
