@@ -285,7 +285,7 @@ namespace ММИО_л1
             for (int i = 0; i < A.Length; i++)
                 solver.AddLimtation(A[i], S[i], B[i]);
             solver.SetTargetFunctionCoefficients(C);
-
+            solver.Nonnegative = true;
             try
             {
                 solver.Solve();

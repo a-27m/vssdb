@@ -9,6 +9,8 @@ namespace SimplexMethod
 
     public abstract class Solver
     {
+        public bool Nonnegative = true;
+
         protected int n = 0, originalN = 0;
         public static Fraction M = new Fraction(1000000, 1);
         protected List<Fraction[]> la;
@@ -344,7 +346,7 @@ namespace SimplexMethod
     public class GraphicSolver : Solver
     {
         public delegate void DebugPolygonEventDelegate(FractionPoint[] polygon);
-        public event DebugPolygonEventDelegate DebugPolygonEvent; 
+        public event DebugPolygonEventDelegate DebugPolygonEvent;
 
         protected short[] signs;
         Fraction[,] a;
@@ -391,18 +393,18 @@ namespace SimplexMethod
         {
             double[] keys = new double[pts.Length];
 
-           FractionPoint center = new FractionPoint(1, 1);
+            FractionPoint center = new FractionPoint(1, 1);
             for (int i = 0; i < pts.Length; i++)
             {
                 center.X *= pts[i].X;
                 center.Y *= pts[i].Y;
             }
-            center.X = new Fraction((decimal)Math.Pow(center.X, 1d / pts.Length));
-            center.Y = new Fraction((decimal)Math.Pow(center.Y, 1d / pts.Length));
+            center.X = new Fraction((decimal)Math.Pow((double)center.X, 1d / pts.Length));
+            center.Y = new Fraction(Math.Sign(center.Y)*(decimal)Math.Pow(Math.Abs(center.Y), 1d / pts.Length));
 
             for (int i = 0; i < keys.Length; i++)
                 // fill keys with angles relative to center-point
-                keys[i] = Math.Atan2(pts[i].Y - center.Y , pts[i].X - center.X);
+                keys[i] = Math.Atan2(pts[i].Y - center.Y, pts[i].X - center.X);
 
             Array.Sort<double, FractionPoint>(keys, pts);
 
@@ -412,12 +414,11 @@ namespace SimplexMethod
         public override Fraction[] Solve()
         {
             int m = this.la.Count;
-
             if (n - m != 2)
                 throw new InvalidOperationException("Graphical method applicable only when n-m equals 2");
 
             #region la to matrix a
-            a = new Fraction[m, n+1];
+            a = new Fraction[m, n + 1];
 
             List<Fraction[]>.Enumerator enumer = la.GetEnumerator();
             for (int i = 0; enumer.MoveNext(); i++)
@@ -436,12 +437,12 @@ namespace SimplexMethod
             {
                 // find row with the min or max element in position k,k
                 uint k_min = k;
-                Fraction min = a[k, n-k];
+                Fraction min = a[k, n - k];
                 for (uint i = k; i < m; i++)
                 {
-                    if (Fraction.Abs(a[i, n-i]) < min)
+                    if (Fraction.Abs(a[i, n - i]) < min)
                     {
-                        min = a[i, n-i];
+                        min = a[i, n - i];
                         k_min = i;
                     }
                 }
@@ -457,7 +458,7 @@ namespace SimplexMethod
                     a[k_min, j] = t;
                 }
 
-                GGaussProcess(ref a, k, (uint)n-k);
+                GGaussProcess(ref a, k, (uint)n - k);
             }
 
             #endregion
@@ -465,12 +466,17 @@ namespace SimplexMethod
             FractionPoint[] cornerPoints;
             cornerPoints = GetCornerPoints();// only valid ones are returned
 
+            if (cornerPoints == null)
+                return null;
+            else if (cornerPoints.Length == 0)
+                return null;
+
             OnPolygon(GetEmbracingPolygon(cornerPoints));
 
             int i_max, i_min;
             GetMinMax(cornerPoints, m_c[1], m_c[0], out i_max, out i_min);
-                       
-            return new Fraction[] { cornerPoints[i_max].X, cornerPoints[i_max].Y  };
+
+            return new Fraction[] { 0/*cornerPoints[i_max].X, cornerPoints[i_max].Y */};
         }
         public override void AddLimtation(Fraction[] a, short sign, Fraction b)
         {
@@ -493,7 +499,7 @@ namespace SimplexMethod
             la.Add(row);
 
             Array.Resize<short>(ref signs, signs.Length + 1);
-            signs[signs.Length - 1] = sign;
+            signs[signs.Length - 1] = (sign != 0 ? sign : (short)-1);
         }
         public override void RemoveLimitation(uint index)
         {
@@ -517,7 +523,7 @@ namespace SimplexMethod
             List<FractionPoint> la = new List<FractionPoint>();
 
             for (int i = 0; i < m; i++)
-                for (int j = i+1; j < m; j++)
+                for (int j = i + 1; j < m; j++)
                 {
                     Fraction det = a[i, 1] * a[j, 2] - a[i, 2] * a[j, 1];
 
@@ -539,9 +545,14 @@ namespace SimplexMethod
                 {
                     Decimal t = (a[i, 1] * eptsList.Current.X +
                     a[i, 2] * eptsList.Current.Y - a[i, 0]).Value;
-                    if (((short)Math.Sign(t) != signs[i]) && ((short)Math.Sign(t) != 0))
-                        ptIsValid = false;
+                    //if (((short)Math.Sign(t) != signs[i]) && ((short)Math.Sign(t) != 0))
+                    //    ptIsValid = false;
                 }
+                //if (Nonnegative)
+                //{
+                //    if ((eptsList.Current.X < 0) || (eptsList.Current.Y < 0))
+                //        ptIsValid = false;
+                //}
 
                 if (ptIsValid)
                     corners.Add(eptsList.Current);
@@ -549,7 +560,7 @@ namespace SimplexMethod
             return corners.ToArray();
         }
 
-        protected void OnPolygon(FractionPoint[]pts)
+        protected void OnPolygon(FractionPoint[] pts)
         {
             if (DebugPolygonEvent != null)
                 DebugPolygonEvent(pts);
