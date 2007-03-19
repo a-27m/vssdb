@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplexMethod", "SimplexMet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ллхн К1", "ллхн К1\ллхн К1.csproj", "{A8A595EF-7FCA-4324-BAD5-6D5352B2C4B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DekartGraphic", "Dekart\DekartGraphic.csproj", "{97B73544-29AE-4AFA-9DB4-957C6D16A13F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{A8A595EF-7FCA-4324-BAD5-6D5352B2C4B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8A595EF-7FCA-4324-BAD5-6D5352B2C4B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8A595EF-7FCA-4324-BAD5-6D5352B2C4B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
