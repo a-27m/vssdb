@@ -400,7 +400,7 @@ namespace SimplexMethod
                 center.Y *= pts[i].Y;
             }
             center.X = new Fraction((decimal)Math.Pow((double)center.X, 1d / pts.Length));
-            center.Y = new Fraction(Math.Sign(center.Y)*(decimal)Math.Pow(Math.Abs(center.Y), 1d / pts.Length));
+            center.Y = new Fraction(Math.Sign(center.Y) * (decimal)Math.Pow(Math.Abs(center.Y), 1d / pts.Length));
 
             for (int i = 0; i < keys.Length; i++)
                 // fill keys with angles relative to center-point
@@ -414,53 +414,109 @@ namespace SimplexMethod
         public override Fraction[] Solve()
         {
             int m = this.la.Count;
-            if (n - m != 2)
+            if ((n > 2) && (n - m != 2))
                 throw new InvalidOperationException("Graphical method applicable only when n-m equals 2");
+
+            List<Fraction[]>.Enumerator e;
+
+            if (n != 2)
+            {
+                #region Canonize
+
+                List<Fraction[]> la2 = new List<Fraction[]>();
+                e = la.GetEnumerator();
+                for (int i = 0; e.MoveNext(); i++)
+                {
+                    Fraction[] tmp;
+
+                    if (signs[i] != 0)
+                    {
+                        n++;
+                        tmp = new Fraction[n + 1];
+                        for (int k = e.Current.Length - 1; k < n; k++)
+                            tmp[k] = 0;
+                        tmp[n] = -signs[i];
+                    }
+                    else
+                    {
+                        tmp = new Fraction[n + 1];
+                        for (int t = 0; t < tmp.Length; tmp[t++] = 0)
+                            ;
+                    }
+
+                    tmp[0] = e.Current[0];
+                    e.Current.CopyTo(tmp, 0);
+                    la2.Add(tmp);
+                }
+
+                la = la2;
+                la2 = null;
+
+                #endregion
+
+                #region la to matrix a
+                a = new Fraction[m, n + 1];
+
+                e = la.GetEnumerator();
+                for (int i = 0; e.MoveNext(); i++)
+                {
+                    int j = 0;
+                    for (; j < e.Current.Length; j++)
+                        a[i, j] = e.Current[j];
+                    for (; j <= n; j++)
+                        a[i, j] = 0;
+                }
+                #endregion
+
+                #region make some basis
+
+                for (uint k = 0; k < m; k++)
+                {
+                    // find row with the min or max element in position k,k
+                    uint k_min = k;
+                    Fraction min = a[k, n - k];
+                    for (uint i = k; i < m; i++)
+                    {
+                        if (Fraction.Abs(a[i, n - i]) < min)
+                        {
+                            min = a[i, n - i];
+                            k_min = i;
+                        }
+                    }
+
+                    if (min == (Fraction)0)
+                        continue;
+
+                    // ok, swap row #k with row #k_min
+                    for (uint j = 0; j < n + 1; j++)
+                    {
+                        Fraction t = a[k, j];
+                        a[k, j] = a[k_min, j];
+                        a[k_min, j] = t;
+                    }
+
+                    GGaussProcess(ref a, k, (uint)n - k);
+                }
+
+                #endregion
+
+                for (int t = 0; t < m; t++)
+                    signs[t] = -1;
+            }
+            //else solve immediately;
 
             #region la to matrix a
             a = new Fraction[m, n + 1];
 
-            List<Fraction[]>.Enumerator enumer = la.GetEnumerator();
-            for (int i = 0; enumer.MoveNext(); i++)
+            e = la.GetEnumerator();
+            for (int i = 0; e.MoveNext(); i++)
             {
                 int j = 0;
-                for (; j < enumer.Current.Length; j++)
-                    a[i, j] = enumer.Current[j];
+                for (; j < e.Current.Length; j++)
+                    a[i, j] = e.Current[j];
                 for (; j <= n; j++)
                     a[i, j] = 0;
             }
-            #endregion
-
-            #region make some basis
-
-            for (uint k = 0; k < m; k++)
-            {
-                // find row with the min or max element in position k,k
-                uint k_min = k;
-                Fraction min = a[k, n - k];
-                for (uint i = k; i < m; i++)
-                {
-                    if (Fraction.Abs(a[i, n - i]) < min)
-                    {
-                        min = a[i, n - i];
-                        k_min = i;
-                    }
-                }
-
-                if (min == (Fraction)0)
-                    continue;
-
-                // ok, swap row #k with row #k_min
-                for (uint j = 0; j < n + 1; j++)
-                {
-                    Fraction t = a[k, j];
-                    a[k, j] = a[k_min, j];
-                    a[k_min, j] = t;
-                }
-
-                GGaussProcess(ref a, k, (uint)n - k);
-            }
-
             #endregion
 
             FractionPoint[] cornerPoints;
