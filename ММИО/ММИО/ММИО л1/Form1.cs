@@ -265,7 +265,6 @@ namespace ММИО_л1
             }
 
             formTables.Show();
-
         }
 
         private void графическийМетодToolStripMenuItem_Click(object sender, EventArgs e)

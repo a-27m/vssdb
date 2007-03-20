@@ -499,7 +499,7 @@ namespace SimplexMethod
             la.Add(row);
 
             Array.Resize<short>(ref signs, signs.Length + 1);
-            signs[signs.Length - 1] = (sign != 0 ? sign : (short)-1);
+            signs[signs.Length - 1] = sign;//(sign != 0 ? sign : (short)-1);
         }
         public override void RemoveLimitation(uint index)
         {
