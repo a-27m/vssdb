@@ -218,7 +218,7 @@ namespace DekartGraphic
 		public int AddPolygon(Color penColor,
 			DrawModes drawMode, params PointF[] pts)
 		{
-			return AddPolygon(penColor, 0, drawMode, pts);
+			return AddPolygon(penColor, 1f, drawMode, pts);
 		}
 
 		public void CenterView()

@@ -67,7 +67,8 @@ namespace DekartGraphic
             DoubleFunction f, float x1, float x2, float StepX)
         {
             this.penColor = PenColor;
-            penWidth = 1f;
+            this.penWidth = 1f;
+
             this.drawingMode = drawMode;
 
             graphic = Tabulate(f, x1, x2, StepX);
@@ -77,6 +78,8 @@ namespace DekartGraphic
             DoubleFunction fx, DoubleFunction fy, float T1, float T2, float StepT)
         {
             this.penColor = PenColor;
+            this.penWidth = 1f;
+
             this.drawingMode = drawMode;
 
             graphic = Tabulate(fx, fy, T1, T2, StepT);
@@ -99,7 +102,7 @@ namespace DekartGraphic
 
             if (EraseBkGnd)
             {
-                g.Clear(Color.Azure);
+                g.Clear(Color.White);
             }
 
             DrawCoordinateSystem(g);
@@ -173,7 +176,7 @@ namespace DekartGraphic
                     foreach (PointF[] segment in graphic)
                         for (int i = 0; i < segment.Length; i++)
                             g.DrawEllipse(pen,
-                                segment[i].X-dotWidth/2f, segment[i].Y-dotWidth/2f,
+                                segment[i].X - dotWidth / 2f, segment[i].Y - dotWidth / 2f,
                                 dotWidth, dotWidth);
                     break;
 
@@ -193,7 +196,7 @@ namespace DekartGraphic
         }
         public virtual void DrawCoordinateSystem(Graphics g)
         {
-            g.Clear(Color.AntiqueWhite);
+            g.Clear(Color.BlanchedAlmond);
             g.SmoothingMode = SmoothingMode.HighQuality;
 
             float m_zoom_x = Math.Abs(g.Transform.Elements[0]);

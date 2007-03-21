@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using Fractions;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace SimplexMethod
 {
-
     public abstract class Solver
     {
         public bool Nonnegative = true;
@@ -28,6 +28,7 @@ namespace SimplexMethod
         }
 
         public abstract Fraction[] Solve();
+        /// <exception cref="InvalidOperationException"></exception>
         public static void GGaussProcess(ref Fraction[,] a, uint Row, uint Col)
         {
             int m = a.GetLength(0);
@@ -345,77 +346,56 @@ namespace SimplexMethod
 
     public class GraphicSolver : Solver
     {
-        public delegate void DebugPolygonEventDelegate(FractionPoint[] polygon);
-        public event DebugPolygonEventDelegate DebugPolygonEvent;
+        public delegate void DebugPolygonEventHandler(FractionPoint[] polygon);
+        public event DebugPolygonEventHandler DebugPolygon;
+
+        public delegate void DebugMaxMinEventHandler(FractionPoint max, FractionPoint min, Fraction f_tan);
+        public event DebugMaxMinEventHandler DebugMaxMin;
 
         protected short[] signs;
         Fraction[,] a;
 
-        protected double ro0(FractionPoint p1)
+
+        public override void AddLimtation(Fraction[] a, short sign, Fraction b)
         {
-            return Math.Sqrt((double)(p1.X * p1.X + p1.Y * p1.Y).Value);
+            if (Math.Abs(sign) > 1)
+                throw new ArgumentOutOfRangeException("sign", "Sign has to be -1 or 0 or 1.");
+
+            if (la == null)
+                la = new List<Fraction[]>();
+            if (signs == null)
+                signs = new short[0];
+
+            n = (a.Length > n ? a.Length : n);
+
+            Fraction[] row = new Fraction[n + 1];
+            for (int i = 0; i < row.Length; row[i++] = 0)
+                ;
+
+            row[0] = b;
+            a.CopyTo(row, 1);
+            la.Add(row);
+
+            Array.Resize<short>(ref signs, signs.Length + 1);
+            signs[signs.Length - 1] = sign;
         }
-
-        protected void GetMinMax(FractionPoint[] A, Fraction Xn, Fraction Yn, out int maxIndex, out int minIndex)
+        public override void RemoveLimitation(uint index)
         {
-            const int C = 5;
-
-            double max = -1d, min = double.MaxValue;
-            maxIndex = -1;
-            minIndex = -1;
-
-            int p = A.Length;
-
-            double angle = Math.Atan2(Yn, Xn);
-
-            for (int t = 0; t < p; t++)
+            la.RemoveAt((int)index);
+            n = 0;
+            foreach (Fraction[] cond in la)
             {
-                double currAngle = Math.Atan2(A[t].Y, A[t].X);
-
-                if (Math.Round(angle, C) == Math.Round(currAngle, C))
-                {
-                    double d = ro0(A[t]);
-                    if (d > max)
-                    {
-                        max = d;
-                        maxIndex = t;
-                    }
-                    if (d < min)
-                    {
-                        min = d;
-                        minIndex = t;
-                    }
-                }
+                if (n < cond.Length)
+                    n = cond.Length;
             }
+
+            for (uint i = index; i < signs.Length - 1; i++)
+                signs[i] = signs[i + 1];
+            Array.Resize<short>(ref signs, signs.Length - 1);
         }
-
-        public static FractionPoint[] GetEmbracingPolygon(FractionPoint[] pts)
-        {
-            double[] keys = new double[pts.Length];
-
-            FractionPoint center = new FractionPoint(1, 1);
-            for (int i = 0; i < pts.Length; i++)
-            {
-                center.X *= pts[i].X;
-                center.Y *= pts[i].Y;
-            }
-            center.X = new Fraction((decimal)Math.Pow((double)center.X, 1d / pts.Length));
-            center.Y = new Fraction(Math.Sign(center.Y) * (decimal)Math.Pow(Math.Abs(center.Y), 1d / pts.Length));
-
-            for (int i = 0; i < keys.Length; i++)
-                // fill keys with angles relative to center-point
-                keys[i] = Math.Atan2(pts[i].Y - center.Y, pts[i].X - center.X);
-
-            Array.Sort<double, FractionPoint>(keys, pts);
-
-            return pts;
-        }
-
         public override Fraction[] Solve()
         {
             int m = this.la.Count;
-            if ((n > 2) && (n - m != 2))
-                throw new InvalidOperationException("Graphical method applicable only when n-m equals 2");
 
             List<Fraction[]>.Enumerator e;
 
@@ -454,6 +434,9 @@ namespace SimplexMethod
 
                 #endregion
 
+                if (n - m != 2)
+                    throw new InvalidOperationException("Graphical method applicable only when n minus m equals 2");
+
                 #region la to matrix a
                 a = new Fraction[m, n + 1];
 
@@ -475,13 +458,13 @@ namespace SimplexMethod
                     // look for non-zero main element at position [k, n-k]
                     int k_nz = -1;
                     for (uint i = k; i < m; i++)
-                        if (a[i, n - k] !=0)
+                        if (a[i, n - k] != 0)
                             k_nz = (int)i;
 
                     if (k_nz == -1)
                         continue;
 
-                    // ok, swap row #k with row #k_min
+                    // ok, swap row #k with row #k_nz
                     for (uint j = 0; j < n + 1; j++)
                     {
                         Fraction t = a[k, j];
@@ -515,10 +498,6 @@ namespace SimplexMethod
                 #endregion
             }
 
-            //a = new Fraction[,]{
-            //{new Fraction(-33,4), new Fraction(27,4), new Fraction(-93,8)},
-            //            {new Fraction(13,2), new Fraction(-7,2), new Fraction(29,4)},
-            //            {new Fraction(-1,4), new Fraction(-1,4), new Fraction(-5,8)}};
             FractionPoint[] cornerPoints;
             cornerPoints = GetCornerPoints();// only valid ones are returned
 
@@ -527,49 +506,36 @@ namespace SimplexMethod
             else if (cornerPoints.Length == 0)
                 return null;
 
-            OnPolygon(GetEmbracingPolygon(cornerPoints));
+            OnPolygon(cornerPoints);
+
+            Fraction c1 = m_c[0], c2 = m_c[1];
+            if (n > 2)
+            //{
+                for (int i = 0; i < m; i++)
+                {
+                    c1 += m_c[i + 2] * a[i, 1];
+                    c2 += m_c[i + 2] * a[i, 2];
+                    //d += m_c[i + 2] * a[i, 0];
+                }
+            //    c1 /= d;
+            //    c2 /= d;
+            //}
 
             int i_max, i_min;
-            GetMinMax(cornerPoints, m_c[1], m_c[0], out i_max, out i_min);
+            GetMinMax(cornerPoints, c1, c2, out i_max, out i_min);
+            OnMaxMin(cornerPoints[i_max], cornerPoints[i_min], c2 / c1);
 
-            return new Fraction[] { 0/*cornerPoints[i_max].X, cornerPoints[i_max].Y */};
-        }
-        public override void AddLimtation(Fraction[] a, short sign, Fraction b)
-        {
-            if (Math.Abs(sign) > 1)
-                throw new ArgumentOutOfRangeException("sign", "Sign has to be -1 or 0 or 1.");
+            // for maximum
+            Fraction[] solution = new Fraction[n];
+            solution[0] = cornerPoints[i_max].X;
+            solution[1] = cornerPoints[i_max].Y;
+            if (n > 2)
+                for (int j = 2; j < n; j++)
+                    for (int i = 0; i < m; i++)
+                        if (a[i, j+1] == 1)
+                            solution[j] = a[i, 0] - a[i, 1] * solution[0] - a[i, 2] * solution[1];
 
-            if (la == null)
-                la = new List<Fraction[]>();
-            if (signs == null)
-                signs = new short[0];
-
-            n = (a.Length > n ? a.Length : n);
-
-            Fraction[] row = new Fraction[n + 1];
-            for (int i = 0; i < row.Length; row[i++] = 0)
-                ;
-
-            row[0] = b;
-            a.CopyTo(row, 1);
-            la.Add(row);
-
-            Array.Resize<short>(ref signs, signs.Length + 1);
-            signs[signs.Length - 1] = sign;
-        }
-        public override void RemoveLimitation(uint index)
-        {
-            la.RemoveAt((int)index);
-            n = 0;
-            foreach (Fraction[] cond in la)
-            {
-                if (n < cond.Length)
-                    n = cond.Length;
-            }
-
-            for (uint i = index; i < signs.Length - 1; i++)
-                signs[i] = signs[i + 1];
-            Array.Resize<short>(ref signs, signs.Length - 1);
+            return solution;
         }
 
         protected FractionPoint[] GetCornerPoints()
@@ -642,11 +608,59 @@ namespace SimplexMethod
             }
             return corners.ToArray();
         }
+        protected void GetMinMax(FractionPoint[] A, Fraction Xf, Fraction Yf, out int maxIndex, out int minIndex)
+        {
+            maxIndex = 0;
+            minIndex = 0;
+
+            Matrix normalize = new Matrix();
+            normalize.Rotate((float)Math.Atan2(Xf, Yf));
+
+            PointF[] pt = new PointF[A.Length];
+            for (int t = 0; t < A.Length; t++)
+                pt[t] = new PointF(A[t].X, A[t].Y);
+
+            normalize.TransformVectors(pt);
+
+            for (int t = 0; t < A.Length; t++)
+            {
+                if (pt[t].X > pt[maxIndex].X)
+                    maxIndex = t;
+                if (pt[t].X < pt[minIndex].X)
+                    minIndex = t;
+            }
+        }
+        public static FractionPoint[] GetEmbracingPolygon(FractionPoint[] pts)
+        {
+            double[] keys = new double[pts.Length];
+
+            FractionPoint center = new FractionPoint(1, 1);
+            for (int i = 0; i < pts.Length; i++)
+            {
+                center.X *= pts[i].X;
+                center.Y *= pts[i].Y;
+            }
+            center.X = new Fraction((decimal)Math.Pow((double)center.X, 1d / pts.Length));
+            center.Y = new Fraction(Math.Sign(center.Y) * (decimal)Math.Pow(Math.Abs(center.Y), 1d / pts.Length));
+
+            for (int i = 0; i < keys.Length; i++)
+                // fill keys with angles relative to center-point
+                keys[i] = Math.Atan2(pts[i].Y - center.Y, pts[i].X - center.X);
+
+            Array.Sort<double, FractionPoint>(keys, pts);
+
+            return pts;
+        }
 
         protected void OnPolygon(FractionPoint[] pts)
         {
-            if (DebugPolygonEvent != null)
-                DebugPolygonEvent(pts);
+            if (DebugPolygon != null)
+                DebugPolygon(GetEmbracingPolygon(pts));
+        }
+        protected void OnMaxMin(FractionPoint max, FractionPoint min, Fraction f_tangence)
+        {
+            if (DebugMaxMin != null)
+                DebugMaxMin(max, min, f_tangence);
         }
     }
 }

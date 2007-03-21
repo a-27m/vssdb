@@ -21,6 +21,7 @@ namespace ММИО_л1
 
         private int n, m;
         FormSTables formTables;
+        DekartForm df;
 
         public Form1()
         {
@@ -204,7 +205,7 @@ namespace ММИО_л1
             for (int i = 0; i < m; i++)
                 solver.AddLimtation(A[i], S[i], B[i]);
             solver.SetTargetFunctionCoefficients(C);
-            
+
             // решаем
             solution = solver.Solve();
 
@@ -217,7 +218,7 @@ namespace ММИО_л1
 
             // переделываем под минимизацию
             for (int i = 0; i < C.Length; i++)
-                C[i]=-C[i];
+                C[i] = -C[i];
             solver.SetTargetFunctionCoefficients(C);
 
             formTables.ResetIterationCounter();
@@ -279,7 +280,8 @@ namespace ММИО_л1
             }
 
             GraphicSolver solver = new GraphicSolver();
-            solver.DebugPolygonEvent += new GraphicSolver.DebugPolygonEventDelegate(solver_DebugPolygonEvent);
+            solver.DebugPolygon += new GraphicSolver.DebugPolygonEventHandler(solver_DebugPolygonEvent);
+            solver.DebugMaxMin += new GraphicSolver.DebugMaxMinEventHandler(solver_DebugMaxMin);
 
             for (int i = 0; i < A.Length; i++)
                 solver.AddLimtation(A[i], S[i], B[i]);
@@ -291,7 +293,7 @@ namespace ММИО_л1
             }
             catch (InvalidOperationException exc)
             {
-                MessageBox.Show(exc.Message,"Error",
+                MessageBox.Show(exc.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
@@ -299,16 +301,83 @@ namespace ММИО_л1
 
         }
 
+        void solver_DebugMaxMin(FractionPoint max, FractionPoint min, Fraction f_tan)
+        {
+            if (df == null)
+            {
+                df = new DekartForm(100, 100, 100, 100);
+                df.Text = "max & min";
+            }
+
+            df.Use_IsVisible = false;
+
+
+            //// n
+            //df.AddPolygon(Color.Gray, 2f, DrawModes.DrawLines,
+            //    new PointF(1000, -1 / f_tan * 1000),
+            //    new PointF(-1000, 1 / f_tan * 1000));
+
+            //df.AddPolygon(Color.Maroon, 1.8f, DrawModes.DrawLines,
+            //    new PointF(1000 + max.X, f_tan * 1000 + max.Y),
+            //    new PointF(-1000 + max.X, -f_tan * 1000 + max.Y));
+
+            //df.AddPolygon(Color.MediumSlateBlue, 1.8f, DrawModes.DrawLines,
+            //    new PointF(1000 + min.X, f_tan * 1000 + min.Y),
+            //    new PointF(-1000 + min.X, -f_tan * 1000 + min.Y));
+
+            // F
+            df.AddPolygon(Color.Gray, DrawModes.DrawLines,
+                new PointF(1000, f_tan * 1000),
+                new PointF(-1000, -f_tan * 1000));
+
+            for (float percent = 0; ; percent+=.05f)
+            {
+                int id = df.AddPolygon(Color.Orange, DrawModes.DrawLines,
+                       new PointF(1000 + max.X*percent, -1 / f_tan * 1000 + max.Y*percent),
+                       new PointF(-1000 + max.X*percent, 1 / f_tan * 1000 + max.Y*percent));
+                if (percent >= 1)
+                    break;
+                df.Update2();
+                Application.DoEvents();
+                df.RemoveGraphic(id);
+            }
+            df.AddPolygon(Color.Orange, 3f, DrawModes.DrawPoints, new PointF(max.X, max.Y));
+
+            for (float percent = 0; ; percent += .05f)
+            {
+                int id = df.AddPolygon(Color.CornflowerBlue, DrawModes.DrawLines,
+                new PointF(1000 + min.X*percent, -1 / f_tan * 1000 + min.Y*percent),
+                new PointF(-1000 + min.X*percent, 1 / f_tan * 1000 + min.Y*percent));
+                if (percent >= 1)
+                    break;
+                df.Update2();
+                Application.DoEvents();
+                df.RemoveGraphic(id);
+            }
+            df.AddPolygon(Color.CornflowerBlue, 3f, DrawModes.DrawPoints, new PointF(min.X, min.Y));
+
+            df.Show();
+            df.Update2();
+        }
+
         void solver_DebugPolygonEvent(FractionPoint[] polygon)
         {
-            PointF[] pts = new PointF[polygon.Length/*+1*/];
+            PointF[] pts = new PointF[polygon.Length];
             for (int i = 0; i < polygon.Length; i++)
                 pts[i] = new PointF((float)polygon[i].X.Value, (float)polygon[i].Y.Value);
-            //pts[polygon.Length] = pts[0];
 
-            DekartForm df = new DekartForm(100, 100, 100, 100);
-            df.AddPolygon(Color.Green, DrawModes.DrawFilledPolygon, pts);
-            df.Text = this.Text + " - графическое решение";
+            if (df == null)
+            {
+                df = new DekartForm(100, 100, 100, 100);
+                df.Text = this.Text + " - графическое решение";
+                df.FormClosed += new FormClosedEventHandler(delegate(object sender, FormClosedEventArgs e)
+                {
+                    df = null;
+                });
+                df.WindowState = FormWindowState.Maximized;
+            }
+            df.RemoveAllGraphics();
+            df.AddPolygon(Color.ForestGreen, DrawModes.DrawFilledPolygon, pts);
             df.Show();
             df.Update2();
         }
