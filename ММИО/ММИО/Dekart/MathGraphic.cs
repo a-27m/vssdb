@@ -57,6 +57,8 @@ namespace DekartGraphic
             }
             set
             {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException();
                 penWidth = value;
             }
         }
@@ -104,8 +106,8 @@ namespace DekartGraphic
         }
         public virtual void DrawGraphic(Graphics g)
         {
-            Pen pen = new Pen(penColor, penWidth);
             float m_zoom = g.Transform.Elements[0];
+            Pen pen = new Pen(penColor, penWidth / m_zoom);
 
             g.SmoothingMode = SmoothingMode.HighQuality;
 
@@ -166,11 +168,11 @@ namespace DekartGraphic
                     break;
 
                 case DrawModes.DrawPoints:
-                    float dotWidth = 0.7f / m_zoom;
+                    float dotWidth = pen.Width;
                     foreach (PointF[] segment in graphic)
                         for (int i = 0; i < segment.Length; i++)
                             g.DrawEllipse(pen,
-                                segment[i].X, segment[i].Y,
+                                segment[i].X-dotWidth/2f, segment[i].Y-dotWidth/2f,
                                 dotWidth, dotWidth);
                     break;
 

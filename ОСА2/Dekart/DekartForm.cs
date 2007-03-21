@@ -174,7 +174,7 @@ namespace DekartGraphic
 
 			grs.Add(newGraphic);
 
-			return grs.IndexOf(newGraphic);
+			return grs.Count-1;
 		}
 
 		/// <summary>
@@ -193,7 +193,7 @@ namespace DekartGraphic
 
 			grs.Add(newGraphic);
 
-			return grs.IndexOf(newGraphic);
+            return grs.Count - 1;
 		}
 
 		/// <summary>
@@ -212,7 +212,7 @@ namespace DekartGraphic
 
 			grs.Add(newGraphic);
 
-			return grs.IndexOf(newGraphic);
+			return grs.Count-1;
 		}
 
 		public int AddPolygon(Color penColor,
@@ -258,6 +258,7 @@ namespace DekartGraphic
 
 		public void RemoveAllGraphics()
 		{
+            if (grs != null)
 			grs.RemoveAll(ReturnTrue);
 		}
 
