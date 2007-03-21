@@ -169,8 +169,8 @@ namespace DekartGraphic
 		{
 			if ( grs == null )
 				grs = new List<MathGraphic>(100);
-			MathGraphic newGraphic = new MathGraphic(penColor, drawMode,
-				f, x1, x2, 0.01f);
+            MathGraphic newGraphic = new MathGraphic(penColor, 1f, drawMode,
+                f, x1, x2, 0.01f);
 
 			grs.Add(newGraphic);
 
