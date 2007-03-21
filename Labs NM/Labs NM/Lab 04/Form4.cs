@@ -133,6 +133,7 @@ namespace Lab_04
 		private void RollStar_Click(object sender, EventArgs e)
 		{
 			DekartForm dForm = new DekartForm(150, 150, 180, 175);
+            dForm.Use_IsVisible = false;
 			dForm.Size = new Size(400, 425);
 			dForm.Text = "f(x) = 5sin(x^3)-x";
 			dForm.Show();
@@ -142,9 +143,9 @@ namespace Lab_04
 			int grnVal = 150;
 			int grnDx = 1;
 			Random rnd = new Random((int)( DateTime.Now.Ticks ));
-			for ( float phi = -0.01f;
-				!dForm.IsDisposed;
-				phi += -0.008f )// -phi/5 for !crazy!
+			for ( float phi = -0.01f;!dForm.IsDisposed;
+                //phi += phi/5 )  //for !crazy!
+				phi += -0.008f ) //normal
 			{
 				grnVal += ( ( grnVal < 100 ) || ( grnVal > 200 ) )
 					? grnDx *= -1 : grnDx;
@@ -178,10 +179,10 @@ namespace Lab_04
 
 				Color cl = Color.FromArgb(100, grnVal, 100);
 
-				if ( tmpID >= 0 )
-					dForm.RemoveGraphic(tmpID);
+                if ( tmpID >= 0 )
+                    dForm.RemoveGraphic(tmpID);
 
-				tmpID = dForm.AddPolygon(cl, 0.02f, DrawModes.DrawLines, pts);
+				tmpID = dForm.AddPolygon(cl, 2f, DrawModes.DrawLines, pts);
 				dForm.Update2();
 				//.DrawAllGraphics();
 				Application.DoEvents();

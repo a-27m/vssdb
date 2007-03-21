@@ -67,6 +67,7 @@ namespace DekartGraphic
             DoubleFunction f, float x1, float x2, float StepX)
         {
             this.penColor = PenColor;
+            penWidth = 1f;
             this.drawingMode = drawMode;
 
             graphic = Tabulate(f, x1, x2, StepX);
