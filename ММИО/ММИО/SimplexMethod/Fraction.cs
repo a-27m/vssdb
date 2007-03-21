@@ -338,8 +338,7 @@ namespace Fractions
                     throw new FormatException("Bad integer part or numerator format.");
 
 
-                return Fraction.Simplify(new
-                    Fraction(sign, numerator + integer * denominator, denominator));
+                return new Fraction(sign, numerator + integer * denominator, denominator);
             }
             else
             {

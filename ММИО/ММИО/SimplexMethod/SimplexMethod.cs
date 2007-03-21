@@ -366,11 +366,11 @@ namespace SimplexMethod
 
             int p = A.Length;
 
-            double angle = Math.Abs((double)(Yn / Xn));
+            double angle = Math.Atan2(Yn, Xn);
 
             for (int t = 0; t < p; t++)
             {
-                double currAngle = Math.Abs((double)(A[t].Y / A[t].X).Value);
+                double currAngle = Math.Atan2(A[t].Y, A[t].X);
 
                 if (Math.Round(angle, C) == Math.Round(currAngle, C))
                 {
@@ -472,27 +472,21 @@ namespace SimplexMethod
 
                 for (uint k = 0; k < m; k++)
                 {
-                    // find row with the min or max element in position k,k
-                    uint k_min = k;
-                    Fraction min = a[k, n - k];
+                    // look for non-zero main element at position [k, n-k]
+                    int k_nz = -1;
                     for (uint i = k; i < m; i++)
-                    {
-                        if (Fraction.Abs(a[i, n - i]) < min)
-                        {
-                            min = a[i, n - i];
-                            k_min = i;
-                        }
-                    }
+                        if (a[i, n - k] !=0)
+                            k_nz = (int)i;
 
-                    if (min == (Fraction)0)
+                    if (k_nz == -1)
                         continue;
 
                     // ok, swap row #k with row #k_min
                     for (uint j = 0; j < n + 1; j++)
                     {
                         Fraction t = a[k, j];
-                        a[k, j] = a[k_min, j];
-                        a[k_min, j] = t;
+                        a[k, j] = a[k_nz, j];
+                        a[k_nz, j] = t;
                     }
 
                     GGaussProcess(ref a, k, (uint)n - k);
@@ -503,22 +497,28 @@ namespace SimplexMethod
                 for (int t = 0; t < m; t++)
                     signs[t] = -1;
             }
-            //else solve immediately;
-
-            #region la to matrix a
-            a = new Fraction[m, n + 1];
-
-            e = la.GetEnumerator();
-            for (int i = 0; e.MoveNext(); i++)
+            else
             {
-                int j = 0;
-                for (; j < e.Current.Length; j++)
-                    a[i, j] = e.Current[j];
-                for (; j <= n; j++)
-                    a[i, j] = 0;
-            }
-            #endregion
+                //solve immediately;
+                #region la to matrix a
+                a = new Fraction[m, n + 1];
 
+                e = la.GetEnumerator();
+                for (int i = 0; e.MoveNext(); i++)
+                {
+                    int j = 0;
+                    for (; j < e.Current.Length; j++)
+                        a[i, j] = e.Current[j];
+                    for (; j <= n; j++)
+                        a[i, j] = 0;
+                }
+                #endregion
+            }
+
+            //a = new Fraction[,]{
+            //{new Fraction(-33,4), new Fraction(27,4), new Fraction(-93,8)},
+            //            {new Fraction(13,2), new Fraction(-7,2), new Fraction(29,4)},
+            //            {new Fraction(-1,4), new Fraction(-1,4), new Fraction(-5,8)}};
             FractionPoint[] cornerPoints;
             cornerPoints = GetCornerPoints();// only valid ones are returned
 
@@ -555,7 +555,7 @@ namespace SimplexMethod
             la.Add(row);
 
             Array.Resize<short>(ref signs, signs.Length + 1);
-            signs[signs.Length - 1] = sign;//(sign != 0 ? sign : (short)-1);
+            signs[signs.Length - 1] = sign;
         }
         public override void RemoveLimitation(uint index)
         {
@@ -591,24 +591,51 @@ namespace SimplexMethod
 
                     la.Add(new FractionPoint(x, y));
                 }
+
+            for (int i = 0; i < m; i++)
+            {
+                if (a[i, 2] != 0)
+                {
+                    la.Add(new FractionPoint(0, a[i, 0] / a[i, 2]));
+                    la.Add(new FractionPoint(M, (a[i, 0] - a[i, 1] * M) / a[i, 2]));
+                }
+                if (a[i, 1] != 0)
+                {
+                    la.Add(new FractionPoint(a[i, 0] / a[i, 1], 0));
+                    la.Add(new FractionPoint((a[i, 0] - a[i, 2] * M) / a[i, 1], M));
+                }
+            }
+            la.Add(new FractionPoint(0, 0));
+            la.Add(new FractionPoint(M, M));
+
             // check up validity for all points
             List<FractionPoint> corners = new List<FractionPoint>();
             List<FractionPoint>.Enumerator eptsList = la.GetEnumerator();
             while (eptsList.MoveNext())
             {
                 bool ptIsValid = true;
+
                 for (int i = 0; i < m && ptIsValid; i++)
                 {
-                    Decimal t = (a[i, 1] * eptsList.Current.X +
-                    a[i, 2] * eptsList.Current.Y - a[i, 0]).Value;
-                    //if (((short)Math.Sign(t) != signs[i]) && ((short)Math.Sign(t) != 0))
-                    //    ptIsValid = false;
+                    Decimal t = (
+                        a[i, 1] * eptsList.Current.X +
+                        a[i, 2] * eptsList.Current.Y -
+                        a[i, 0]).Value;
+
+                    if (!(
+                        ((short)Math.Sign(t) == signs[i]) ||
+                        ((short)Math.Sign(t) == 0)))
+                    {
+                        ptIsValid = false;
+                        break;
+                    }
                 }
-                //if (Nonnegative)
-                //{
-                //    if ((eptsList.Current.X < 0) || (eptsList.Current.Y < 0))
-                //        ptIsValid = false;
-                //}
+
+                if (Nonnegative && ptIsValid)
+                {
+                    if ((eptsList.Current.X < 0) || (eptsList.Current.Y < 0))
+                        ptIsValid = false;
+                }
 
                 if (ptIsValid)
                     corners.Add(eptsList.Current);
