@@ -56,8 +56,9 @@ namespace SimplexMethod
     public class SimplexSolver : Solver
     {
         public delegate void DebugSimplexTableHandler(int[] basis, Fraction[] c, Fraction[,] table);
-        public delegate bool DelegateBoolIntInt(int i, int j);
         public event DebugSimplexTableHandler DebugNewSimplexTable;
+      
+        public delegate bool DelegateBoolIntInt(int i, int j);
 
         protected void OnNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
         {
@@ -353,6 +354,9 @@ namespace SimplexMethod
         public delegate void DebugMaxMinEventHandler(FractionPoint max, FractionPoint min, Fraction f_tan);
         public event DebugMaxMinEventHandler DebugMaxMinPts;
 
+        public delegate void DebugGaussProcessMatrixHandler(Fraction[,] matrix);
+        public event DebugGaussProcessMatrixHandler DebugGaussProcessMatrix;
+
         public delegate void DebugExtremumEventHandler(Fraction[] coordinates);
         public event DebugExtremumEventHandler DebugMaxSolution;
         public event DebugExtremumEventHandler DebugMinSolution;
@@ -463,6 +467,8 @@ namespace SimplexMethod
 
                 #region make some basis
 
+                OnGaussProcessMatrix(a);
+
                 wherex = new int[m];
                 for (int l = 0; l < m; l++)
                     wherex[l] = m - l - 1;
@@ -471,7 +477,7 @@ namespace SimplexMethod
                 {
                     try
                     {
-                        GGaussProcess(ref a, k, (uint)n - k);
+                        GGaussProcess(ref a, k, (uint)k+3);
                     }
                     catch (InvalidOperationException)
                     {
@@ -496,8 +502,10 @@ namespace SimplexMethod
                         wherex[k] = wherex[k_nz];
                         wherex[k_nz] = currpos;
 
-                        GGaussProcess(ref a, k, (uint)n - k);
+                        GGaussProcess(ref a, k, (uint)k + 3);
                     }
+
+                    OnGaussProcessMatrix(a);
                 }
 
                 #endregion
@@ -713,6 +721,11 @@ namespace SimplexMethod
         {
             if (DebugMaxMinPts != null)
                 DebugMaxMinPts(max, min, f_tangence);
+        }
+        protected void OnGaussProcessMatrix(Fraction[,] matrix)
+        {
+            if (DebugGaussProcessMatrix != null)
+                DebugGaussProcessMatrix(matrix);
         }
     }
 }

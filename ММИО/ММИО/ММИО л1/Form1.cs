@@ -292,6 +292,7 @@ namespace ММИО_л1
             solver.DebugMaxMinPts += new GraphicSolver.DebugMaxMinEventHandler(solver_DebugMaxMin);
             solver.DebugMaxSolution += new GraphicSolver.DebugExtremumEventHandler(solver_DebugMaxSolution);
             solver.DebugMinSolution += new GraphicSolver.DebugExtremumEventHandler(solver_DebugMinSolution);
+            solver.DebugGaussProcessMatrix += new GraphicSolver.DebugGaussProcessMatrixHandler(solver_DebugGaussProcessMatrix);
 
             for (int i = 0; i < A.Length; i++)
                 solver.AddLimtation(A[i], S[i], B[i]);
@@ -307,6 +308,15 @@ namespace ММИО_л1
                     MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
+        }
+
+        void solver_DebugGaussProcessMatrix(Fraction[,] matrix)
+        {
+            if (formTables == null)
+                formTables = new FormSTables();
+
+            formTables.AddTable(matrix);
+            formTables.Show();
         }
 
         void solver_DebugMinSolution(Fraction[] coordinates)
