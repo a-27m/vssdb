@@ -91,6 +91,9 @@ namespace ММИО_л1
                 dataGridView1[j, 0].Value = C[j].ToString();
 
             dataGridView1.AutoResizeColumns();
+
+            dataGridView1[n + 1, 0].ReadOnly = true;
+            dataGridView1[n , 0].ReadOnly = true;
         }
         private void DowndateGrid()
         {
@@ -279,6 +282,11 @@ namespace ММИО_л1
                 return;
             }
 
+            if (df != null)
+                df.RemoveAllGraphics();
+
+            richTextBox1.Text = "";
+
             GraphicSolver solver = new GraphicSolver();
             solver.DebugPolygon += new GraphicSolver.DebugPolygonEventHandler(solver_DebugPolygonEvent);
             solver.DebugMaxMinPts += new GraphicSolver.DebugMaxMinEventHandler(solver_DebugMaxMin);
@@ -307,7 +315,7 @@ namespace ММИО_л1
             for (int i = 0; i < coordinates.Length; i++)
                 value += coordinates[i] * C[i];
 
-            richTextBox1.Text += "Minimum: F= " + value.ToString() + " ~" + value.Value.ToString("f2");
+            richTextBox1.Text += "Minimum: F= " + value.ToString() + " ≈ " + value.Value.ToString("f3");
             richTextBox1.Text += Environment.NewLine;
             for (int i = 0; i < coordinates.Length - 1; i++)
                 richTextBox1.Text += string.Format(" x{0} = {1},", i + 1, coordinates[i]);
@@ -323,7 +331,7 @@ namespace ММИО_л1
             for (int i = 0; i < coordinates.Length; i++)
                 value += coordinates[i] * C[i];
 
-            richTextBox1.Text += "Maximum: F= " + value.ToString() + " ~" + value.Value.ToString("f2");
+            richTextBox1.Text += "Maximum: F= " + value.ToString() + " ≈ " + value.Value.ToString("f3");
             richTextBox1.Text += Environment.NewLine;
             for (int i = 0; i < coordinates.Length - 1; i++)
                 richTextBox1.Text += string.Format(" x{0} = {1},", i + 1, coordinates[i]);
