@@ -281,7 +281,9 @@ namespace ММИО_л1
 
             GraphicSolver solver = new GraphicSolver();
             solver.DebugPolygon += new GraphicSolver.DebugPolygonEventHandler(solver_DebugPolygonEvent);
-            solver.DebugMaxMin += new GraphicSolver.DebugMaxMinEventHandler(solver_DebugMaxMin);
+            solver.DebugMaxMinPts += new GraphicSolver.DebugMaxMinEventHandler(solver_DebugMaxMin);
+            solver.DebugMaxSolution += new GraphicSolver.DebugExtremumEventHandler(solver_DebugMaxSolution);
+            solver.DebugMinSolution += new GraphicSolver.DebugExtremumEventHandler(solver_DebugMinSolution);
 
             for (int i = 0; i < A.Length; i++)
                 solver.AddLimtation(A[i], S[i], B[i]);
@@ -297,8 +299,38 @@ namespace ММИО_л1
                     MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
+        }
 
+        void solver_DebugMinSolution(Fraction[] coordinates)
+        {
+            Fraction value = 0;
+            for (int i = 0; i < coordinates.Length; i++)
+                value += coordinates[i] * C[i];
 
+            richTextBox1.Text += "Minimum: F= " + value.ToString() + " ~" + value.Value.ToString("f2");
+            richTextBox1.Text += Environment.NewLine;
+            for (int i = 0; i < coordinates.Length - 1; i++)
+                richTextBox1.Text += string.Format(" x{0} = {1},", i + 1, coordinates[i]);
+            richTextBox1.Text += string.Format(" x{0} = {1}.", coordinates.Length, coordinates[coordinates.Length-1]);
+            richTextBox1.Text += Environment.NewLine+Environment.NewLine;
+
+            splitContainer1.Panel2Collapsed = false;
+        }
+
+        void solver_DebugMaxSolution(Fraction[] coordinates)
+        {
+            Fraction value = 0;
+            for (int i = 0; i < coordinates.Length; i++)
+                value += coordinates[i] * C[i];
+
+            richTextBox1.Text += "Maximum: F= " + value.ToString() + " ~" + value.Value.ToString("f2");
+            richTextBox1.Text += Environment.NewLine;
+            for (int i = 0; i < coordinates.Length - 1; i++)
+                richTextBox1.Text += string.Format(" x{0} = {1},", i + 1, coordinates[i]);
+            richTextBox1.Text += string.Format(" x{0} = {1}.", coordinates.Length, coordinates[coordinates.Length-1]);
+            richTextBox1.Text += Environment.NewLine+Environment.NewLine;
+
+            splitContainer1.Panel2Collapsed = false;
         }
 
         void solver_DebugMaxMin(FractionPoint max, FractionPoint min, Fraction f_tan)
@@ -311,49 +343,28 @@ namespace ММИО_л1
 
             df.Use_IsVisible = false;
 
-
-            //// n
-            //df.AddPolygon(Color.Gray, 2f, DrawModes.DrawLines,
-            //    new PointF(1000, -1 / f_tan * 1000),
-            //    new PointF(-1000, 1 / f_tan * 1000));
-
-            //df.AddPolygon(Color.Maroon, 1.8f, DrawModes.DrawLines,
-            //    new PointF(1000 + max.X, f_tan * 1000 + max.Y),
-            //    new PointF(-1000 + max.X, -f_tan * 1000 + max.Y));
-
-            //df.AddPolygon(Color.MediumSlateBlue, 1.8f, DrawModes.DrawLines,
-            //    new PointF(1000 + min.X, f_tan * 1000 + min.Y),
-            //    new PointF(-1000 + min.X, -f_tan * 1000 + min.Y));
-
             // F
             df.AddPolygon(Color.Gray, DrawModes.DrawLines,
                 new PointF(1000, f_tan * 1000),
                 new PointF(-1000, -f_tan * 1000));
 
-            for (float percent = 0; ; percent+=.05f)
-            {
-                int id = df.AddPolygon(Color.Orange, DrawModes.DrawLines,
-                       new PointF(1000 + max.X*percent, -1 / f_tan * 1000 + max.Y*percent),
-                       new PointF(-1000 + max.X*percent, 1 / f_tan * 1000 + max.Y*percent));
-                if (percent >= 1)
-                    break;
-                df.Update2();
-                Application.DoEvents();
-                df.RemoveGraphic(id);
-            }
-            df.AddPolygon(Color.Orange, 3f, DrawModes.DrawPoints, new PointF(max.X, max.Y));
-
             for (float percent = 0; ; percent += .05f)
             {
-                int id = df.AddPolygon(Color.CornflowerBlue, DrawModes.DrawLines,
-                new PointF(1000 + min.X*percent, -1 / f_tan * 1000 + min.Y*percent),
-                new PointF(-1000 + min.X*percent, 1 / f_tan * 1000 + min.Y*percent));
-                if (percent >= 1)
+                int id1 = df.AddPolygon(Color.Orange, DrawModes.DrawLines,
+                       new PointF(1000 + max.X * percent, -1 / f_tan * 1000 + max.Y * percent),
+                       new PointF(-1000 + max.X * percent, 1 / f_tan * 1000 + max.Y * percent));
+                int id2 = df.AddPolygon(Color.CornflowerBlue, DrawModes.DrawLines,
+                    new PointF(1000 + min.X * percent, -1 / f_tan * 1000 + min.Y * percent),
+                    new PointF(-1000 + min.X * percent, 1 / f_tan * 1000 + min.Y * percent));
+                if (percent >= 0.99f)
                     break;
                 df.Update2();
                 Application.DoEvents();
-                df.RemoveGraphic(id);
+                df.RemoveGraphic(id2);
+                df.RemoveGraphic(id1);
             }
+
+            df.AddPolygon(Color.Orange, 3f, DrawModes.DrawPoints, new PointF(max.X, max.Y));
             df.AddPolygon(Color.CornflowerBlue, 3f, DrawModes.DrawPoints, new PointF(min.X, min.Y));
 
             df.Show();
@@ -368,15 +379,15 @@ namespace ММИО_л1
 
             if (df == null)
             {
-                df = new DekartForm(100, 100, 100, 100);
+                df = new DekartForm(75, 75, 250, 200);
                 df.Text = this.Text + " - графическое решение";
                 df.FormClosed += new FormClosedEventHandler(delegate(object sender, FormClosedEventArgs e)
                 {
                     df = null;
                 });
-                df.WindowState = FormWindowState.Maximized;
+                //df.WindowState = FormWindowState.Maximized;
             }
-            df.RemoveAllGraphics();
+            //df.RemoveAllGraphics();
             df.AddPolygon(Color.ForestGreen, DrawModes.DrawFilledPolygon, pts);
             df.Show();
             df.Update2();

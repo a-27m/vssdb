@@ -31,12 +31,13 @@ namespace SimplexMethod
         /// <exception cref="InvalidOperationException"></exception>
         public static void GGaussProcess(ref Fraction[,] a, uint Row, uint Col)
         {
-            int m = a.GetLength(0);
-            int n = a.GetLength(1);
-
             Fraction x = a[Row, Col];
             if (x == 0)
                 throw new InvalidOperationException("Specifed element is zero!");
+
+            int m = a.GetLength(0);
+            int n = a.GetLength(1);
+
 
             for (int j = 0; j < n; j++)
                 a[Row, j] /= x;
@@ -350,11 +351,16 @@ namespace SimplexMethod
         public event DebugPolygonEventHandler DebugPolygon;
 
         public delegate void DebugMaxMinEventHandler(FractionPoint max, FractionPoint min, Fraction f_tan);
-        public event DebugMaxMinEventHandler DebugMaxMin;
+        public event DebugMaxMinEventHandler DebugMaxMinPts;
+
+        public delegate void DebugExtremumEventHandler(Fraction[] coordinates);
+        public event DebugExtremumEventHandler DebugMaxSolution;
+        public event DebugExtremumEventHandler DebugMinSolution;
+
+        private delegate void TmpDelegate(int index);
 
         protected short[] signs;
         Fraction[,] a;
-
 
         public override void AddLimtation(Fraction[] a, short sign, Fraction b)
         {
@@ -398,6 +404,10 @@ namespace SimplexMethod
             int m = this.la.Count;
 
             List<Fraction[]>.Enumerator e;
+
+            #region Get canonic problem in matrix a
+
+            int[] wherex = null;
 
             if (n != 2)
             {
@@ -453,26 +463,41 @@ namespace SimplexMethod
 
                 #region make some basis
 
+                wherex = new int[m];
+                for (int l = 0; l < m; l++)
+                    wherex[l] = m - l - 1;
+
                 for (uint k = 0; k < m; k++)
                 {
-                    // look for non-zero main element at position [k, n-k]
-                    int k_nz = -1;
-                    for (uint i = k; i < m; i++)
-                        if (a[i, n - k] != 0)
-                            k_nz = (int)i;
-
-                    if (k_nz == -1)
-                        continue;
-
-                    // ok, swap row #k with row #k_nz
-                    for (uint j = 0; j < n + 1; j++)
+                    try
                     {
-                        Fraction t = a[k, j];
-                        a[k, j] = a[k_nz, j];
-                        a[k_nz, j] = t;
+                        GGaussProcess(ref a, k, (uint)n - k);
                     }
+                    catch (InvalidOperationException)
+                    {
+                        // look for non-zero main element at position [k, n-k]
+                        int k_nz = -1;
+                        for (uint i = k; i < m; i++)
+                            if (a[i, n - k] != 0)
+                                k_nz = (int)i;
 
-                    GGaussProcess(ref a, k, (uint)n - k);
+                        if (k_nz == -1)
+                            continue;
+
+                        // ok, swap row #k with row #k_nz
+                        for (uint j = 0; j < n + 1; j++)
+                        {
+                            Fraction t = a[k, j];
+                            a[k, j] = a[k_nz, j];
+                            a[k_nz, j] = t;
+                        }
+                        // update wherex
+                        int currpos = wherex[k];
+                        wherex[k] = wherex[k_nz];
+                        wherex[k_nz] = currpos;
+
+                        GGaussProcess(ref a, k, (uint)n - k);
+                    }
                 }
 
                 #endregion
@@ -482,7 +507,6 @@ namespace SimplexMethod
             }
             else
             {
-                //solve immediately;
                 #region la to matrix a
                 a = new Fraction[m, n + 1];
 
@@ -498,6 +522,9 @@ namespace SimplexMethod
                 #endregion
             }
 
+            #endregion
+
+            #region Get corner points of the polygon
             FractionPoint[] cornerPoints;
             cornerPoints = GetCornerPoints();// only valid ones are returned
 
@@ -508,34 +535,55 @@ namespace SimplexMethod
 
             OnPolygon(cornerPoints);
 
+            #endregion
+
+            #region Get new coefficients of optimum function
             Fraction c1 = m_c[0], c2 = m_c[1];
             if (n > 2)
-            //{
                 for (int i = 0; i < m; i++)
                 {
-                    c1 += m_c[i + 2] * a[i, 1];
-                    c2 += m_c[i + 2] * a[i, 2];
-                    //d += m_c[i + 2] * a[i, 0];
+                    c1 += m_c[i + 2] * a[wherex[i], 1];
+                    c2 += m_c[i + 2] * a[wherex[i], 2];
                 }
-            //    c1 /= d;
-            //    c2 /= d;
-            //}
+            #endregion
 
+            #region Get points that gives maximum and minimum to the opt. function
             int i_max, i_min;
             GetMinMax(cornerPoints, c1, c2, out i_max, out i_min);
-            OnMaxMin(cornerPoints[i_max], cornerPoints[i_min], c2 / c1);
+            OnMaxMinPoints(cornerPoints[i_max], cornerPoints[i_min], c2 / c1);
+            #endregion
 
-            // for maximum
-            Fraction[] solution = new Fraction[n];
-            solution[0] = cornerPoints[i_max].X;
-            solution[1] = cornerPoints[i_max].Y;
-            if (n > 2)
-                for (int j = 2; j < n; j++)
+            #region Form and "send" solutions
+
+            Fraction[] solution = null;
+
+            TmpDelegate form_rest = delegate(int index)
+            {
+                solution = new Fraction[n];
+                solution[0] = cornerPoints[index].X;
+                solution[1] = cornerPoints[index].Y;
+                if (n > 2)
                     for (int i = 0; i < m; i++)
-                        if (a[i, j+1] == 1)
-                            solution[j] = a[i, 0] - a[i, 1] * solution[0] - a[i, 2] * solution[1];
+                        solution[i + 2] = a[wherex[i], 0] -
+                            a[wherex[i], 1] * solution[0] -
+                            a[wherex[i], 2] * solution[1];
+            };
 
-            return solution;
+            if (DebugMaxSolution != null)
+            {
+                form_rest(i_max);
+                DebugMaxSolution(solution);
+            }
+
+            if (DebugMinSolution != null)
+            {
+                form_rest(i_min);
+                DebugMinSolution(solution);
+            }
+
+            #endregion
+
+            return null;
         }
 
         protected FractionPoint[] GetCornerPoints()
@@ -614,7 +662,7 @@ namespace SimplexMethod
             minIndex = 0;
 
             Matrix normalize = new Matrix();
-            normalize.Rotate((float)Math.Atan2(Xf, Yf));
+            normalize.Rotate((float)(Math.Atan2(Xf, Yf) * 180f / Math.PI));
 
             PointF[] pt = new PointF[A.Length];
             for (int t = 0; t < A.Length; t++)
@@ -622,11 +670,17 @@ namespace SimplexMethod
 
             normalize.TransformVectors(pt);
 
+            //debug
+            //FractionPoint[] rotatedpts = new FractionPoint[A.Length];
+            //for (int i = 0; i < rotatedpts.Length; i++)
+            //    rotatedpts[i] = new FractionPoint(pt[i].X, pt[i].Y);
+            //OnPolygon(rotatedpts);
+
             for (int t = 0; t < A.Length; t++)
             {
-                if (pt[t].X > pt[maxIndex].X)
+                if (pt[t].Y > pt[maxIndex].Y)
                     maxIndex = t;
-                if (pt[t].X < pt[minIndex].X)
+                if (pt[t].Y < pt[minIndex].Y)
                     minIndex = t;
             }
         }
@@ -634,14 +688,12 @@ namespace SimplexMethod
         {
             double[] keys = new double[pts.Length];
 
-            FractionPoint center = new FractionPoint(1, 1);
+            FractionPoint center = new FractionPoint(0, 0);
             for (int i = 0; i < pts.Length; i++)
             {
-                center.X *= pts[i].X;
-                center.Y *= pts[i].Y;
+                center.X += pts[i].X / pts.Length;
+                center.Y += pts[i].Y / pts.Length;
             }
-            center.X = new Fraction((decimal)Math.Pow((double)center.X, 1d / pts.Length));
-            center.Y = new Fraction(Math.Sign(center.Y) * (decimal)Math.Pow(Math.Abs(center.Y), 1d / pts.Length));
 
             for (int i = 0; i < keys.Length; i++)
                 // fill keys with angles relative to center-point
@@ -657,10 +709,10 @@ namespace SimplexMethod
             if (DebugPolygon != null)
                 DebugPolygon(GetEmbracingPolygon(pts));
         }
-        protected void OnMaxMin(FractionPoint max, FractionPoint min, Fraction f_tangence)
+        protected void OnMaxMinPoints(FractionPoint max, FractionPoint min, Fraction f_tangence)
         {
-            if (DebugMaxMin != null)
-                DebugMaxMin(max, min, f_tangence);
+            if (DebugMaxMinPts != null)
+                DebugMaxMinPts(max, min, f_tangence);
         }
     }
 }

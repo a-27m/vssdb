@@ -391,6 +391,8 @@ namespace Fractions
         }
         public string ToString(string format)
         {
+            if (format == null)
+            return ToString();
             //if (this.m_numerator == 0)
             //    return "0";
 
@@ -897,7 +899,7 @@ namespace Fractions
         //   System.OverflowException:
         //     value is less than Fraction.MinValue or greater than Fraction.MaxValue.-or-
         //     value is System.Single.NaN, System.Single.PositiveInfinity, or System.Single.NegativeInfinity.
-        public static explicit operator Fraction(float value)
+        public static implicit operator Fraction(float value)
         {
             return new Fraction((decimal)value);
         }
@@ -1027,6 +1029,21 @@ namespace Fractions
         {
             return new Fraction((decimal)value);
         }
+
+        ////
+        //// Summary:
+        ////     Converts a float number to a Fraction.
+        ////
+        //// Parameters:
+        ////   value:
+        ////     A float number.
+        ////
+        //// Returns:
+        ////     A Fraction that represents the converted float.
+        //public static implicit operator Fraction(float value)
+        //{
+        //    return new Fraction((decimal)value);
+        //}
 
         //
         // Summary:
