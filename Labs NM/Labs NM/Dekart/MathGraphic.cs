@@ -18,6 +18,66 @@ namespace DekartGraphic
 
     public class MathGraphic
     {
+
+        [Serializable()]
+        public struct ColorSchema
+        {
+            public Color backgroundColor;
+            public Color gridColor;
+            public Color axesColor;
+            public Color textColor;
+
+            public static ColorSchema BlackAndWhite
+            {
+                get
+                {
+                    ColorSchema cs;
+                    cs.axesColor = Color.Black;
+                    cs.backgroundColor = Color.White;
+                    cs.gridColor = Color.Gray;
+                    cs.textColor = Color.Black;
+                    return cs;
+                }
+            }
+            public static ColorSchema Default
+            {
+                get
+                {
+                    ColorSchema cs;
+                    cs.axesColor = Color.Black;
+                    cs.backgroundColor = Color.BlanchedAlmond;
+                    cs.gridColor = Color.FromArgb(180, Color.Blue);
+                    cs.textColor = Color.Black;
+                    return cs;
+                }
+            }
+
+            public ColorSchema(Color backgroundColor, Color gridColor,
+                Color axesColor, Color textColor)
+            {
+                this.axesColor = axesColor;
+                this.backgroundColor = backgroundColor;
+                this.gridColor = gridColor;
+                this.textColor = textColor;
+            }
+        }
+
+        protected ColorSchema m_CurrentColorSchema = ColorSchema.BlackAndWhite;
+        public ColorSchema CurrentColorSchema
+        {
+            get
+            {
+                return m_CurrentColorSchema;
+            }
+            set
+            {
+                m_CurrentColorSchema.axesColor = value.axesColor;
+                m_CurrentColorSchema.backgroundColor = value.backgroundColor;
+                m_CurrentColorSchema.gridColor = value.gridColor;
+                m_CurrentColorSchema.textColor = value.textColor;
+            }
+        }
+
         public bool Use_IsVisible = false;
         protected PointF[][] graphic;
         private bool tabulated = false;
@@ -102,7 +162,7 @@ namespace DekartGraphic
 
             if (EraseBkGnd)
             {
-                g.Clear(Color.White);
+                g.Clear(CurrentColorSchema.backgroundColor);
             }
 
             DrawCoordinateSystem(g);
@@ -196,7 +256,7 @@ namespace DekartGraphic
         }
         public virtual void DrawCoordinateSystem(Graphics g)
         {
-            g.Clear(Color.BlanchedAlmond);
+            g.Clear(CurrentColorSchema.backgroundColor);
             g.SmoothingMode = SmoothingMode.HighQuality;
 
             float m_zoom_x = Math.Abs(g.Transform.Elements[0]);
@@ -204,10 +264,10 @@ namespace DekartGraphic
             //float ox = g.Transform.Elements[4];
             //ox = g.Transform.OffsetX;
 
-            Pen GridPen = new Pen(Color.FromArgb(180, Color.Blue), 0f);
+            Pen GridPen = new Pen(CurrentColorSchema.gridColor, 0f);
             GridPen.DashStyle = DashStyle.Solid;
 
-            Pen AxePen = new Pen(Brushes.Black,
+            Pen AxePen = new Pen(new SolidBrush(CurrentColorSchema.axesColor),
                 2 / (m_zoom_x > m_zoom_y ?
                 m_zoom_y : m_zoom_x));
 
