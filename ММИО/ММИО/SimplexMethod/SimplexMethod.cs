@@ -471,7 +471,7 @@ namespace SimplexMethod
 
                 wherex = new int[m];
                 for (int l = 0; l < m; l++)
-                    wherex[l] = m - l - 1;
+                    wherex[l] = l;//m - l - 1;
 
                 for (uint k = 0; k < m; k++)
                 {
@@ -547,11 +547,12 @@ namespace SimplexMethod
 
             #region Get new coefficients of optimum function
             Fraction c1 = m_c[0], c2 = m_c[1];
+            
             if (n > 2)
                 for (int i = 0; i < m; i++)
                 {
-                    c1 += m_c[i + 2] * a[wherex[i], 1];
-                    c2 += m_c[i + 2] * a[wherex[i], 2];
+                    c1 -= m_c[i + 2] * a[i, 1];
+                    c2 -= m_c[i + 2] * a[i, 2];
                 }
             #endregion
 

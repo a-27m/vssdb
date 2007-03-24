@@ -62,7 +62,7 @@ namespace DekartGraphic
             }
         }
 
-        protected ColorSchema m_CurrentColorSchema = ColorSchema.BlackAndWhite;
+        protected ColorSchema m_CurrentColorSchema = ColorSchema.Default;
         public ColorSchema CurrentColorSchema
         {
             get
@@ -261,8 +261,8 @@ namespace DekartGraphic
 
             float m_zoom_x = Math.Abs(g.Transform.Elements[0]);
             float m_zoom_y = Math.Abs(g.Transform.Elements[3]);
-            //float ox = g.Transform.Elements[4];
-            //ox = g.Transform.OffsetX;
+            float ox = g.Transform.OffsetX;
+            float oy = g.Transform.OffsetY;
 
             Pen GridPen = new Pen(CurrentColorSchema.gridColor, 0f);
             GridPen.DashStyle = DashStyle.Solid;
@@ -275,6 +275,7 @@ namespace DekartGraphic
             StringFormat stringFormatY = new StringFormat();
             stringFormatX.LineAlignment = StringAlignment.Center;
             stringFormatY.LineAlignment = StringAlignment.Center;
+            stringFormatX.Alignment = StringAlignment.Far;
             stringFormatX.FormatFlags = StringFormatFlags.DirectionVertical;
 
             Font font = new Font("Arial",
@@ -289,42 +290,27 @@ namespace DekartGraphic
             y1 = g.VisibleClipBounds.Top;
             y2 = g.VisibleClipBounds.Bottom;
 
-            #region Grid
+            #region Grid and text
 
             float dx = 30f / m_zoom_x, dy = 30f / m_zoom_y;// шаг сетки
 
-            for (float x = 0; x < x2; x += dx)
+            float textX = -(ox - 3) / m_zoom_x;
+            float textY = -oy / m_zoom_y + g.VisibleClipBounds.Height;
+
+            for (float x = (float)(int)Math.Ceiling(x1 / dx) * dx; x < x2; x += dx)
             {
+                string label = x.ToString("#0.###");
                 g.DrawLine(GridPen, x, y1, x, y2);
-                g.DrawString(x.ToString("#0.###"), font, Brushes.Black,
-                    new PointF(x, font.GetHeight() / 2), stringFormatX);
-            }
-            for (float x = 0; x > x1; x -= dx)
-            {
-                g.DrawLine(GridPen, x, y1, x, y2);
-                g.DrawString(x.ToString("#0.###"), font, Brushes.Black,
-                    new PointF(x, font.GetHeight() / 2), stringFormatX);
+                g.DrawString(label, font, Brushes.Black,
+                    new PointF(x, textY), stringFormatX);
             }
 
-            for (float y = 0; y < y2; y += dy)
+            for (float y = (float)(int)Math.Ceiling(y1 / dy) * dy; y < y2; y += dy)
             {
+                g.DrawString((-y).ToString("#0.####"), font, Brushes.Black,
+                   new PointF(textX, y), stringFormatY);
                 g.DrawLine(GridPen, x1, y, x2, y);
-                g.DrawString((-y).ToString("#0.###"), font, Brushes.Black,
-                    new PointF(0 + 3 / m_zoom_x, y), stringFormatY);
             }
-            for (float y = 0; y > y1; y -= dy)
-            {
-                g.DrawLine(GridPen, x1, y, x2, y);
-                g.DrawString((-y).ToString("#0.###"), font, Brushes.Black,
-                    new PointF(0 + 3 / m_zoom_x, y), stringFormatY);
-            }
-
-            //for (float y = (int)Math.Ceiling(y1 / dy) * dy; y < y2; y += dy)
-            //{
-            //    g.DrawString((-y).ToString("#0.####"), font, Brushes.Black,
-            //       new PointF(0 + 3 / m_zoom, y), stringFormatY);
-            //    g.DrawLine(GridPen, x1, y, x2, y);
-            //}
 
             #endregion
 
@@ -336,6 +322,10 @@ namespace DekartGraphic
             g.DrawLine(AxePen, 0, y1, 0, y2);
             g.DrawLine(AxePen, 0, y1, 0 - 3 / m_zoom_x, y1 + 10 / m_zoom_y);
             g.DrawLine(AxePen, 0, y1, 0 + 3 / m_zoom_x, y1 + 10 / m_zoom_y);
+
+            AxePen.Width = 0;
+            g.DrawLine(AxePen, x1, y2 - 1 / m_zoom_y, x2, y2 - 1f / m_zoom_y);
+            g.DrawLine(AxePen, x1, y1, x1, y2);
             #endregion
 
             g.ScaleTransform(1, -1);

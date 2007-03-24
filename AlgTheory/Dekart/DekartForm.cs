@@ -127,15 +127,15 @@ namespace DekartGraphic
 		private void InitGrafixBuffer()
 		{
 			grCntxt = BufferedGraphicsManager.Current;
-			//grCntxt.MaximumBuffer = pictureBox1.Size+new Size(1,1);
+			grCntxt.MaximumBuffer = this.toolStripContainer1.ContentPanel.Size+new Size(1,1);
 
-			//grBuf = grCntxt.Allocate(pictureBox1.CreateGraphics(),
-			//    pictureBox1.ClientRectangle);
+			grBuf = grCntxt.Allocate(this.toolStripContainer1.ContentPanel.CreateGraphics(),
+			    this.toolStripContainer1.ContentPanel.ClientRectangle);
 
-			grCntxt.MaximumBuffer = Size + new Size(1, 1);
+			//grCntxt.MaximumBuffer = Size + new Size(1, 1);
 
-			grBuf = grCntxt.Allocate(CreateGraphics(),
-				ClientRectangle);
+			//grBuf = grCntxt.Allocate(CreateGraphics(),
+			//	ClientRectangle);
 
 			grBuf.Graphics.SmoothingMode = SmoothingMode.HighQuality;
 			grBuf.Graphics.Clear(BackColor);
@@ -441,7 +441,9 @@ namespace DekartGraphic
 
 			if ( saveFileDialog1.ShowDialog() == DialogResult.OK )
 			{
-				Bitmap bmp = new Bitmap(Width, Height,
+				Bitmap bmp = new Bitmap(
+                    this.toolStripContainer1.ContentPanel.Width,
+                    this.toolStripContainer1.ContentPanel.Height,
 					grBuf.Graphics);
 				Graphics tempGr = Graphics.FromImage(bmp);
 

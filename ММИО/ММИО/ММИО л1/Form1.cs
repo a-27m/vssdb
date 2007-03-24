@@ -167,16 +167,16 @@ namespace ММИО_л1
 
         private void Form1_Shown(object sender, EventArgs e)
         {
-            if (this.IsNewDocument)
-            {
-                FormAskDim fad = new FormAskDim();
-                if (fad.ShowDialog(this) != DialogResult.OK)
-                    Close();
-                n = fad.N;
-                m = fad.M;
-                GridMyResize(n, m);
-                dataGridView1.Select();
-            }
+            //if (this.IsNewDocument)
+            //{
+            //    FormAskDim fad = new FormAskDim();
+            //    if (fad.ShowDialog(this) != DialogResult.OK)
+            //        Close();
+            //    n = fad.N;
+            //    m = fad.M;
+            //    GridMyResize(n, m);
+            //    dataGridView1.Select();
+            //}
         }
 
         void solver_DebugNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
@@ -361,13 +361,19 @@ namespace ММИО_л1
 
             df.Use_IsVisible = false;
 
-            // F
-            df.AddPolygon(Color.Gray, DrawModes.DrawLines,
+            // n
+            df.AddPolygon(Color.Black, DrawModes.DrawLines,
                 new PointF(1000, f_tan * 1000),
                 new PointF(-1000, -f_tan * 1000));
 
             for (float percent = 0; ; percent += .05f)
             {
+                //int id1 = df.AddPolygon(Color.Black, DrawModes.DrawLines,
+                //       new PointF(1000 + max.X * percent, -1 / f_tan * 1000 + max.Y * percent),
+                //       new PointF(-1000 + max.X * percent, 1 / f_tan * 1000 + max.Y * percent));
+                //int id2 = df.AddPolygon(Color.Black, DrawModes.DrawLines,
+                //    new PointF(1000 + min.X * percent, -1 / f_tan * 1000 + min.Y * percent),
+                //    new PointF(-1000 + min.X * percent, 1 / f_tan * 1000 + min.Y * percent));
                 int id1 = df.AddPolygon(Color.Orange, DrawModes.DrawLines,
                        new PointF(1000 + max.X * percent, -1 / f_tan * 1000 + max.Y * percent),
                        new PointF(-1000 + max.X * percent, 1 / f_tan * 1000 + max.Y * percent));
@@ -384,6 +390,9 @@ namespace ММИО_л1
 
             df.AddPolygon(Color.Orange, 3f, DrawModes.DrawPoints, new PointF(max.X, max.Y));
             df.AddPolygon(Color.CornflowerBlue, 3f, DrawModes.DrawPoints, new PointF(min.X, min.Y));
+
+            //df.AddPolygon(Color.Black, 3f, DrawModes.DrawPoints, new PointF(max.X, max.Y));
+            //df.AddPolygon(Color.Black, 3f, DrawModes.DrawPoints, new PointF(min.X, min.Y));
 
             df.Show();
             df.Update2();
@@ -406,7 +415,7 @@ namespace ММИО_л1
                 //df.WindowState = FormWindowState.Maximized;
             }
             //df.RemoveAllGraphics();
-            df.AddPolygon(Color.ForestGreen, DrawModes.DrawFilledPolygon, pts);
+            df.AddPolygon(Color.Black, DrawModes.DrawFilledPolygon, pts);
             df.Show();
             df.Update2();
         }
