@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
+using System.IO.Compression;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Windows.Forms;
+
 using DekartGraphic;
 using SimplexMethod;
 using Fractions;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
-using System.IO.Compression;
 
 namespace ММИО_л1
 {
