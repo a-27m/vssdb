@@ -17,7 +17,7 @@ namespace Лаб2
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-          //  linkLabel1.DefaultText;
+            //  linkLabel1.DefaultText;
         }
     }
 
@@ -90,14 +90,40 @@ namespace Лаб2
             this.Text = textBox.Text;
             this.Close();
         }
+
+        public override string Text
+        {
+            get
+            {
+                return textBox.Text;
+            }
+            set
+            {
+                textBox.Text = value;
+            }
+        }
     }
 
     public class LinkLabelMy : LinkLabel
     {
-        FormPopup fp=null;
+        FormPopup fp = null;
 
-        string m_value= "";
-       public  string Value
+        string m_caption;
+        public string Caption
+        {
+            get
+            {
+                return m_caption;
+            }
+            set
+            {
+                m_caption = value;
+                Text = Caption + " " + value;
+            }
+        }
+
+        string m_value = "";
+        public string Value
         {
             get
             {
@@ -106,31 +132,21 @@ namespace Лаб2
             set
             {
                 m_value = value;
+                Text = Caption + " " + value;
             }
         }
 
         protected override void OnLinkClicked(LinkLabelLinkClickedEventArgs e)
         {
-        fp = new FormPopup(this);
+            fp = new FormPopup(this);
             fp.Show();
             fp.FormClosed += new FormClosedEventHandler(fp_FormClosed);
             base.OnLinkClicked(e);
         }
 
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            string str = Text;
-            Text += " " + Value;
-            base.OnPaint(e);
-            Text = str;
-        }
-
         void fp_FormClosed(object sender, FormClosedEventArgs e)
         {
             this.Value = fp.Text;
-            this.AutoSize = true;
-            this.Size = this.PreferredSize;
         }
-
     }
 }

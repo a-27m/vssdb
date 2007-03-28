@@ -85,6 +85,7 @@
             this.linkLabel1.TabIndex = 3;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Начало отсчета:";
+            this.linkLabel1.Value = "";
             // 
             // Form1
             // 
