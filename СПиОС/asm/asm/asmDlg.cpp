@@ -20,13 +20,13 @@ class CAboutDlg : public CDialog
 public:
 	CAboutDlg();
 
-	// Dialog Data
+// Dialog Data
 	enum { IDD = IDD_ABOUTBOX };
 
-protected:
+	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
-	// Implementation
+// Implementation
 protected:
 	DECLARE_MESSAGE_MAP()
 };
@@ -50,7 +50,7 @@ END_MESSAGE_MAP()
 
 
 CasmDlg::CasmDlg(CWnd* pParent /*=NULL*/)
-: CDialog(CasmDlg::IDD, pParent)
+	: CDialog(CasmDlg::IDD, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -158,16 +158,16 @@ HCURSOR CasmDlg::OnQueryDragIcon()
 
 void CasmDlg::OnBnClickedOpen()
 {
-	CFileDialog dlg(TRUE, L"asm", L"*.asm");
+	CFileDialog dlg(TRUE, (LPCTSTR)"asm", (LPCTSTR)"*.asm");
 	if(dlg.DoModal() == IDOK){
-		CStdioFile file;
-		CString s;
-		VERIFY(file.Open(dlg.GetPathName(),CFile::modeRead));
-		while (file.ReadString(s))
-		{
-			m_list1.AddString(s);
-		}
+	CStdioFile file;
+	CString s;
+	VERIFY(file.Open(dlg.GetPathName(),CFile::modeRead));
+	while (file.ReadString(s))
+	{
+		m_list1.AddString(s);
 	}
+}
 
 }
 
@@ -180,91 +180,93 @@ int code_start;
 int length;
 CMyList<int>*	list_addr = new CMyList<int>;
 CString label_start;
-CMyList<CString> *SymTab;
-CMyList<int> *SymTab_addr;
+CMyList<CString> *SymTab = new CMyList<CString>;
+CMyList<int> *SymTab_addr = new CMyList<int>;
 CMyList<int> *SymTab_value = new CMyList<int>;
 int list_i;
 int numb;
 struct Command{
-	char *pname;
-	int iCode;
-	int iLength;
-};
+				char *pname;
+				int iCode;
+				int iLength;
+			  };
 Command OpTab[3] = {
-	{"MOV", 1, 4},
-	{"INT", 2, 2},
-	{"RET", 3, 1}
-};
+					{"MOV", 1, 4},
+					{"INT", 2, 2},
+					{"RET", 3, 1}
+					};
 
 void ORG_Adress(CString s, CString word)
 {
 	if(word == "ORG")
-	{
-		CString str;
-		bool b = false;
-		int w;
-		int l = word.GetLength() + 1;  
-		for (w = l; w < s.GetLength(); w++)
 		{
-			if (s.GetAt(w) == ' ')
-				b = true;
-			int len = word.GetLength();
-			if (b == false)
-				str.Insert(len, s.GetAt(w));
-		}
-		ORG = _wtoi((LPCTSTR)str);
-		if (ORG == 0)//если в ORG не число
-		{
-			AfxMessageBox(L"Wrong use of directive ORG");
-			error = true;
-			return;
-		}
-		else//если в ORG число
-		{
-			int len = str.GetLength() + 4;//есть ли еще слова в строке
-			if (s.GetLength() != len)
+			CString str;
+			bool b = false;
+			UINT nType = MB_OK;
+	        UINT nIDHelp = 0;
+			int w;
+			int l = word.GetLength() + 1;  
+			for (w = l; w < s.GetLength(); w++)
 			{
-				b = false;
-				for (w = len; w < s.GetLength(); w++)
+				if (s.GetAt(w) == ' ')
+					b = true;
+				int len = word.GetLength();
+				if (b == false)
+					str.Insert(len, s.GetAt(w));
+			}
+			ORG = _wtoi((LPCTSTR)str);
+			if (ORG == 0)//если в ORG не число
+			{
+				AfxMessageBox((LPCTSTR)L"Wrang use of directive ORG", nType, nIDHelp);
+				error = true;
+				return;
+			}
+			else//если в ORG число
+			{
+				int len = str.GetLength() + 4;//есть ли еще слова в строке
+				if (s.GetLength() != len)
 				{
-					if (s.GetAt(w) != ' ')
+					b = false;
+					for (w = len; w < s.GetLength(); w++)
 					{
-						if (b == false)
+						if (s.GetAt(w) != ' ')
 						{
-							if (s.GetAt(w) == ';')//не комментарий ли
+							if (b == false)
 							{
-								b = true;
-								list_addr ->AddLast(ORG);
-								first = false;
-							}
-							else 
-							{
-								AfxMessageBox((LPCTSTR)L"Wrong use of directive ORG");
-								error = true;
-								return;
+								if (s.GetAt(w) == ';')//не комментарий ли
+								{
+									b = true;
+									list_addr ->AddLast(ORG);
+									first = false;
+								}
+								else 
+								{
+									AfxMessageBox((LPCTSTR)L"Wrang use of directive ORG", nType, nIDHelp);
+									error = true;
+									return;
+								}
 							}
 						}
 					}
 				}
+				else
+				{
+					first = false;
+					list_addr ->AddLast(ORG);
+				}
 			}
+		}
+		else//если не ORG
+		{
+			if (s.GetAt(0) == ';')
+				first = true;
 			else
 			{
-				first = false;
-				list_addr ->AddLast(ORG);
+				AfxMessageBox((LPCTSTR)L"Directive ORG wasn't use");
+				error = true;
+				return;
 			}
 		}
-	}
-	else//если не ORG
-	{
-		if (s.GetAt(0) == ';')
-			first = true;
-		else
-		{
-			AfxMessageBox((LPCTSTR)L"Directive ORG wasn't use");
-			error = true;
-			return;
-		}
-	}
 }
 
 void Label(CString s, CString word)
@@ -306,7 +308,7 @@ void Label(CString s, CString word)
 						}
 						else
 							w = s.GetLength();
-
+							
 					}
 				}
 			}
@@ -426,8 +428,8 @@ void Operation(CString s, CString word)
 								{
 									str.Insert(str.GetLength(), s.GetAt(w));
 								}
-								else
-									w = s.GetLength();
+									else
+										w = s.GetLength();
 							}
 						}
 					}
@@ -540,9 +542,9 @@ void CasmDlg::OnBnClickedTranslate()
 			}
 		}
 	}
-	if (!end)
+	if (end == false)
 	{
-		AfxMessageBox(L"Operator END have not been used");
+		AfxMessageBox((LPCTSTR)L"Operator END wasn't use");
 		return;
 	}
 	first = true;
@@ -555,8 +557,16 @@ void CasmDlg::OnBnClickedTranslate()
 		{
 			if (first)
 			{
-				CString str;
-				str.Format(L"HEAD ORG %X",--length);
+				CString str("Head Org ");
+				char *buf;
+				buf = new char[20];
+				--length;
+				itoa(length, buf, 16);
+				//itoa(length, buf, 16);
+				for (int i = 0; i < 2; ++i)
+				{
+					str.Insert(str.GetLength(), buf[i]);	
+				}
 				m_list2.AddString(str);
 				first = false;
 			}
@@ -585,9 +595,17 @@ void CasmDlg::OnBnClickedTranslate()
 								i = SymTab->GetCount();
 							}
 						}
-						int addr = *list_addr->GetByIndex(index++);
-						CString str = CString::Format("CODE %X%X", addr,);
-
+						CString str("Code  ");
+						int addr = *list_addr->GetByIndex(index);
+						++index;
+						char *buf;
+						buf = new char[20];
+						itoa(addr, buf, 16);
+						for (int i = 0; i < 2; ++i)
+						{
+							str.Insert(5 + i, buf[i]);	
+						}
+						buf = new char[20];
 						addr = *SymTab_value->GetByIndex(w);
 						itoa(addr, buf, 16);
 						CString s_b;
@@ -649,7 +667,7 @@ void CasmDlg::OnBnClickedTranslate()
 									int l = *list_addr->GetByIndex(index);
 									++index;
 									char *buf = new char[20];
-									itoa(l, buf, 16);
+						 			itoa(l, buf, 16);
 									for (int i = 0; i < 2; ++i)
 									{
 										str.Insert(5 + i, buf[i]);	
@@ -686,7 +704,7 @@ void CasmDlg::OnBnClickedTranslate()
 										int addr = *list_addr->GetByIndex(index);
 										++index;
 										char *buf = new char[20];
-										itoa(addr, buf, 16);
+						 				itoa(addr, buf, 16);
 										for (int i = 0; i < 2; ++i)
 										{
 											str.Insert(5 + i, buf[i]);	
@@ -717,7 +735,7 @@ void CasmDlg::OnBnClickedTranslate()
 								int l = *list_addr->GetByIndex(index);
 								++index;
 								char *buf = new char[20];
-								itoa(l, buf, 16);
+						 		itoa(l, buf, 16);
 								for (int i = 0; i < 2; ++i)
 								{
 									str.Insert(5 + i, buf[i]);	
