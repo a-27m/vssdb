@@ -82,19 +82,17 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,178,7,50,16,WS_GROUP
 END
 
-IDD_ASM_DIALOG DIALOGEX 0, 0, 379, 188
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
-EXSTYLE WS_EX_APPWINDOW
+IDD_ASM_DIALOG DIALOGEX 0, 0, 283, 226
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTROLPARENT | WS_EX_STATICEDGE | WS_EX_APPWINDOW
 CAPTION "Двухпроходный ассемблер"
+MENU IDR_MENU1
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    PUSHBUTTON      "Cancel",IDCANCEL,310,79,50,16
-    LISTBOX         IDC_LIST1,17,28,130,141,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
-    LISTBOX         IDC_LIST2,167,30,129,139,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Source file",IDC_STATIC,19,15,78,8
-    LTEXT           "Object file",IDC_STATIC,170,16,34,8
-    PUSHBUTTON      "Open",IDC_Open,309,31,50,14
-    PUSHBUTTON      "Translate",IDC_Translate,311,54,50,14
+    LISTBOX         IDC_LIST1,7,18,132,201,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_LIST2,144,18,132,201,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Source file",IDC_STATIC,7,7,38,8
+    LTEXT           "Object file",IDC_STATIC,145,7,34,8
 END
 
 
@@ -156,12 +154,31 @@ BEGIN
     IDD_ASM_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 372
+        RIGHTMARGIN, 276
         TOPMARGIN, 7
-        BOTTOMMARGIN, 181
+        BOTTOMMARGIN, 219
     END
 END
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU1 MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Open",                       ID_FILE_OPEN
+        MENUITEM "E&xit",                       IDCANCEL
+    END
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "T&ranslate",                  ID_TOOLS_TRANSLATE
+    END
+END
 
 
 /////////////////////////////////////////////////////////////////////////////

@@ -115,7 +115,7 @@ void CMyList<T>::AddLast(CMyList * List) //source OK
 	tmp=this->first;
 	while(tmp->next!=NULL) {tmp=tmp->next;}
 	tmp->next=List->first;
-	while(tmp->next!=NULL) {count++;}// <- goto the end of added list
+	while(tmp->next!=NULL) {count++;}// <- walk to the end of added list
 }
 
 template <class T>

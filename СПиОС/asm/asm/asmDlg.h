@@ -29,12 +29,11 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
-public:
-	afx_msg void OnBnClickedOpen();
+
 public:
 	CListBox m_list1;
-public:
 	CListBox m_list2;
-public:
+
+	afx_msg void OnBnClickedOpen();
 	afx_msg void OnBnClickedTranslate();
 };

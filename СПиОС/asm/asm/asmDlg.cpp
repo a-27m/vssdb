@@ -67,8 +67,9 @@ BEGIN_MESSAGE_MAP(CasmDlg, CDialog)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
-	ON_BN_CLICKED(IDC_Open, &CasmDlg::OnBnClickedOpen)
-	ON_BN_CLICKED(IDC_Translate, &CasmDlg::OnBnClickedTranslate)
+	ON_COMMAND(ID_FILE_OPEN, &CasmDlg::OnBnClickedOpen)
+	ON_COMMAND(ID_TOOLS_TRANSLATE, &CasmDlg::OnBnClickedTranslate)
+	ON_WM_MENUSELECT()
 END_MESSAGE_MAP()
 
 
@@ -77,8 +78,6 @@ END_MESSAGE_MAP()
 BOOL CasmDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-
-	// Add "About..." menu item to system menu.
 
 	// IDM_ABOUTBOX must be in the system command range.
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
@@ -159,16 +158,17 @@ HCURSOR CasmDlg::OnQueryDragIcon()
 void CasmDlg::OnBnClickedOpen()
 {
 	CFileDialog dlg(TRUE, (LPCTSTR)"asm", (LPCTSTR)"*.asm");
-	if(dlg.DoModal() == IDOK){
-	CStdioFile file;
-	CString s;
-	VERIFY(file.Open(dlg.GetPathName(),CFile::modeRead));
-	while (file.ReadString(s))
+	if(dlg.DoModal() == IDOK)
 	{
-		m_list1.AddString(s);
+		CStdioFile file;
+		CString s;
+		VERIFY(file.Open(dlg.GetPathName(),CFile::modeRead));
+		m_list1.ResetContent();
+		while (file.ReadString(s))
+		{
+			m_list1.AddString(s);
+		}
 	}
-}
-
 }
 
 bool first;
@@ -178,18 +178,19 @@ bool end = false;
 int ORG = -1000;
 int code_start;
 int length;
-CMyList<int>*	list_addr = new CMyList<int>;
+CMyList<int>*	list_addr;
 CString label_start;
-CMyList<CString> *SymTab = new CMyList<CString>;
-CMyList<int> *SymTab_addr = new CMyList<int>;
+CMyList<CString> *SymTab;
+CMyList<int> *SymTab_addr;
 CMyList<int> *SymTab_value = new CMyList<int>;
 int list_i;
 int numb;
-struct Command{
-				char *pname;
-				int iCode;
-				int iLength;
-			  };
+
+struct Command {
+	char *pname;
+	int iCode;
+	int iLength;
+};
 Command OpTab[3] = {
 					{"MOV", 1, 4},
 					{"INT", 2, 2},
@@ -496,14 +497,21 @@ void CasmDlg::OnBnClickedTranslate()
 	SymTab = new CMyList<CString>;
 	SymTab_addr = new CMyList<int>;
 	list_addr = new CMyList<int>;
+
 	first = true;
 	start = false;
-	CString s;
+
 	numb = m_list1.GetCount();
+	m_list2.ResetContent();
+
 	int i = 0;
 	int w = 0;
+
 	UINT nType = MB_OK;
 	UINT nIDHelp = 0;
+
+		CString s;
+
 	for (list_i = 0; list_i < numb; ++list_i)
 	{
 		CString word;
@@ -569,6 +577,7 @@ void CasmDlg::OnBnClickedTranslate()
 				}
 				m_list2.AddString(str);
 				first = false;
+				delete buf;
 			}
 			else
 			{
@@ -605,6 +614,7 @@ void CasmDlg::OnBnClickedTranslate()
 						{
 							str.Insert(5 + i, buf[i]);	
 						}
+						delete buf;
 						buf = new char[20];
 						addr = *SymTab_value->GetByIndex(w);
 						itoa(addr, buf, 16);
@@ -617,6 +627,7 @@ void CasmDlg::OnBnClickedTranslate()
 						//str = str + s_b;
 						//str.Insert(str.GetLength(), s_b);
 						m_list2.AddString(str);
+						delete buf;
 					}
 				}
 				else
@@ -632,6 +643,7 @@ void CasmDlg::OnBnClickedTranslate()
 							str.Insert(str.GetLength(), buf[i]);	
 						}
 						m_list2.AddString(str);
+						delete buf;
 					}
 					else
 					{
@@ -648,7 +660,7 @@ void CasmDlg::OnBnClickedTranslate()
 							}
 							if(w == -1)
 							{
-								AfxMessageBox((LPCTSTR)L"Wrong use of operator MOV");
+								AfxMessageBox(L"Wrong use of operator MOV");
 								return;
 							}
 							else
@@ -672,6 +684,7 @@ void CasmDlg::OnBnClickedTranslate()
 									{
 										str.Insert(5 + i, buf[i]);	
 									}
+									delete buf;
 									buf = new char[20];
 									itoa(digit, buf, 16);
 									for (int i = 0; i < 2; ++i)
@@ -679,6 +692,7 @@ void CasmDlg::OnBnClickedTranslate()
 										str.Insert(str.GetLength(), buf[i]);	
 									}
 									m_list2.AddString(str);
+									delete buf;
 								}
 								else
 								{
@@ -695,7 +709,7 @@ void CasmDlg::OnBnClickedTranslate()
 									}
 									if(b == false)
 									{
-										AfxMessageBox((LPCTSTR)L"Wrong use of operator MOV");
+										AfxMessageBox(L"Wrong use of operator MOV");
 										return;
 									}
 									else
@@ -710,6 +724,7 @@ void CasmDlg::OnBnClickedTranslate()
 											str.Insert(5 + i, buf[i]);	
 										}
 										int digit = *SymTab_addr->GetByIndex(w);
+										delete buf;
 										buf = new char[20];
 										itoa(digit, buf, 16);
 										for (int i = 0; i < 2; ++i)
@@ -717,6 +732,7 @@ void CasmDlg::OnBnClickedTranslate()
 											str.Insert(str.GetLength(), buf[i]);	
 										}
 										m_list2.AddString(str);
+										delete buf;
 									}
 								}
 							}
@@ -731,7 +747,7 @@ void CasmDlg::OnBnClickedTranslate()
 							int digit = _wtoi((LPCTSTR)s_digit);
 							if(digit != 0)
 							{
-								CString str("Code  02 ");
+								CString str(L"Code  02 ");
 								int l = *list_addr->GetByIndex(index);
 								++index;
 								char *buf = new char[20];
@@ -740,6 +756,7 @@ void CasmDlg::OnBnClickedTranslate()
 								{
 									str.Insert(5 + i, buf[i]);	
 								}
+								delete buf;
 								buf = new char[20];
 								itoa(digit, buf, 16);
 								for (int i = 0; i < 2; ++i)
@@ -747,10 +764,11 @@ void CasmDlg::OnBnClickedTranslate()
 									str.Insert(str.GetLength(), buf[i]);	
 								}
 								m_list2.AddString(str);
+								delete buf;
 							}
 							else
 							{
-								AfxMessageBox((LPCTSTR)L"Wrong use of operator INT");
+								AfxMessageBox(L"Wrong use of operator INT");
 								return;
 							}
 						}
@@ -768,10 +786,11 @@ void CasmDlg::OnBnClickedTranslate()
 									str.Insert(5 + i, buf[i]);	
 								}
 								m_list2.AddString(str);
+								delete buf;
 							}
 							else
 							{
-								AfxMessageBox((LPCTSTR)L"Wrong use of operator RET");
+								AfxMessageBox(L"Wrong use of operator RET");
 								return;
 							}
 						}
@@ -780,4 +799,10 @@ void CasmDlg::OnBnClickedTranslate()
 			}
 		}
 	}
+
+	delete SymTab;
+	delete SymTab_addr;
+	delete SymTab_value;
+	delete list_addr;
 }
+
