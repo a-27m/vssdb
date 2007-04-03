@@ -57,16 +57,16 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.linkLabelMy7 = new Лаб2.LinkLabelMy();
             this.linkLabelMy4 = new Лаб2.LinkLabelMy();
             this.linkLabelMy6 = new Лаб2.LinkLabelMy();
             this.linkLabelMy5 = new Лаб2.LinkLabelMy();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.linkLabelMy0 = new Лаб2.LinkLabelMy();
             this.linkLabelMy1 = new Лаб2.LinkLabelMy();
             this.linkLabelMy2 = new Лаб2.LinkLabelMy();
             this.linkLabelMy3 = new Лаб2.LinkLabelMy();
-            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -144,21 +144,27 @@
             // 
             this.textBox2.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.textBox2.BackColor = System.Drawing.SystemColors.Control;
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox2.ForeColor = System.Drawing.SystemColors.WindowText;
             this.textBox2.Location = new System.Drawing.Point(290, 152);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 13);
+            this.textBox2.Size = new System.Drawing.Size(100, 20);
             this.textBox2.TabIndex = 3;
+            this.textBox2.Text = "———";
+            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // textBox1
             // 
             this.textBox1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.textBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox1.ForeColor = System.Drawing.SystemColors.WindowText;
             this.textBox1.Location = new System.Drawing.Point(290, 54);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 13);
+            this.textBox1.Size = new System.Drawing.Size(100, 20);
             this.textBox1.TabIndex = 1;
+            this.textBox1.Text = "———";
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // panel2
             // 
@@ -175,62 +181,6 @@
             this.tableLayoutPanel1.SetRowSpan(this.panel2, 2);
             this.panel2.Size = new System.Drawing.Size(144, 92);
             this.panel2.TabIndex = 1;
-            // 
-            // linkLabelMy7
-            // 
-            this.linkLabelMy7.AutoSize = true;
-            this.linkLabelMy7.Caption = "Начало отсчета:";
-            this.errorProvider1.SetIconAlignment(this.linkLabelMy7, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
-            this.linkLabelMy7.Location = new System.Drawing.Point(19, 12);
-            this.linkLabelMy7.Name = "linkLabelMy7";
-            this.linkLabelMy7.Size = new System.Drawing.Size(98, 13);
-            this.linkLabelMy7.TabIndex = 0;
-            this.linkLabelMy7.TabStop = true;
-            this.linkLabelMy7.Text = "Начало отсчета: 0";
-            this.linkLabelMy7.Value = "0";
-            this.linkLabelMy7.TextChanged += new System.EventHandler(this.linkLabel1_TextChanged);
-            // 
-            // linkLabelMy4
-            // 
-            this.linkLabelMy4.AutoSize = true;
-            this.linkLabelMy4.Caption = "Единицы:";
-            this.errorProvider1.SetIconAlignment(this.linkLabelMy4, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
-            this.linkLabelMy4.Location = new System.Drawing.Point(19, 75);
-            this.linkLabelMy4.Name = "linkLabelMy4";
-            this.linkLabelMy4.Size = new System.Drawing.Size(58, 13);
-            this.linkLabelMy4.TabIndex = 3;
-            this.linkLabelMy4.TabStop = true;
-            this.linkLabelMy4.Text = "Единицы: ";
-            this.linkLabelMy4.Value = "";
-            this.linkLabelMy4.TextChanged += new System.EventHandler(this.linkLabel1_TextChanged);
-            // 
-            // linkLabelMy6
-            // 
-            this.linkLabelMy6.AutoSize = true;
-            this.linkLabelMy6.Caption = "Конец отсчета:";
-            this.errorProvider1.SetIconAlignment(this.linkLabelMy6, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
-            this.linkLabelMy6.Location = new System.Drawing.Point(19, 33);
-            this.linkLabelMy6.Name = "linkLabelMy6";
-            this.linkLabelMy6.Size = new System.Drawing.Size(104, 13);
-            this.linkLabelMy6.TabIndex = 1;
-            this.linkLabelMy6.TabStop = true;
-            this.linkLabelMy6.Text = "Конец отсчета: 100";
-            this.linkLabelMy6.Value = "100";
-            this.linkLabelMy6.TextChanged += new System.EventHandler(this.linkLabel1_TextChanged);
-            // 
-            // linkLabelMy5
-            // 
-            this.linkLabelMy5.AutoSize = true;
-            this.linkLabelMy5.Caption = "Делений:";
-            this.errorProvider1.SetIconAlignment(this.linkLabelMy5, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
-            this.linkLabelMy5.Location = new System.Drawing.Point(19, 54);
-            this.linkLabelMy5.Name = "linkLabelMy5";
-            this.linkLabelMy5.Size = new System.Drawing.Size(58, 13);
-            this.linkLabelMy5.TabIndex = 2;
-            this.linkLabelMy5.TabStop = true;
-            this.linkLabelMy5.Text = "Делений: ";
-            this.linkLabelMy5.Value = "";
-            this.linkLabelMy5.TextChanged += new System.EventHandler(this.linkLabel1_TextChanged);
             // 
             // panel1
             // 
@@ -249,12 +199,73 @@
             this.panel1.Size = new System.Drawing.Size(144, 92);
             this.panel1.TabIndex = 0;
             // 
+            // errorProvider1
+            // 
+            this.errorProvider1.BlinkRate = 125;
+            this.errorProvider1.ContainerControl = this;
+            // 
+            // linkLabelMy7
+            // 
+            this.linkLabelMy7.AutoSize = true;
+            this.linkLabelMy7.Caption = "Начало отсчета:";
+            this.errorProvider1.SetIconAlignment(this.linkLabelMy7, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
+            this.linkLabelMy7.Location = new System.Drawing.Point(19, 7);
+            this.linkLabelMy7.Name = "linkLabelMy7";
+            this.linkLabelMy7.Size = new System.Drawing.Size(98, 13);
+            this.linkLabelMy7.TabIndex = 0;
+            this.linkLabelMy7.TabStop = true;
+            this.linkLabelMy7.Text = "Начало отсчета: 0";
+            this.linkLabelMy7.Value = "0";
+            this.linkLabelMy7.TextChanged += new System.EventHandler(this.linkLabel1_TextChanged);
+            // 
+            // linkLabelMy4
+            // 
+            this.linkLabelMy4.AutoSize = true;
+            this.linkLabelMy4.Caption = "Единицы:";
+            this.errorProvider1.SetIconAlignment(this.linkLabelMy4, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
+            this.linkLabelMy4.Location = new System.Drawing.Point(19, 70);
+            this.linkLabelMy4.Name = "linkLabelMy4";
+            this.linkLabelMy4.Size = new System.Drawing.Size(58, 13);
+            this.linkLabelMy4.TabIndex = 3;
+            this.linkLabelMy4.TabStop = true;
+            this.linkLabelMy4.Text = "Единицы: ";
+            this.linkLabelMy4.Value = "";
+            this.linkLabelMy4.TextChanged += new System.EventHandler(this.linkLabel1_TextChanged);
+            // 
+            // linkLabelMy6
+            // 
+            this.linkLabelMy6.AutoSize = true;
+            this.linkLabelMy6.Caption = "Конец отсчета:";
+            this.errorProvider1.SetIconAlignment(this.linkLabelMy6, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
+            this.linkLabelMy6.Location = new System.Drawing.Point(19, 28);
+            this.linkLabelMy6.Name = "linkLabelMy6";
+            this.linkLabelMy6.Size = new System.Drawing.Size(104, 13);
+            this.linkLabelMy6.TabIndex = 1;
+            this.linkLabelMy6.TabStop = true;
+            this.linkLabelMy6.Text = "Конец отсчета: 100";
+            this.linkLabelMy6.Value = "100";
+            this.linkLabelMy6.TextChanged += new System.EventHandler(this.linkLabel1_TextChanged);
+            // 
+            // linkLabelMy5
+            // 
+            this.linkLabelMy5.AutoSize = true;
+            this.linkLabelMy5.Caption = "Делений:";
+            this.errorProvider1.SetIconAlignment(this.linkLabelMy5, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
+            this.linkLabelMy5.Location = new System.Drawing.Point(19, 49);
+            this.linkLabelMy5.Name = "linkLabelMy5";
+            this.linkLabelMy5.Size = new System.Drawing.Size(58, 13);
+            this.linkLabelMy5.TabIndex = 2;
+            this.linkLabelMy5.TabStop = true;
+            this.linkLabelMy5.Text = "Делений: ";
+            this.linkLabelMy5.Value = "";
+            this.linkLabelMy5.TextChanged += new System.EventHandler(this.linkLabel1_TextChanged);
+            // 
             // linkLabelMy0
             // 
             this.linkLabelMy0.AutoSize = true;
             this.linkLabelMy0.Caption = "Начало отсчета:";
             this.errorProvider1.SetIconAlignment(this.linkLabelMy0, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
-            this.linkLabelMy0.Location = new System.Drawing.Point(19, 12);
+            this.linkLabelMy0.Location = new System.Drawing.Point(19, 7);
             this.linkLabelMy0.Name = "linkLabelMy0";
             this.linkLabelMy0.Size = new System.Drawing.Size(98, 13);
             this.linkLabelMy0.TabIndex = 0;
@@ -268,7 +279,7 @@
             this.linkLabelMy1.AutoSize = true;
             this.linkLabelMy1.Caption = "Конец отсчета:";
             this.errorProvider1.SetIconAlignment(this.linkLabelMy1, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
-            this.linkLabelMy1.Location = new System.Drawing.Point(19, 33);
+            this.linkLabelMy1.Location = new System.Drawing.Point(19, 28);
             this.linkLabelMy1.Name = "linkLabelMy1";
             this.linkLabelMy1.Size = new System.Drawing.Size(104, 13);
             this.linkLabelMy1.TabIndex = 1;
@@ -282,7 +293,7 @@
             this.linkLabelMy2.AutoSize = true;
             this.linkLabelMy2.Caption = "Делений:";
             this.errorProvider1.SetIconAlignment(this.linkLabelMy2, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
-            this.linkLabelMy2.Location = new System.Drawing.Point(19, 54);
+            this.linkLabelMy2.Location = new System.Drawing.Point(19, 49);
             this.linkLabelMy2.Name = "linkLabelMy2";
             this.linkLabelMy2.Size = new System.Drawing.Size(58, 13);
             this.linkLabelMy2.TabIndex = 2;
@@ -296,7 +307,7 @@
             this.linkLabelMy3.AutoSize = true;
             this.linkLabelMy3.Caption = "Единицы:";
             this.errorProvider1.SetIconAlignment(this.linkLabelMy3, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
-            this.linkLabelMy3.Location = new System.Drawing.Point(19, 75);
+            this.linkLabelMy3.Location = new System.Drawing.Point(19, 70);
             this.linkLabelMy3.Name = "linkLabelMy3";
             this.linkLabelMy3.Size = new System.Drawing.Size(58, 13);
             this.linkLabelMy3.TabIndex = 3;
@@ -304,11 +315,6 @@
             this.linkLabelMy3.Text = "Единицы: ";
             this.linkLabelMy3.Value = "";
             this.linkLabelMy3.TextChanged += new System.EventHandler(this.linkLabel1_TextChanged);
-            // 
-            // errorProvider1
-            // 
-            this.errorProvider1.BlinkRate = 125;
-            this.errorProvider1.ContainerControl = this;
             // 
             // Form1
             // 

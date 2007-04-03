@@ -10,7 +10,7 @@ namespace Лаб2
 {
     public partial class Form1 : Form
     {
-     public   class ScaleParams
+        public class ScaleParams
         {
             private float m_S0;
             public float S0
@@ -38,8 +38,8 @@ namespace Лаб2
                 }
             }
 
-            private int m_n;
-            public int N
+            private uint m_n;
+            public uint N
             {
                 get
                 {
@@ -81,7 +81,7 @@ namespace Лаб2
             /// <returns>Value in the scale sp2</returns>
             public static float Translate(float value, ScaleParams sp1, ScaleParams sp2)
             {
-                return (value * sp1.Unit + (sp2.S0 - sp1.S0)) / sp2.Unit;
+                return (value - sp1.S0) * sp2.Unit / sp1.Unit + sp2.S0;
             }
         }
 
@@ -92,17 +92,16 @@ namespace Лаб2
             InitializeComponent();
             scale1 = new ScaleParams();
             scale2 = new ScaleParams();
-            linkLabelMy0.DataBindings.Add("Value", scale1, "S0", true, DataSourceUpdateMode.OnPropertyChanged);
-            linkLabelMy1.DataBindings.Add("Value", scale1, "S1", true, DataSourceUpdateMode.OnPropertyChanged);
-            linkLabelMy2.DataBindings.Add("Value", scale1, "N", true, DataSourceUpdateMode.OnPropertyChanged);
-            linkLabelMy3.DataBindings.Add("Value", scale1, "UnitsName", true, DataSourceUpdateMode.OnPropertyChanged);
+            linkLabelMy0.DataBindings.Add("Value", scale1, "S0");
+            linkLabelMy1.DataBindings.Add("Value", scale1, "S1");
+            linkLabelMy2.DataBindings.Add("Value", scale1, "N");
+            linkLabelMy3.DataBindings.Add("Value", scale1, "UnitsName");
 
-            linkLabelMy7.DataBindings.Add("Value", scale2, "S0", true, DataSourceUpdateMode.OnPropertyChanged);
-            linkLabelMy6.DataBindings.Add("Value", scale2, "S1", true, DataSourceUpdateMode.OnPropertyChanged);
-            linkLabelMy5.DataBindings.Add("Value", scale2, "N", true, DataSourceUpdateMode.OnPropertyChanged);
-            linkLabelMy4.DataBindings.Add("Value", scale2, "UnitsName", true, DataSourceUpdateMode.OnPropertyChanged);
+            linkLabelMy7.DataBindings.Add("Value", scale2, "S0");
+            linkLabelMy6.DataBindings.Add("Value", scale2, "S1");
+            linkLabelMy5.DataBindings.Add("Value", scale2, "N");
+            linkLabelMy4.DataBindings.Add("Value", scale2, "UnitsName");
         }
-
 
         private void linkLabel1_TextChanged(object sender, EventArgs e)
         {
@@ -112,24 +111,36 @@ namespace Лаб2
 
         //private void trackBars_ValueChanged(object sender, EventArgs e)
         //{
+        ////    (sender as TrackBar).Value;
+        ////    float value = ScaleParams.Translate(
+        ////    if (sender == trackBar1)
+        ////    {
 
+        ////    }
 
-        //    (sender as TrackBar).Value+;
-        //    float value = ScaleParams.Translate(
-        //    if (sender == trackBar1)
-        //    {
+        //    //textBox1.Text = trackBar1.Va
 
-        //    }
         //}
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            float old_value = (float)trackBar1.Value/trackBar1.Maximum * (scale1.S1 - scale1.S0) + scale1.S0;
+            float old_value = (float)trackBar1.Value / trackBar1.Maximum * (scale1.S1 - scale1.S0) + scale1.S0;
 
             textBox1.Text = old_value.ToString();
 
             float value = ScaleParams.Translate(old_value, scale1, scale2);
-            trackBar2.Value = (int)((value - scale2.S0) / (scale2.S1 - scale2.S0)*trackBar2.Maximum);
+
+            textBox2.Text = value.ToString();
+
+            try
+            {
+                trackBar2.Value = (int)((value - scale2.S0) / (scale2.S1 - scale2.S0) * trackBar2.Maximum);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                trackBar2.Value = value > scale2.S1 ?
+                    trackBar2.Maximum : trackBar2.Minimum;
+            }
 
             statusLabel1.Text = string.Format("{0} {1} = {2} {3}",
                 old_value, scale1.UnitsName, value, scale2.UnitsName);
@@ -137,12 +148,23 @@ namespace Лаб2
 
         private void trackBar2_Scroll(object sender, EventArgs e)
         {
-            float old_value = (float)trackBar2.Value/trackBar2.Maximum * (scale2.S1 - scale2.S0) + scale2.S0;
+            float old_value = (float)trackBar2.Value / trackBar2.Maximum * (scale2.S1 - scale2.S0) + scale2.S0;
 
             textBox2.Text = old_value.ToString();
 
             float value = ScaleParams.Translate(old_value, scale2, scale1);
-            trackBar1.Value = (int)((value - scale1.S0) / (scale1.S1 - scale1.S0)*trackBar1.Maximum);
+
+            textBox1.Text = value.ToString();
+
+            try
+            {
+                trackBar1.Value = (int)((value - scale1.S0) / (scale1.S1 - scale1.S0) * trackBar1.Maximum);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                trackBar1.Value = value > scale1.S1 ?
+                    trackBar1.Maximum : trackBar1.Minimum;
+            }
 
             statusLabel1.Text = string.Format("{0} {1} = {2} {3}",
                 old_value, scale2.UnitsName, value, scale1.UnitsName);
@@ -273,7 +295,12 @@ namespace Лаб2
 
         void fp_FormClosed(object sender, FormClosedEventArgs e)
         {
-            this.Value = fp.Text;
+            this.m_value = fp.Text;
+            foreach (Binding binding in this.DataBindings)
+            {
+                binding.WriteValue();
+                binding.ReadValue();
+            }
         }
     }
 }
