@@ -49,6 +49,16 @@ namespace AlgTheory
             if (!ok)
                 return;
 
+            if (x1 > x2)
+            {
+                float t = x1;
+                x1 = x2;
+                x2 = t;
+
+                textBox1.Text = x1.ToString();
+                textBox2.Text = x2.ToString();
+            }
+
             DekartForm df = new DekartForm(50, 50, 30, 150);
             df.Text = "y ≈ sin(x)";
             df.AddGraphic(new DoubleFunction(delegate(double x)
