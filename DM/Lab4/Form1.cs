@@ -1,8 +1,9 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using automats;
 
-namespace Lab3
+namespace Lab4
 {
     public partial class Form1 : Form
     {
