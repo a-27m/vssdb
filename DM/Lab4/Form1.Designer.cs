@@ -1,4 +1,4 @@
-namespace Lab3
+namespace Lab4
 {
     partial class Form1
     {
@@ -47,7 +47,7 @@ namespace Lab3
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 8F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 9F));
             this.tableLayoutPanel1.Controls.Add(this.button1, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.button2, 2, 2);
             this.tableLayoutPanel1.Controls.Add(this.textBox1, 1, 1);
