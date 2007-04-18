@@ -204,29 +204,37 @@ namespace Lab3
             int i = 0;
             foreach (Card card in dictonary)
             {
+                Color backColor = SystemColors.Control;
+
                 dgv.Columns.Add("a", "a");
                 dgv[i, 0].Value = card.Id.ToString();
-                dgv[i, 0].Style.BackColor = Color.LightGray;
+                dgv[i, 0].Style.BackColor = backColor;
+
+                dgv.ColumnCount = dgv.ColumnCount + card.Symbols.Length;
 
                 for (int j = 0; j < card.Symbols.Length; j++)
                 {
                     uint alt = card.AlternativeCardIds[j];
 
-                    dgv.Columns.Add("a", "a");
                     dgv[i + j, 1].Value = card.Symbols[j];
                     dgv[i + j, 2].Value = alt == 0 ? "" : alt.ToString();
 
-                    dgv[i + j, 1].Style.BackColor = Color.LightGray;
-                    dgv[i + j, 2].Style.BackColor = Color.LightGray;
+                    dgv[i + j, 1].Style.BackColor = backColor;
+                    dgv[i + j, 2].Style.BackColor = backColor;
                 }
 
                 i += card.Symbols.Length + 1;
             }
 
+            dgv.Columns.RemoveAt(dgv.ColumnCount - 1);
+
             dgv.AutoResizeColumns();
             dgv.AutoResizeRows();
 
             dgv.ResumeLayout(false);
+
+            if (dgv.SelectedCells != null && dgv.SelectedCells.Count > 0)
+                dgv.SelectedCells[0].Selected = false;
         }
     }
 }
