@@ -24,6 +24,14 @@ namespace automats
         {
             static uint lastCardId = 0;
 
+            public static uint LastCardId
+            {
+                get
+                {
+                    return Card.lastCardId;
+                }
+            }
+
             uint id;
             public uint Id
             {
@@ -86,7 +94,7 @@ namespace automats
             }
         }
 
-        protected bool _find(string Word, bool WeNeedToAddIfNotFound)
+        protected bool _find(string Word, uint StartFrom, bool WeNeedToAddIfNotFound)
         {
             lastSearchComparsions = 0;
 
@@ -106,7 +114,8 @@ namespace automats
 
             // initialize search loop
             List<Card>.Enumerator i = dictonary.GetEnumerator();
-            i.MoveNext();
+            while (i.MoveNext() && StartFrom-- > 0)
+                ;
 
             int cardPos = 0;
 
@@ -167,23 +176,23 @@ namespace automats
             return false;
         }
 
-        public void Add(string Word)
+        virtual public void Add(string Word)
         {
-            _find(Word, true);
+            _find(Word, 0, true);
         }
 
-        public bool Find(string Word)
+        virtual public bool Find(string Word)
         {
-            return _find(Word, false);
+            return _find(Word, 0, false);
         }
 
-        public void Clear()
+        virtual public void Clear()
         {
             dictonary.Clear();
             Card.ResetIndices();
         }
 
-        public void Print(DataGridView dgv)
+        virtual public void Print(DataGridView dgv)
         {
             dgv.SuspendLayout();
 

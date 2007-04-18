@@ -41,6 +41,7 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="ExtendingPrefixIdenifierAutomat.cs" />
     <Compile Include="ExtendingTerminalAutomat.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
