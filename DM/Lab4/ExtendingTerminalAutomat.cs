@@ -64,6 +64,11 @@ namespace Lab3
                 this.alter_ids = new uint[Symbols.Length];
                 this.symbols = Symbols;
             }
+
+            public static void ResetIndices()
+            {
+                lastCardId = 0;
+            }
         }
 
         public ExtendingTerminalAutomat()
@@ -71,29 +76,45 @@ namespace Lab3
             dictonary = new List<Card>();
         }
 
+        uint lastSearchComparsions = 0;
+
+        public uint LastSearchComparsionsCount
+        {
+            get
+            {
+                return lastSearchComparsions;
+            }
+        }
+
         protected bool _find(string Word, bool WeNeedToAddIfNotFound)
         {
+            lastSearchComparsions = 0;
+
             // add ''—|''
             Word += _EndMarker;
 
             if (dictonary.Count == 0)
             {
                 if (WeNeedToAddIfNotFound)
+                {
                     dictonary.Add(new Card(Word.ToCharArray()));
+                    return true;
+                }
                 else
                     return false;
-
-                return true;
             }
 
             // initialize search loop
             List<Card>.Enumerator i = dictonary.GetEnumerator();
             i.MoveNext();
+
             int cardPos = 0;
 
             // start to search for a given Word
             for (int wordPos = 0; wordPos < Word.Length; )
             {
+                lastSearchComparsions++;
+
                 if (i.Current.Symbols[cardPos] == _EndMarker && Word[wordPos] == _EndMarker)
                 {
                     // we're at the end of the current card, 
@@ -114,13 +135,13 @@ namespace Lab3
                     // not equal, so follow by the alternative way.
                     uint alternativeCardId = i.Current.AlternativeCardIds[cardPos];
 
-                    if (alternativeCardId == 0 && WeNeedToAddIfNotFound)
+                    if (alternativeCardId == 0)
                     {
-                        // i.e. no alternative card, so there we can …                       
+                        // i.e. no alternative card, so there we can either …                       
 
                         if (WeNeedToAddIfNotFound)
                         {
-                            // … either create new card and place Word in the dictonary …
+                            // … create new card and place Word in the dictonary, …
                             Card card = new Card(Word.ToCharArray(wordPos, Word.Length - wordPos));
                             i.Current.AlternativeCardIds[cardPos] = card.Id;
                             dictonary.Add(card);
@@ -156,8 +177,16 @@ namespace Lab3
             return _find(Word, false);
         }
 
+        public void Clear()
+        {
+            dictonary.Clear();
+            Card.ResetIndices();
+        }
+
         public void Print(DataGridView dgv)
         {
+            dgv.SuspendLayout();
+
             dgv.Columns.Clear();
             dgv.Rows.Clear();
 
@@ -196,6 +225,8 @@ namespace Lab3
 
             dgv.AutoResizeColumns();
             dgv.AutoResizeRows();
+
+            dgv.ResumeLayout(false);
         }
     }
 }
