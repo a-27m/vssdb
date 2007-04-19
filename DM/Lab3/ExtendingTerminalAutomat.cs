@@ -25,6 +25,7 @@ namespace automats
             {
                 return id;
             }
+            set { id = value; }
         }
 
         char[] symbols;
@@ -153,6 +154,7 @@ namespace automats
                         {
                             // … create new card and place Word in the dictonary, …
                             Card card = new Card(Word.ToCharArray(wordPos, Word.Length - wordPos));
+                            card.Id = (uint)dictonary.Count + 1;
                             i.Current.AlternativeCardIds[cardPos] = card.Id;
                             dictonary.Add(card);
                             return true;
@@ -196,6 +198,8 @@ namespace automats
         virtual public void Print(DataGridView dgv)
         {
             dgv.SuspendLayout();
+
+            int scrollX = dgv.HorizontalScrollingOffset;
 
             dgv.Columns.Clear();
             dgv.Rows.Clear();

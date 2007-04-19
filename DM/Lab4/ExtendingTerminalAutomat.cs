@@ -67,7 +67,7 @@ namespace automats
 
     public class ExtendingTerminalAutomat
     {
-        const char _EndMarker = '¶';
+        //const char _EndMarker = '¶';
 
         List<Card> dictonary = null;
 
@@ -98,9 +98,6 @@ namespace automats
         {
             lastSearchComparsions = 0;
 
-            // add ''—|''
-            Word += _EndMarker;
-
             // is it the first word?
             if (dictonary.Count == 0)
             {
@@ -121,11 +118,11 @@ namespace automats
             int cardPos = 0;
 
             // start to search for a given Word
-            for (int wordPos = 0; wordPos < Word.Length; )
+            for (int wordPos = 0; wordPos <= Word.Length; )
             {
                 lastSearchComparsions++;
 
-                if (i.Current.Symbols[cardPos] == _EndMarker && Word[wordPos] == _EndMarker)
+                if ((cardPos == i.Current.Symbols.Length) && (wordPos == Word.Length))
                 {
                     // we're at the end of the current card, 
                     // so we've found a Word in the dictonary.

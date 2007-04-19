@@ -48,7 +48,7 @@ namespace automats
 
         public override bool Find(string Word)
         {
-            return _find(Word.Substring(1), CharToVectorIndex(Word[0]), false);
+            return _find(Word.Substring(1), vector[CharToVectorIndex(Word[0])], false);
         }
 
         public override void Clear()
