@@ -63,8 +63,8 @@ namespace Lab4
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 38F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(464, 232);
-            this.tableLayoutPanel1.TabIndex = 1;
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(464, 304);
+            this.tableLayoutPanel1.TabIndex = 0;
             // 
             // button1
             // 
@@ -72,7 +72,7 @@ namespace Lab4
             this.button1.Location = new System.Drawing.Point(113, 53);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
+            this.button1.TabIndex = 2;
             this.button1.Text = "Добавить";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -83,7 +83,7 @@ namespace Lab4
             this.button2.Location = new System.Drawing.Point(194, 53);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 5;
+            this.button2.TabIndex = 3;
             this.button2.Text = "Найти";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -97,7 +97,7 @@ namespace Lab4
             this.textBox1.Location = new System.Drawing.Point(11, 23);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(441, 26);
-            this.textBox1.TabIndex = 3;
+            this.textBox1.TabIndex = 1;
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label1
@@ -110,7 +110,7 @@ namespace Lab4
             this.label1.Location = new System.Drawing.Point(11, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(441, 20);
-            this.label1.TabIndex = 4;
+            this.label1.TabIndex = 0;
             this.label1.Text = "Введите слово:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
@@ -142,15 +142,15 @@ namespace Lab4
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGridView1.ShowEditingIcon = false;
-            this.dataGridView1.Size = new System.Drawing.Size(441, 130);
-            this.dataGridView1.TabIndex = 2;
+            this.dataGridView1.Size = new System.Drawing.Size(441, 202);
+            this.dataGridView1.TabIndex = 5;
             // 
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(275, 53);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 6;
+            this.button3.TabIndex = 4;
             this.button3.Text = "Очистить";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -160,13 +160,13 @@ namespace Lab4
             this.AcceptButton = this.button2;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(464, 232);
+            this.ClientSize = new System.Drawing.Size(464, 304);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1024, 266);
+            this.MaximumSize = new System.Drawing.Size(1024, 400);
             this.MinimumSize = new System.Drawing.Size(8, 266);
             this.Name = "Form1";
-            this.Text = "Л3: расширяющийся КА";
+            this.Text = "Л4: обнаружение префиксов";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

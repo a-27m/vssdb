@@ -7,23 +7,33 @@ namespace Lab4
 {
     public partial class Form1 : Form
     {
+        ExtendingPrefixIdenifierAutomat eta;
 
         public Form1()
         {
             InitializeComponent();
-            eta = new ExtendingTerminalAutomat();
-        }
 
-        ExtendingTerminalAutomat eta;
+            eta = new ExtendingPrefixIdenifierAutomat();
+
+            string[] reservedWords = new string[] { 
+                "END",
+                "FOR",
+                "GOTO",
+                "GOSUB", 
+                "IF",
+                "LET",
+                "NEXT",
+                "RETURN",
+                "REM",
+                "STEP",
+                "TO" };
+
+            foreach (string word in reservedWords)
+                eta.Add(word);
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            eta.Add("оса");
-            eta.Add("бок");
-            eta.Add("бока");
-            eta.Add("бак");
-            eta.Add("око");
-
             eta.Print(dataGridView1);
 
             this.Width = dataGridView1.GetPreferredSize(this.Size).Width + 45;

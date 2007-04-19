@@ -25,11 +25,25 @@ namespace automats
         {
             Word = Word.ToUpper();
 
-            base.Add(Word.Substring(1));
             uint index = CharToVectorIndex(Word[0]);
 
             if (vector[index] == 0)
-                vector[index] = ExtendingPrefixIdenifierAutomat.Card.LastCardId;
+            {
+                this.Dictonary.Add(new Card(Word.ToCharArray(1, Word.Length - 1)));
+                vector[index] = Card.LastCardId;
+                return;
+            }
+            else
+            {
+                base._find(Word.Substring(1), vector[index], true);
+            }
+
+            //if (vector[index] >= Card.LastCardId)
+            //{
+            //   
+            //}
+            //else
+            // 
         }
 
         public override bool Find(string Word)
@@ -50,6 +64,8 @@ namespace automats
 
             dgv.SuspendLayout();
 
+            dgv.ColumnCount = dgv.ColumnCount + 2;
+
             // we want to print vector at the begining, so shift current rows down
             dgv.Rows.Insert(0, 3);
 
@@ -65,7 +81,26 @@ namespace automats
                     dgv[j, 1].Value = vector[j].ToString();
             }
 
+            dgv.Columns.RemoveAt(dgv.ColumnCount - 1);
+
+            dgv.AutoResizeColumns();
+            dgv.AutoResizeRows();
+
             dgv.ResumeLayout(false);
+
+            if (dgv.SelectedCells != null && dgv.SelectedCells.Count > 0)
+                dgv.SelectedCells[0].Selected = false;
+
         }
+
+        //public event MyEventHandler WordFound;
+        //public delegate void MyEventHandler(string word);
+
+        //void Processor(string input)
+        //{
+
+        //    if (WordFound != null)
+        //        WordFound(
+        //}
     }
 }

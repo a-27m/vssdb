@@ -6,6 +6,65 @@ using System.Drawing;
 
 namespace automats
 {
+    public struct Card
+    {
+        static uint lastCardId = 0;
+
+        public static uint LastCardId
+        {
+            get
+            {
+                return Card.lastCardId;
+            }
+        }
+
+        uint id;
+        public uint Id
+        {
+            get
+            {
+                return id;
+            }
+        }
+
+        char[] symbols;
+        public char[] Symbols
+        {
+            get
+            {
+                return symbols;
+            }
+        }
+
+        uint[] alter_ids;
+        public uint[] AlternativeCardIds
+        {
+            get
+            {
+                return alter_ids;
+            }
+            set
+            {
+                alter_ids = value;
+            }
+        }
+
+        public Card(char[] Symbols)
+        {
+            if (Symbols == null)
+                throw new ArgumentNullException();
+
+            this.id = ++lastCardId;
+            this.alter_ids = new uint[Symbols.Length];
+            this.symbols = Symbols;
+        }
+
+        public static void ResetIndices()
+        {
+            lastCardId = 0;
+        }
+    }
+
     public class ExtendingTerminalAutomat
     {
         const char _EndMarker = '¶';
@@ -17,65 +76,6 @@ namespace automats
             get
             {
                 return dictonary;
-            }
-        }
-
-        public struct Card
-        {
-            static uint lastCardId = 0;
-
-            public static uint LastCardId
-            {
-                get
-                {
-                    return Card.lastCardId;
-                }
-            }
-
-            uint id;
-            public uint Id
-            {
-                get
-                {
-                    return id;
-                }
-            }
-
-            char[] symbols;
-            public char[] Symbols
-            {
-                get
-                {
-                    return symbols;
-                }
-            }
-
-            uint[] alter_ids;
-            public uint[] AlternativeCardIds
-            {
-                get
-                {
-                    return alter_ids;
-                }
-                set
-                {
-                    alter_ids = value;
-                }
-            }
-
-            public Card(char[] Symbols)
-            {
-                if (Symbols == null)
-                    throw new ArgumentNullException();
-
-                this.id = ++lastCardId;
-                this.alter_ids = new uint[Symbols.Length];
-                this.symbols = Symbols;
-            }
-
-            public static void ResetIndices()
-            {
-                lastCardId = 0;
             }
         }
 
@@ -94,16 +94,17 @@ namespace automats
             }
         }
 
-        protected bool _find(string Word, uint StartFrom, bool WeNeedToAddIfNotFound)
+        protected bool _find(string Word, uint StartFrom, bool AddIfNotFound)
         {
             lastSearchComparsions = 0;
 
             // add ''—|''
             Word += _EndMarker;
 
+            // is it the first word?
             if (dictonary.Count == 0)
             {
-                if (WeNeedToAddIfNotFound)
+                if (AddIfNotFound)
                 {
                     dictonary.Add(new Card(Word.ToCharArray()));
                     return true;
@@ -114,7 +115,7 @@ namespace automats
 
             // initialize search loop
             List<Card>.Enumerator i = dictonary.GetEnumerator();
-            while (i.MoveNext() && StartFrom-- > 0)
+            while (i.MoveNext() && StartFrom-- > 1)
                 ;
 
             int cardPos = 0;
@@ -148,7 +149,7 @@ namespace automats
                     {
                         // i.e. no alternative card, so there we can either …                       
 
-                        if (WeNeedToAddIfNotFound)
+                        if (AddIfNotFound)
                         {
                             // … create new card and place Word in the dictonary, …
                             Card card = new Card(Word.ToCharArray(wordPos, Word.Length - wordPos));
@@ -202,13 +203,13 @@ namespace automats
             dgv.ColumnCount = 1;
             dgv.Rows.Add(3);
 
-            dgv.Rows[0].HeaderCell.ToolTipText = "Номер состояния";
+            dgv.Rows[0].HeaderCell.ToolTipText = "Состояние";
             dgv.Rows[1].HeaderCell.ToolTipText = "Входной символ";
             dgv.Rows[2].HeaderCell.ToolTipText = "Альтернативный переход";
 
-            dgv.Rows[0].HeaderCell.Value = "i";
+            dgv.Rows[0].HeaderCell.Value = "S";
             dgv.Rows[1].HeaderCell.Value = "A";
-            dgv.Rows[2].HeaderCell.Value = "d";
+            dgv.Rows[2].HeaderCell.Value = "ν";
 
             int i = 0;
             foreach (Card card in dictonary)
