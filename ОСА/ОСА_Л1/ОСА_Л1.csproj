@@ -47,7 +47,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Dekart\DekartGraphic.csproj">
+    <ProjectReference Include="..\..\..\..\..\Axell%27s files\ZSEA\ÎÑÀ\Dekart\DekartGraphic.csproj">
       <Project>{97B73544-29AE-4AFA-9DB4-957C6D16A13F}</Project>
       <Name>DekartGraphic</Name>
     </ProjectReference>

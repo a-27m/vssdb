@@ -1,9 +1,9 @@
 
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ÎÑÀ_Ë1", "ÎÑÀ_Ë1\ÎÑÀ_Ë1.csproj", "{B6D8B67E-C835-4562-925C-2826C92A1769}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DekartGraphic", "Dekart\DekartGraphic.csproj", "{97B73544-29AE-4AFA-9DB4-957C6D16A13F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ÎÑÀ_Ë1", "..\..\..\Documents and Settings\Axell\Desktop\ÎÑÀ_Ë1\ÎÑÀ_Ë1\ÎÑÀ_Ë1.csproj", "{B6D8B67E-C835-4562-925C-2826C92A1769}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,14 +11,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B6D8B67E-C835-4562-925C-2826C92A1769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B6D8B67E-C835-4562-925C-2826C92A1769}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B6D8B67E-C835-4562-925C-2826C92A1769}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B6D8B67E-C835-4562-925C-2826C92A1769}.Release|Any CPU.Build.0 = Release|Any CPU
 		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6D8B67E-C835-4562-925C-2826C92A1769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6D8B67E-C835-4562-925C-2826C92A1769}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6D8B67E-C835-4562-925C-2826C92A1769}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6D8B67E-C835-4562-925C-2826C92A1769}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
