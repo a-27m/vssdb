@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ÎÑÀ_Ë1", "ÎÑÀ_Ë1.csproj", "{B6D8B67E-C835-4562-925C-2826C92A1769}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ÎÑÀ_Ë1", "ÎÑÀ_Ë1\ÎÑÀ_Ë1.csproj", "{B6D8B67E-C835-4562-925C-2826C92A1769}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DekartGraphic", "Dekart\DekartGraphic.csproj", "{97B73544-29AE-4AFA-9DB4-957C6D16A13F}"
 EndProject
