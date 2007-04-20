@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Text;
+using System.Collections.ObjectModel;
 
 namespace DekartGraphic
 {
@@ -14,7 +15,17 @@ namespace DekartGraphic
 	{
 		protected static int windowsCount = 0;
 
+        public event PaintEventHandler CoodrinateSystemDrawn;
+
 		protected List<MathGraphic> grs;
+
+        public ReadOnlyCollection<MathGraphic> MathGraphicList
+        {
+            get
+            {
+                return grs.AsReadOnly();
+            }
+        }
 
 		public int CountGraphics
 		{
@@ -233,7 +244,9 @@ namespace DekartGraphic
 			grBuf.Graphics.Transform = new Matrix(zoom.X, 0f, 0f, -zoom.Y, ox, oy);
 			if ( grs != null )
 			{
-				grs[0].DrawCoordinateSystem(grBuf.Graphics);
+                grs[0].DrawCoordinateSystem(grBuf.Graphics);
+
+               OnCoordinateSystemDrawn(grBuf.Graphics);
 
 				foreach ( MathGraphic gr in grs )
 				{
@@ -244,6 +257,12 @@ namespace DekartGraphic
 				PrintCurrentZoom();
 			}
 		}
+
+        protected virtual void OnCoordinateSystemDrawn(Graphics graphics)
+        {
+            if (this.CoodrinateSystemDrawn != null)
+                CoodrinateSystemDrawn(this, new PaintEventArgs(graphics, grBuf.Graphics.);
+        }
 
 		private void PrintCurrentZoom()
 		{
@@ -281,7 +300,7 @@ namespace DekartGraphic
             //Refresh();
 		}
 
-		protected void Render()
+		private void Render()
 		{
             Graphics g = this.toolStripContainer1.ContentPanel.CreateGraphics();
 			grBuf.Render(g);
