@@ -149,6 +149,8 @@ namespace DekartGraphic
         {
             graphic = new PointF[1][];
             graphic[0] = pts;
+
+            tabulated = true;
         }
 
         public void Draw(Graphics g)
@@ -256,7 +258,6 @@ namespace DekartGraphic
         }
         public virtual void DrawCoordinateSystem(Graphics g)
         {
-            g.Clear(CurrentColorSchema.backgroundColor);
             g.SmoothingMode = SmoothingMode.HighQuality;
 
             float m_zoom_x = Math.Abs(g.Transform.Elements[0]);
@@ -394,5 +395,3 @@ namespace DekartGraphic
         }
     }
 }
-
-
