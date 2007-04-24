@@ -35,8 +35,11 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Automat.cs" />
+    <Compile Include="AutomatMura.cs" />
     <Compile Include="Polish.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TerminalAutomat.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Polish.pas" />

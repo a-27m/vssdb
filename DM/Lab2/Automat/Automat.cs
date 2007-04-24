@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+//test
 namespace automats
 {
     class AutomatException : Exception
