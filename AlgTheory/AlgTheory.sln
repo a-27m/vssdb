@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DekartGraphic", "Dekart\Dek
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Root1", "Root1\Root1.csproj", "{41F7F160-E3DE-43D5-97E0-9AD0278BE5CB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab3allroots", "Lab3allroots\Lab3allroots.csproj", "{46EF238B-4EC6-4956-A895-A97CF2172D8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polish", "Polish\Polish.csproj", "{B2EEF867-0C96-4513-9765-C217EA136DF9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +29,14 @@ Global
 		{41F7F160-E3DE-43D5-97E0-9AD0278BE5CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41F7F160-E3DE-43D5-97E0-9AD0278BE5CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41F7F160-E3DE-43D5-97E0-9AD0278BE5CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46EF238B-4EC6-4956-A895-A97CF2172D8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46EF238B-4EC6-4956-A895-A97CF2172D8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46EF238B-4EC6-4956-A895-A97CF2172D8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46EF238B-4EC6-4956-A895-A97CF2172D8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2EEF867-0C96-4513-9765-C217EA136DF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2EEF867-0C96-4513-9765-C217EA136DF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2EEF867-0C96-4513-9765-C217EA136DF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2EEF867-0C96-4513-9765-C217EA136DF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

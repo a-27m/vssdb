@@ -244,11 +244,11 @@ namespace DekartGraphic
 			grBuf.Graphics.Transform = new Matrix(zoom.X, 0f, 0f, -zoom.Y, ox, oy);
 			if ( grs != null )
 			{
-                grs[0].DrawCoordinateSystem(grBuf.Graphics);
+                grs[0].Draw(grBuf.Graphics);
 
                OnCoordinateSystemDrawn(grBuf.Graphics);
 
-				foreach ( MathGraphic gr in grs )
+				foreach ( MathGraphic gr in grs.GetRange(1, grs.Count-1) )
 				{
 					gr.Use_IsVisible = Use_IsVisible;
 					gr.DrawGraphic(grBuf.Graphics);

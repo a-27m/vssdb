@@ -56,6 +56,10 @@
       <Project>{97B73544-29AE-4AFA-9DB4-957C6D16A13F}</Project>
       <Name>DekartGraphic</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Polish\Polish.csproj">
+      <Project>{B2EEF867-0C96-4513-9765-C217EA136DF9}</Project>
+      <Name>Polish</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

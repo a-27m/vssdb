@@ -1,38 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Text;
 using System.Windows.Forms;
 
 using DekartGraphic;
+using Polish;
 
 namespace Root1
 {
     public partial class Form1 : Form
     {
-        public delegate void RootFoundHandler(double x);
-        public event RootFoundHandler RootFound;
-
-        DekartForm df;
-
-        public Form1()
-        {
-            InitializeComponent();
-            df = new DekartForm(100, 100, 300, 150);
-            df.Text = "Типа корни";
-            df.Use_IsVisible = false;
-            df.AddGraphic(f1, -10, 10, DrawModes.DrawLines, Color.Green);
-            RootFound += new RootFoundHandler(Form1_RootFound);
-        }
-
-        void Form1_RootFound(double x)
-        {
-            df.AddPolygon(Color.Red, DrawModes.DrawLines,
-                new PointF((float)x, 1),
-                new PointF((float)x, -1));
-            df.Update2();
-        }
+        List<MathGraphic> mgs;
+        Matrix matrix;
 
         double f1(double x)
         {
@@ -41,29 +22,53 @@ namespace Root1
 
         double fxy(double x, double y)
         {
-            return x * x * x + y * y * y - x * y;
+            double a = 5;
+            double b = 1;
+            double c = 5;
+            return a * x * x + b * y * y * y + c * x * y * y + x * x * x * x * x * x * x;
+
+            //return x * x * x + y * y * y - x * y;
         }
 
-        public struct complex
+        public Form1()
         {
-            public double real;
-            public double imagine;
+            InitializeComponent();
+            matrix = new Matrix(300, 0f, 0f, -300, 200, 200);
+            mgs = new List<MathGraphic>();
+        }
 
-            public complex(double re, double im)
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            if (mgs != null)
             {
-                real = re;
-                imagine = im;
-            }
+                if (mgs.Count < 1)
+                    return;
 
-            public complex Add(complex c1, complex c2)
-            {
-                return new complex(c1.real + c2.real, c1.imagine + c2.imagine);
+                Invalidate();
+
+                List<MathGraphic>.Enumerator i = mgs.GetEnumerator();
+                i.MoveNext();
+
+                e.Graphics.Transform = matrix;
+                //i.Current.DrawCoordinateSystem(e.Graphics);
+                i.Current.Draw(e.Graphics);
+
+                while (i.MoveNext())
+                    i.Current.DrawGraphic(e.Graphics);
             }
         }
 
-        double[] Iteration(double a, double b, DoubleFunction f)
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            double h = 1e-3;
+            PointF[] pts = new PointF[] { new PointF(e.X, e.Y) };
+            Matrix tmp = matrix.Clone();
+            tmp.Invert();
+            tmp.TransformPoints(pts);
+            Text = string.Format("{0}, {1}", pts[0].X, pts[0].Y);
+        }
+
+        double[] Iteration(DoubleFunction f, double a, double b, double h)
+        {
             List<double> roots = new List<double>();
             int lastSign = Math.Sign(f(a));
 
@@ -75,7 +80,7 @@ namespace Root1
                 if (sign != lastSign)
                 {
                     roots.Add(x);
-                    OnRootFound(x);
+                    //OnRootFound(x);
                 }
                 lastSign = sign;
             }
@@ -83,18 +88,58 @@ namespace Root1
             return roots.ToArray();
         }
 
-        void OnRootFound(double x)
+        double fy0(double x)
         {
-            if (RootFound != null)
-                RootFound(x);
+            return fxy(x, y);
         }
+        double fx0(double y)
+        {
+            return fxy(x, y);
+        }
+
+        double x, y;
 
         private void button1_Click(object sender, EventArgs e)
         {
+            DekartForm df = new DekartForm(30, 30, 200, 200);
+
+            List<PointF> pts = new List<PointF>();
+
+            double x1 = -3;
+            double x2 = 3;
+            double hx = 1e-2;
+
+            double y1 = -3;
+            double y2 = 3;
+            double hy = 1e-2;
+
+            for (y = y1; y < y2; y += hy)
+            {
+                double[] rootX = Iteration(fy0, x1, x2, hx);
+
+                for (int i = 0; i < rootX.Length; i++)
+                    pts.Add(new PointF((float)rootX[i], (float)y));
+            }
+
+            for (x = x1; x < x2; x += hx)
+            {
+                double[] rootY = Iteration(fx0, y1, y2, hy);
+
+                for (int i = 0; i < rootY.Length; i++)
+                    pts.Add(new PointF((float)x, (float)rootY[i]));
+            }
+
+
+            df.AddPolygon(Color.Gray, DrawModes.DrawPoints, pts.ToArray());
             df.Show();
             df.Update2();
+            //MathGraphic mg = new MathGraphic(pts.ToArray());
+            //mg.PenColor = Color.Green;
 
-            Iteration(-1, 10, f1);
+            //mg.PenWidth = 1f;
+            //mgs.Add(mg);
+
+            Refresh();
         }
     }
 }
