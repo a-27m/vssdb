@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlgTheory lab1", "AlgTheory - lab1\AlgTheory lab1.csproj", "{6C47B508-C10F-4087-BA96-FA39BE686659}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DekartGraphic", "..\Dekart\DekartGraphic.csproj", "{97B73544-29AE-4AFA-9DB4-957C6D16A13F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DekartGraphic", "Dekart\DekartGraphic.csproj", "{97B73544-29AE-4AFA-9DB4-957C6D16A13F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Root1", "Root1\Root1.csproj", "{41F7F160-E3DE-43D5-97E0-9AD0278BE5CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +21,10 @@ Global
 		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41F7F160-E3DE-43D5-97E0-9AD0278BE5CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41F7F160-E3DE-43D5-97E0-9AD0278BE5CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41F7F160-E3DE-43D5-97E0-9AD0278BE5CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41F7F160-E3DE-43D5-97E0-9AD0278BE5CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

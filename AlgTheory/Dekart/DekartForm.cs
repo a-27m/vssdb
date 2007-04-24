@@ -260,8 +260,15 @@ namespace DekartGraphic
 
         protected virtual void OnCoordinateSystemDrawn(Graphics graphics)
         {
+            Rectangle rect = new Rectangle();
+            rect.Location = new Point((int)graphics.ClipBounds.Location.X,
+                (int)graphics.ClipBounds.Location.Y);
+            rect.Size = new Size((int)graphics.ClipBounds.Size.Width,
+                (int)graphics.ClipBounds.Size.Height);
+
+
             if (this.CoodrinateSystemDrawn != null)
-                CoodrinateSystemDrawn(this, new PaintEventArgs(graphics, grBuf.Graphics.);
+                CoodrinateSystemDrawn(this, new PaintEventArgs(graphics,rect));
         }
 
 		private void PrintCurrentZoom()
