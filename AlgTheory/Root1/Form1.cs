@@ -20,7 +20,7 @@ namespace Root1
         {
             InitializeComponent();
             df = new DekartForm(100, 100, 300, 150);
-            df.Text = "";
+            df.Text = "Типа корни";
             df.Use_IsVisible = false;
             df.AddGraphic(f1, -10, 10, DrawModes.DrawLines, Color.Green);
             RootFound += new RootFoundHandler(Form1_RootFound);
