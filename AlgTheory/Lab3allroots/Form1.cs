@@ -10,9 +10,9 @@ using DekartGraphic;
 
 namespace Root1
 {
+
     public partial class Form1 : Form
     {
-        //List<MathGraphic> mgs;
         Matrix matrix;
         DekartForm dForm = null;
 
@@ -21,71 +21,6 @@ namespace Root1
         double f1(double x)
         {
             return Math.Sin(x * x - 4);
-        }
-
-        public class Polynom
-        {
-            double[] a;
-
-            public int N
-            {
-                get
-                {
-                    return a.Length - 1;
-                }
-            }
-
-            public double this[int i]
-            {
-                get
-                {
-                    return a[i];
-                }
-                set
-                {
-                    if (i <= N)
-                        a[i] = value;
-                }
-            }
-
-            public Polynom(params double[] a)
-            {
-                this.a = (double[])a.Clone();
-            }
-
-            public double Evaluate(double x)
-            {
-                double result = a[0];
-                for (int i = 1; i < a.Length; i++)
-                    result = result * x + a[i];
-                return result;
-            }
-
-            public Polynom Diff()
-            {
-                if (this.N < 1)
-                    return new Polynom(0);
-
-                double[] d = new double[a.Length - 1];
-                for (int i = 0; i < a.Length - 1; i++)
-                    d[i] = a[i] * (a.Length - i - 1);
-
-                return new Polynom(d);
-            }
-
-            public static Polynom operator /(Polynom P, double z)
-            {
-                if (P.N < 1)
-                    throw new InvalidOperationException("Polynom P is constant");
-
-                double[] a = new double[P.a.Length - 1];
-
-                a[0] = P.a[0];
-                for (int i = 1; i < a.Length; i++)
-                    a[i] = a[i - 1] * z + P.a[i];
-
-                return new Polynom(a);
-            }
         }
 
         public Form1()
@@ -104,42 +39,15 @@ namespace Root1
                 if (poly1.N <= 1)
                     return;
                 poly1 = poly1 / lastRoot;
-                button1_Click(sender, e);
+
+                f = poly1.Evaluate;
+                df = poly1.Diff().Evaluate;
+                FindRoot();
             }
         }
 
         // x^4-10*x^3+35*x^2-50*x+24
         Polynom poly1 = new Polynom(1, -10, 35, -50, 24);
-
-        //private void pictureBox1_Paint(object sender, PaintEventArgs e)
-        //{
-        //    if (mgs != null)
-        //    {
-        //        if (mgs.Count < 1)
-        //            return;
-
-        //        Invalidate();
-
-        //        List<MathGraphic>.Enumerator i = mgs.GetEnumerator();
-        //        i.MoveNext();
-
-        //        e.Graphics.Transform = matrix;
-        //        //i.Current.DrawCoordinateSystem(e.Graphics);
-        //        i.Current.Draw(e.Graphics);
-
-        //        while (i.MoveNext())
-        //            i.Current.DrawGraphic(e.Graphics);
-        //    }
-        //}
-
-        //private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
-        //{
-        //    PointF[] pts = new PointF[] { new PointF(e.X, e.Y) };
-        //    Matrix tmp = matrix.Clone();
-        //    tmp.Invert();
-        //    tmp.TransformPoints(pts);
-        //    Text = string.Format("{0}, {1}", pts[0].X, pts[0].Y);
-        //}
 
         public static double NewtoneRafson(DoubleFunction f, DoubleFunction df,
     double p0, double eps, out List<PointF[]> lines, bool silent)
@@ -183,11 +91,20 @@ namespace Root1
             return p0;
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
             double p0;
             double eps;
+			float x1, x2;
+            DoubleFunction f ;
+            DoubleFunction df;
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ReadPolynom();
+
+             f = poly1.Evaluate;
+            df = poly1.Diff().Evaluate;
+
+            #region read eps, p0, x1, x2
             errorProvider.Clear();
 
             try
@@ -204,11 +121,7 @@ namespace Root1
                 errorProvider.SetError(textE, "Has to be > 0");
                 return;
             }
-
-            double res = double.NaN;
-            List<PointF[]> lines = null;
-
-            #region Method Newtone-Rafson
+            
             try
             {
                 p0 = float.Parse(textP0.Text);
@@ -219,6 +132,28 @@ namespace Root1
                 return;
             }
 
+			try
+			{ x1 = float.Parse(textX1.Text); }
+			catch ( FormatException )
+			{ errorProvider.SetError(textX1, "Wrong float number"); return; }
+
+			try
+			{ x2 = float.Parse(textX2.Text); }
+			catch ( FormatException )
+			{ errorProvider.SetError(textX2, "Wrong float number"); return; }
+
+            #endregion
+
+            if (poly1.N>0)
+            FindRoot();
+        }
+
+        private void FindRoot()
+        {
+            double res = double.NaN;
+            List<PointF[]> lines = null;
+
+            #region prepare dform
             if (dForm == null)
             {
                 dForm = new DekartForm(100, 100, 300, 300);
@@ -234,28 +169,22 @@ namespace Root1
             else
                 dForm.RemoveAllGraphics();
 
-            dForm.AddGraphic(poly1.Evaluate, -5f, 5f, DrawModes.DrawLines, Color.Green);
+            #endregion
+
+            dForm.AddGraphic(f, x1, x2, DrawModes.DrawLines, Color.Green);
             dForm.Show();
             dForm.Update2();
 
-            res = NewtoneRafson(poly1.Evaluate, poly1.Diff().Evaluate, p0, eps, out lines, false);
+            res = NewtoneRafson(f, df, p0, eps, out lines, false);
             lastRoot = res;
-            #endregion
 
             #region Print results
 
             if (lines != null)
-            {
                 foreach (PointF[] pts in lines)
-                {
                     dForm.AddPolygon(Color.Red, DrawModes.DrawLines, pts);
-                }
-            }
-            //  dForm.Show();
-            dForm.Update2();
 
-            //listRoots.Items.Clear();
-            //listY.Items.Clear();
+            dForm.Update2();
 
             if (double.IsNaN(res))
             {
@@ -273,6 +202,158 @@ namespace Root1
         private void Form1_Load(object sender, EventArgs e)
         {
             textE.Text = 0.0001.ToString();
+            textP0.Text = "1";
+            //double[] c = new double[9];
+            //c[1] = 1;
+            //for (int i = 3; i < c.Length; i+=2)
+            //    c[i] = -c[i - 2] / (i - 1) / (i);
+
+            //Array.Reverse(c);
+
+            //poly1 = new Polynom(c);
+        }
+
+        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            ReadPolynom();
+
+            listRoots.Items.Clear();
+            listY.Items.Clear();
+
+            this.textBoxFx.Text = poly1.ToString();
+            dataGridView1.AutoResizeColumns();
+        }
+
+        private void ReadPolynom()
+        {
+            poly1 = new Polynom(new double[dataGridView1.RowCount - 1]);
+            for (int i = 0; i < dataGridView1.RowCount; i++)
+            {
+                if (dataGridView1[0, i].Value == null)
+                {
+                    poly1[i] = 0;
+                    continue;
+                }
+                try
+                {
+                    poly1[i] = double.Parse(dataGridView1[0, i].Value.ToString());
+                }
+                catch (FormatException)
+                {
+                    errorProvider.SetError(dataGridView1, "Wrong float number");
+                    break;
+                }
+            }
+        }
+
+        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            for (int i = dataGridView1.RowCount - 2; i >= 0; i--)
+            {
+                dataGridView1.Rows[i].HeaderCell.Value = (dataGridView1.RowCount - i - 2).ToString();
+            }
+        }
+    }
+
+    public class Polynom
+    {
+        double[] a;
+
+        public int N
+        {
+            get
+            {
+                return a.Length - 1;
+            }
+        }
+
+        public double this[int i]
+        {
+            get
+            {
+                return a[i];
+            }
+            set
+            {
+                if (i <= N)
+                    a[i] = value;
+            }
+        }
+
+        public Polynom(params double[] a)
+        {
+            this.a = (double[])a.Clone();
+        }
+
+        public double Evaluate(double x)
+        {
+            double result = a[0];
+            for (int i = 1; i < a.Length; i++)
+                result = result * x + a[i];
+            return result;
+        }
+
+        public Polynom Diff()
+        {
+            if (this.N < 1)
+                return new Polynom(0);
+
+            double[] d = new double[a.Length - 1];
+            for (int i = 0; i < a.Length - 1; i++)
+                d[i] = a[i] * (a.Length - i - 1);
+
+            return new Polynom(d);
+        }
+
+        public static Polynom operator /(Polynom P, double z)
+        {
+            if (P.N < 1)
+                throw new InvalidOperationException("Polynom P is constant");
+
+            double[] a = new double[P.a.Length - 1];
+
+            a[0] = P.a[0];
+            for (int i = 1; i < a.Length; i++)
+                a[i] = a[i - 1] * z + P.a[i];
+
+            return new Polynom(a);
+        }
+
+        public override string ToString()
+        {
+            string str = "";
+            for (int i = 0; i < a.Length - 2; i++)
+            {
+                if (a[i] == 0)
+                    continue;
+                str += string.Format("{2}{0}x^{1}",
+                    a[i] == 1 ? "" : (a[i] == -1 ? "-" : a[i].ToString()),
+                    N - i,
+                    a[i] < 0 ? "" : "+");
+            }
+
+            double v;
+
+            if (a.Length > 0)
+            {
+                if (a.Length > 1)
+                {
+                    v = a[a.Length - 2];
+                    if (v != 0)
+                    {
+                        str += string.Format("{1}{0}x",
+                            v == 1 ? "" : (v == -1 ? "-" : v.ToString()),
+                            v < 0 ? "" : "+");
+                    }
+                }
+
+                v = a[a.Length - 1];
+                if (v != 0)
+                {
+                    str += string.Format("{1}{0}", v, v < 0 ? "" : "+");
+                }
+            }
+            return str;
         }
     }
 }
