@@ -36,12 +36,12 @@
             System.Windows.Forms.Label label9;
             System.Windows.Forms.Label label7;
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.textE = new System.Windows.Forms.TextBox();
             this.groupFirstApproximation = new System.Windows.Forms.GroupBox();
             this.textP0 = new System.Windows.Forms.TextBox();
             this.groupInterval = new System.Windows.Forms.GroupBox();
             this.textX1 = new System.Windows.Forms.TextBox();
             this.textX2 = new System.Windows.Forms.TextBox();
+            this.textE = new System.Windows.Forms.TextBox();
             this.textBoxFx = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
@@ -67,14 +67,12 @@
             // groupBox2
             // 
             groupBox2.Controls.Add(label1);
-            groupBox2.Controls.Add(this.textE);
             groupBox2.Controls.Add(this.groupFirstApproximation);
             groupBox2.Controls.Add(this.groupInterval);
-            groupBox2.Controls.Add(this.textBoxFx);
-            groupBox2.Controls.Add(label7);
-            groupBox2.Location = new System.Drawing.Point(131, 12);
+            groupBox2.Controls.Add(this.textE);
+            groupBox2.Location = new System.Drawing.Point(131, 48);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new System.Drawing.Size(332, 130);
+            groupBox2.Size = new System.Drawing.Size(369, 125);
             groupBox2.TabIndex = 8;
             groupBox2.TabStop = false;
             groupBox2.Text = "Параметры";
@@ -83,26 +81,18 @@
             // 
             label1.AutoSize = true;
             label1.Font = new System.Drawing.Font("Symbol", 10F);
-            label1.Location = new System.Drawing.Point(202, 22);
+            label1.Location = new System.Drawing.Point(30, 92);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(14, 17);
             label1.TabIndex = 17;
             label1.Text = "&e";
             label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // textE
-            // 
-            this.textE.Location = new System.Drawing.Point(222, 22);
-            this.textE.Name = "textE";
-            this.textE.Size = new System.Drawing.Size(100, 20);
-            this.textE.TabIndex = 18;
-            this.textE.Text = "1";
-            // 
             // groupFirstApproximation
             // 
             this.groupFirstApproximation.Controls.Add(label2);
             this.groupFirstApproximation.Controls.Add(this.textP0);
-            this.groupFirstApproximation.Location = new System.Drawing.Point(8, 66);
+            this.groupFirstApproximation.Location = new System.Drawing.Point(12, 24);
             this.groupFirstApproximation.Name = "groupFirstApproximation";
             this.groupFirstApproximation.Size = new System.Drawing.Size(158, 54);
             this.groupFirstApproximation.TabIndex = 15;
@@ -112,7 +102,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(6, 22);
+            label2.Location = new System.Drawing.Point(19, 24);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(19, 13);
             label2.TabIndex = 1;
@@ -120,9 +110,9 @@
             // 
             // textP0
             // 
-            this.textP0.Location = new System.Drawing.Point(31, 19);
+            this.textP0.Location = new System.Drawing.Point(44, 21);
             this.textP0.Name = "textP0";
-            this.textP0.Size = new System.Drawing.Size(100, 20);
+            this.textP0.Size = new System.Drawing.Size(95, 20);
             this.textP0.TabIndex = 2;
             this.textP0.Text = "0";
             // 
@@ -132,7 +122,7 @@
             this.groupInterval.Controls.Add(this.textX1);
             this.groupInterval.Controls.Add(label9);
             this.groupInterval.Controls.Add(this.textX2);
-            this.groupInterval.Location = new System.Drawing.Point(179, 48);
+            this.groupInterval.Location = new System.Drawing.Point(215, 19);
             this.groupInterval.Name = "groupInterval";
             this.groupInterval.Size = new System.Drawing.Size(143, 72);
             this.groupInterval.TabIndex = 21;
@@ -154,7 +144,7 @@
             this.textX1.Name = "textX1";
             this.textX1.Size = new System.Drawing.Size(100, 20);
             this.textX1.TabIndex = 8;
-            this.textX1.Text = "0";
+            this.textX1.Text = "-5";
             // 
             // label9
             // 
@@ -173,29 +163,37 @@
             this.textX2.TabIndex = 10;
             this.textX2.Text = "5";
             // 
-            // textBoxFx
+            // textE
             // 
-            this.textBoxFx.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxFx.Location = new System.Drawing.Point(37, 21);
-            this.textBoxFx.Name = "textBoxFx";
-            this.textBoxFx.ReadOnly = true;
-            this.textBoxFx.Size = new System.Drawing.Size(157, 20);
-            this.textBoxFx.TabIndex = 12;
-            this.textBoxFx.Text = "n/a";
+            this.textE.Location = new System.Drawing.Point(50, 91);
+            this.textE.Name = "textE";
+            this.textE.Size = new System.Drawing.Size(100, 20);
+            this.textE.TabIndex = 18;
+            this.textE.Text = "1";
             // 
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new System.Drawing.Point(12, 25);
+            label7.Location = new System.Drawing.Point(131, 21);
             label7.Name = "label7";
-            label7.Size = new System.Drawing.Size(21, 13);
+            label7.Size = new System.Drawing.Size(30, 13);
             label7.TabIndex = 11;
-            label7.Text = "f(x)";
+            label7.Text = "f(x) =";
+            // 
+            // textBoxFx
+            // 
+            this.textBoxFx.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxFx.Location = new System.Drawing.Point(165, 17);
+            this.textBoxFx.Name = "textBoxFx";
+            this.textBoxFx.ReadOnly = true;
+            this.textBoxFx.Size = new System.Drawing.Size(230, 22);
+            this.textBoxFx.TabIndex = 12;
+            this.textBoxFx.Text = "n/a";
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(419, 176);
+            this.button1.Location = new System.Drawing.Point(401, 12);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(99, 30);
             this.button1.TabIndex = 3;
@@ -227,7 +225,7 @@
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(113, 194);
+            this.dataGridView1.Size = new System.Drawing.Size(113, 299);
             this.dataGridView1.TabIndex = 21;
             this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsAdded);
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
@@ -236,48 +234,57 @@
             // 
             this.Column2.HeaderText = "a[i]";
             this.Column2.Name = "Column2";
-            this.Column2.Width = 20;
+            this.Column2.Width = 40;
             // 
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.listY);
             this.groupBox5.Controls.Add(this.listRoots);
-            this.groupBox5.Location = new System.Drawing.Point(12, 212);
+            this.groupBox5.Location = new System.Drawing.Point(131, 179);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(506, 151);
+            this.groupBox5.Size = new System.Drawing.Size(369, 132);
             this.groupBox5.TabIndex = 20;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Корни";
             // 
             // listY
             // 
+            this.listY.BackColor = System.Drawing.SystemColors.Control;
+            this.listY.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listY.Dock = System.Windows.Forms.DockStyle.Right;
             this.listY.FormattingEnabled = true;
             this.listY.IntegralHeight = false;
-            this.listY.Location = new System.Drawing.Point(255, 20);
+            this.listY.Location = new System.Drawing.Point(182, 16);
             this.listY.Name = "listY";
-            this.listY.ScrollAlwaysVisible = true;
-            this.listY.Size = new System.Drawing.Size(245, 126);
+            this.listY.Size = new System.Drawing.Size(184, 113);
             this.listY.TabIndex = 19;
+            this.listY.SelectedIndexChanged += new System.EventHandler(this.ListsSync);
             // 
             // listRoots
             // 
+            this.listRoots.BackColor = System.Drawing.SystemColors.Control;
+            this.listRoots.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listRoots.Dock = System.Windows.Forms.DockStyle.Left;
             this.listRoots.FormattingEnabled = true;
             this.listRoots.IntegralHeight = false;
-            this.listRoots.Location = new System.Drawing.Point(6, 19);
+            this.listRoots.Location = new System.Drawing.Point(3, 16);
             this.listRoots.Name = "listRoots";
-            this.listRoots.ScrollAlwaysVisible = true;
-            this.listRoots.Size = new System.Drawing.Size(243, 127);
+            this.listRoots.Size = new System.Drawing.Size(180, 113);
             this.listRoots.TabIndex = 18;
+            this.listRoots.SelectedIndexChanged += new System.EventHandler(this.ListsSync);
             // 
             // Form1
             // 
+            this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(530, 372);
+            this.ClientSize = new System.Drawing.Size(508, 322);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(groupBox2);
             this.Controls.Add(this.button1);
+            this.Controls.Add(this.textBoxFx);
+            this.Controls.Add(label7);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Form1";
@@ -293,6 +300,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

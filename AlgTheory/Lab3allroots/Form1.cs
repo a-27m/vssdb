@@ -6,7 +6,6 @@ using System.Text;
 using System.Windows.Forms;
 
 using DekartGraphic;
-//using Polish;
 
 namespace Root1
 {
@@ -39,6 +38,8 @@ namespace Root1
                 if (poly1.N <= 1)
                     return;
                 poly1 = poly1 / lastRoot;
+
+                textBoxFx.Text = poly1.ToString();
 
                 f = poly1.Evaluate;
                 df = poly1.Diff().Evaluate;
@@ -87,6 +88,7 @@ namespace Root1
             }
             while ((Math.Abs(p0 - p_prev) >= eps) &&
                 (Math.Abs(f(p0)) > eps));
+            //while (Math.Abs(p0 - p_prev) >= eps*Math.Abs(p0));
 
             return p0;
         }
@@ -163,6 +165,8 @@ namespace Root1
                     new MouseEventHandler(dForm_MouseClick);
                 dForm.FormClosed += new FormClosedEventHandler(delegate(object s, FormClosedEventArgs eva)
                 {
+                    ReadPolynom();
+                    textBoxFx.Text = poly1.ToString();
                     dForm = null;
                 });
             }
@@ -188,7 +192,7 @@ namespace Root1
 
             if (double.IsNaN(res))
             {
-                MessageBox.Show("Корни не найдены.");
+                dForm.Text = "Корни не найдены.";
                 return;
             }
 
@@ -213,15 +217,25 @@ namespace Root1
             //poly1 = new Polynom(c);
         }
 
-        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        private void ListsSync(object sender, EventArgs e)
         {
-            ReadPolynom();
-
-            listRoots.Items.Clear();
-            listY.Items.Clear();
-
-            this.textBoxFx.Text = poly1.ToString();
-            dataGridView1.AutoResizeColumns();
+            if (sender is ListBox)
+            {
+                try
+                {
+                    if (sender.Equals(listRoots))
+                    {
+                        listY.SelectedIndex = listRoots.SelectedIndex;
+                    }
+                    if (sender.Equals(listY))
+                    {
+                        listRoots.SelectedIndex = listY.SelectedIndex;
+                    }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                }
+            }
         }
 
         private void ReadPolynom()
@@ -244,6 +258,17 @@ namespace Root1
                     break;
                 }
             }
+        }
+
+        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            ReadPolynom();
+
+            listRoots.Items.Clear();
+            listY.Items.Clear();
+
+            this.textBoxFx.Text = poly1.ToString();
+            dataGridView1.AutoResizeColumns();
         }
 
         private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
@@ -353,6 +378,9 @@ namespace Root1
                     str += string.Format("{1}{0}", v, v < 0 ? "" : "+");
                 }
             }
+
+            if (str[0] == '+')
+                str = str.Substring(1);
             return str;
         }
     }
