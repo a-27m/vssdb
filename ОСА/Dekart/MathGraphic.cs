@@ -132,6 +132,8 @@ namespace DekartGraphic
             this.drawingMode = drawMode;
 
             graphic = Tabulate(f, x1, x2, StepX);
+
+            tabulated = true;
         }
 
         public MathGraphic(Color PenColor, DrawModes drawMode,
@@ -143,6 +145,8 @@ namespace DekartGraphic
             this.drawingMode = drawMode;
 
             graphic = Tabulate(fx, fy, T1, T2, StepT);
+
+            tabulated = true;
         }
 
         public MathGraphic(PointF[] pts)

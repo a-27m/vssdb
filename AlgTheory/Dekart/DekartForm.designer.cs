@@ -303,7 +303,7 @@ namespace DekartGraphic
         private System.Windows.Forms.ToolStripButton toolStripButtonPlus;
         private System.Windows.Forms.ToolStripButton toolStripButtonMinus;
         private System.Windows.Forms.ToolStripComboBox toolComboBoxZoom;
-        private System.Windows.Forms.ToolStripContainer toolStripContainer1;
+        public System.Windows.Forms.ToolStripContainer toolStripContainer1;
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripButton toolStripButtonLeft;
         private System.Windows.Forms.ToolStripButton toolStripButtonRight;
