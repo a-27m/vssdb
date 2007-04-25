@@ -20,7 +20,9 @@ const TabFuns:TTabFuns = (  ('arcsinh','A'),('arccosh','B'),('arctanh','C'),
 //         Ò à á ë è ö à   ð å ø å í è é   Ä è é ê ñ ò ð à:
 //                                   infix[i]
 //                           @  +-  */  ^  (  )  F  P
-      TabDyxtr:TTabDyxtr = ((4, 1,  1,  1, 1, 5, 1, 6), // @
+      TabDyxtr:TTabDyxtr =
+      //                   @  +-  */   ^  (   )   F  P
+						   ((4, 1,  1,  1, 1, 5, 1, 6), // @
                             (2, 2,  1,  1, 1, 2, 1, 6), // +-
                             (2, 2,  2,  1, 1, 2, 1, 6), // */     TOS
                             (2, 2,  2,  2, 1, 2, 1, 6), // ^
