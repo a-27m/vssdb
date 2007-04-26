@@ -1,17 +1,17 @@
 
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlgTheory lab1", "AlgTheory - lab1\AlgTheory lab1.csproj", "{6C47B508-C10F-4087-BA96-FA39BE686659}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 1 - Sin in series", "AlgTheory - lab1\Lab 1 - Sin in series.csproj", "{6C47B508-C10F-4087-BA96-FA39BE686659}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DekartGraphic", "Dekart\DekartGraphic.csproj", "{97B73544-29AE-4AFA-9DB4-957C6D16A13F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Root1", "Root1\Root1.csproj", "{41F7F160-E3DE-43D5-97E0-9AD0278BE5CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 2 - ImplicitPlot2D", "Root1\Lab 2 - ImplicitPlot2D.csproj", "{41F7F160-E3DE-43D5-97E0-9AD0278BE5CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab3allroots", "Lab3allroots\Lab3allroots.csproj", "{46EF238B-4EC6-4956-A895-A97CF2172D8F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 3 - All roots (Newton)", "Lab3allroots\Lab 3 - All roots (Newton).csproj", "{46EF238B-4EC6-4956-A895-A97CF2172D8F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polish", "..\Polish\Polish.csproj", "{A978D1E6-7D39-42D8-8695-0EFBC60289CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComplexRoots", "ComplexRoots\ComplexRoots.csproj", "{85825FAE-97D5-4828-AD8D-7ED0DAF68633}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 4 - Complex Roots (Fractal 1)", "ComplexRoots\Lab 4 - Complex Roots (Fractal 1).csproj", "{85825FAE-97D5-4828-AD8D-7ED0DAF68633}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
