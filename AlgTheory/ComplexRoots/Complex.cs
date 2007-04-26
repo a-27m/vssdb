@@ -1,17 +1,23 @@
 using System;
+using System.Collections.Generic;
 
-namespace Complex
+namespace ComplexNumbers
 {
+    public delegate Complex ComplexFunction(Complex z);
+
     public struct Complex
     {
         public double re;
         public double im;
+
+        public static readonly Complex NaN = new Complex(double.NaN, double.NaN);
 
         public Complex(double real, double imagine)
         {
             re = real;
             im = imagine;
         }
+
         public Complex(double real)
         {
             re = real;
@@ -26,12 +32,17 @@ namespace Complex
             }
         }
 
-        public double Norm
+        //public double Norm
+        //{
+        //    get
+        //    {
+        //        return Complex.Norm(this);
+        //    }
+        //}
+
+        public static double Norm(Complex z)
         {
-            get
-            {
-                return Math.Sqrt(x2y2);
-            }
+            return Math.Sqrt(z.x2y2);
         }
 
         public Complex Add(Complex c1)
@@ -68,5 +79,54 @@ namespace Complex
         {
             return c1.Divide(c2);
         }
+
+        public static bool IsNaN(Complex z)
+        {
+            return double.IsNaN(z.re) || double.IsNaN(z.im);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("({0}; {1})", re, im);
+        }
+
+        public string ToString(string formatString)
+        {
+            string str = "(";
+            str += re.ToString(formatString);
+            str += "; ";
+            str += im.ToString(formatString);
+            str += ")";
+
+            return str;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            if (obj is Complex)
+            {
+                return ((Complex)obj).re == re &&
+                   ((Complex)obj).im == im;
+            }
+            else
+            {
+                return base.Equals(obj);
+            }
+        }
+
+        //public class Comparer : IEqualityComparer<Complex>
+        //{
+        //    public bool Equals(Complex x, Complex y)
+        //    {
+        //        return Complex.Equals(x, y);
+        //    }
+
+        //    public int GetHashCode(Complex obj)
+        //    {
+        //        return obj.GetHashCode();
+        //    }
+        //}
     }
 }
