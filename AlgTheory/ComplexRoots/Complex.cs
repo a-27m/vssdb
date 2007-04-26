@@ -110,9 +110,10 @@ namespace ComplexNumbers
 
         public override int GetHashCode()
         {
-            byte[] bytes = 
-            BitConverter.GetBytes(re);
-            return BitConverter.
+            return base.GetHashCode();
+            //byte[] bytes = 
+            //BitConverter.GetBytes(re);
+            //return BitConverter.
         }
 
         //public class Comparer : IEqualityComparer<Complex>
