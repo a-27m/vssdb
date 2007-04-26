@@ -6,7 +6,6 @@ using System.Text;
 using System.Windows.Forms;
 
 using DekartGraphic;
-//using Polish;
 
 namespace Root1
 {
@@ -15,21 +14,59 @@ namespace Root1
         List<MathGraphic> mgs;
         Matrix matrix;
 
-        double f1(double x)
+        class coefs
         {
-            return Math.Sin(x * x - 4);
+            protected double _a, _b, _c;
+
+            public double c
+            {
+                get
+                {
+                    return _c;
+                }
+                set
+                {
+                    _c = value;
+                }
+            }
+
+            public double b
+            {
+                get
+                {
+                    return _b;
+                }
+                set
+                {
+                    _b = value;
+                }
+            }
+
+            public double a
+            {
+                get
+                {
+                    return _a;
+                }
+                set
+                {
+                    _a = value;
+                }
+            }
         }
+        coefs p;
 
-            double a = 5;
-            double b = 1;
-            double c = 5;
-
-        double fxy(double x, double y)
+        double fxy0(double x, double y)
+        {            
+            return p.a * x * x + p.b * y * y * y + p.c * x * y * y + x * x * x * x * x * x * x;
+        }
+        double fxy1(double x, double y)
         {
-            //return x*x*x+y*y*y+x*x+1.01*y*y-0.15;
-            return a * x * x + b * y * y * y + c * x * y * y + x * x * x * x * x * x * x;
-
-            //return x * x * x + y * y * y - x * y;
+            return x * x * x + y * y * y - x * y;
+        }
+        double fxy2(double x, double y)
+        {
+            return x * x * x + y * y * y + x * x + 1.01 * y * y - 0.15;
         }
 
         public Form1()
@@ -37,6 +74,19 @@ namespace Root1
             InitializeComponent();
             matrix = new Matrix(300, 0f, 0f, -300, 200, 200);
             mgs = new List<MathGraphic>();
+
+            p = new coefs();
+            p.a = 5;
+            p.b = 1;
+            p.c = 5;
+
+            fxy = fxy0;
+
+            radioButton0.Enabled = true;
+
+            linkLabel1.DataBindings.Add("Value", p, "a");
+            linkLabelMy1.DataBindings.Add("Value", p, "b");
+            linkLabelMy2.DataBindings.Add("Value", p, "c");
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -90,6 +140,8 @@ namespace Root1
             return roots.ToArray();
         }
 
+        delegate double DoubleFunctionXY(double x, double y);
+
         double fy0(double x)
         {
             return fxy(x, y);
@@ -100,22 +152,21 @@ namespace Root1
         }
 
         double x, y;
+        DoubleFunctionXY fxy;
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-
             DekartForm df = new DekartForm(30, 30, 200, 200);
 
             List<PointF> pts = new List<PointF>();
 
             double x1 = -3;
             double x2 = 3;
-            double hx = 1e-2;
+            double hx = 0.005;
 
             double y1 = -3;
             double y2 = 3;
-            double hy = 1e-2;
+            double hy = 0.005;
 
             for (y = y1; y < y2; y += hy)
             {
@@ -137,17 +188,10 @@ namespace Root1
             df.AddPolygon(Color.Gray, DrawModes.DrawPoints, pts.ToArray());
             df.Show();
             df.Update2();
-            //MathGraphic mg = new MathGraphic(pts.ToArray());
-            //mg.PenColor = Color.Green;
-
-            //mg.PenWidth = 1f;
-            //mgs.Add(mg);
-
-            Refresh();
         }
 
         #region linklabel
-        
+
         public class FormPopup : Form
         {
             TextBox textBox = null;
@@ -282,6 +326,23 @@ namespace Root1
         }
 
         #endregion
+
+        private void radioButton0_CheckedChanged(object sender, EventArgs e)
+        {
+            fxy = fxy0;
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            fxy = fxy1;
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            fxy = fxy2;
+        }
+
+
 
     }
 }
