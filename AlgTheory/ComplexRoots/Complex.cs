@@ -32,14 +32,6 @@ namespace ComplexNumbers
             }
         }
 
-        //public double Norm
-        //{
-        //    get
-        //    {
-        //        return Complex.Norm(this);
-        //    }
-        //}
-
         public static double Norm(Complex z)
         {
             return Math.Sqrt(z.x2y2);
@@ -114,6 +106,13 @@ namespace ComplexNumbers
             {
                 return base.Equals(obj);
             }
+        }
+
+        public override int GetHashCode()
+        {
+            byte[] bytes = 
+            BitConverter.GetBytes(re);
+            return BitConverter.
         }
 
         //public class Comparer : IEqualityComparer<Complex>

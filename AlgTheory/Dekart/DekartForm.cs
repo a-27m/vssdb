@@ -207,6 +207,15 @@ namespace DekartGraphic
             return grs.Count - 1;
 		}
 
+        public int AddGraphic(MathGraphic mg)
+        {
+            if (grs == null)
+                grs = new List<MathGraphic>(100);
+
+            grs.Add(mg);
+            return grs.Count - 1;
+        }
+
 		/// <summary>
 		/// </summary>
 		/// <param name="penWidth">Is zooming with graphics of not zero :(</param>
