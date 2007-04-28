@@ -66,7 +66,7 @@ namespace Root1
         }
         double fxy2(double x, double y)
         {
-            return x * x * x + y * y * y + x * x + 1.01 * y * y - 0.15;
+            return Math.Pow(x, 7) * Math.Cos(Math.Pow(y, 5) + x) + y * x * Math.Tan(Math.Pow(x, 5) + 2 * y);
         }
 
         public Form1()
@@ -162,11 +162,11 @@ namespace Root1
 
             double x1 = -3;
             double x2 = 3;
-            double hx = 0.005;
+            double hx = 0.05;
 
             double y1 = -3;
             double y2 = 3;
-            double hy = 0.005;
+            double hy = 0.05;
 
             for (y = y1; y < y2; y += hy)
             {

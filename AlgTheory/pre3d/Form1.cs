@@ -24,8 +24,9 @@ namespace pre3d
         private void button1_Click(object sender, EventArgs e)
         {
             g3d = new Graphic3D(fxy, -5f, 5f, -5f, 5f, 0.2f);
-            g3d.alphaX = 180 + 30+45;
-            g3d.alphaY = -30+45;
+            g3d.alphaX = 180 +45;
+            g3d.alphaY = 0;
+            g3d.alphaZ = 90;
             pictureBox1.Refresh();
         }
 

@@ -44,15 +44,18 @@ namespace pre3d
         //public float alphaX = (float)(5f / 4f * Math.PI);
         //public float alphaY = (float)0f;
         //public float alphaZ = (float)(1f / 2f * Math.PI);
-        public float alphaX = (float)(180+45);
+        public float alphaX = (float)(180 + 45);
         public float alphaY = (float)0f;
         public float alphaZ = (float)(90);
 
         float z_max, z_min;
 
+        float sinX, sinY, sinZ;
+        float cosX, cosY, cosZ;
+
         public void Draw(Graphics g)
         {
-           g.Clear(Color.White);
+            g.Clear(Color.White);
             g.Transform = new Matrix(zoom, 0, 0, zoom, ox, oy);
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
@@ -63,20 +66,24 @@ namespace pre3d
             PointF p3 = new PointF();
             PointF p4 = new PointF();
 
-//            g.DrawEllipse(pen, 0f, 0f, 3f / zoom, 3f / zoom);
+            //            g.DrawEllipse(pen, 0f, 0f, 3f / zoom, 3f / zoom);
 
-            float cosX = (float)Math.Cos(alphaX / 180f * Math.PI);
-            float cosY = (float)Math.Cos(alphaY / 180f * Math.PI);
-            float cosZ = 0.8f;//(float)Math.Cos(alphaZ/180f*Math.PI);
+            cosX = (float)Math.Cos(alphaX / 180f * Math.PI);
+            cosY = (float)Math.Cos(alphaY / 180f * Math.PI);
+            cosZ = (float)Math.Cos(alphaZ / 180f * Math.PI);
+
+            sinX = (float)Math.Sin(alphaX / 180f * Math.PI);
+            sinY = (float)Math.Sin(alphaY / 180f * Math.PI);
+            sinZ = (float)Math.Sin(alphaZ / 180f * Math.PI);
 
             for (int j = 1; j < pts.Length; j++)
             {
                 for (int i = 1; i < pts[j].Length; i++) // в pts[j] меняется y
                 {
-                    Project(ref p1, pts[i][j], cosX, cosY, cosZ);
-                    Project(ref p2, pts[i - 1][j], cosX, cosY, cosZ);
-                    Project(ref p3, pts[i][j - 1], cosX, cosY, cosZ);
-                    Project(ref p4, pts[i - 1][j - 1], cosX, cosY, cosZ);
+                    Project(ref p1, pts[i][j]);//, cosX, cosY, cosZ);
+                    Project(ref p2, pts[i - 1][j]);//, cosX, cosY, cosZ);
+                    Project(ref p3, pts[i][j - 1]);//, cosX, cosY, cosZ);
+                    Project(ref p4, pts[i - 1][j - 1]);//, cosX, cosY, cosZ);
 
                     int v = (int)((pts[i][j].z - z_min) / (z_max - z_min) * 200) + 50;
 
@@ -94,10 +101,10 @@ namespace pre3d
             pen.Color = Color.Green;
             pen.Width = 2f / zoom;
 
-            Project(ref ptO, new Point3d(0, 0, 0), cosX, cosY, cosZ);
-            Project(ref ptOx, new Point3d(5, 0, 0), cosX, cosY, cosZ);
-            Project(ref ptOy, new Point3d(0, 5, 0), cosX, cosY, cosZ);
-            Project(ref ptOz, new Point3d(0, 0, 5), cosX, cosY, cosZ);
+            Project(ref ptO, new Point3d(0, 0, 0));//, cosX, cosY, cosZ);
+            Project(ref ptOx, new Point3d(5, 0, 0));//, cosX, cosY, cosZ);
+            Project(ref ptOy, new Point3d(0, 5, 0));//, cosX, cosY, cosZ);
+            Project(ref ptOz, new Point3d(0, 0, 5));//, cosX, cosY, cosZ);
 
             g.DrawLine(pen, ptO, ptOx);
             g.DrawLine(pen, ptO, ptOz);
@@ -105,10 +112,16 @@ namespace pre3d
             g.DrawLine(pen, ptO, ptOy);
         }
 
-        protected void Project(ref PointF p2d, Point3d p3d, float cosX, float cosY, float cosZ)
+        protected void Project(ref PointF p2d, Point3d p3d)
         {
-            p2d.X = cosY * p3d.y + cosX * p3d.x;
-            p2d.Y = -cosX * p3d.x - cosZ * p3d.z;
+            //p2d.X = cosY * p3d.y + cosX * p3d.x;
+            //p2d.Y = -cosX * p3d.x - cosZ * p3d.z;
+
+            //mx = 
+
+            p2d.X = p3d.x * cosX + p3d.y * cosY + p3d.z * cosZ;
+            p2d.Y = p3d.x * sinX + p3d.y * sinY + p3d.z * sinZ;
+            p2d.Y = -p2d.Y;
         }
 
         public Point3d[][] Tabulate(DoubleFunction3d fxy,
