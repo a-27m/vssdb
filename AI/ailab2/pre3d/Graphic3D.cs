@@ -37,56 +37,81 @@ namespace pre3d
             pts = Tabulate(fxy, x1, x2, y1, y2, Step, Step);
         }
 
+        public float zoom = 50f;
+        public float ox = 150;
+        public float oy = 150;
+
+        //public float alphaX = (float)(5f / 4f * Math.PI);
+        //public float alphaY = (float)0f;
+        //public float alphaZ = (float)(1f / 2f * Math.PI);
+        public float alphaX = (float)(180+45);
+        public float alphaY = (float)0f;
+        public float alphaZ = (float)(90);
+
+        float z_max, z_min;
+
         public void Draw(Graphics g)
         {
-            g.Clear(Color.White);
-
-            float zoom = 50f;
-            float ox = 150;
-            float oy = 150;
-
+           g.Clear(Color.White);
             g.Transform = new Matrix(zoom, 0, 0, zoom, ox, oy);
+            g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            Pen pen = new Pen(Color.Black, 1f / zoom);
-
-            //float dz = (float)(0.5 / Math.Sqrt(2));
-            //float ptSize = 0.5F / zoom;
+            Pen pen = new Pen(Color.Black, 0.45f / zoom);
 
             PointF p1 = new PointF();
             PointF p2 = new PointF();
             PointF p3 = new PointF();
+            PointF p4 = new PointF();
 
-            g.DrawEllipse(pen, 0f, 0f, 3f / zoom, 3f / zoom);
+//            g.DrawEllipse(pen, 0f, 0f, 3f / zoom, 3f / zoom);
+
+            float cosX = (float)Math.Cos(alphaX / 180f * Math.PI);
+            float cosY = (float)Math.Cos(alphaY / 180f * Math.PI);
+            float cosZ = 0.8f;//(float)Math.Cos(alphaZ/180f*Math.PI);
 
             for (int j = 1; j < pts.Length; j++)
             {
                 for (int i = 1; i < pts[j].Length; i++) // в pts[j] меняется y
                 {
-                    //float dzy = (float)(dz * i);
+                    Project(ref p1, pts[i][j], cosX, cosY, cosZ);
+                    Project(ref p2, pts[i - 1][j], cosX, cosY, cosZ);
+                    Project(ref p3, pts[i][j - 1], cosX, cosY, cosZ);
+                    Project(ref p4, pts[i - 1][j - 1], cosX, cosY, cosZ);
 
-                    p1.X = (float)(pts[i][j].y - pts[i][j].x/Math.Sqrt(2));
-                    p1.Y = (float)(pts[i][j].x / Math.Sqrt(2) - pts[i][j].z);
+                    int v = (int)((pts[i][j].z - z_min) / (z_max - z_min) * 200) + 50;
 
-                    p2.X = (float)(pts[i-1][j].y - pts[i-1][j].x / Math.Sqrt(2));
-                    p2.Y = (float)(pts[i - 1][j].x / Math.Sqrt(2) - pts[i - 1][j].z);
-
-                    p3.X = (float)(pts[i][j-1].y - pts[i][j-1].x / Math.Sqrt(2));
-                    p3.Y = (float)(pts[i][j-1].x / Math.Sqrt(2) - pts[i][j-1].z);
-
+                    //g.FillPolygon(new SolidBrush(Color.FromArgb(v, v, v)),
+                    //    new PointF[] { p1, p2, p4, p3 });
                     g.DrawLine(pen, p1, p2);
                     g.DrawLine(pen, p1, p3);
                 }
             }
+
+            PointF ptO = new PointF();
+            PointF ptOx = new PointF();
+            PointF ptOy = new PointF();
+            PointF ptOz = new PointF();
+            pen.Color = Color.Green;
+            pen.Width = 2f / zoom;
+
+            Project(ref ptO, new Point3d(0, 0, 0), cosX, cosY, cosZ);
+            Project(ref ptOx, new Point3d(5, 0, 0), cosX, cosY, cosZ);
+            Project(ref ptOy, new Point3d(0, 5, 0), cosX, cosY, cosZ);
+            Project(ref ptOz, new Point3d(0, 0, 5), cosX, cosY, cosZ);
+
+            g.DrawLine(pen, ptO, ptOx);
+            g.DrawLine(pen, ptO, ptOz);
+            pen.Color = Color.Red;
+            g.DrawLine(pen, ptO, ptOy);
         }
 
-        protected PointF As2d(Point3d p3, float dzx)
+        protected void Project(ref PointF p2d, Point3d p3d, float cosX, float cosY, float cosZ)
         {
-            PointF p2 = new PointF();
-            p2.X = p3.y - dzx;
-            return p2;
+            p2d.X = cosY * p3d.y + cosX * p3d.x;
+            p2d.Y = -cosX * p3d.x - cosZ * p3d.z;
         }
 
-        public static Point3d[][] Tabulate(DoubleFunction3d fxy,
+        public Point3d[][] Tabulate(DoubleFunction3d fxy,
             float x1, float x2,
             float y1, float y2,
             float StepX, float StepY)
@@ -123,6 +148,10 @@ namespace pre3d
                     }
 
                     dots.Add(new Point3d(x, y, z));
+                    if (z_max < z)
+                        z_max = z;
+                    if (z_min > z)
+                        z_min = z;
                 }
 
                 surf.Add(dots.ToArray());
