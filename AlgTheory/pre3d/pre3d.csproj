@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{97B73544-29AE-4AFA-9DB4-957C6D16A13F}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{4777D09C-D3EB-44C6-BDE6-0541B5C587F3}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DekartGraphic</RootNamespace>
-    <AssemblyName>Dekart</AssemblyName>
+    <RootNamespace>pre3d</RootNamespace>
+    <AssemblyName>pre3d</AssemblyName>
     
     
     
@@ -37,19 +37,20 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DekartForm.cs">
+    <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DekartForm.designer.cs">
-      <DependentUpon>DekartForm.cs</DependentUpon>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="MathGraphic.cs" />
+    <Compile Include="Graphic3D.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DekartForm.resx">
-      <DependentUpon>DekartForm.cs</DependentUpon>
+    <EmbeddedResource Include="Form1.resx">
       <SubType>Designer</SubType>
+      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
