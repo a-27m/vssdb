@@ -1,4 +1,4 @@
-﻿namespace ComplexRoots
+﻿namespace Lab_5___SysEqu__Fractal_2_
 {
     partial class Form1
     {
