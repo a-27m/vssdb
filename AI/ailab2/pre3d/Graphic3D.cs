@@ -29,11 +29,24 @@ namespace pre3d
     {
         protected Point3d[][] pts;
 
+        float sin(float degree)
+        {
+            return (float)Math.Sin(degree / 180.0 * Math.PI);
+        }
+        float cos(float degree)
+        {
+            return (float)Math.Cos(degree / 180.0 * Math.PI);
+        }
+
         public Graphic3D(DoubleFunction3d fxy,
             float x1, float x2,
             float y1, float y2,
             float Step)
         {
+            x_min = x1;
+            x_max = x2;
+            y_min = y1;
+            y_max = y2;
             pts = Tabulate(fxy, x1, x2, y1, y2, Step, Step);
         }
 
@@ -41,17 +54,17 @@ namespace pre3d
         public float ox = 150;
         public float oy = 150;
 
-        //public float alphaX = (float)(5f / 4f * Math.PI);
-        //public float alphaY = (float)0f;
-        //public float alphaZ = (float)(1f / 2f * Math.PI);
-        public float alphaX = (float)(180 + 45);
-        public float alphaY = (float)0f;
-        public float alphaZ = (float)(90);
-
+        float x_max, x_min;
+        float y_max, y_min;
         float z_max, z_min;
 
-        float sinX, sinY, sinZ;
-        float cosX, cosY, cosZ;
+        float Xi, Yi, Zi;
+        float Xj, Yj, Zj;
+        float Xk, Yk, Zk;
+        
+        public float mx = 1f, my = 1f, mz = 1f;
+
+        public float phiH = 0f, phiV = 0f;
 
         public void Draw(Graphics g)
         {
@@ -66,62 +79,78 @@ namespace pre3d
             PointF p3 = new PointF();
             PointF p4 = new PointF();
 
-            //            g.DrawEllipse(pen, 0f, 0f, 3f / zoom, 3f / zoom);
-
-            cosX = (float)Math.Cos(alphaX / 180f * Math.PI);
-            cosY = (float)Math.Cos(alphaY / 180f * Math.PI);
-            cosZ = (float)Math.Cos(alphaZ / 180f * Math.PI);
-
-            sinX = (float)Math.Sin(alphaX / 180f * Math.PI);
-            sinY = (float)Math.Sin(alphaY / 180f * Math.PI);
-            sinZ = (float)Math.Sin(alphaZ / 180f * Math.PI);
+            Xi = mx * cos(phiH) * cos(phiV);
+            Xj = my * sin(phiH) * cos(phiV);
+            Xk = mz * sin(phiV);
+            Norm(ref Xi, ref Xj, ref Xk);
+            Yi = mx * cos(90f+phiH) * cos(phiV);
+            Yj = my *  sin(90f+phiH) * cos(phiV);
+            Yk = mz * sin(phiV);
+            Norm(ref Yi, ref Yj, ref Yk);
+            Zi = mx * cos(phiH) * cos(90f+phiV);
+            Zj = my * sin(phiH) * cos(90f+phiV);
+            Zk = mz * sin(90f+phiV);
+            Norm(ref Zi, ref Zj, ref Zk);
 
             for (int j = 1; j < pts.Length; j++)
             {
                 for (int i = 1; i < pts[j].Length; i++) // в pts[j] меняется y
                 {
-                    Project(ref p1, pts[i][j]);//, cosX, cosY, cosZ);
-                    Project(ref p2, pts[i - 1][j]);//, cosX, cosY, cosZ);
-                    Project(ref p3, pts[i][j - 1]);//, cosX, cosY, cosZ);
-                    Project(ref p4, pts[i - 1][j - 1]);//, cosX, cosY, cosZ);
+                    Project(ref p1, pts[i][j]);
+                    Project(ref p2, pts[i - 1][j]);
+                    Project(ref p3, pts[i][j - 1]);
+                    Project(ref p4, pts[i - 1][j - 1]);
 
                     int v = (int)((pts[i][j].z - z_min) / (z_max - z_min) * 200) + 50;
 
                     //g.FillPolygon(new SolidBrush(Color.FromArgb(v, v, v)),
                     //    new PointF[] { p1, p2, p4, p3 });
+                    pen.Color = Color.FromArgb(v, v, v);
                     g.DrawLine(pen, p1, p2);
                     g.DrawLine(pen, p1, p3);
                 }
             }
 
-            PointF ptO = new PointF();
-            PointF ptOx = new PointF();
-            PointF ptOy = new PointF();
-            PointF ptOz = new PointF();
-            pen.Color = Color.Green;
-            pen.Width = 2f / zoom;
+            #region Axes
 
-            Project(ref ptO, new Point3d(0, 0, 0));//, cosX, cosY, cosZ);
-            Project(ref ptOx, new Point3d(5, 0, 0));//, cosX, cosY, cosZ);
-            Project(ref ptOy, new Point3d(0, 5, 0));//, cosX, cosY, cosZ);
-            Project(ref ptOz, new Point3d(0, 0, 5));//, cosX, cosY, cosZ);
+            pen.Width =2f / zoom;
+            pen.EndCap = LineCap.Round;
 
-            g.DrawLine(pen, ptO, ptOx);
-            g.DrawLine(pen, ptO, ptOz);
+            Project(ref p1, new Point3d(0, 0, 0));
+
+            // x
+            pen.Color = Color.Blue;
+            //Project(ref p1, new Point3d(x_min, 0, 0));
+            Project(ref p2, new Point3d(x_max, 0, 0));            
+            g.DrawLine(pen, p1, p2);
+
+            // y
             pen.Color = Color.Red;
-            g.DrawLine(pen, ptO, ptOy);
+            //Project(ref p1, new Point3d(0, y_min, 0));
+            Project(ref p2, new Point3d(0, y_max, 0));
+            g.DrawLine(pen, p1, p2);
+
+            // z
+            pen.Color = Color.Green;
+            //Project(ref p1, new Point3d(0, 0, z_min));
+            Project(ref p2, new Point3d(0, 0, z_max));
+            g.DrawLine(pen, p1, p2);
+
+            #endregion
+        }
+
+        private void Norm(ref float Xi, ref float Xj, ref float Xk)
+        {
+            float norm = (float)Math.Sqrt(Xi * Xi + Xj * Xj + Xk * Xk);
+            Xi /= norm;
+            Xj /= norm;
+            Xk /= norm;
         }
 
         protected void Project(ref PointF p2d, Point3d p3d)
         {
-            //p2d.X = cosY * p3d.y + cosX * p3d.x;
-            //p2d.Y = -cosX * p3d.x - cosZ * p3d.z;
-
-            //mx = 
-
-            p2d.X = p3d.x * cosX + p3d.y * cosY + p3d.z * cosZ;
-            p2d.Y = p3d.x * sinX + p3d.y * sinY + p3d.z * sinZ;
-            p2d.Y = -p2d.Y;
+            p2d.X = p3d.x * sin(phiH) + p3d.y * cos(phiH);
+            p2d.Y = p3d.x * cos(phiH) * cos(phiV) - p3d.y * sin(phiH) * cos(phiV) - p3d.z * sin(phiV);
         }
 
         public Point3d[][] Tabulate(DoubleFunction3d fxy,
