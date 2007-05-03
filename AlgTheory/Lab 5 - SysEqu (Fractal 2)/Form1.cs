@@ -12,7 +12,7 @@ using DekartGraphic;
 
 namespace Lab_5___SysEqu__Fractal_2_
 {
-    public delegate double DoubleOfComplexFunction(double[] X);
+    public delegate double DoubleOfVectorFunction(params double[] X);
 
     public partial class Form1 : Form
     {
@@ -103,7 +103,7 @@ namespace Lab_5___SysEqu__Fractal_2_
             }
         }
 
-        double f1(double[] X)
+        double f1(params double[] X)
         {
 #if debug
             if (X.Length < 2)
@@ -114,48 +114,88 @@ namespace Lab_5___SysEqu__Fractal_2_
             double x = X[0];
             double y = X[1];
             return x * x * x - 2 * Math.Sin(x) - y;
+            //return x * x - 4;
         }
-        double f2(double[] X)
+        double f2(params double[] X)
         {
 #if debug
             if (X.Length < 2)
                 throw new ArgumentException("Too few args", "X");
 #endif
-         
+
             // original
             double x = X[0];
             double y = X[1];
             return Math.Sqrt(y + 7) * Math.Cos(y) - x;
+            //return 0;
         }
 
         double h = 1e-3;
 
-        double dF_dx(DoubleOfComplexFunction f, Complex z)
+        #region numerical derivates definitions
+        double dFx(DoubleOfVectorFunction f, params double[] z)
         {
-            return f(
+            return (f(z[0] + h, z[1]) - f(z[0] - h, z[1])) / 2 / h;
+        }
+        double dFy(DoubleOfVectorFunction f, params double[] z)
+        {
+            return (f(z[0], z[1] + h) - f(z[0], z[1] - h)) / 2 / h;
         }
 
-        private Complex Newtone(DoubleOfComplexFunction[] F,
+        #endregion
+
+        private Complex Newtone(DoubleOfVectorFunction[] Fns,
             Complex z0, double eps, out int iterations)
         {
-            Complex x_old, x = z0;
+            double x = z0.re;
+            double y = z0.im;
+            double x0, y0;
 
             iterations = 0;
 
+            DoubleOfVectorFunction F = Fns[0];
+            DoubleOfVectorFunction G = Fns[1];
+
             do
             {
-                x_old = x;
+                x0 = x;
+                y0 = y;
 
-                double dx = F[1]
+                //get new approximation in (x,y)
+                //by evaluation of known expressions respectively
+
+                //a:=eval(diff(f,x),[x=x0,y=y0]);b:=eval(diff(f,y),[x=x0,y=y0]);
+                //d:=eval(f,[x=x0,y=y0]);
+                //k(x,y):=a*(x-x0)+b*(y-y0)+d
+
+                double F0 = F(x0, y0);
+                double G0 = G(x0, y0);
+                double dFx0 = dFx(F, x0, y0);
+                double dFy0 = dFy(F, x0, y0);
+                double dGx0 = dFx(G, x0, y0);
+                double dGy0 = dFy(G, x0, y0);
+                double t = -dGx0 * dFy0 + dFx0 * dGy0;
+
+                if (t == 0)
+                    return Complex.NaN;
+                if (double.IsNaN(t))
+                    return Complex.NaN;
+                x = (G0 * dFy0 - dGy0 * F0) / t + x0;
+                y = (dGx0 * F0 - dFx0 * G0) / t + y0;
+
+                //x = G(x0, y0);
+                //y = F(x, y0);
 
                 iterations++;
 
                 if (iterations % 200 == 0)
                     return Complex.NaN;
 
-            } while (Complex.Norm(x - x_old) >= eps);
+                //} while (Math.Sqrt(x * x + y * y) - Math.Sqrt(x0 * x0 + y0 * y0) >= eps);
+            } while (Math.Abs(Math.Abs(F(x, y) - G(x, y)) - Math.Abs(F(x0, y0) - G(x0, y0))) >= eps);
 
-            return x;
+
+            return new Complex(x,y);
         }
 
         public double delta = 0.01;
@@ -203,18 +243,18 @@ namespace Lab_5___SysEqu__Fractal_2_
 
             //double x1 = -2;
             //double x2 = 2;
-            double hx = 0.01;
+            double hx = 0.1;
 
             //double y1 = -2;
             //double y2 = 2;
-            double hy = 0.01;
+            double hy = 0.1;
 
             for (double y = x1; y < x2; y += hy)
                 for (double x = x1; x < x2; x += hx)
                 {
                     int iterations;
                     float percent;
-                    res = Newtone(new DoubleOfComplexFunction[] {f1, f2 }, new Complex(x, y), eps, out iterations);
+                    res = Newtone(new DoubleOfVectorFunction[] { f1, f2 }, new Complex(x, y), eps, out iterations);
                     percent = iterations / 30f;
                     if (percent > 1f)
                         percent = 1f;
@@ -270,8 +310,9 @@ namespace Lab_5___SysEqu__Fractal_2_
             {
                 listRoots.Items.Add("z" + (listRoots.Items.Count + 1) + " = "
                    + z.value.ToString("F6"));
-                listY.Items.Add("f" + (listY.Items.Count + 1) + " = "
-                    + poly1.Evaluate(z.value).ToString("F6"));
+                listY.Items.Add("f,g" + (listY.Items.Count + 1) + " = "
+                    + f1(z.value.re, z.value.im).ToString("F6") +", "
+                    + f2(z.value.re, z.value.im).ToString("F6"));
             }
         }
     }
