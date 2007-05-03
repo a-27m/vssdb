@@ -1,4 +1,4 @@
-﻿#define debug
+﻿//#define debug
 
 using System;
 using System.Collections.Generic;
@@ -109,7 +109,6 @@ namespace Lab_5___SysEqu__Fractal_2_
             if (X.Length < 2)
                 throw new ArgumentException("Too few args", "X");
 #endif
-
             // original
             double x = X[0];
             double y = X[1];
@@ -122,13 +121,33 @@ namespace Lab_5___SysEqu__Fractal_2_
             if (X.Length < 2)
                 throw new ArgumentException("Too few args", "X");
 #endif
-
             // original
             double x = X[0];
             double y = X[1];
             return Math.Sqrt(y + 7) * Math.Cos(y) - x;
             //return 0;
         }
+        double f1x(double t)
+        {
+            return t;
+        }
+        double f1y(double t)
+        {
+            return t * t * t - 2 * Math.Sin(t);
+            //return Math.Cos(Math.Pow(t + 6, Math.Sin(t + 6)));
+            //return t * t;
+        }
+        double f2x(double t)
+        {
+            return Math.Sqrt(t + 7) * Math.Cos(t);
+            //return Math.Sin(Math.Pow(t + 5, Math.Cos(t + 5)));
+            //return t * t;
+        }
+        double f2y(double t)
+        {
+            return t;
+        }
+
 
         double h = 1e-3;
 
@@ -146,28 +165,19 @@ namespace Lab_5___SysEqu__Fractal_2_
 
         private Complex Newtone(DoubleOfVectorFunction[] Fns,
             Complex z0, double eps, out int iterations)
-        {
+        {  //a:=eval(diff(f,x),[x=x0,y=y0]);b:=eval(diff(f,y),[x=x0,y=y0]);d:=eval(f,[x=x0,y=y0]);k(x,y):=a*(x-x0)+b*(y-y0)+d
             double x = z0.re;
             double y = z0.im;
             double x0, y0;
-
+            DoubleOfVectorFunction F = Fns[0], G = Fns[1];
             iterations = 0;
-
-            DoubleOfVectorFunction F = Fns[0];
-            DoubleOfVectorFunction G = Fns[1];
 
             do
             {
                 x0 = x;
                 y0 = y;
 
-                //get new approximation in (x,y)
-                //by evaluation of known expressions respectively
-
-                //a:=eval(diff(f,x),[x=x0,y=y0]);b:=eval(diff(f,y),[x=x0,y=y0]);
-                //d:=eval(f,[x=x0,y=y0]);
-                //k(x,y):=a*(x-x0)+b*(y-y0)+d
-
+                #region eval {F, G, dFx, dFy, dGx, dGy} @ (x0,y0)
                 double F0 = F(x0, y0);
                 double G0 = G(x0, y0);
                 double dFx0 = dFx(F, x0, y0);
@@ -180,22 +190,18 @@ namespace Lab_5___SysEqu__Fractal_2_
                     return Complex.NaN;
                 if (double.IsNaN(t))
                     return Complex.NaN;
+
+                #endregion
+
                 x = (G0 * dFy0 - dGy0 * F0) / t + x0;
                 y = (dGx0 * F0 - dFx0 * G0) / t + y0;
 
-                //x = G(x0, y0);
-                //y = F(x, y0);
-
-                iterations++;
-
-                if (iterations % 200 == 0)
+                if (++iterations % 200 == 0)
                     return Complex.NaN;
 
-                //} while (Math.Sqrt(x * x + y * y) - Math.Sqrt(x0 * x0 + y0 * y0) >= eps);
-            } while (Math.Abs(Math.Abs(F(x, y) - G(x, y)) - Math.Abs(F(x0, y0) - G(x0, y0))) >= eps);
+            } while (Math.Sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0)) >= eps);
 
-
-            return new Complex(x,y);
+            return new Complex(x, y);
         }
 
         public double delta = 0.01;
@@ -241,25 +247,26 @@ namespace Lab_5___SysEqu__Fractal_2_
                 Color.Violet
             };
 
-            //double x1 = -2;
-            //double x2 = 2;
-            double hx = 0.1;
+            double hx = 0.01;
+            double hy = 0.01;
 
-            //double y1 = -2;
-            //double y2 = 2;
-            double hy = 0.1;
+            double y1 = x1, y2 = x2;
 
-            for (double y = x1; y < x2; y += hy)
+            for (double y = y1; y < y2; y += hy)
                 for (double x = x1; x < x2; x += hx)
                 {
                     int iterations;
                     float percent;
                     res = Newtone(new DoubleOfVectorFunction[] { f1, f2 }, new Complex(x, y), eps, out iterations);
-                    percent = iterations / 30f;
-                    if (percent > 1f)
-                        percent = 1f;
 
-                    if (Complex.IsNaN(res))
+                    bool inRange = true;
+                    inRange &= res.re > x1;
+                    inRange &= res.re < x2;
+                    inRange &= res.im > y1;
+                    inRange &= res.im < y2;
+
+
+                    if (Complex.IsNaN(res) || !inRange)
                     {
                         colors.Add(Color.Black);
                         pts.Add(new PointF((float)x, (float)y));
@@ -273,6 +280,10 @@ namespace Lab_5___SysEqu__Fractal_2_
                             newRoot.value = res;
                             roots.Add(newRoot);
                         }
+
+                        percent = iterations / 30f;
+                        if (percent > 1f)
+                            percent = 1f;
 
                         bool needAdd = true;
                         foreach (Root r in roots)
@@ -298,10 +309,19 @@ namespace Lab_5___SysEqu__Fractal_2_
                     }
                 }
 
-            DotGraphic dotGraphic = new DotGraphic(pts.ToArray(), colors.ToArray());
-            dotGraphic.CurrentColorSchema = new MathGraphic.ColorSchema(
-                Color.Black, Color.DimGray, Color.Black, Color.Gray);
-            dForm.AddGraphic(dotGraphic);
+            //DotGraphic dotGraphic = new DotGraphic(pts.ToArray(), colors.ToArray());
+            //dotGraphic.CurrentColorSchema = new MathGraphic.ColorSchema(
+            //    Color.Black, Color.DimGray, Color.DimGray, Color.Gray);
+            //dForm.AddGraphic(dotGraphic);
+
+            MathGraphic mg;
+            mg = new MathGraphic(Color.White, DrawModes.DrawLines, f1x, f1y,
+                -5f, 5f, 0.01f);
+            dForm.AddGraphic(mg);
+
+            mg = new MathGraphic(Color.White, DrawModes.DrawLines, f2x, f2y,
+                -5f, 5f, 0.01f);
+            dForm.AddGraphic(mg);
 
             dForm.Show();
             dForm.Update2();
@@ -311,7 +331,7 @@ namespace Lab_5___SysEqu__Fractal_2_
                 listRoots.Items.Add("z" + (listRoots.Items.Count + 1) + " = "
                    + z.value.ToString("F6"));
                 listY.Items.Add("f,g" + (listY.Items.Count + 1) + " = "
-                    + f1(z.value.re, z.value.im).ToString("F6") +", "
+                    + f1(z.value.re, z.value.im).ToString("F6") + ", "
                     + f2(z.value.re, z.value.im).ToString("F6"));
             }
         }

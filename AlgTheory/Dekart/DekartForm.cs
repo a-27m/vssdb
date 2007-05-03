@@ -351,6 +351,8 @@ namespace DekartGraphic
 
 		private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+            Bitmap bmp = new Bitmap(100, 100);
+            
 			float px = ClientRectangle.Width / 2f;
 			float py = ClientRectangle.Height / 2f;
 
