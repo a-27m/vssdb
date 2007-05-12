@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab6", "Lab6\Lab6.csproj", "{6B53B095-0E2C-4B58-BEB4-A68479816D88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "automats", "..\L6\automats\automats\automats.csproj", "{76A90044-6ECE-4F55-AFFA-A16439990D60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6B53B095-0E2C-4B58-BEB4-A68479816D88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B53B095-0E2C-4B58-BEB4-A68479816D88}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B53B095-0E2C-4B58-BEB4-A68479816D88}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B53B095-0E2C-4B58-BEB4-A68479816D88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76A90044-6ECE-4F55-AFFA-A16439990D60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76A90044-6ECE-4F55-AFFA-A16439990D60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76A90044-6ECE-4F55-AFFA-A16439990D60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76A90044-6ECE-4F55-AFFA-A16439990D60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

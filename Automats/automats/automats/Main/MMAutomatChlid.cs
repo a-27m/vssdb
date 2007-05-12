@@ -10,7 +10,7 @@ namespace automats
 {
     public partial class MMAutomatChlid : Form, IPlayableMDIChild
     {
-        const string delims = " ;,\t";
+        const string delims = " \t\n";
         //const string BottomSign = "¶";
         const string BottomSign = "*";
         const string EndSign = "$";
@@ -106,7 +106,7 @@ namespace automats
             //throw new Exception("Editing isn't implemented yet!");
         }
 
-        bool machine_Step(int inIndex, int newStateIndex, int outSymbolIndex, int[] stackState)
+        bool machine_Step(int inIndex, int newStateIndex, int outSymbolIndex, int[] stackState, int[] transIndex)
         {
             progressBar.PerformStep();
             if (inIndex != -1)
@@ -115,8 +115,8 @@ namespace automats
                 if (outSymbolIndex != -1)
                     txtOut.Text += machine.Z[outSymbolIndex].ToString() + " ";
                 txtStates.Text += machine.S[newStateIndex].ToString() + " ";
-                grid.Rows[ (newStateIndex)*machine.M.Length+stackState[0] ].
-                    Cells[inIndex].Selected = true;
+                txtTrans.Text = machine.TranslationString;
+                grid.Rows[ (newStateIndex)*machine.M.Length+stackState[0] ].Cells[inIndex].Selected = true;
 
                  //while(paused)
                Application.DoEvents();
