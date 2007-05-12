@@ -5,7 +5,7 @@ using System.Text;
 namespace automats
 {
     public delegate void ClassesChangedHandler(List<List<int>> list, object[] S);
-    public delegate bool TerminalStepDelegate(int inIndex, int newStateIndex, int outSymbolIndex);
+    public delegate bool TerminalStepDelegate(object inIndex, int newStateIndex, int outSymbolIndex);
 
     public abstract class TerminalAutomat : Automat
     {
