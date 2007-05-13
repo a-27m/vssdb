@@ -114,7 +114,6 @@ namespace automats
             {
                 if (outSymbolIndex != -1)
                     txtOut.Text += machine.Z[outSymbolIndex].ToString() + " ";
-                txtStates.Text += machine.S[newStateIndex].ToString() + " ";
                 txtTrans.Text = machine.TranslationString;
                 grid.Rows[ (newStateIndex)*machine.M.Length+stackState[0] ].Cells[inIndex].Selected = true;
 
@@ -153,7 +152,6 @@ namespace automats
             PrintAutomat();
 
             txtOut.Clear();
-            txtStates.Text = machine.State.ToString() + " ";
 
             machine.Step += new MMAutomat.MMStepDelegate(machine_Step);
             machine.Process(strs, out ss, out oo, out stst);
