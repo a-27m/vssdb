@@ -3,6 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "automats", "..\L6\automats\automats\automats.csproj", "{76A90044-6ECE-4F55-AFFA-A16439990D60}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2FA5A3C8-47D7-4E3D-9EF4-7E8B53996750}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Documents and Settings\Axell\Desktop\f\l6.automat = ..\..\..\Documents and Settings\Axell\Desktop\f\l6.automat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -19,7 +19,7 @@ namespace automats
 
         private string[] strs;
         protected int pos;
-        
+
         protected MMAutomatChlid()
         {
             InitializeComponent();
@@ -49,25 +49,39 @@ namespace automats
             for (int i = 0; i < machine.A.Length; i++)
                 grid.Columns.Add("column" + i.ToString(), machine.A[i].ToString());
 
-            grid.Rows.Add(machine.M.Length * machine.S.Length);
+            grid.Rows.Add((machine.M.Length - 5) * machine.S.Length);
 
             for (int i = 0; i < machine.S.Length; i++)
             {
-                for (int j = 0; j < machine.M.Length; j++)
+                for (int j = 0; j < machine.M.Length - 5 - 1; j++)
                 {
                     grid.Rows[j].HeaderCell.Value = "(" + machine.S[i].ToString() + ") " + machine.M[j].ToString();
                     grid.Rows[j].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
                 }
             }
 
+            for (int i = 0; i < machine.S.Length; i++)
+            {
+                grid.Rows[machine.M.Length - 6].HeaderCell.Value =
+                    "(" + machine.S[i].ToString() + ") " + machine.M[machine.M.Length - 1].ToString();
+                grid.Rows[machine.M.Length - 6].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            }
+
             for (int k = 0; k < machine.S.Length; k++)
             {
-                for (int i = 0; i < machine.M.Length; i++)
+                for (int i = 0; i < machine.M.Length - 5 - 1; i++)
                     for (int j = 0; j < machine.A.Length; j++)
                     {
                         grid.Rows[i].Cells[j].Value = "#" + machine.ManDevice[k][i, j].ToString();
+                        // grid.Rows[i- 6].Cells[j].Value = "#" + machine.ManDevice[k][i-1, j].ToString();
                     }
             }
+
+            for (int j = 0; j < machine.A.Length; j++)
+            {
+                grid.Rows[machine.M.Length - 6].Cells[j].Value = "#" + machine.ManDevice[0][machine.M.Length - 1, j].ToString();
+            }
+
             grid.AutoResizeColumns();
             grid.AutoResizeRows();
 
@@ -115,10 +129,13 @@ namespace automats
                 if (outSymbolIndex != -1)
                     txtOut.Text += machine.Z[outSymbolIndex].ToString() + " ";
                 txtTrans.Text = machine.TranslationString;
-                grid.Rows[ (newStateIndex)*machine.M.Length+stackState[0] ].Cells[inIndex].Selected = true;
+                if (stackState[0] < machine.M.Length - 5)
+                    grid.Rows[(newStateIndex) * machine.M.Length + stackState[0]].Cells[inIndex].Selected = true;
+                else
+                    grid.Rows[(newStateIndex) * machine.M.Length + stackState[0]-6].Cells[inIndex].Selected = true;
 
-                 //while(paused)
-               Application.DoEvents();
+                //while(paused)
+                Application.DoEvents();
                 System.Threading.Thread.Sleep(200);
 
                 grid.Rows[newStateIndex].Cells[inIndex].Selected = false;
@@ -127,7 +144,7 @@ namespace automats
                 listBoxStack.Items.Add("Stack:");
                 foreach (int el in stackState)
                 {
-                    listBoxStack.Items.Insert(listBoxStack.Items.Count,machine.M[el]);
+                    listBoxStack.Items.Insert(listBoxStack.Items.Count, machine.M[el]);
                 }
 
                 return true;
@@ -174,7 +191,7 @@ namespace automats
             //throw new Exception("Need it? Write it!");
         }
 
-       #endregion
+        #endregion
 
         private void bnCheck_Click(object sender, EventArgs e)
         {

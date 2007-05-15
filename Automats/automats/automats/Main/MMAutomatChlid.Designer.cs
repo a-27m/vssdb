@@ -70,7 +70,7 @@ namespace automats
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel1);
             this.splitContainer1.Size = new System.Drawing.Size(505, 405);
-            this.splitContainer1.SplitterDistance = 211;
+            this.splitContainer1.SplitterDistance = 284;
             this.splitContainer1.TabIndex = 8;
             // 
             // splitContainer2
@@ -88,7 +88,7 @@ namespace automats
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.listBoxStack);
-            this.splitContainer2.Size = new System.Drawing.Size(505, 211);
+            this.splitContainer2.Size = new System.Drawing.Size(505, 284);
             this.splitContainer2.SplitterDistance = 392;
             this.splitContainer2.TabIndex = 1;
             // 
@@ -99,6 +99,7 @@ namespace automats
             this.grid.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.grid.BackgroundColor = System.Drawing.SystemColors.Control;
             this.grid.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.grid.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -110,7 +111,6 @@ namespace automats
             this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grid.Location = new System.Drawing.Point(0, 0);
-            this.grid.MultiSelect = false;
             this.grid.Name = "grid";
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
@@ -126,7 +126,7 @@ namespace automats
             this.grid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.grid.ShowCellToolTips = false;
             this.grid.ShowEditingIcon = false;
-            this.grid.Size = new System.Drawing.Size(392, 211);
+            this.grid.Size = new System.Drawing.Size(392, 284);
             this.grid.TabIndex = 0;
             // 
             // listBoxStack
@@ -135,7 +135,7 @@ namespace automats
             this.listBoxStack.FormattingEnabled = true;
             this.listBoxStack.Location = new System.Drawing.Point(0, 0);
             this.listBoxStack.Name = "listBoxStack";
-            this.listBoxStack.Size = new System.Drawing.Size(109, 199);
+            this.listBoxStack.Size = new System.Drawing.Size(109, 277);
             this.listBoxStack.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -161,7 +161,7 @@ namespace automats
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(505, 190);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(505, 117);
             this.tableLayoutPanel1.TabIndex = 7;
             // 
             // label1
@@ -170,7 +170,7 @@ namespace automats
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(39, 70);
+            this.label1.Size = new System.Drawing.Size(39, 34);
             this.label1.TabIndex = 1;
             this.label1.Text = "Input";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -181,14 +181,14 @@ namespace automats
             this.txtIn.Location = new System.Drawing.Point(48, 3);
             this.txtIn.Multiline = true;
             this.txtIn.Name = "txtIn";
-            this.txtIn.Size = new System.Drawing.Size(384, 64);
+            this.txtIn.Size = new System.Drawing.Size(384, 28);
             this.txtIn.TabIndex = 2;
             this.txtIn.TextChanged += new System.EventHandler(this.txtIn_TextChanged);
             // 
             // bnCheck
             // 
             this.bnCheck.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.bnCheck.Location = new System.Drawing.Point(438, 24);
+            this.bnCheck.Location = new System.Drawing.Point(438, 6);
             this.bnCheck.Name = "bnCheck";
             this.bnCheck.Size = new System.Drawing.Size(64, 21);
             this.bnCheck.TabIndex = 6;
@@ -200,7 +200,7 @@ namespace automats
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.txtOut, 2);
             this.txtOut.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtOut.Location = new System.Drawing.Point(48, 73);
+            this.txtOut.Location = new System.Drawing.Point(48, 37);
             this.txtOut.Name = "txtOut";
             this.txtOut.ReadOnly = true;
             this.txtOut.Size = new System.Drawing.Size(454, 20);
@@ -210,7 +210,7 @@ namespace automats
             // 
             this.label2.AutoSize = true;
             this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Location = new System.Drawing.Point(3, 70);
+            this.label2.Location = new System.Drawing.Point(3, 34);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(39, 26);
             this.label2.TabIndex = 3;
@@ -221,19 +221,20 @@ namespace automats
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.progressBar, 3);
             this.progressBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.progressBar.Location = new System.Drawing.Point(3, 169);
+            this.progressBar.Location = new System.Drawing.Point(3, 97);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(499, 18);
+            this.progressBar.Size = new System.Drawing.Size(499, 17);
             this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar.TabIndex = 5;
+            this.progressBar.Visible = false;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(3, 96);
+            this.label4.Location = new System.Drawing.Point(3, 60);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(39, 70);
+            this.label4.Size = new System.Drawing.Size(39, 34);
             this.label4.TabIndex = 9;
             this.label4.Text = "Translation";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -242,11 +243,11 @@ namespace automats
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.txtTrans, 2);
             this.txtTrans.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtTrans.Location = new System.Drawing.Point(48, 99);
+            this.txtTrans.Location = new System.Drawing.Point(48, 63);
             this.txtTrans.Multiline = true;
             this.txtTrans.Name = "txtTrans";
             this.txtTrans.ReadOnly = true;
-            this.txtTrans.Size = new System.Drawing.Size(454, 64);
+            this.txtTrans.Size = new System.Drawing.Size(454, 28);
             this.txtTrans.TabIndex = 10;
             // 
             // MMAutomatChlid

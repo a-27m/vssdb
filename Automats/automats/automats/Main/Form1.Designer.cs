@@ -135,6 +135,7 @@ namespace automats
             this.toolStripButton2.Name = "toolStripButton2";
             this.toolStripButton2.Size = new System.Drawing.Size(109, 22);
             this.toolStripButton2.Text = "Minimize automat";
+            this.toolStripButton2.Visible = false;
             this.toolStripButton2.Click += new System.EventHandler(this.minimizeToolBn_Click);
             // 
             // helpToolStripButton
@@ -222,6 +223,7 @@ namespace automats
             this.statusStrip1.Size = new System.Drawing.Size(450, 22);
             this.statusStrip1.TabIndex = 6;
             this.statusStrip1.Text = "statusStrip1";
+            this.statusStrip1.Visible = false;
             // 
             // toolStripStatusLabel1
             // 
