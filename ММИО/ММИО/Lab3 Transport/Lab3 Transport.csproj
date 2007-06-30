@@ -70,9 +70,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SimplexMethod\SimplexMethod.csproj">
+    <ProjectReference Include="..\SimplexMethod\Lab2 SimplexMethod.csproj">
       <Project>{27FF1204-81C9-455D-BD8C-773414C3AFB3}</Project>
-      <Name>SimplexMethod</Name>
+      <Name>Lab2 SimplexMethod</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

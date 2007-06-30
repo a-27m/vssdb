@@ -89,9 +89,9 @@
       <Project>{97B73544-29AE-4AFA-9DB4-957C6D16A13F}</Project>
       <Name>DekartGraphic</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SimplexMethod\SimplexMethod.csproj">
+    <ProjectReference Include="..\SimplexMethod\Lab2 SimplexMethod.csproj">
       <Project>{27FF1204-81C9-455D-BD8C-773414C3AFB3}</Project>
-      <Name>SimplexMethod</Name>
+      <Name>Lab2 SimplexMethod</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

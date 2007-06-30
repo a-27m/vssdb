@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplexMethod", "SimplexMethod\SimplexMethod.csproj", "{27FF1204-81C9-455D-BD8C-773414C3AFB3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab2 SimplexMethod", "SimplexMethod\Lab2 SimplexMethod.csproj", "{27FF1204-81C9-455D-BD8C-773414C3AFB3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ллхн К1", "ллхн К1\ллхн К1.csproj", "{A8A595EF-7FCA-4324-BAD5-6D5352B2C4B8}"
 EndProject
