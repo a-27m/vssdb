@@ -63,20 +63,30 @@ namespace Le__Scout
 
         private void button1_Click(object sender, EventArgs e)
         {
+            SelectByCode(textBox1.Text);
+            PrintLog("ImportRow done");
+        }
+
+        private void SelectByCode(string strCode)
+        {
             MySqlCommand command;
             MySqlDataAdapter adapter;
 
-            command = new MySqlCommand("SELECT * from q where code="+maskedTextBox1.Text, connection);
+            command = new MySqlCommand(@"select * from q where code=" + strCode, connection);
             adapter = new MySqlDataAdapter(command);
 
-            DataTable table = new DataTable();
-
-            adapter.Fill(table);//dataSet1, "tab_q");
-
-            dataGridView1.DataSource = table;
-            //dataGridView1.DataMember = "tab_q";
+            //DataTable table = new DataTable();
+            //adapter.Fill(table);
+            adapter.Fill(dataSet1.Tables["chetab"]);
+            //adapter.FillSchema(dataSet1.Tables["chetab"], SchemaType.Source);
+            //dataSet1.Tables["chetab"].LoadDataRow(table.Rows[0].ItemArray, true);
 
             dataGridView1.AutoResizeColumns();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            connectToolStripMenuItem_Click(sender, e);
         }
     }
 }
