@@ -63,21 +63,42 @@ namespace Le__Scout
 
         private void button1_Click(object sender, EventArgs e)
         {
-            SelectByCode(textBox1.Text);
+            SelectByCode(textBox1.Text, dataSet1.Tables["chetab"]);
+
+            //MySqlCommand cmd = new MySqlCommand();
+            //MySqlParameter p1 = cmd.CreateParameter();
+// ...
+// create myDataSet and myDataAdapter
+// ...
+            /*
+            select q.id from q where code=?pcode;
+            update q set count = (select count-1 from 
+            
+            */
+
             PrintLog("ImportRow done");
         }
 
-        private void SelectByCode(string strCode)
+        private void SelectByCode(string strCode, DataTable tableToFill)
         {
             MySqlCommand command;
             MySqlDataAdapter adapter;
 
-            command = new MySqlCommand(@"select * from q where code=" + strCode, connection);
-            adapter = new MySqlDataAdapter(command);
+            command = new MySqlCommand(@"select * from q where code=?pcode", connection);
+            adapter = new MySqlDataAdapter();
+            adapter.SelectCommand = command;
+            adapter.SelectCommand.Parameters.AddWithValue("?pcode",int.Parse(strCode));
+            adapter.SelectCommand.Parameters.Add("?filter", "id > 2");
+           /*
+          
+            adapter.SelectCommand.Parameters.Add("@CategoryName", MySqlDbType.VarChar, 80).Value = "toasters";
+            adapter.se.SelectCommand.Parameters.Add("@SerialNum", MySqlDbType.Long).Value = 239;
+            adapter.Fill(myDataSet);
+            * */
 
             //DataTable table = new DataTable();
             //adapter.Fill(table);
-            adapter.Fill(dataSet1.Tables["chetab"]);
+            adapter.Fill(tableToFill);
             //adapter.FillSchema(dataSet1.Tables["chetab"], SchemaType.Source);
             //dataSet1.Tables["chetab"].LoadDataRow(table.Rows[0].ItemArray, true);
 
