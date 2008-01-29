@@ -63,6 +63,7 @@ namespace Le__Scout
 
         private void button1_Click(object sender, EventArgs e)
         {
+            qTableAdapter.
             SelectByCode(textBox1.Text, dataSet1.Tables["chetab"]);
 
             //MySqlCommand cmd = new MySqlCommand();
@@ -107,6 +108,8 @@ namespace Le__Scout
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // TODO: This line of code loads data into the 'leplusDataSet.q' table. You can move, or remove it, as needed.
+            this.qTableAdapter.Fill(this.leplusDataSet.q);
             connectToolStripMenuItem_Click(sender, e);
         }
     }
