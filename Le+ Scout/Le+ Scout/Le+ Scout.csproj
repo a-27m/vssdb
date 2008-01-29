@@ -60,6 +60,12 @@
     <Compile Include="FormPropDbConnection.Designer.cs">
       <DependentUpon>FormPropDbConnection.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSearch.Designer.cs">
+      <DependentUpon>FormSearch.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -69,6 +75,10 @@
     <EmbeddedResource Include="FormPropDbConnection.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormPropDbConnection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSearch.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormSearch.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
