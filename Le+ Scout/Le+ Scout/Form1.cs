@@ -17,10 +17,12 @@ namespace Le__Scout
 @"Database={0};Data Source={1};Port={2};User Id={3};Password={4}";
 
         int r_id = -1;
+        int q_id = -1;
 
         public Form1()
         {
             InitializeComponent();
+            dataGridView1.AutoGenerateColumns = true;
         }
 
         private void propDBConnectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -62,29 +64,30 @@ namespace Le__Scout
                 connection.Close();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            QidByCode(textBox1.Text, dataSet1.Tables["chetab"]);
+//        private void button1_Click(object sender, EventArgs e)
+//        {
+//            Sell(textBox1.Text);
 
-            //MySqlCommand cmd = new MySqlCommand();
-            //MySqlParameter p1 = cmd.CreateParameter();
-// ...
-// create myDataSet and myDataAdapter
-// ...
-            /*
-            select q.id from q where code=?pcode;
-            update q set count = (select count-1 from 
+//            //MySqlCommand cmd = new MySqlCommand();
+//            //MySqlParameter p1 = cmd.CreateParameter();
+//// ...
+//// create myDataSet and myDataAdapter
+//// ...
+//            /*
+//            select q.id from q where code=?pcode;
+//            update q set count = (select count-1 from 
             
-            */
+//            */
 
-            PrintLog("ImportRow done");
-        }
+//            PrintLog("ImportRow done");
+//        }
 
-        private int Sell(string strCode)
+        private void Sell(string strCode)
         {
+            int code = -1;
             try
             {
-                int code = int.Parse(strCode);
+                code = int.Parse(strCode);
             }
             catch (FormatException)
             {
@@ -99,9 +102,13 @@ namespace Le__Scout
             adapter = new MySqlDataAdapter(@"select * from q where code=?pcode", connection);
             adapter.SelectCommand.Parameters.AddWithValue("?pcode", code);
             adapter.Fill(tableToFill);
+            // TODO: if no schema
+            if (dataSet1.Tables["chetab"].Columns.Count == 0)
+                adapter.FillSchema(dataSet1.Tables["chetab"], SchemaType.Source);
+            tableToFill.PrimaryKey = new DataColumn[] { tableToFill.Columns["id"] };
 
             int n = tableToFill.Rows.Count;
-            int q_id = -1;
+            q_id = -1;
 
             #region Determine exact ware q_id
             if (n == 0)
@@ -124,18 +131,22 @@ namespace Le__Scout
             }
             else
             {
-                q_id = tableToFill.Rows[0].ItemArray[0];
+                q_id = (int)tableToFill.Rows[0].ItemArray[0];
             }
             #endregion
 
             DataRow wareRow = tableToFill.Rows.Find(q_id);
-            dataSet1.Tables["chetab"].Rows.Add(wareRow);
+            dataSet1.Tables["chetab"].Rows.Add(wareRow.ItemArray);
             //dataGridView1.AutoResizeColumns();
 
             // Focus on kol-vo
-            dataGridView1["count", dataGridView1.Rows.GetFirstRow(DataGridViewElementStates.Visible)];
-            //dataGridView1.BeginEdit(true);
-
+            dataGridView1.Focus();
+            dataGridView1.CurrentCell = dataGridView1[
+                  "count",
+                  dataGridView1.Rows.GetFirstRow(DataGridViewElementStates.Visible)
+                  ];
+            dataGridView1.CurrentCell.Value = 1;
+            dataGridView1.BeginEdit(true);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -145,6 +156,7 @@ namespace Le__Scout
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
+            // this <enter> key meant to be pressed by scaner after code
             if (e.KeyChar == (char)Keys.Enter)
             {
                 Sell(textBox1.Text);
@@ -166,6 +178,35 @@ namespace Le__Scout
             cmdStartSell.ExecuteNonQuery();
             r_id = (int)cmdStartSell.Parameters["?rv"].Value;
             PrintLog("Start sell returned:" + r_id);
+        }
+
+        private void dataGridView1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // ?? intended situation: cell 'count' is in focus, cashier corrects value, 
+            // then <enter> pressed by scaner, signaling that the new code starts
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                int count = (int)dataGridView1[
+                    "count",
+                    dataGridView1.Rows.GetFirstRow(DataGridViewElementStates.Visible)
+                    ].Value;
+                CallStored_Sell(count);
+                textBox1.SelectAll();
+                textBox1.Focus();
+                PrintLog("DataGridView1 passed has focus to the textbox1 on <enter>");
+            }
+        }
+
+        private void CallStored_Sell(int count)
+        {
+            MySqlCommand cmdSell = new MySqlCommand("sell", connection);
+            cmdSell.CommandType = CommandType.StoredProcedure;
+            cmdSell.Parameters.AddWithValue("?q_id", q_id);
+            cmdSell.Parameters.AddWithValue("?r_id", r_id);
+            cmdSell.Parameters.AddWithValue("?howmuch", count);
+            cmdSell.ExecuteNonQuery();
+            PrintLog(string.Format("[Call] leplus.sell(q_id = {0}, r_id = {1}, howmuch = {2});",
+                q_id, r_id, count));
         }
     }
 }

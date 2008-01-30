@@ -28,7 +28,7 @@ namespace Le__Scout
         {
             get
             {
-                (int)dataGridView1["id",dataGridView1.SelectedRows[0]].Value;
+                return (int)dataGridView1["id",dataGridView1.SelectedRows[0].Index].Value;
             }
         }
 
