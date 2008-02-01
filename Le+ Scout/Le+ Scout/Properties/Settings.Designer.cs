@@ -70,5 +70,14 @@ namespace Le__Scout.Properties {
                 this["DbPass"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Le+® Scout")]
+        public string MainTitleText {
+            get {
+                return ((string)(this["MainTitleText"]));
+            }
+        }
     }
 }

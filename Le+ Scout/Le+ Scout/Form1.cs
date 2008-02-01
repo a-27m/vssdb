@@ -22,7 +22,7 @@ namespace Le__Scout
         public Form1()
         {
             InitializeComponent();
-            dataGridView1.AutoGenerateColumns = true;
+            dgv1.AutoGenerateColumns = true;
         }
 
         private void propDBConnectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -137,16 +137,16 @@ namespace Le__Scout
 
             DataRow wareRow = tableToFill.Rows.Find(q_id);
             dataSet1.Tables["chetab"].Rows.Add(wareRow.ItemArray);
-            //dataGridView1.AutoResizeColumns();
+            //dgv1.AutoResizeColumns();
 
             // Focus on kol-vo
-            dataGridView1.Focus();
-            dataGridView1.CurrentCell = dataGridView1[
+            dgv1.Focus();
+            dgv1.CurrentCell = dgv1[
                   "count",
-                  dataGridView1.Rows.GetFirstRow(DataGridViewElementStates.Visible)
+                  dgv1.Rows.GetFirstRow(DataGridViewElementStates.Visible)
                   ];
-            dataGridView1.CurrentCell.Value = 1;
-            dataGridView1.BeginEdit(true);
+            dgv1.CurrentCell.Value = 1;
+            dgv1.BeginEdit(true);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -178,6 +178,8 @@ namespace Le__Scout
             cmdStartSell.ExecuteNonQuery();
             r_id = (int)cmdStartSell.Parameters["?rv"].Value;
             PrintLog("Start sell returned:" + r_id);
+
+            dgv1.DataMember = "chetab";
         }
 
         private void dataGridView1_KeyPress(object sender, KeyPressEventArgs e)
@@ -186,9 +188,9 @@ namespace Le__Scout
             // then <enter> pressed by scaner, signaling that the new code starts
             if (e.KeyChar == (char)Keys.Enter)
             {
-                int count = (int)dataGridView1[
+                int count = (int)dgv1[
                     "count",
-                    dataGridView1.Rows.GetFirstRow(DataGridViewElementStates.Visible)
+                    dgv1.Rows.GetFirstRow(DataGridViewElementStates.Visible)
                     ].Value;
                 CallStored_Sell(count);
                 textBox1.SelectAll();
@@ -207,6 +209,29 @@ namespace Le__Scout
             cmdSell.ExecuteNonQuery();
             PrintLog(string.Format("[Call] leplus.sell(q_id = {0}, r_id = {1}, howmuch = {2});",
                 q_id, r_id, count));
+        }
+
+        const string qSelectReceiptByRid = @"
+select w.*
+from w,r
+where w.r_id=r.id
+  and r.id=?rid
+  and r.state='proc';
+";
+
+        private void buttonComplete_Click(object sender, EventArgs e)
+        {
+            MySqlDataAdapter adapter;
+            adapter = new MySqlDataAdapter(qSelectReceiptByRid, connection);
+            adapter.SelectCommand.Parameters.AddWithValue("?rid", r_id);
+
+            dataSet1.Tables["resche"].Clear();
+            adapter.Fill(dataSet1.Tables["resche"]);
+            int sumReceipt = CallStored_TotalByReceipt();
+
+            label1.Text = sumReceipt.ToString();
+
+            dgv1.DataMember = "resche";            
         }
     }
 }

@@ -14,5 +14,8 @@
     <Setting Name="DbPass" Type="System.String" Scope="User">
       <Value Profile="(Default)">152436</Value>
     </Setting>
+    <Setting Name="MainTitleText" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Le+® Scout</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
