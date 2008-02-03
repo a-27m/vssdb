@@ -85,7 +85,8 @@ namespace Le__Scout
             adapter = new MySqlDataAdapter(@"select * from q where code=?pcode", connection);
             adapter.SelectCommand.Parameters.AddWithValue("?pcode", code);
             adapter.Fill(tableToFill);
-            // TODO: if no schema
+
+            // TODO: fillschema() only if no schema
             if (dataSet1.Tables["chetab"].Columns.Count == 0)
                 adapter.FillSchema(dataSet1.Tables["chetab"], SchemaType.Source);
             tableToFill.PrimaryKey = new DataColumn[] { tableToFill.Columns["id"] };
@@ -120,16 +121,19 @@ namespace Le__Scout
 
             DataRow wareRow = tableToFill.Rows.Find(q_id);
             dataSet1.Tables["chetab"].Rows.Add(wareRow.ItemArray);
-            //dgv1.AutoResizeColumns();
+            dgv1.DataMember = "chetab";
+            dgv1.AutoResizeColumns();
 
             // Focus on kol-vo
-            dgv1.Focus();
-            dgv1.CurrentCell = dgv1[
-                  "count",
-                  dgv1.Rows.GetFirstRow(DataGridViewElementStates.Visible)
-                  ];
-            dgv1.CurrentCell.Value = 1;
-            dgv1.BeginEdit(true);
+            textBoxHowmuch.Focus();
+            textBoxHowmuch.Text = "1";
+            textBoxHowmuch.SelectAll();
+            //dgv1.CurrentCell = dgv1[
+            //      "count",
+            //      dgv1.Rows.GetFirstRow(DataGridViewElementStates.Visible)
+            //      ];
+            //dgv1.CurrentCell.Value = 1;
+            //dgv1.BeginEdit(true);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -166,20 +170,20 @@ namespace Le__Scout
             dgv1.DataMember = "chetab";
         }
 
-        private void dataGridView1_KeyPress(object sender, KeyPressEventArgs e)
+        private void countEndChanging_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // ?? intended situation: cell 'count' is in focus, cashier corrects value, 
+            // ?? intended situation: 'count' is in focus, cashier corrects value, 
             // then <enter> pressed by scaner, signaling that the new code starts
             if (e.KeyChar == (char)Keys.Enter)
             {
-                int count = (int)dgv1[
-                    "count",
-                    dgv1.Rows.GetFirstRow(DataGridViewElementStates.Visible)
-                    ].Value;
+                //try
+                int count = int.Parse(textBoxHowmuch.Text);
+
                 CallStored_Sell(count);
-                textBox1.SelectAll();
+
                 textBox1.Focus();
-                PrintLog("DataGridView1 passed has focus to the textbox1 on <enter>");
+                textBox1.SelectAll();
+                PrintLog("focus is passed to the textbox1 on <enter> ("+sender.ToString()+")");
             }
         }
 
@@ -193,6 +197,8 @@ namespace Le__Scout
             cmdSell.ExecuteNonQuery();
             PrintLog(string.Format("[Call] leplus.sell(q_id = {0}, r_id = {1}, howmuch = {2});",
                 q_id, r_id, count));
+
+
         }
 
         private float SelectTotalByRid()
@@ -201,7 +207,9 @@ namespace Le__Scout
             cmdSell.Parameters.AddWithValue("?rid", r_id);
             PrintLog(string.Format("[Query] sum(count*price_rozn) from w, r_id = {0}, returned: {1}",
                 r_id, total));
-            return (float)(int)cmdSell.ExecuteScalar();
+
+            //try
+            return (float)cmdSell.ExecuteScalar();
         }
 
         #region SELECT queries
@@ -224,6 +232,11 @@ select sum(count*price_rozn)
 
         private void buttonComplete_Click(object sender, EventArgs e)
         {
+            ShowCurrentReceiptPositions();
+        }
+
+        private void ShowCurrentReceiptPositions()
+        {
             MySqlDataAdapter adapter;
             adapter = new MySqlDataAdapter(qSelectReceiptByRid, connection);
             adapter.SelectCommand.Parameters.AddWithValue("?rid", r_id);
@@ -234,7 +247,7 @@ select sum(count*price_rozn)
 
             label1.Text = total.ToString("0.00$");
 
-            dgv1.DataMember = "resche";            
+            dgv1.DataMember = "resche";
         }
     }
 }
