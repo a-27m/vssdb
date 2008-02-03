@@ -18,6 +18,7 @@ namespace Le__Scout
 
         int r_id = -1;
         int q_id = -1;
+        float total = -1f;
 
         public Form1()
         {
@@ -63,24 +64,6 @@ namespace Le__Scout
             if (connection != null)
                 connection.Close();
         }
-
-//        private void button1_Click(object sender, EventArgs e)
-//        {
-//            Sell(textBox1.Text);
-
-//            //MySqlCommand cmd = new MySqlCommand();
-//            //MySqlParameter p1 = cmd.CreateParameter();
-//// ...
-//// create myDataSet and myDataAdapter
-//// ...
-//            /*
-//            select q.id from q where code=?pcode;
-//            update q set count = (select count-1 from 
-            
-//            */
-
-//            PrintLog("ImportRow done");
-//        }
 
         private void Sell(string strCode)
         {
@@ -160,6 +143,7 @@ namespace Le__Scout
             if (e.KeyChar == (char)Keys.Enter)
             {
                 Sell(textBox1.Text);
+                // PrintLog("[Sell]");
             }
         }
 
@@ -211,13 +195,32 @@ namespace Le__Scout
                 q_id, r_id, count));
         }
 
+        private float SelectTotalByRid()
+        {
+            MySqlCommand cmdSell = new MySqlCommand(qSelectTotalByRid, connection);
+            cmdSell.Parameters.AddWithValue("?rid", r_id);
+            PrintLog(string.Format("[Query] sum(count*price_rozn) from w, r_id = {0}, returned: {1}",
+                r_id, total));
+            return (float)(int)cmdSell.ExecuteScalar();
+        }
+
+        #region SELECT queries
         const string qSelectReceiptByRid = @"
 select w.*
-from w,r
-where w.r_id=r.id
-  and r.id=?rid
-  and r.state='proc';
+  from w,r
+ where w.r_id = r.id
+   and r.id = ?rid
+   and r.state = 'proc';
 ";
+        const string qSelectTotalByRid = @"
+select sum(count*price_rozn)
+  from w,r
+ where w.r_id = r.id
+   and r.id = ?rid
+   and r.state = 'proc';
+";
+
+        #endregion
 
         private void buttonComplete_Click(object sender, EventArgs e)
         {
@@ -227,9 +230,9 @@ where w.r_id=r.id
 
             dataSet1.Tables["resche"].Clear();
             adapter.Fill(dataSet1.Tables["resche"]);
-            int sumReceipt = CallStored_TotalByReceipt();
+            total = SelectTotalByRid();
 
-            label1.Text = sumReceipt.ToString();
+            label1.Text = total.ToString("0.00$");
 
             dgv1.DataMember = "resche";            
         }
