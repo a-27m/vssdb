@@ -13,13 +13,13 @@ namespace Le__Scout
         public FormSearch()
         {
             InitializeComponent();
-            dataGridView1.AutoGenerateColumns = true;
+            dgvData.AutoGenerateColumns = true;
             this.FormClosing += new FormClosingEventHandler(FormSearch_FormClosing);
         }
 
         void FormSearch_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count > 1)
+            if (dgvData.SelectedRows.Count > 1)
                 e.Cancel = true;
         }
 
@@ -27,7 +27,7 @@ namespace Le__Scout
         {
             get
             {
-                return dataGridView1;
+                return dgvData;
             }
         }
 
@@ -35,7 +35,7 @@ namespace Le__Scout
         {
             get
             {
-                return (int)dataGridView1["id", dataGridView1.SelectedRows[0].Index].Value;
+                return (int)dgvData["id", dgvData.SelectedRows[0].Index].Value;
             }
         }
 

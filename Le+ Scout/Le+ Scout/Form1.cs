@@ -97,7 +97,7 @@ namespace Le__Scout
             #region Determine exact ware q_id
             if (n == 0)
             {
-                PrintLog("[Oops] The ware not found by code: count(*) == 0");
+                PrintLog("[Oops] The ware is not found by the code: count(*) == 0");
                 return;
             }
 
@@ -128,12 +128,6 @@ namespace Le__Scout
             textBoxHowmuch.Focus();
             textBoxHowmuch.Text = "1";
             textBoxHowmuch.SelectAll();
-            //dgv1.CurrentCell = dgv1[
-            //      "count",
-            //      dgv1.Rows.GetFirstRow(DataGridViewElementStates.Visible)
-            //      ];
-            //dgv1.CurrentCell.Value = 1;
-            //dgv1.BeginEdit(true);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -159,13 +153,18 @@ namespace Le__Scout
                 // ask to interrupt or complete current receipt
             }
 
+            CallStored_StartSell();
+        }
+
+        private void CallStored_StartSell()
+        {
             MySqlCommand cmdStartSell = new MySqlCommand("start_sell", connection);
             cmdStartSell.CommandType = CommandType.StoredProcedure;
             cmdStartSell.Parameters.Add("?rv", MySqlDbType.Int32).Direction =
                 ParameterDirection.ReturnValue;
             cmdStartSell.ExecuteNonQuery();
             r_id = (int)cmdStartSell.Parameters["?rv"].Value;
-            PrintLog("Start sell returned:" + r_id);
+            PrintLog("Start_sell returned:" + r_id);
 
             dgv1.DataMember = "chetab";
         }
@@ -189,6 +188,11 @@ namespace Le__Scout
 
         private void CallStored_Sell(int count)
         {
+            if (r_id == -1)
+            {
+                CallStored_StartSell();
+            }
+
             MySqlCommand cmdSell = new MySqlCommand("sell", connection);
             cmdSell.CommandType = CommandType.StoredProcedure;
             cmdSell.Parameters.AddWithValue("?q_id", q_id);
@@ -197,8 +201,6 @@ namespace Le__Scout
             cmdSell.ExecuteNonQuery();
             PrintLog(string.Format("[Call] leplus.sell(q_id = {0}, r_id = {1}, howmuch = {2});",
                 q_id, r_id, count));
-
-
         }
 
         private float SelectTotalByRid()
@@ -209,7 +211,7 @@ namespace Le__Scout
                 r_id, total));
 
             //try
-            return (float)cmdSell.ExecuteScalar();
+            return (float)(double)cmdSell.ExecuteScalar();
         }
 
         #region SELECT queries
