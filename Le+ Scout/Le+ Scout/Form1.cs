@@ -118,10 +118,12 @@ namespace Le__Scout
                 q_id = (int)tableToFill.Rows[0].ItemArray[0];
             }
             #endregion
-
+            
             DataRow wareRow = tableToFill.Rows.Find(q_id);
-            dataSet1.Tables["chetab"].Rows.Add(wareRow.ItemArray);
+            dataSet1.Tables["chetab"].ImportRow(wareRow);
             dgv1.DataMember = "chetab";
+            for (int i = 0; i< dgv1.Columns.Count;i++)
+                dgv1.Columns[i].HeaderText = dataColumn1.Caption;
             dgv1.AutoResizeColumns();
 
             // Focus on kol-vo
