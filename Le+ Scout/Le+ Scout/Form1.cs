@@ -18,6 +18,7 @@ namespace Le__Scout
 @"Database={0};Data Source={1};Port={2};User Id={3};Password={4}";
 
         int r_id = -1;
+//        string r_no = -1;
         int q_id = -1;
         float total = -1f;
             NumberFormatInfo numInfo = new NumberFormatInfo();
@@ -37,6 +38,31 @@ namespace Le__Scout
             {
             }
        }
+
+        string ReceiptNumber
+        {
+            get
+            {
+                MySqlDataReader reader = null;
+                try
+                {
+                    reader = new MySqlCommand(string.Format(@"
+select r.receipt_no
+from r where r.id = {0}
+ and r.state = 'proc';", r_id), connection).ExecuteReader();
+                    reader.Read();
+                    return reader.GetInt32(0).ToString();
+                }
+                catch
+                {
+                    return "-- 0 --";
+                }
+                finally
+                {
+                   if (reader != null) reader.Close();
+                }
+            }
+        }
 
         private void propDBConnectToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -103,7 +129,7 @@ namespace Le__Scout
             tableToFill = new DataTable("tableToFill");
 
             MySqlDataAdapter adapter;
-            adapter = new MySqlDataAdapter(@"select * from q where code=?pcode", connection);
+            adapter = new MySqlDataAdapter(qSelectWareByCode, connection);
             adapter.SelectCommand.Parameters.AddWithValue("?pcode", code);
             adapter.Fill(tableToFill);
 
@@ -143,14 +169,10 @@ namespace Le__Scout
             DataRow wareRow = tableToFill.Rows.Find(q_id);
             dataSet1.Tables["chetab"].ImportRow(wareRow);
             dgv1.DataMember = "chetab";
-            //for (int i = 0; i< dgv1.Columns.Count;i++)
-            //    dgv1.Columns[i].HeaderText = dataColumn1.Caption;
-            //dgv1.AutoResizeColumns();
 
             // Focus on kol-vo
-            textBoxHowmuch.Focus();
-            textBoxHowmuch.Text = "1";
-            textBoxHowmuch.SelectAll();
+            dgv1.CurrentCell = dgv1["countDataGridViewTextBoxColumn", dgv1.Rows.Count-1];
+            dgv1.BeginEdit(true);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -190,6 +212,7 @@ namespace Le__Scout
             PrintLog("Start_sell returned:" + r_id);
 
             dgv1.DataMember = "chetab";
+            textBoxReceiptNumber.Text = ReceiptNumber;
         }
 
         private void countEndChanging_KeyPress(object sender, KeyPressEventArgs e)
@@ -238,6 +261,11 @@ namespace Le__Scout
         }
 
         #region SELECT queries
+        const string qSelectWareByCode = @"
+select q.id, q.code, q.name, q.price_rozn, 1 as count
+from q
+where code=?pcode
+";
         const string qSelectReceiptByRid = @"
 select w.*
   from w,r
@@ -279,7 +307,8 @@ select sum(count*price_rozn)
         {
             PrintLog("showlog clicked");
 
-            if (showLogToolStripMenuItem.Checked = !showLogToolStripMenuItem.Checked)
+            textBoxDebug.Visible = showLogToolStripMenuItem.Checked = !showLogToolStripMenuItem.Checked;
+            /*if (showLogToolStripMenuItem.Checked = !showLogToolStripMenuItem.Checked)
             {
                 splitContainer1.Panel2Collapsed = showLogToolStripMenuItem.Checked;
                 this.Size = new Size(this.Size.Width,
@@ -291,7 +320,7 @@ select sum(count*price_rozn)
                     this.Size.Height - splitContainer1.Panel2.Height);
                 splitContainer1.Panel2Collapsed = showLogToolStripMenuItem.Checked;
             }
-
+            */
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)
@@ -324,6 +353,22 @@ select sum(count*price_rozn)
         {
             menuStrip1.Visible = false;
             linkLabel1.Visible = true;
+        }
+
+        private void dgv1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+        }
+
+        private void dgv1_CellValidated(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex != countDataGridViewTextBoxColumn.Index)
+                return;
+
+            // sell or do correction?
+            if (dgv1.DataMember == "chetab")
+            CallStored_Sell((int)dgv1[e.ColumnIndex, e.RowIndex].Value);
+            if (dgv1.DataMember == "resche")
+            CallStored_CorrectW(r_id, resche.Rows[e.RowIndex]["q_id"], )
         }
     }
 }

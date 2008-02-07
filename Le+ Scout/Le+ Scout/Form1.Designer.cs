@@ -31,6 +31,7 @@ namespace Le__Scout
             System.Windows.Forms.Label label7;
             System.Windows.Forms.Label label5;
             System.Windows.Forms.Label label6;
+            System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.ïðîäàæèToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,10 +41,12 @@ namespace Le__Scout
             this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.propDBConnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.textBoxDebug = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBoxReceiptNumber = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxHowmuch = new System.Windows.Forms.TextBox();
@@ -63,32 +66,26 @@ namespace Le__Scout
             this.dataColumn4 = new System.Data.DataColumn();
             this.dataColumn5 = new System.Data.DataColumn();
             this.resche = new System.Data.DataTable();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.label8 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.textBoxDebug = new System.Windows.Forms.TextBox();
             label7 = new System.Windows.Forms.Label();
             label5 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
+            tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.menuStrip1.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chetab)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.resche)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new System.Drawing.Point(9, 31);
+            label7.Location = new System.Drawing.Point(17, 41);
             label7.Name = "label7";
             label7.Size = new System.Drawing.Size(66, 13);
             label7.TabIndex = 10;
@@ -97,7 +94,7 @@ namespace Le__Scout
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new System.Drawing.Point(30, 7);
+            label5.Location = new System.Drawing.Point(38, 17);
             label5.Name = "label5";
             label5.Size = new System.Drawing.Size(41, 13);
             label5.TabIndex = 8;
@@ -106,7 +103,7 @@ namespace Le__Scout
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new System.Drawing.Point(34, 57);
+            label6.Location = new System.Drawing.Point(42, 67);
             label6.Name = "label6";
             label6.Size = new System.Drawing.Size(37, 13);
             label6.TabIndex = 13;
@@ -184,44 +181,78 @@ namespace Le__Scout
             this.showLogToolStripMenuItem.Text = "Ñêðûòü îò÷åò";
             this.showLogToolStripMenuItem.Click += new System.EventHandler(this.showLogToolStripMenuItem_CheckedChanged);
             // 
-            // textBoxDebug
-            // 
-            this.textBoxDebug.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxDebug.Location = new System.Drawing.Point(0, 0);
-            this.textBoxDebug.Multiline = true;
-            this.textBoxDebug.Name = "textBoxDebug";
-            this.textBoxDebug.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxDebug.Size = new System.Drawing.Size(575, 81);
-            this.textBoxDebug.TabIndex = 1;
-            // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.BackColor = global::Le__Scout.Properties.Settings.Default.BackColor;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.dgv1, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.splitContainer1, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.menuStrip1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.linkLabel1, 0, 0);
-            this.tableLayoutPanel1.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Le__Scout.Properties.Settings.Default, "BackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 76F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(581, 372);
-            this.tableLayoutPanel1.TabIndex = 2;
+            tableLayoutPanel1.BackColor = global::Le__Scout.Properties.Settings.Default.BackColor;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tableLayoutPanel1.Controls.Add(this.panel3, 0, 3);
+            tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
+            tableLayoutPanel1.Controls.Add(this.dgv1, 0, 2);
+            tableLayoutPanel1.Controls.Add(this.menuStrip1, 0, 0);
+            tableLayoutPanel1.Controls.Add(this.linkLabel1, 0, 0);
+            tableLayoutPanel1.Controls.Add(this.textBoxDebug, 1, 3);
+            tableLayoutPanel1.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Le__Scout.Properties.Settings.Default, "BackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 4;
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 76F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 97F));
+            tableLayoutPanel1.Size = new System.Drawing.Size(635, 446);
+            tableLayoutPanel1.TabIndex = 2;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(label6);
+            this.panel3.Controls.Add(label5);
+            this.panel3.Controls.Add(this.label8);
+            this.panel3.Controls.Add(this.label1);
+            this.panel3.Controls.Add(this.textBox3);
+            this.panel3.Controls.Add(label7);
+            this.panel3.Location = new System.Drawing.Point(3, 352);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(200, 90);
+            this.panel3.TabIndex = 0;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(85, 63);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(54, 19);
+            this.label8.TabIndex = 12;
+            this.label8.Text = "label8";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(85, 13);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(54, 19);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "label1";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Font = global::Le__Scout.Properties.Settings.Default.NumbersFont;
+            this.textBox3.Location = new System.Drawing.Point(89, 35);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(100, 25);
+            this.textBox3.TabIndex = 11;
+            this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
             // 
             // panel1
             // 
             this.panel1.BackColor = global::Le__Scout.Properties.Settings.Default.BackColor;
-            this.tableLayoutPanel1.SetColumnSpan(this.panel1, 2);
-            this.panel1.Controls.Add(this.textBox2);
+            tableLayoutPanel1.SetColumnSpan(this.panel1, 2);
+            this.panel1.Controls.Add(this.textBoxReceiptNumber);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.textBoxHowmuch);
@@ -231,26 +262,26 @@ namespace Le__Scout
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 23);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(575, 70);
+            this.panel1.Size = new System.Drawing.Size(629, 70);
             this.panel1.TabIndex = 9;
             // 
-            // textBox2
+            // textBoxReceiptNumber
             // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.BackColor = global::Le__Scout.Properties.Settings.Default.BackColor;
-            this.textBox2.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Le__Scout.Properties.Settings.Default, "BackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textBox2.Font = global::Le__Scout.Properties.Settings.Default.NumbersFont;
-            this.textBox2.Location = new System.Drawing.Point(452, 26);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(100, 25);
-            this.textBox2.TabIndex = 13;
+            this.textBoxReceiptNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxReceiptNumber.BackColor = global::Le__Scout.Properties.Settings.Default.BackColor;
+            this.textBoxReceiptNumber.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Le__Scout.Properties.Settings.Default, "BackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBoxReceiptNumber.Font = global::Le__Scout.Properties.Settings.Default.NumbersFont;
+            this.textBoxReceiptNumber.Location = new System.Drawing.Point(506, 26);
+            this.textBoxReceiptNumber.Name = "textBoxReceiptNumber";
+            this.textBoxReceiptNumber.ReadOnly = true;
+            this.textBoxReceiptNumber.Size = new System.Drawing.Size(100, 25);
+            this.textBoxReceiptNumber.TabIndex = 13;
             // 
             // label4
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(485, 10);
+            this.label4.Location = new System.Drawing.Point(539, 10);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(67, 13);
             this.label4.TabIndex = 12;
@@ -310,7 +341,7 @@ namespace Le__Scout
             this.nameDataGridViewTextBoxColumn,
             this.priceroznDataGridViewTextBoxColumn,
             this.countDataGridViewTextBoxColumn});
-            this.tableLayoutPanel1.SetColumnSpan(this.dgv1, 2);
+            tableLayoutPanel1.SetColumnSpan(this.dgv1, 2);
             this.dgv1.DataBindings.Add(new System.Windows.Forms.Binding("BackgroundColor", global::Le__Scout.Properties.Settings.Default, "BackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.dgv1.DataMember = "chetab";
             this.dgv1.DataSource = this.dataSet1;
@@ -321,8 +352,9 @@ namespace Le__Scout
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.dgv1.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dgv1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dgv1.Size = new System.Drawing.Size(575, 186);
+            this.dgv1.Size = new System.Drawing.Size(629, 247);
             this.dgv1.TabIndex = 2;
+            this.dgv1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv1_CellValidated);
             this.dgv1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.countEndChanging_KeyPress);
             // 
             // idDataGridViewTextBoxColumn
@@ -399,74 +431,6 @@ namespace Le__Scout
             // 
             this.resche.TableName = "resche";
             // 
-            // splitContainer1
-            // 
-            this.tableLayoutPanel1.SetColumnSpan(this.splitContainer1, 2);
-            this.splitContainer1.DataBindings.Add(new System.Windows.Forms.Binding("Panel2Collapsed", global::Le__Scout.Properties.Settings.Default, "HideLog", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 291);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.panel2);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.textBoxDebug);
-            this.splitContainer1.Panel2Collapsed = true;
-            this.splitContainer1.Size = new System.Drawing.Size(575, 78);
-            this.splitContainer1.SplitterDistance = 76;
-            this.splitContainer1.TabIndex = 11;
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = global::Le__Scout.Properties.Settings.Default.BackColor;
-            this.panel2.Controls.Add(label6);
-            this.panel2.Controls.Add(this.label8);
-            this.panel2.Controls.Add(this.textBox3);
-            this.panel2.Controls.Add(label7);
-            this.panel2.Controls.Add(label5);
-            this.panel2.Controls.Add(this.label1);
-            this.panel2.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Le__Scout.Properties.Settings.Default, "BackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(575, 78);
-            this.panel2.TabIndex = 10;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(77, 53);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(54, 19);
-            this.label8.TabIndex = 12;
-            this.label8.Text = "label8";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Font = global::Le__Scout.Properties.Settings.Default.NumbersFont;
-            this.textBox3.Location = new System.Drawing.Point(81, 25);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 25);
-            this.textBox3.TabIndex = 11;
-            this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(77, 3);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(54, 19);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "label1";
-            // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
@@ -478,12 +442,22 @@ namespace Le__Scout
             this.linkLabel1.Text = "Ìåíþ...";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
+            // textBoxDebug
+            // 
+            this.textBoxDebug.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxDebug.Location = new System.Drawing.Point(209, 352);
+            this.textBoxDebug.Multiline = true;
+            this.textBoxDebug.Name = "textBoxDebug";
+            this.textBoxDebug.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBoxDebug.Size = new System.Drawing.Size(423, 91);
+            this.textBoxDebug.TabIndex = 13;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(581, 372);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.ClientSize = new System.Drawing.Size(635, 446);
+            this.Controls.Add(tableLayoutPanel1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = global::Le__Scout.Properties.Settings.Default.MainTitleText;
@@ -491,20 +465,16 @@ namespace Le__Scout
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chetab)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.resche)).EndInit();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
-            this.splitContainer1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -514,8 +484,6 @@ namespace Le__Scout
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem propertiesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem propDBConnectToolStripMenuItem;
-        private System.Windows.Forms.TextBox textBoxDebug;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.DataGridView dgv1;
         private System.Data.DataSet dataSet1;
         private System.Data.DataTable chetab;
@@ -526,15 +494,13 @@ namespace Le__Scout
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Data.DataColumn dataColumn1;
         private System.Data.DataColumn dataColumn2;
         private System.Data.DataColumn dataColumn3;
         private System.Data.DataColumn dataColumn4;
         private System.Data.DataColumn dataColumn5;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBoxReceiptNumber;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ToolStripMenuItem showLogToolStripMenuItem;
@@ -548,6 +514,8 @@ namespace Le__Scout
         private System.Windows.Forms.DataGridViewTextBoxColumn priceroznDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.TextBox textBoxDebug;
     }
 }
 
