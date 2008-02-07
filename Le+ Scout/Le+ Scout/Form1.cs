@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using Le__Scout.Properties;
+using System.Globalization;
 
 namespace Le__Scout
 {
@@ -19,11 +20,13 @@ namespace Le__Scout
         int r_id = -1;
         int q_id = -1;
         float total = -1f;
+            NumberFormatInfo numInfo = new NumberFormatInfo();
 
         public Form1()
         {
             InitializeComponent();
-            dgv1.AutoGenerateColumns = true;
+            numInfo.NumberDecimalSeparator = " грн ";
+            numInfo.NumberDecimalDigits = 2;
         }
 
         private void propDBConnectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -42,8 +45,7 @@ namespace Le__Scout
                 appSettings.DbPass)
                 );
 
-            PrintLog("Connection: " + connection.State.ToString());
-            PrintLog("Trying to open...");
+            PrintLog("Trying to open connection...");
             //try
             connection.Open();
             PrintLog("Connection: " + connection.State.ToString());
@@ -59,6 +61,7 @@ namespace Le__Scout
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Settings.Default.Save();
         //    try
 
             if (connection != null)
@@ -122,8 +125,8 @@ namespace Le__Scout
             DataRow wareRow = tableToFill.Rows.Find(q_id);
             dataSet1.Tables["chetab"].ImportRow(wareRow);
             dgv1.DataMember = "chetab";
-            for (int i = 0; i< dgv1.Columns.Count;i++)
-                dgv1.Columns[i].HeaderText = dataColumn1.Caption;
+            //for (int i = 0; i< dgv1.Columns.Count;i++)
+            //    dgv1.Columns[i].HeaderText = dataColumn1.Caption;
             dgv1.AutoResizeColumns();
 
             // Focus on kol-vo
@@ -249,9 +252,60 @@ select sum(count*price_rozn)
             adapter.Fill(dataSet1.Tables["resche"]);
             total = SelectTotalByRid();
 
-            label1.Text = total.ToString("0.00$");
+            label1.Text = total.ToString("0 грн 00 коп");
 
             dgv1.DataMember = "resche";
+        }
+
+        private void showLogToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            PrintLog("showlog clicked");
+
+            if (showLogToolStripMenuItem.Checked = !showLogToolStripMenuItem.Checked)
+            {
+                splitContainer1.Panel2Collapsed = showLogToolStripMenuItem.Checked;
+                this.Size = new Size(this.Size.Width,
+                    this.Height - splitContainer1.Panel1.Bottom + 100);
+            }
+            else
+            {
+                this.Size = new Size(this.Size.Width,
+                    this.Size.Height - splitContainer1.Panel2.Height);
+                splitContainer1.Panel2Collapsed = showLogToolStripMenuItem.Checked;
+            }
+
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+            int p;
+            p = textBox3.SelectionStart;
+            try
+            {
+                textBox3.Text = textBox3.Text.Replace('.', NumberFormatInfo.CurrentInfo.NumberDecimalSeparator[0]);
+                textBox3.Text = textBox3.Text.Replace(',', NumberFormatInfo.CurrentInfo.NumberDecimalSeparator[0]);
+                label8.Text = (float.Parse(textBox3.Text)-total).ToString("0.00 коп", numInfo);
+
+            }
+            catch (FormatException)
+            {
+            }
+            finally
+            {
+                textBox3.SelectionStart = p;
+            }
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            menuStrip1.Visible = true;
+            linkLabel1.Visible = false;
+        }
+
+        private void menuStrip1_MenuDeactivate(object sender, EventArgs e)
+        {
+            menuStrip1.Visible = false;
+            linkLabel1.Visible = true;
         }
     }
 }

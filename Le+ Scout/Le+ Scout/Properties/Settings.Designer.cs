@@ -79,5 +79,38 @@ namespace Le__Scout.Properties {
                 return ((string)(this["MainTitleText"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Control")]
+        public global::System.Drawing.Color BackColor {
+            get {
+                return ((global::System.Drawing.Color)(this["BackColor"]));
+            }
+            set {
+                this["BackColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool HideLog {
+            get {
+                return ((bool)(this["HideLog"]));
+            }
+            set {
+                this["HideLog"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Arial, 11.25pt")]
+        public global::System.Drawing.Font NumbersFont {
+            get {
+                return ((global::System.Drawing.Font)(this["NumbersFont"]));
+            }
+        }
     }
 }
