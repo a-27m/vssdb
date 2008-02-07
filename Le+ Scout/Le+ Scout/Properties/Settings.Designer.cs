@@ -112,5 +112,16 @@ namespace Le__Scout.Properties {
                 return ((global::System.Drawing.Font)(this["NumbersFont"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.ArrayList ColumnsWidths {
+            get {
+                return ((global::System.Collections.ArrayList)(this["ColumnsWidths"]));
+            }
+            set {
+                this["ColumnsWidths"] = value;
+            }
+        }
     }
 }

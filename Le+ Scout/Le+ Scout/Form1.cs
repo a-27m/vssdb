@@ -27,7 +27,16 @@ namespace Le__Scout
             InitializeComponent();
             numInfo.NumberDecimalSeparator = " грн ";
             numInfo.NumberDecimalDigits = 2;
-        }
+
+            try
+            {
+                for (int i = 0; i < Settings.Default.ColumnsWidths.Count; i++)
+                    dgv1.Columns[i].Width = (int)Settings.Default.ColumnsWidths[i];
+            }
+            catch
+            {
+            }
+       }
 
         private void propDBConnectToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -61,9 +70,18 @@ namespace Le__Scout
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Settings.Default.Save();
-        //    try
+            //
+            Settings.Default.HideLog = showLogToolStripMenuItem.Checked;
 
+            //
+            int[] widths = new int[dgv1.ColumnCount];
+            for (int i = 0; i < widths.Length; i++)
+                widths[i] = dgv1.Columns[i].Width;
+            Settings.Default.ColumnsWidths = new System.Collections.ArrayList(widths);
+            
+            Settings.Default.Save();
+
+        //    try
             if (connection != null)
                 connection.Close();
         }
@@ -127,7 +145,7 @@ namespace Le__Scout
             dgv1.DataMember = "chetab";
             //for (int i = 0; i< dgv1.Columns.Count;i++)
             //    dgv1.Columns[i].HeaderText = dataColumn1.Caption;
-            dgv1.AutoResizeColumns();
+            //dgv1.AutoResizeColumns();
 
             // Focus on kol-vo
             textBoxHowmuch.Focus();

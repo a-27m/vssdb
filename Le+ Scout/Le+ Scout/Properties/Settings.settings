@@ -26,5 +26,8 @@
     <Setting Name="NumbersFont" Type="System.Drawing.Font" Scope="Application">
       <Value Profile="(Default)">Arial, 11.25pt</Value>
     </Setting>
+    <Setting Name="ColumnsWidths" Type="System.Collections.ArrayList" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
