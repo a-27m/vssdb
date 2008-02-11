@@ -18,26 +18,11 @@ namespace Le__Scout
 @"Database={0};Data Source={1};Port={2};User Id={3};Password={4}";
 
         int r_id = -1;
-//        string r_no = -1;
+        //        string r_no = -1;
         int q_id = -1;
         float total = -1f;
-            NumberFormatInfo numInfo = new NumberFormatInfo();
-
-        public Form1()
-        {
-            InitializeComponent();
-            numInfo.NumberDecimalSeparator = " грн ";
-            numInfo.NumberDecimalDigits = 2;
-
-            try
-            {
-                for (int i = 0; i < Settings.Default.ColumnsWidths.Count; i++)
-                    dgv1.Columns[i].Width = (int)Settings.Default.ColumnsWidths[i];
-            }
-            catch
-            {
-            }
-       }
+        NumberFormatInfo numInfo;
+        Form formLog;
 
         string ReceiptNumber
         {
@@ -59,9 +44,96 @@ from r where r.id = {0}
                 }
                 finally
                 {
-                   if (reader != null) reader.Close();
+                    if (reader != null)
+                        reader.Close();
                 }
             }
+        }
+
+        public Form1()
+        {
+            InitializeComponent();
+            numInfo = new NumberFormatInfo();
+            numInfo.NumberDecimalSeparator = " грн ";
+            numInfo.NumberDecimalDigits = 2;
+
+            try
+            {
+                for (int i = 0; i < Settings.Default.ColumnsWidths.Count; i++)
+                    dgv1.Columns[i].Width = (int)Settings.Default.ColumnsWidths[i];
+            }
+            catch
+            {
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            if (Settings.Default.ShowLog)
+                formLog = CreateShowFormLog();
+
+            connectToolStripMenuItem_Click(sender, e);
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //
+            Settings.Default.ShowLog = showLogToolStripMenuItem.Checked;
+
+            //
+            int[] widths = new int[dgv1.ColumnCount];
+            for (int i = 0; i < widths.Length; i++)
+                widths[i] = dgv1.Columns[i].Width;
+            Settings.Default.ColumnsWidths = new System.Collections.ArrayList(widths);
+
+            Settings.Default.Save();
+
+            //    try
+            if (connection != null)
+                connection.Close();
+        }
+
+        private Form CreateShowFormLog()
+        {
+            Form formLog = new Form();
+            formLog.SuspendLayout();
+
+            TextBox box = new TextBox();
+            box.Dock = DockStyle.Fill;
+            box.Multiline = true;
+            box.ReadOnly = true;
+            box.BackColor = SystemColors.Window;
+            box.Name = "box";
+            box.ScrollBars = ScrollBars.Both;
+
+            formLog.Controls.Add(box);
+            formLog.StartPosition = FormStartPosition.Manual;
+            formLog.Location = new Point(0, 0);
+            formLog.Size = new Size(500, 300);
+            formLog.Text = "Отладочные подробности работы";
+            formLog.ResumeLayout();
+            formLog.Show();
+            formLog.FormClosed += new FormClosedEventHandler(delegate(object sender, FormClosedEventArgs e)
+            {
+                showLogToolStripMenuItem.Checked = false;
+                return;
+            });
+            formLog.SendToBack();
+
+            return formLog;
+        }
+
+        private void PrintLog(string text)
+        {
+            if (formLog == null)
+                return;
+            if (formLog.IsDisposed)
+                return;
+
+            (formLog.Controls["box"] as TextBox).Text +=
+                string.Format("[{0}] {1}{2}",
+                DateTime.Now.ToString("HH:MM:ss.fff"), text, Environment.NewLine
+                );
         }
 
         private void propDBConnectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -72,7 +144,7 @@ from r where r.id = {0}
         private void connectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Settings appSettings = new Settings();
-            connection = new MySqlConnection( string.Format(connectionStringFormat, 
+            connection = new MySqlConnection(string.Format(connectionStringFormat,
                 "leplus",
                 appSettings.DbHostName,
                 appSettings.DbHostPort,
@@ -84,32 +156,146 @@ from r where r.id = {0}
             //try
             connection.Open();
             PrintLog("Connection: " + connection.State.ToString());
-
         }
 
-        private void PrintLog(string text)
+        private void textBoxCode_KeyPress(object sender, KeyPressEventArgs e)
         {
-            textBoxDebug.Text += string.Format("[{0}] {1}{2}",
-                DateTime.Now.ToString("HH:MM:ss.fff"), text, Environment.NewLine
-                );
+            // this <enter> key meant to be pressed by scaner after code
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                Sell(textBoxCode.Text);
+                // PrintLog("[Sell]");
+            }
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void newReceipt_Click(object sender, EventArgs e)
         {
-            //
-            Settings.Default.HideLog = showLogToolStripMenuItem.Checked;
+            if (r_id != -1)
+            {
+                PrintLog("[Warning] r_id <> -1");
+                // ask to interrupt or complete current receipt
+            }
 
-            //
-            int[] widths = new int[dgv1.ColumnCount];
-            for (int i = 0; i < widths.Length; i++)
-                widths[i] = dgv1.Columns[i].Width;
-            Settings.Default.ColumnsWidths = new System.Collections.ArrayList(widths);
-            
-            Settings.Default.Save();
+            CallStored_StartSell();
+        }
 
-        //    try
-            if (connection != null)
-                connection.Close();
+        private void countEndChanging_KeyPress(object sender, KeyPressEventArgs e)
+        {/*
+            // ?? intended situation: 'count' is in focus, cashier corrects value, 
+            // then <enter> pressed by scaner, signaling that the new code starts
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                //try
+                int count = int.Parse(textBoxHowmuch.Text);
+
+                CallStored_Sell(count);
+
+                textBoxCode.Focus();
+                textBoxCode.SelectAll();
+                PrintLog("focus is passed to the textbox1 on <enter> (" + sender.ToString() + ")");
+            }
+        */}
+
+        private void complete_Click(object sender, EventArgs e)
+        {
+            ShowCurrentReceiptPositions();
+        }
+
+        private void textBoxCash_TextChanged(object sender, EventArgs e)
+        {
+            int p;
+            p = textBoxCash.SelectionStart;
+            try
+            {
+                textBoxCash.Text = textBoxCash.Text.Replace('.', NumberFormatInfo.CurrentInfo.NumberDecimalSeparator[0]);
+                textBoxCash.Text = textBoxCash.Text.Replace(',', NumberFormatInfo.CurrentInfo.NumberDecimalSeparator[0]);
+                label8.Text = (float.Parse(textBoxCash.Text) - total).ToString("0.00 коп", numInfo);
+
+            }
+            catch (FormatException)
+            {
+            }
+            finally
+            {
+                textBoxCash.SelectionStart = p;
+            }
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            menuStrip1.Visible = true;
+            linkLabel1.Visible = false;
+        }
+
+        private void menuStrip1_MenuDeactivate(object sender, EventArgs e)
+        {
+            menuStrip1.Visible = false;
+            linkLabel1.Visible = true;
+        }
+
+        private void showLogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (showLogToolStripMenuItem.Checked = !showLogToolStripMenuItem.Checked)
+            {// need log
+
+                if (formLog == null)
+                {
+                    formLog = CreateShowFormLog();
+                }
+                else
+                {
+                    if (formLog.IsDisposed)
+                        formLog = CreateShowFormLog();
+                }
+            }
+            else
+            {
+                if (formLog == null)
+                    return;
+                if (formLog.IsDisposed)
+                    return;
+                formLog.Close();
+            }
+        }
+
+        private void dgv1_CellValidated(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex != countDataGridViewTextBoxColumn.Index)
+                return;
+
+            // try
+
+            // sell or correct?
+            if (q_id == -1)
+            {
+                CallStored_CorrectW(
+                       (int)resche.Rows[e.RowIndex]["q_id"],
+                       int.Parse(dgv1[e.ColumnIndex, e.RowIndex].Value.ToString())
+                       );
+            }
+            else
+            {
+                CallStored_Sell(int.Parse(dgv1[e.ColumnIndex, e.RowIndex].Value.ToString()));
+                textBoxCode.Focus();
+                textBoxCode.SelectAll();
+            }
+
+            q_id = -1;
+        }
+
+        private void ShowCurrentReceiptPositions()
+        {
+            MySqlDataAdapter adapter;
+            adapter = new MySqlDataAdapter(qSelectReceiptByRid, connection);
+            adapter.SelectCommand.Parameters.AddWithValue("?rid", r_id);
+
+            dataSet1.Tables["resche"].Clear();
+            adapter.Fill(dataSet1.Tables["resche"]);
+            total = SelectTotalByRid();
+
+            label1.Text = total.ToString("0 грн 00 коп");
+
+            dgv1.DataMember = "resche";
         }
 
         private void Sell(string strCode)
@@ -165,40 +351,14 @@ from r where r.id = {0}
                 q_id = (int)tableToFill.Rows[0].ItemArray[0];
             }
             #endregion
-            
+
             DataRow wareRow = tableToFill.Rows.Find(q_id);
             dataSet1.Tables["chetab"].ImportRow(wareRow);
             dgv1.DataMember = "chetab";
 
             // Focus on kol-vo
-            dgv1.CurrentCell = dgv1["countDataGridViewTextBoxColumn", dgv1.Rows.Count-1];
+            dgv1.CurrentCell = dgv1["countDataGridViewTextBoxColumn", dgv1.Rows.Count - 1];
             dgv1.BeginEdit(true);
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            connectToolStripMenuItem_Click(sender, e);
-        }
-
-        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            // this <enter> key meant to be pressed by scaner after code
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                Sell(textBox1.Text);
-                // PrintLog("[Sell]");
-            }
-        }
-
-        private void buttonNewReceipt_Click(object sender, EventArgs e)
-        {
-            if (r_id != -1)
-            {
-                PrintLog("[Warning] r_id <> -1");
-                // ask to interrupt or complete current receipt
-            }
-
-            CallStored_StartSell();
         }
 
         private void CallStored_StartSell()
@@ -213,23 +373,6 @@ from r where r.id = {0}
 
             dgv1.DataMember = "chetab";
             textBoxReceiptNumber.Text = ReceiptNumber;
-        }
-
-        private void countEndChanging_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            // ?? intended situation: 'count' is in focus, cashier corrects value, 
-            // then <enter> pressed by scaner, signaling that the new code starts
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                //try
-                int count = int.Parse(textBoxHowmuch.Text);
-
-                CallStored_Sell(count);
-
-                textBox1.Focus();
-                textBox1.SelectAll();
-                PrintLog("focus is passed to the textbox1 on <enter> ("+sender.ToString()+")");
-            }
         }
 
         private void CallStored_Sell(int count)
@@ -247,6 +390,28 @@ from r where r.id = {0}
             cmdSell.ExecuteNonQuery();
             PrintLog(string.Format("[Call] leplus.sell(q_id = {0}, r_id = {1}, howmuch = {2});",
                 q_id, r_id, count));
+
+            q_id = -1;
+            ShowCurrentReceiptPositions();
+        }
+
+        private void CallStored_CorrectW(int q_id, int howmuch)
+        {
+            if (r_id == -1)
+            {
+                throw new Exception("r_id == -1!");
+            }
+
+            MySqlCommand cmd = new MySqlCommand("correctw", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("?qid", q_id);
+            cmd.Parameters.AddWithValue("?rid", r_id);
+            cmd.Parameters.AddWithValue("?howmuch", howmuch);
+            cmd.ExecuteNonQuery();
+            PrintLog(string.Format("[Call] leplus.correctw(qid = {0}, rid = {1}, howmuch = {2});",
+                q_id, r_id, howmuch));
+
+            q_id = -1;
         }
 
         private float SelectTotalByRid()
@@ -282,93 +447,5 @@ select sum(count*price_rozn)
 ";
 
         #endregion
-
-        private void buttonComplete_Click(object sender, EventArgs e)
-        {
-            ShowCurrentReceiptPositions();
-        }
-
-        private void ShowCurrentReceiptPositions()
-        {
-            MySqlDataAdapter adapter;
-            adapter = new MySqlDataAdapter(qSelectReceiptByRid, connection);
-            adapter.SelectCommand.Parameters.AddWithValue("?rid", r_id);
-
-            dataSet1.Tables["resche"].Clear();
-            adapter.Fill(dataSet1.Tables["resche"]);
-            total = SelectTotalByRid();
-
-            label1.Text = total.ToString("0 грн 00 коп");
-
-            dgv1.DataMember = "resche";
-        }
-
-        private void showLogToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            PrintLog("showlog clicked");
-
-            textBoxDebug.Visible = showLogToolStripMenuItem.Checked = !showLogToolStripMenuItem.Checked;
-            /*if (showLogToolStripMenuItem.Checked = !showLogToolStripMenuItem.Checked)
-            {
-                splitContainer1.Panel2Collapsed = showLogToolStripMenuItem.Checked;
-                this.Size = new Size(this.Size.Width,
-                    this.Height - splitContainer1.Panel1.Bottom + 100);
-            }
-            else
-            {
-                this.Size = new Size(this.Size.Width,
-                    this.Size.Height - splitContainer1.Panel2.Height);
-                splitContainer1.Panel2Collapsed = showLogToolStripMenuItem.Checked;
-            }
-            */
-        }
-
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-            int p;
-            p = textBox3.SelectionStart;
-            try
-            {
-                textBox3.Text = textBox3.Text.Replace('.', NumberFormatInfo.CurrentInfo.NumberDecimalSeparator[0]);
-                textBox3.Text = textBox3.Text.Replace(',', NumberFormatInfo.CurrentInfo.NumberDecimalSeparator[0]);
-                label8.Text = (float.Parse(textBox3.Text)-total).ToString("0.00 коп", numInfo);
-
-            }
-            catch (FormatException)
-            {
-            }
-            finally
-            {
-                textBox3.SelectionStart = p;
-            }
-        }
-
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            menuStrip1.Visible = true;
-            linkLabel1.Visible = false;
-        }
-
-        private void menuStrip1_MenuDeactivate(object sender, EventArgs e)
-        {
-            menuStrip1.Visible = false;
-            linkLabel1.Visible = true;
-        }
-
-        private void dgv1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-        }
-
-        private void dgv1_CellValidated(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.ColumnIndex != countDataGridViewTextBoxColumn.Index)
-                return;
-
-            // sell or do correction?
-            if (dgv1.DataMember == "chetab")
-            CallStored_Sell((int)dgv1[e.ColumnIndex, e.RowIndex].Value);
-            if (dgv1.DataMember == "resche")
-            CallStored_CorrectW(r_id, resche.Rows[e.RowIndex]["q_id"], )
-        }
     }
 }

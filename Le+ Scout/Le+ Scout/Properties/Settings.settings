@@ -20,7 +20,7 @@
     <Setting Name="BackColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Control</Value>
     </Setting>
-    <Setting Name="HideLog" Type="System.Boolean" Scope="User">
+    <Setting Name="ShowLog" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="NumbersFont" Type="System.Drawing.Font" Scope="Application">

@@ -29,6 +29,7 @@ namespace Le__Scout
         private void InitializeComponent()
         {
             System.Windows.Forms.GroupBox groupBox1;
+            this.numericUpDownPort = new System.Windows.Forms.NumericUpDown();
             this.textBoxPass = new System.Windows.Forms.TextBox();
             this.textBoxLogin = new System.Windows.Forms.TextBox();
             this.textBoxHost = new System.Windows.Forms.TextBox();
@@ -38,7 +39,6 @@ namespace Le__Scout
             this.label1 = new System.Windows.Forms.Label();
             this.buttonOk = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.numericUpDownPort = new System.Windows.Forms.NumericUpDown();
             groupBox1 = new System.Windows.Forms.GroupBox();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPort)).BeginInit();
@@ -61,6 +61,28 @@ namespace Le__Scout
             groupBox1.TabStop = false;
             groupBox1.Text = "Сервер";
             // 
+            // numericUpDownPort
+            // 
+            this.numericUpDownPort.Location = new System.Drawing.Point(78, 42);
+            this.numericUpDownPort.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numericUpDownPort.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownPort.Name = "numericUpDownPort";
+            this.numericUpDownPort.Size = new System.Drawing.Size(100, 20);
+            this.numericUpDownPort.TabIndex = 4;
+            this.numericUpDownPort.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // textBoxPass
             // 
             this.textBoxPass.Location = new System.Drawing.Point(78, 99);
@@ -69,6 +91,7 @@ namespace Le__Scout
             this.textBoxPass.ShortcutsEnabled = false;
             this.textBoxPass.Size = new System.Drawing.Size(100, 20);
             this.textBoxPass.TabIndex = 3;
+            this.textBoxPass.UseSystemPasswordChar = true;
             this.textBoxPass.TextChanged += new System.EventHandler(this.textBoxPass_TextChanged);
             this.textBoxPass.Enter += new System.EventHandler(this.textBoxPass_Enter);
             // 
@@ -142,28 +165,6 @@ namespace Le__Scout
             this.buttonCancel.Text = "Отмена";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            // 
-            // numericUpDownPort
-            // 
-            this.numericUpDownPort.Location = new System.Drawing.Point(78, 42);
-            this.numericUpDownPort.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.numericUpDownPort.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownPort.Name = "numericUpDownPort";
-            this.numericUpDownPort.Size = new System.Drawing.Size(100, 20);
-            this.numericUpDownPort.TabIndex = 4;
-            this.numericUpDownPort.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // FormPropDbConnection
             // 

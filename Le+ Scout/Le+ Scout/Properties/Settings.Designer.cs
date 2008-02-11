@@ -95,12 +95,12 @@ namespace Le__Scout.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool HideLog {
+        public bool ShowLog {
             get {
-                return ((bool)(this["HideLog"]));
+                return ((bool)(this["ShowLog"]));
             }
             set {
-                this["HideLog"] = value;
+                this["ShowLog"] = value;
             }
         }
         
