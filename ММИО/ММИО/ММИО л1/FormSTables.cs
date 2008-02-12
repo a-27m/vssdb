@@ -85,6 +85,8 @@ namespace ММИО_л1
         private void FormSTables_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
+            //dataToPopulate = new List<string[]>();
+            //tableCount = 0;
             this.Hide();
         }
 

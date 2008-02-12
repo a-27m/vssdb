@@ -280,6 +280,7 @@ namespace ММИО_л1
             }
             catch
             {
+                MessageBox.Show("Input error!");
                 return;
             }
 
@@ -299,6 +300,9 @@ namespace ММИО_л1
                 solver.AddLimtation(A[i], S[i], B[i]);
             solver.SetTargetFunctionCoefficients(C);
 
+            //solver_DebugGaussProcessMatrix((Fraction[,])A);
+            formTables = new FormSTables();
+
             try
             {
                 solver.Solve();
@@ -309,6 +313,34 @@ namespace ММИО_л1
                     MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
+
+            #region specialno dlya djema))) podrobnosti
+
+            richTextBox1.Text += " ---===== Детали ====--- " + Environment.NewLine;
+            for (int i = 0; i < m; i++)
+            {
+                richTextBox1.Text += string.Format(
+                       " x{0} = {1}·x1 {2} {3}·x2 {4} {5}", // x3 = 4/5·x1 + 1/2·x2 - 7/5
+                       i + 1, // 0
+                       -solver.A[i, 1], // 1
+                       Math.Sign(-solver.A[i, 2]) < 0 ? "" : "+", // 2
+                       -solver.A[i, 2], // 3
+                       Math.Sign(solver.A[i, 0]) < 0 ? "" : "+", // 4
+                       solver.A[i, 0] // 5
+                       ) + Environment.NewLine;
+            }
+            
+            // F(x1,x2) = c1x1 + c2x2 + d
+            richTextBox1.Text += string.Format(
+                " F = {0}·x1 {1} {2}·x2 {3} {4}", // e.g.: F = 4/5·x1 + 1/2·x2 - 7/5
+                       solver.C1, // 0
+                       Math.Sign(solver.C2) < 0 ? "" : "+", // 1
+                       solver.C2, // 2
+                       Math.Sign(solver.D) < 0 ? "" : "+", // 3
+                       solver.D // 4
+                ) + Environment.NewLine;
+
+            #endregion
         }
 
         void solver_DebugGaussProcessMatrix(Fraction[,] matrix)

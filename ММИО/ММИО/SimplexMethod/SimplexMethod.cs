@@ -366,6 +366,39 @@ namespace SimplexMethod
         protected short[] signs;
         Fraction[,] a;
 
+        #region out of initial design .. on demand )
+        public Fraction[,] A
+        {
+            get
+            {
+                return (Fraction[,])a.Clone();
+            }
+        }
+
+        Fraction d, c1, c2;
+        public Fraction D
+        {
+            get
+            {
+                return d;
+            }
+        }
+        public Fraction C1
+        {
+            get
+            {
+                return c1;
+            }
+        }
+        public Fraction C2
+        {
+            get
+            {
+                return c2;
+            }
+        }
+        #endregion
+
         public override void AddLimtation(Fraction[] a, short sign, Fraction b)
         {
             if (Math.Abs(sign) > 1)
@@ -403,6 +436,10 @@ namespace SimplexMethod
                 signs[i] = signs[i + 1];
             Array.Resize<short>(ref signs, signs.Length - 1);
         }
+        /// <summary>
+        /// Solves exterm(maximum) problem
+        /// </summary>
+        /// <returns>Xmax vector</returns>
         public override Fraction[] Solve()
         {
             int m = this.la.Count;
@@ -413,41 +450,41 @@ namespace SimplexMethod
 
             int[] wherex = null;
 
-            if (n != 2)
+            #region Canonize
+
+            List<Fraction[]> la2 = new List<Fraction[]>();
+            e = la.GetEnumerator();
+            for (int i = 0; e.MoveNext(); i++)
             {
-                #region Canonize
+                Fraction[] tmp;
 
-                List<Fraction[]> la2 = new List<Fraction[]>();
-                e = la.GetEnumerator();
-                for (int i = 0; e.MoveNext(); i++)
+                if (signs[i] != 0)
                 {
-                    Fraction[] tmp;
-
-                    if (signs[i] != 0)
-                    {
-                        n++;
-                        tmp = new Fraction[n + 1];
-                        for (int k = e.Current.Length - 1; k < n; k++)
-                            tmp[k] = 0;
-                        tmp[n] = -signs[i];
-                    }
-                    else
-                    {
-                        tmp = new Fraction[n + 1];
-                        for (int t = 0; t < tmp.Length; tmp[t++] = 0)
-                            ;
-                    }
-
-                    tmp[0] = e.Current[0];
-                    e.Current.CopyTo(tmp, 0);
-                    la2.Add(tmp);
+                    n++;
+                    tmp = new Fraction[n + 1];
+                    for (int k = e.Current.Length - 1; k < n; k++)
+                        tmp[k] = 0;
+                    tmp[n] = -signs[i];
+                }
+                else
+                {
+                    tmp = new Fraction[n + 1];
+                    for (int t = 0; t < tmp.Length; tmp[t++] = 0)
+                        ;
                 }
 
-                la = la2;
-                la2 = null;
+                tmp[0] = e.Current[0];
+                e.Current.CopyTo(tmp, 0);
+                la2.Add(tmp);
+            }
 
-                #endregion
+            la = la2;
+            la2 = null;
 
+            #endregion
+
+            if (n != 2)
+            {
                 if (n - m != 2)
                     throw new InvalidOperationException("Graphical method applicable only when n minus m equals 2");
 
@@ -477,7 +514,7 @@ namespace SimplexMethod
                 {
                     try
                     {
-                        GGaussProcess(ref a, k, (uint)k+3);
+                        GGaussProcess(ref a, k, (uint)k + 3);
                     }
                     catch (InvalidOperationException)
                     {
@@ -546,11 +583,14 @@ namespace SimplexMethod
             #endregion
 
             #region Get new coefficients of optimum function
-            Fraction c1 = m_c[0], c2 = m_c[1];
-            
+            c1 = m_c[0];
+            c2 = m_c[1];
+            d = new Fraction(0);
+
             if (n > 2)
                 for (int i = 0; i < m; i++)
                 {
+                    d += m_c[i + 2] * a[i, 0];
                     c1 -= m_c[i + 2] * a[i, 1];
                     c2 -= m_c[i + 2] * a[i, 2];
                 }
@@ -592,7 +632,7 @@ namespace SimplexMethod
 
             #endregion
 
-            return null;
+            return solution;
         }
 
         protected FractionPoint[] GetCornerPoints()

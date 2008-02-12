@@ -246,7 +246,7 @@ namespace Fractions
             }
 
             return base.Equals(obj);
-            throw new ArgumentException("Cannot compare arguments");
+//            throw new ArgumentException("Cannot compare arguments");
         }
         public override int GetHashCode()
         {
