@@ -168,16 +168,16 @@ namespace ММИО_л1
 
         private void Form1_Shown(object sender, EventArgs e)
         {
-            //if (this.IsNewDocument)
-            //{
-            //    FormAskDim fad = new FormAskDim();
-            //    if (fad.ShowDialog(this) != DialogResult.OK)
-            //        Close();
-            //    n = fad.N;
-            //    m = fad.M;
-            //    GridMyResize(n, m);
-            //    dataGridView1.Select();
-            //}
+            if (this.IsNewDocument)
+            {
+                FormAskDim fad = new FormAskDim();
+                if (fad.ShowDialog(this) != DialogResult.OK)
+                    Close();
+                n = fad.N;
+                m = fad.M;
+                GridMyResize(n, m);
+                dataGridView1.Select();
+            }
         }
 
         void solver_DebugNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
