@@ -32,7 +32,7 @@ namespace Le__Scout
             System.Windows.Forms.Label label5;
             System.Windows.Forms.Label label6;
             System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -254,8 +254,8 @@ namespace Le__Scout
             this.dgv1.Location = new System.Drawing.Point(3, 75);
             this.dgv1.Name = "dgv1";
             this.dgv1.RowHeadersVisible = false;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.dgv1.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.dgv1.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dgv1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dgv1.Size = new System.Drawing.Size(572, 295);
             this.dgv1.TabIndex = 2;
@@ -430,6 +430,7 @@ namespace Le__Scout
             this.Name = "Form1";
             this.Text = global::Le__Scout.Properties.Settings.Default.MainTitleText;
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();

@@ -161,11 +161,8 @@ from r where r.id = {0}
         private void textBoxCode_KeyPress(object sender, KeyPressEventArgs e)
         {
             // this <enter> key meant to be pressed by scaner after code
-            if (e.KeyChar == (char)Keys.Enter)
-            {
+            if ((e.KeyChar == (char)Keys.Enter) && (textBoxCode.Text.Length > 0))
                 Sell(textBoxCode.Text);
-                // PrintLog("[Sell]");
-            }
         }
 
         private void newReceipt_Click(object sender, EventArgs e)
@@ -402,6 +399,7 @@ from r where r.id = {0}
                 throw new Exception("r_id == -1!");
             }
 
+            //try
             MySqlCommand cmd = new MySqlCommand("correctw", connection);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("?qid", q_id);
@@ -447,5 +445,10 @@ select sum(count*price_rozn)
 ";
 
         #endregion
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            textBoxReceiptNumber.Text = this.ReceiptNumber;
+        }
     }
 }
