@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using Le__Scout.Properties;
 using System.Globalization;
+using System.Drawing.Printing;
 
 namespace Le__Scout
 {
@@ -118,7 +119,7 @@ from r where r.id = {0}
                 showLogToolStripMenuItem.Checked = false;
                 return;
             });
-            formLog.SendToBack();
+            this.BringToFront();
 
             return formLog;
         }
@@ -162,7 +163,10 @@ from r where r.id = {0}
         {
             // this <enter> key meant to be pressed by scaner after code
             if ((e.KeyChar == (char)Keys.Enter) && (textBoxCode.Text.Length > 0))
+            {
                 Sell(textBoxCode.Text);
+                textBoxCode.SelectAll();
+            }
         }
 
         private void newReceipt_Click(object sender, EventArgs e)
@@ -207,10 +211,10 @@ from r where r.id = {0}
                 textBoxCash.Text = textBoxCash.Text.Replace('.', NumberFormatInfo.CurrentInfo.NumberDecimalSeparator[0]);
                 textBoxCash.Text = textBoxCash.Text.Replace(',', NumberFormatInfo.CurrentInfo.NumberDecimalSeparator[0]);
                 label8.Text = (float.Parse(textBoxCash.Text) - total).ToString("0.00 êîï", numInfo);
-
             }
-            catch (FormatException)
+            catch (Exception)//FormatException)
             {
+                label8.Text = "Îøèáêà ââîäà";
             }
             finally
             {
@@ -290,7 +294,7 @@ from r where r.id = {0}
             adapter.Fill(dataSet1.Tables["resche"]);
             total = SelectTotalByRid();
 
-            label1.Text = total.ToString("0 ãðí 00 êîï");
+            label1.Text = total.ToString("0.00 êîï", numInfo);
 
             dgv1.DataMember = "resche";
         }
@@ -333,7 +337,7 @@ from r where r.id = {0}
 
             if (n > 1)
             {
-                FormSearch fs = new FormSearch();
+                FormSearch fs = new FormSearch(connection);
                 fs.DataGridView1.DataSource = tableToFill;
                 if (fs.ShowDialog() != DialogResult.OK)
                 {
@@ -449,6 +453,16 @@ select sum(count*price_rozn)
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             textBoxReceiptNumber.Text = this.ReceiptNumber;
+        }
+
+        private void ïå÷àòü×åêàToolStripMenuItem_Click(object sender, EventArgs e)
+        {            
+            PrintDocument prdoc = new PrintDocument();
+            PrintDialog pd = new PrintDialog();
+            pd.Document = prdoc;
+//            if (pd.ShowDialog() == DialogResult.OK)
+
+            prdoc.Print();
         }
     }
 }

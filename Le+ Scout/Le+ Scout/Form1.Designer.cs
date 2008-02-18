@@ -33,6 +33,7 @@ namespace Le__Scout
             System.Windows.Forms.Label label6;
             System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -65,6 +66,7 @@ namespace Le__Scout
             this.propDBConnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.ïå÷àòü×åêàToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             label7 = new System.Windows.Forms.Label();
             label5 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
@@ -110,19 +112,19 @@ namespace Le__Scout
             // 
             tableLayoutPanel1.BackColor = global::Le__Scout.Properties.Settings.Default.BackColor;
             tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 90F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10F));
             tableLayoutPanel1.Controls.Add(this.panel3, 0, 3);
             tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
             tableLayoutPanel1.Controls.Add(this.dgv1, 0, 2);
             tableLayoutPanel1.Controls.Add(this.menuStrip1, 0, 0);
-            tableLayoutPanel1.Controls.Add(this.linkLabel1, 0, 0);
+            tableLayoutPanel1.Controls.Add(this.linkLabel1, 1, 3);
             tableLayoutPanel1.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Le__Scout.Properties.Settings.Default, "BackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 4;
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 53F));
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 97F));
@@ -137,10 +139,11 @@ namespace Le__Scout
             this.panel3.Controls.Add(this.label1);
             this.panel3.Controls.Add(this.textBoxCash);
             this.panel3.Controls.Add(label7);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 376);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(200, 90);
-            this.panel3.TabIndex = 0;
+            this.panel3.Size = new System.Drawing.Size(514, 91);
+            this.panel3.TabIndex = 1;
             // 
             // label8
             // 
@@ -169,7 +172,7 @@ namespace Le__Scout
             this.textBoxCash.Location = new System.Drawing.Point(76, 31);
             this.textBoxCash.Name = "textBoxCash";
             this.textBoxCash.Size = new System.Drawing.Size(100, 25);
-            this.textBoxCash.TabIndex = 11;
+            this.textBoxCash.TabIndex = 0;
             this.textBoxCash.TextChanged += new System.EventHandler(this.textBoxCash_TextChanged);
             // 
             // panel1
@@ -182,10 +185,10 @@ namespace Le__Scout
             this.panel1.Controls.Add(this.textBoxCode);
             this.panel1.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::Le__Scout.Properties.Settings.Default, "BackColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 22);
+            this.panel1.Location = new System.Drawing.Point(3, 29);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(572, 47);
-            this.panel1.TabIndex = 9;
+            this.panel1.TabIndex = 0;
             // 
             // textBoxReceiptNumber
             // 
@@ -227,7 +230,7 @@ namespace Le__Scout
             this.textBoxCode.Location = new System.Drawing.Point(6, 16);
             this.textBoxCode.Name = "textBoxCode";
             this.textBoxCode.Size = new System.Drawing.Size(107, 25);
-            this.textBoxCode.TabIndex = 8;
+            this.textBoxCode.TabIndex = 0;
             this.textBoxCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.textBoxCode.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxCode_KeyPress);
             // 
@@ -240,6 +243,14 @@ namespace Le__Scout
             this.dgv1.BackgroundColor = global::Le__Scout.Properties.Settings.Default.BackColor;
             this.dgv1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dgv1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Chartreuse;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgv1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgv1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.idDataGridViewTextBoxColumn,
             this.codeDataGridViewTextBoxColumn,
@@ -251,13 +262,13 @@ namespace Le__Scout
             this.dgv1.DataMember = "chetab";
             this.dgv1.DataSource = this.dataSet1;
             this.dgv1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgv1.Location = new System.Drawing.Point(3, 75);
+            this.dgv1.Location = new System.Drawing.Point(3, 82);
             this.dgv1.Name = "dgv1";
             this.dgv1.RowHeadersVisible = false;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.dgv1.RowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.dgv1.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.dgv1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dgv1.Size = new System.Drawing.Size(572, 295);
+            this.dgv1.Size = new System.Drawing.Size(572, 288);
             this.dgv1.TabIndex = 2;
             this.dgv1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv1_CellValidated);
             this.dgv1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.countEndChanging_KeyPress);
@@ -267,6 +278,7 @@ namespace Le__Scout
             this.idDataGridViewTextBoxColumn.DataPropertyName = "id";
             this.idDataGridViewTextBoxColumn.HeaderText = "id";
             this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            this.idDataGridViewTextBoxColumn.ReadOnly = true;
             this.idDataGridViewTextBoxColumn.Visible = false;
             // 
             // codeDataGridViewTextBoxColumn
@@ -274,12 +286,14 @@ namespace Le__Scout
             this.codeDataGridViewTextBoxColumn.DataPropertyName = "code";
             this.codeDataGridViewTextBoxColumn.HeaderText = "Êîä òîâàðà";
             this.codeDataGridViewTextBoxColumn.Name = "codeDataGridViewTextBoxColumn";
+            this.codeDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // nameDataGridViewTextBoxColumn
             // 
             this.nameDataGridViewTextBoxColumn.DataPropertyName = "name";
             this.nameDataGridViewTextBoxColumn.HeaderText = "Íàçâàíèå";
             this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
             this.nameDataGridViewTextBoxColumn.Width = 200;
             // 
             // priceroznDataGridViewTextBoxColumn
@@ -287,6 +301,7 @@ namespace Le__Scout
             this.priceroznDataGridViewTextBoxColumn.DataPropertyName = "price_rozn";
             this.priceroznDataGridViewTextBoxColumn.HeaderText = "Öåíà (ðîçí)";
             this.priceroznDataGridViewTextBoxColumn.Name = "priceroznDataGridViewTextBoxColumn";
+            this.priceroznDataGridViewTextBoxColumn.ReadOnly = true;
             this.priceroznDataGridViewTextBoxColumn.Width = 120;
             // 
             // countDataGridViewTextBoxColumn
@@ -338,7 +353,7 @@ namespace Le__Scout
             // 
             // menuStrip1
             // 
-            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            tableLayoutPanel1.SetColumnSpan(this.menuStrip1, 2);
             this.menuStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ïðîäàæèToolStripMenuItem,
@@ -347,18 +362,18 @@ namespace Le__Scout
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.MinimumSize = new System.Drawing.Size(0, 20);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(245, 20);
+            this.menuStrip1.Size = new System.Drawing.Size(578, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.MenuDeactivate += new System.EventHandler(this.menuStrip1_MenuDeactivate);
             // 
             // ïðîäàæèToolStripMenuItem
             // 
             this.ïðîäàæèToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.íîâûé×ToolStripMenuItem,
-            this.çàâåðøèòüÏðîäàæóToolStripMenuItem});
+            this.çàâåðøèòüÏðîäàæóToolStripMenuItem,
+            this.ïå÷àòü×åêàToolStripMenuItem});
             this.ïðîäàæèToolStripMenuItem.Name = "ïðîäàæèToolStripMenuItem";
-            this.ïðîäàæèToolStripMenuItem.Size = new System.Drawing.Size(65, 16);
+            this.ïðîäàæèToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
             this.ïðîäàæèToolStripMenuItem.Text = "Ïðîäàæè";
             // 
             // íîâûé×ToolStripMenuItem
@@ -380,7 +395,7 @@ namespace Le__Scout
             // connectToolStripMenuItem
             // 
             this.connectToolStripMenuItem.Name = "connectToolStripMenuItem";
-            this.connectToolStripMenuItem.Size = new System.Drawing.Size(95, 16);
+            this.connectToolStripMenuItem.Size = new System.Drawing.Size(95, 20);
             this.connectToolStripMenuItem.Text = "Ïîäêëþ÷èòüñÿ";
             this.connectToolStripMenuItem.Click += new System.EventHandler(this.connectToolStripMenuItem_Click);
             // 
@@ -390,7 +405,7 @@ namespace Le__Scout
             this.propDBConnectToolStripMenuItem,
             this.showLogToolStripMenuItem});
             this.propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
-            this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(73, 16);
+            this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
             this.propertiesToolStripMenuItem.Text = "Íàñòðîéêè";
             // 
             // propDBConnectToolStripMenuItem
@@ -411,13 +426,21 @@ namespace Le__Scout
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(248, 0);
+            this.linkLabel1.Location = new System.Drawing.Point(523, 373);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(45, 13);
             this.linkLabel1.TabIndex = 12;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Ìåíþ...";
+            this.linkLabel1.Visible = false;
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // ïå÷àòü×åêàToolStripMenuItem
+            // 
+            this.ïå÷àòü×åêàToolStripMenuItem.Name = "ïå÷àòü×åêàToolStripMenuItem";
+            this.ïå÷àòü×åêàToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.ïå÷àòü×åêàToolStripMenuItem.Text = "Ïå÷àòü ÷åêà";
+            this.ïå÷àòü×åêàToolStripMenuItem.Click += new System.EventHandler(this.ïå÷àòü×åêàToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -475,13 +498,14 @@ namespace Le__Scout
         private System.Windows.Forms.ToolStripMenuItem connectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem íîâûé×ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem çàâåðøèòüÏðîäàæóToolStripMenuItem;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn codeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn priceroznDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
-        private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.ToolStripMenuItem ïå÷àòü×åêàToolStripMenuItem;
     }
 }
 
