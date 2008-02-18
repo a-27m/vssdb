@@ -61,12 +61,13 @@ namespace Le__Scout
             this.ïğîäàæèToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.íîâûé×ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.çàâåğøèòüÏğîäàæóToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ïå÷àòü×åêàToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.propDBConnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.ïå÷àòü×åêàToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ïîèñêToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             label7 = new System.Windows.Forms.Label();
             label5 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
@@ -371,7 +372,8 @@ namespace Le__Scout
             this.ïğîäàæèToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.íîâûé×ToolStripMenuItem,
             this.çàâåğøèòüÏğîäàæóToolStripMenuItem,
-            this.ïå÷àòü×åêàToolStripMenuItem});
+            this.ïå÷àòü×åêàToolStripMenuItem,
+            this.ïîèñêToolStripMenuItem});
             this.ïğîäàæèToolStripMenuItem.Name = "ïğîäàæèToolStripMenuItem";
             this.ïğîäàæèToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
             this.ïğîäàæèToolStripMenuItem.Text = "Ïğîäàæè";
@@ -391,6 +393,13 @@ namespace Le__Scout
             this.çàâåğøèòüÏğîäàæóToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.çàâåğøèòüÏğîäàæóToolStripMenuItem.Text = "Çàâåğøèòü ïğîäàæó";
             this.çàâåğøèòüÏğîäàæóToolStripMenuItem.Click += new System.EventHandler(this.complete_Click);
+            // 
+            // ïå÷àòü×åêàToolStripMenuItem
+            // 
+            this.ïå÷àòü×åêàToolStripMenuItem.Name = "ïå÷àòü×åêàToolStripMenuItem";
+            this.ïå÷àòü×åêàToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.ïå÷àòü×åêàToolStripMenuItem.Text = "Ïå÷àòü ÷åêà";
+            this.ïå÷àòü×åêàToolStripMenuItem.Click += new System.EventHandler(this.ïå÷àòü×åêàToolStripMenuItem_Click);
             // 
             // connectToolStripMenuItem
             // 
@@ -435,12 +444,13 @@ namespace Le__Scout
             this.linkLabel1.Visible = false;
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
-            // ïå÷àòü×åêàToolStripMenuItem
+            // ïîèñêToolStripMenuItem
             // 
-            this.ïå÷àòü×åêàToolStripMenuItem.Name = "ïå÷àòü×åêàToolStripMenuItem";
-            this.ïå÷àòü×åêàToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
-            this.ïå÷àòü×åêàToolStripMenuItem.Text = "Ïå÷àòü ÷åêà";
-            this.ïå÷àòü×åêàToolStripMenuItem.Click += new System.EventHandler(this.ïå÷àòü×åêàToolStripMenuItem_Click);
+            this.ïîèñêToolStripMenuItem.Name = "ïîèñêToolStripMenuItem";
+            this.ïîèñêToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
+            this.ïîèñêToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.ïîèñêToolStripMenuItem.Text = "Ïîèñê";
+            this.ïîèñêToolStripMenuItem.Click += new System.EventHandler(this.ïîèñêToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -506,6 +516,7 @@ namespace Le__Scout
         private System.Windows.Forms.DataGridViewTextBoxColumn priceroznDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
         private System.Windows.Forms.ToolStripMenuItem ïå÷àòü×åêàToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ïîèñêToolStripMenuItem;
     }
 }
 

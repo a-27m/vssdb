@@ -338,7 +338,6 @@ from r where r.id = {0}
             if (n > 1)
             {
                 FormSearch fs = new FormSearch(connection);
-                fs.DataGridView1.DataSource = tableToFill;
                 if (fs.ShowDialog() != DialogResult.OK)
                 {
                     PrintLog("[Abort] Search canceled (fs.ShowDialog != OK)");
@@ -463,6 +462,22 @@ select sum(count*price_rozn)
 //            if (pd.ShowDialog() == DialogResult.OK)
 
             prdoc.Print();
+        }
+
+        private void поискToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormSearch fs = new FormSearch(connection);
+            if (fs.ShowDialog() != DialogResult.OK)
+            {
+                PrintLog("[Abort] Search canceled (fs.ShowDialog != OK)");
+                return;
+            }
+            q_id = fs.SelectedId;
+            fs.Dispose();
+
+            // тут надо продать найденное
+
+            textBoxCode.SelectAll();
         }
     }
 }
