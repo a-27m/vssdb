@@ -38,7 +38,7 @@ namespace Лаб2
                 }
             }
 
-            private uint m_n;
+            private uint m_n = 100;
             public uint N
             {
                 get
@@ -168,6 +168,90 @@ namespace Лаб2
 
             statusLabel1.Text = string.Format("{0} {1} = {2} {3}",
                 old_value, scale2.UnitsName, value, scale1.UnitsName);
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                float old_value;
+
+                if (!float.TryParse(textBox1.Text, out old_value))
+                {
+                    statusLabel1.Text = "Float number format error at the 1st scale!";
+                    return;
+                }
+
+                float value = ScaleParams.Translate(old_value, scale1, scale2);
+
+                try
+                {
+                    trackBar2.Value = (int)((value - scale2.S0) / (scale2.S1 - scale2.S0) * trackBar2.Maximum);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    trackBar2.Value = value > scale2.S1 ?
+                        trackBar2.Maximum : trackBar2.Minimum;
+                }
+                try
+                {
+                    trackBar1.Value = (int)((old_value - scale1.S0) / (scale1.S1 - scale1.S0) * trackBar1.Maximum);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    trackBar1.Value = old_value > scale1.S1 ?
+                        trackBar1.Maximum : trackBar1.Minimum;
+                }
+
+
+                textBox2.Text = value.ToString();
+
+                statusLabel1.Text = string.Format("{0} {1} = {2} {3}",
+    old_value, scale1.UnitsName, value, scale2.UnitsName);
+
+            }
+        }
+
+        private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                float old_value;
+
+                if (!float.TryParse(textBox2.Text, out old_value))
+                {
+                    statusLabel1.Text = "Float number format error at the 1st scale!";
+                    return;
+                }
+
+                float value = ScaleParams.Translate(old_value, scale2, scale1);
+
+                try
+                {
+                    trackBar1.Value = (int)((value - scale1.S0) / (scale1.S1 - scale1.S0) * trackBar1.Maximum);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    trackBar1.Value = value > scale1.S1 ?
+                        trackBar1.Maximum : trackBar1.Minimum;
+                }
+                try
+                {
+                    trackBar2.Value = (int)((old_value - scale2.S0) / (scale2.S1 - scale2.S0) * trackBar2.Maximum);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    trackBar2.Value = old_value > scale2.S1 ?
+                        trackBar2.Maximum : trackBar2.Minimum;
+                }
+
+
+                textBox1.Text = value.ToString();
+
+                statusLabel1.Text = string.Format("{0} {1} = {2} {3}",
+    old_value, scale2.UnitsName, value, scale1.UnitsName);
+
+            }
         }
     }
 

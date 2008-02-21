@@ -57,16 +57,16 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.linkLabelMy7 = new Лаб2.LinkLabelMy();
             this.linkLabelMy4 = new Лаб2.LinkLabelMy();
             this.linkLabelMy6 = new Лаб2.LinkLabelMy();
             this.linkLabelMy5 = new Лаб2.LinkLabelMy();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.linkLabelMy0 = new Лаб2.LinkLabelMy();
             this.linkLabelMy1 = new Лаб2.LinkLabelMy();
             this.linkLabelMy2 = new Лаб2.LinkLabelMy();
             this.linkLabelMy3 = new Лаб2.LinkLabelMy();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -152,6 +152,7 @@
             this.textBox2.TabIndex = 3;
             this.textBox2.Text = "———";
             this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox2_KeyPress);
             // 
             // textBox1
             // 
@@ -165,6 +166,7 @@
             this.textBox1.TabIndex = 1;
             this.textBox1.Text = "———";
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
             // 
             // panel2
             // 
@@ -181,28 +183,6 @@
             this.tableLayoutPanel1.SetRowSpan(this.panel2, 2);
             this.panel2.Size = new System.Drawing.Size(144, 92);
             this.panel2.TabIndex = 1;
-            // 
-            // panel1
-            // 
-            this.panel1.AutoSize = true;
-            this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.linkLabelMy0);
-            this.panel1.Controls.Add(this.linkLabelMy1);
-            this.panel1.Controls.Add(this.linkLabelMy2);
-            this.panel1.Controls.Add(this.linkLabelMy3);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Padding = new System.Windows.Forms.Padding(16, 0, 16, 0);
-            this.tableLayoutPanel1.SetRowSpan(this.panel1, 2);
-            this.panel1.Size = new System.Drawing.Size(144, 92);
-            this.panel1.TabIndex = 0;
-            // 
-            // errorProvider1
-            // 
-            this.errorProvider1.BlinkRate = 125;
-            this.errorProvider1.ContainerControl = this;
             // 
             // linkLabelMy7
             // 
@@ -253,12 +233,30 @@
             this.errorProvider1.SetIconAlignment(this.linkLabelMy5, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
             this.linkLabelMy5.Location = new System.Drawing.Point(19, 49);
             this.linkLabelMy5.Name = "linkLabelMy5";
-            this.linkLabelMy5.Size = new System.Drawing.Size(58, 13);
+            this.linkLabelMy5.Size = new System.Drawing.Size(76, 13);
             this.linkLabelMy5.TabIndex = 2;
             this.linkLabelMy5.TabStop = true;
-            this.linkLabelMy5.Text = "Делений: ";
-            this.linkLabelMy5.Value = "";
+            this.linkLabelMy5.Text = "Делений: 100";
+            this.linkLabelMy5.Value = "100";
+            this.linkLabelMy5.Visible = false;
             this.linkLabelMy5.TextChanged += new System.EventHandler(this.linkLabel1_TextChanged);
+            // 
+            // panel1
+            // 
+            this.panel1.AutoSize = true;
+            this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.linkLabelMy0);
+            this.panel1.Controls.Add(this.linkLabelMy1);
+            this.panel1.Controls.Add(this.linkLabelMy2);
+            this.panel1.Controls.Add(this.linkLabelMy3);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Padding = new System.Windows.Forms.Padding(16, 0, 16, 0);
+            this.tableLayoutPanel1.SetRowSpan(this.panel1, 2);
+            this.panel1.Size = new System.Drawing.Size(144, 92);
+            this.panel1.TabIndex = 0;
             // 
             // linkLabelMy0
             // 
@@ -295,11 +293,12 @@
             this.errorProvider1.SetIconAlignment(this.linkLabelMy2, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
             this.linkLabelMy2.Location = new System.Drawing.Point(19, 49);
             this.linkLabelMy2.Name = "linkLabelMy2";
-            this.linkLabelMy2.Size = new System.Drawing.Size(58, 13);
+            this.linkLabelMy2.Size = new System.Drawing.Size(76, 13);
             this.linkLabelMy2.TabIndex = 2;
             this.linkLabelMy2.TabStop = true;
-            this.linkLabelMy2.Text = "Делений: ";
-            this.linkLabelMy2.Value = "";
+            this.linkLabelMy2.Text = "Делений: 100";
+            this.linkLabelMy2.Value = "100";
+            this.linkLabelMy2.Visible = false;
             this.linkLabelMy2.TextChanged += new System.EventHandler(this.linkLabel1_TextChanged);
             // 
             // linkLabelMy3
@@ -315,6 +314,11 @@
             this.linkLabelMy3.Text = "Единицы: ";
             this.linkLabelMy3.Value = "";
             this.linkLabelMy3.TextChanged += new System.EventHandler(this.linkLabel1_TextChanged);
+            // 
+            // errorProvider1
+            // 
+            this.errorProvider1.BlinkRate = 125;
+            this.errorProvider1.ContainerControl = this;
             // 
             // Form1
             // 
