@@ -1,0 +1,50 @@
+// actix.idl : type library source for ActiveX Control project.
+
+// This file will be processed by the MIDL compiler tool to
+// produce the type library (actix.tlb) that will become a resource in
+// actix.ocx.
+
+#include <olectl.h>
+#include <idispids.h>
+
+[ uuid(BE2BBEE1-AF50-4AF7-BF15-E711ABD5779F), version(1.0),
+  helpfile("actix.hlp"),
+  helpstring("actix ActiveX Control module"),
+  control ]
+library actixLib
+{
+	importlib(STDOLE_TLB);
+
+	//  Primary dispatch interface for CactixCtrl
+
+	[ uuid(5F2FDA10-B7FB-4B87-8B4F-5CCE3D64ACBC),
+	  helpstring("Dispatch interface for actix Control")]
+	dispinterface _Dactix
+	{
+		properties:
+		methods:
+	};
+
+	//  Event dispatch interface for CactixCtrl
+
+	[ uuid(D0E40FC3-A24A-4738-B4D1-FCCF1C8F1EB1),
+	  helpstring("Event interface for actix Control") ]
+	dispinterface _DactixEvents
+	{
+		properties:
+			//  Event interface has no properties
+
+		methods:
+	};
+
+	//  Class information for CactixCtrl
+
+	[ uuid(0F8AB0D7-CEFB-46B9-9908-DA074F7AB116),
+	  helpstring("actix Control"), control ]
+	coclass actix
+	{
+		[default] dispinterface _Dactix;
+		[default, source] dispinterface _DactixEvents;
+	};
+
+};
