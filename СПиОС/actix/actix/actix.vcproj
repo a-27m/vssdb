@@ -5,10 +5,6 @@
 	Name="actix"
 	ProjectGUID="{77E919D6-CA9E-48D7-A905-A6EB45622DF9}"
 	RootNamespace="actix"
-	
-	
-	
-	
 	Keyword="MFCActiveXProj"
 	>
 	<Platforms>
@@ -74,6 +70,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				RegisterOutput="true"
+				AdditionalDependencies="gdiplus.dll"
 				OutputFile="$(OutDir)\$(ProjectName).ocx"
 				LinkIncremental="2"
 				ModuleDefinitionFile=".\actix.def"
@@ -224,6 +221,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\City.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Graph.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Pipe.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -259,6 +268,22 @@
 			</File>
 			<File
 				RelativePath=".\actixPropPage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\City.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Graph.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MyList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Pipe.h"
 				>
 			</File>
 			<File

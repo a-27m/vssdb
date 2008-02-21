@@ -1,7 +1,7 @@
 #pragma once
 
 // actixCtrl.h : Declaration of the CactixCtrl ActiveX Control class.
-
+#include "Graph.h"
 
 // CactixCtrl : See actixCtrl.cpp for implementation.
 
@@ -9,6 +9,15 @@ class CactixCtrl : public COleControl
 {
 	DECLARE_DYNCREATE(CactixCtrl)
 
+	CGraph* m_graph;
+	CGraph* m_t_graph;
+protected: 
+	CPoint	button_down_point;
+	bool	dijkstra_mode;
+
+public:
+	CGraph* GetGraph() { return m_graph;}
+	CGraph* GetTempGraph() { return m_t_graph;}
 // Constructor
 public:
 	CactixCtrl();

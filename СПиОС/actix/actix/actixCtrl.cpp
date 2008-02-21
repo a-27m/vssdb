@@ -4,7 +4,7 @@
 #include "actix.h"
 #include "actixCtrl.h"
 #include "actixPropPage.h"
-
+#include "MyList.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -132,16 +132,67 @@ CactixCtrl::~CactixCtrl()
 // CactixCtrl::OnDraw - Drawing function
 
 void CactixCtrl::OnDraw(
-			CDC* pdc, const CRect& rcBounds, const CRect& rcInvalid)
+			CDC* pDC, const CRect& rcBounds, const CRect& rcInvalid)
 {
-	if (!pdc)
+	if (!pDC)
 		return;
 
 	// TODO: Replace the following code with your own drawing code.
-	pdc->FillRect(rcBounds, CBrush::FromHandle((HBRUSH)GetStockObject(WHITE_BRUSH)));
-	pdc->Ellipse(rcBounds);
-}
+	//pdc->FillRect(rcBounds, CBrush::FromHandle((HBRUSH)GetStockObject(WHITE_BRUSH)));
+	//pdc->Ellipse(rcBounds);
 
+	CRect rc, rc_client;
+	HDC hdcMem;
+	HBITMAP hbmMem;
+	HGDIOBJ hbmOld;
+	HBRUSH hbrBkGnd;
+
+	// Get the size of the client rectangle.
+	GetClientRect(&rc_client);
+	rc = CRect(CPoint(0,0), GetGraph()->GetSize() );
+	rc.UnionRect(&rc_client,&rc);
+	// Create a compatible DC.
+	hdcMem = CreateCompatibleDC(pDC->GetSafeHdc());
+	// Create a bitmap big enough for our client rectangle.
+	hbmMem = CreateCompatibleBitmap(pDC->GetSafeHdc(),
+		rc.right-rc.left,
+		rc.bottom-rc.top);
+	// Select the bitmap into the off-screen DC.
+	hbmOld = SelectObject(hdcMem, hbmMem);
+
+	// Erase the back&gound.
+	hbrBkGnd = CreateSolidBrush(GetGraph()->GetProps().bkColor);
+	FillRect(hdcMem, &rc, hbrBkGnd);
+	DeleteObject(hbrBkGnd);
+
+	// Render the image into the offscreen DC.
+	Graphics g(hdcMem);
+	g.SetPageUnit(UnitPixel);
+
+					    GetGraph()    ->ShowPipes(&g);
+	if (dijkstra_mode)  GetTempGraph()->ShowPipes(&g);
+
+					    GetGraph()    ->ShowLabels(&g);
+	if (dijkstra_mode)  GetTempGraph()->ShowLabels(&g);
+
+					    GetGraph()	  ->ShowCities(&g);
+	if (dijkstra_mode)	GetTempGraph()->ShowCities(&g);
+
+	GetGraph()->ShowAnchor(&g);
+	//pDoc->GetGraph()->ShowChain(&g,pDoc->GetChain());
+	
+	// Blt the changes to the screen DC.
+	BitBlt(pDC->GetSafeHdc(),
+		rc.left, rc.top,
+		rc.right-rc.left, rc.bottom-rc.top,
+		hdcMem,
+		0, 0,
+		SRCCOPY);
+	// Done with off-screen bitmap and DC.
+	SelectObject(hdcMem, hbmOld);
+	DeleteObject(hbmMem);
+	DeleteDC(hdcMem);
+}
 
 
 // CactixCtrl::DoPropExchange - Persistence support
