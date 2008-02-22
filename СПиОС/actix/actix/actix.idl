@@ -35,6 +35,7 @@ library actixLib
 			//  Event interface has no properties
 
 		methods:
+			[id(DISPID_MOUSEDOWN)] void MouseDown(SHORT Button, SHORT Shift, OLE_XPOS_PIXELS x, OLE_YPOS_PIXELS y);
 	};
 
 	//  Class information for CactixCtrl

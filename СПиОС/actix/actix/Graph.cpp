@@ -1,6 +1,7 @@
 // Graph.cpp : implementation file
 //
 #include "stdafx.h"
+#include "actix.h"
 #include "Graph.h"
 #include "math.h"
 

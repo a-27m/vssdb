@@ -50,5 +50,13 @@ protected:
 public:
 	enum {
 	};
+public:
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+public:
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+public:
+	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
+public:
+	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 };
 

@@ -5,10 +5,14 @@
 #include "actixCtrl.h"
 #include "actixPropPage.h"
 #include "MyList.h"
+#include "DlgProp.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+#define dijkstra_msg (WM_USER + 1)
+//UINT dijkstra_msg = RegisterWindowMessage(L"dmsg");
 
 
 IMPLEMENT_DYNCREATE(CactixCtrl, COleControl)
@@ -19,6 +23,16 @@ IMPLEMENT_DYNCREATE(CactixCtrl, COleControl)
 
 BEGIN_MESSAGE_MAP(CactixCtrl, COleControl)
 	ON_OLEVERB(AFX_IDS_VERB_PROPERTIES, OnProperties)
+
+//	ON_COMMAND(ID_BUTTON32771, CPathMakerView::OnPropertyBn )
+//	ON_WM_ERASEBKGND( )
+//	ON_MESSAGE( dijkstra_msg, CPathMakerView::OnDijkstra )
+//	ON_WM_SETCURSOR()
+
+ON_WM_LBUTTONDOWN()
+ON_WM_LBUTTONUP()
+ON_WM_RBUTTONDOWN()
+ON_WM_RBUTTONUP()
 END_MESSAGE_MAP()
 
 
@@ -33,6 +47,8 @@ END_DISPATCH_MAP()
 // Event map
 
 BEGIN_EVENT_MAP(CactixCtrl, COleControl)
+
+	EVENT_STOCK_MOUSEDOWN()
 END_EVENT_MAP()
 
 
@@ -115,7 +131,15 @@ BOOL CactixCtrl::CactixCtrlFactory::UpdateRegistry(BOOL bRegister)
 CactixCtrl::CactixCtrl()
 {
 	InitializeIIDs(&IID_Dactix, &IID_DactixEvents);
-	// TODO: Initialize your control's instance data here.
+	// TODO: Initialize your control's instance data here
+	// GDI+
+	ULONG_PTR gdiplusToken; 
+	GdiplusStartupInput gdiplusStartupInput; 
+	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+
+	this->m_graph = new CGraph;
+	this->m_t_graph = new CGraph;
+	//this->m_chain = new CMyList<CCity>;
 }
 
 
@@ -125,6 +149,9 @@ CactixCtrl::CactixCtrl()
 CactixCtrl::~CactixCtrl()
 {
 	// TODO: Cleanup your control's instance data here.
+	delete m_graph;
+	delete m_t_graph;
+	//delete m_chain;
 }
 
 
@@ -219,3 +246,168 @@ void CactixCtrl::OnResetState()
 
 
 // CactixCtrl message handlers
+
+
+void CactixCtrl::OnLButtonDown(UINT nFlags,CPoint point)
+{
+	dijkstra_mode = false;
+
+	if (nFlags&MK_CONTROL)
+	{
+
+		double d=0;CString s;
+		CGraph * pGraph = GetGraph();
+		int R = pGraph->GetProps().radius;
+		CCity* cty = pGraph->Nearest(point,d);
+		if (d>R) { pGraph->SetAnchor(NULL);RedrawWindow();return; }
+		if (pGraph->GetAnchor() == cty)
+			{pGraph->SetAnchor(NULL); RedrawWindow(); return;}
+		if (pGraph->GetAnchor() == NULL)
+			{pGraph->SetAnchor(cty ); RedrawWindow(); return;}
+		//	go Dijkstra()
+		s.Format(
+			L"Find way between \"%s\" and \"%s\" ?",
+			pGraph->GetAnchor()->GetName(),
+			cty->GetName());
+
+		if (AfxMessageBox(
+			s,
+			MB_ICONINFORMATION|MB_YESNO) == IDYES)
+		{
+			dijkstra_mode = true;
+			pGraph->Dijkskra(
+				pGraph->GetAnchor(),
+				cty,
+				GetTempGraph(),
+				GetSafeHwnd(),
+				dijkstra_msg
+				);
+		}
+		pGraph->SetAnchor(NULL);
+		RedrawWindow();
+	}
+	else
+	{
+		button_down_point = point;
+		SetCapture();
+	}
+
+	COleControl::OnLButtonDown(nFlags, point);
+}
+
+void CactixCtrl::OnLButtonUp(UINT nFlags,CPoint point)
+{
+	if (GetCapture()!=this) return;
+	ReleaseCapture();
+
+	if (nFlags&MK_CONTROL)	return;
+
+	double d = 0; // distance to the nearest city
+	CGraph * pGraph = GetGraph();
+	int radius = pGraph -> GetProps().radius;
+	//point += GetScrollPosition();
+	//button_down_point += GetScrollPosition();
+
+	if (point == button_down_point)
+	{
+//		no dragin' occurs
+		CAddCityDlg dlg;
+		CCity * cty = pGraph -> Nearest (point, d);
+		SetModifiedFlag();
+		if (( d <= radius) && (cty!=NULL))
+		{// change name
+			dlg.m_name = cty->GetName();
+			int old_l = dlg.m_name.GetLength();
+			if (dlg.DoModal() == IDOK)
+			{
+				cty->SetName(dlg.m_name);
+				RedrawWindow(
+					/*CRect(
+					cty->coord,
+					cty->coord+CPoint(max(dlg.m_name.GetLength(),old_l)*FONT_WIDTH,2*radius)
+					)*/);
+			}
+			else return;
+		}
+		else
+		{
+			if (dlg.DoModal() == IDOK)
+			{// add city
+				pGraph->AddCity(CCity( point,dlg.m_name ));
+//				SetScrollSizes(MM_TEXT, pGraph->GetSize());
+//				point -= GetScrollPosition();
+				RedrawWindow(
+/*					CRect(
+					point + CPoint(-radius,-radius),
+					point + CPoint(dlg.m_name.GetLength()*FONT_WIDTH+radius, 2*radius)
+					)*/);
+			}
+			else return;
+		}
+	}
+	else
+	{//	movin the choosen city
+		CCity * cty1 = pGraph -> Nearest (button_down_point, d);
+		if (( d > radius ) || (cty1==NULL)) return;
+		cty1->coord = point;
+		pGraph->UpdateSize(cty1);
+//		SetScrollSizes(MM_TEXT, pGraph->GetSize());
+
+		RedrawWindow();
+	}
+
+	COleControl::OnLButtonUp(nFlags, point);
+}
+void CactixCtrl::OnRButtonDown(UINT nFlags,CPoint point)
+{
+	dijkstra_mode = false;
+
+	CGraph* pGraph	= GetGraph();
+	double min_r = 0;
+//	point += GetScrollPosition();
+	CCity* cty1 = pGraph->Nearest(point, min_r);
+	if (pGraph->props->radius < min_r) return;
+	pGraph->SetAnchor(cty1);
+	RedrawWindow();
+	SetCapture();
+
+	COleControl::OnRButtonDown(nFlags, point);
+}
+
+void CactixCtrl::OnRButtonUp(UINT nFlags,CPoint point)
+{
+	if (GetCapture()!=this) return;
+	ReleaseCapture();
+	CGraph* pGraph = GetGraph();
+	CCity* anch = pGraph->GetAnchor();	pGraph->SetAnchor(NULL);
+	double min_r = 0;
+//	point += GetScrollPosition();
+	CCity* cty2 = pGraph->Nearest(point, min_r);
+
+	if (anch == NULL) return;
+	
+	if (anch == cty2)
+	{
+		RedrawWindow();
+		return;
+	}
+	
+	if (pGraph->props->radius < min_r)
+	{
+		RedrawWindow();
+		return;
+	}
+
+	CPipDlg dlg;
+	if (dlg.DoModal() != IDOK)
+	{
+		RedrawWindow();
+		return;
+	}
+
+	pGraph->AddPipe(anch, cty2, dlg.m_cost);
+	RedrawWindow();
+
+	COleControl::OnRButtonUp(nFlags, point);
+}
+

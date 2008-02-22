@@ -74,7 +74,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				RegisterOutput="true"
-				AdditionalDependencies="gdiplus.dll"
+				AdditionalDependencies="gdiplus.lib"
 				OutputFile="$(OutDir)\$(ProjectName).ocx"
 				LinkIncremental="2"
 				ModuleDefinitionFile=".\actix.def"
@@ -229,6 +229,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DlgProp.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Graph.cpp"
 				>
 			</File>
@@ -279,6 +283,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DlgProp.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Graph.h"
 				>
 			</File>
@@ -319,5 +327,9 @@
 		</File>
 	</Files>
 	<Globals>
+		<Global
+			Name="RESOURCE_FILE"
+			Value="actix.rc"
+		/>
 	</Globals>
 </VisualStudioProject>
