@@ -5,6 +5,10 @@
 	Name="actix"
 	ProjectGUID="{77E919D6-CA9E-48D7-A905-A6EB45622DF9}"
 	RootNamespace="actix"
+	
+	
+	
+	
 	Keyword="MFCActiveXProj"
 	>
 	<Platforms>
