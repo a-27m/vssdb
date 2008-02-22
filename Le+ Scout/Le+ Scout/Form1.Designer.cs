@@ -272,7 +272,6 @@ namespace Le__Scout
             this.dgv1.Size = new System.Drawing.Size(572, 288);
             this.dgv1.TabIndex = 2;
             this.dgv1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv1_CellValidated);
-            this.dgv1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.countEndChanging_KeyPress);
             // 
             // idDataGridViewTextBoxColumn
             // 

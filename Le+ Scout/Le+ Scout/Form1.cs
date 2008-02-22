@@ -15,15 +15,17 @@ namespace Le__Scout
     public partial class Form1 : Form
     {
         MySqlConnection connection = null;
+        NumberFormatInfo numInfo;
+        FormLog formLog;
+
+        static SearchAgent searchAgent;
+
         string connectionStringFormat =
 @"Database={0};Data Source={1};Port={2};User Id={3};Password={4}";
 
-        int r_id = -1;
-        //        string r_no = -1;
-        int q_id = -1;
+        int active_r_id = -1;
+        int active_q_id = -1;
         float total = -1f;
-        NumberFormatInfo numInfo;
-        Form formLog;
 
         string ReceiptNumber
         {
@@ -35,7 +37,7 @@ namespace Le__Scout
                     reader = new MySqlCommand(string.Format(@"
 select r.receipt_no
 from r where r.id = {0}
- and r.state = 'proc';", r_id), connection).ExecuteReader();
+ and r.state = 'proc';", active_r_id), connection).ExecuteReader();
                     reader.Read();
                     return reader.GetInt32(0).ToString();
                 }
@@ -71,56 +73,34 @@ from r where r.id = {0}
         private void Form1_Load(object sender, EventArgs e)
         {
             if (Settings.Default.ShowLog)
-                formLog = CreateShowFormLog();
+               formLog = CreateShowFormLog();
 
             connectToolStripMenuItem_Click(sender, e);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //
             Settings.Default.ShowLog = showLogToolStripMenuItem.Checked;
 
-            //
             int[] widths = new int[dgv1.ColumnCount];
             for (int i = 0; i < widths.Length; i++)
                 widths[i] = dgv1.Columns[i].Width;
             Settings.Default.ColumnsWidths = new System.Collections.ArrayList(widths);
 
+            // try
             Settings.Default.Save();
 
-            //    try
+            // try
             if (connection != null)
                 connection.Close();
         }
 
-        private Form CreateShowFormLog()
+        private FormLog CreateShowFormLog()
         {
-            Form formLog = new Form();
-            formLog.SuspendLayout();
-
-            TextBox box = new TextBox();
-            box.Dock = DockStyle.Fill;
-            box.Multiline = true;
-            box.ReadOnly = true;
-            box.BackColor = SystemColors.Window;
-            box.Name = "box";
-            box.ScrollBars = ScrollBars.Both;
-
-            formLog.Controls.Add(box);
-            formLog.StartPosition = FormStartPosition.Manual;
-            formLog.Location = new Point(0, 0);
-            formLog.Size = new Size(500, 300);
-            formLog.Text = "Отладочные подробности работы";
-            formLog.ResumeLayout();
+            FormLog formLog = new FormLog();
+            formLog.FormClosing += new FormClosingEventHandler(formLog_FormClosing);
             formLog.Show();
-            formLog.FormClosed += new FormClosedEventHandler(delegate(object sender, FormClosedEventArgs e)
-            {
-                showLogToolStripMenuItem.Checked = false;
-                return;
-            });
-            this.BringToFront();
-
+            formLog.BringToFront();
             return formLog;
         }
 
@@ -130,11 +110,12 @@ from r where r.id = {0}
                 return;
             if (formLog.IsDisposed)
                 return;
+            formLog.Print(text);
+        }
 
-            (formLog.Controls["box"] as TextBox).Text +=
-                string.Format("[{0}] {1}{2}",
-                DateTime.Now.ToString("HH:MM:ss.fff"), text, Environment.NewLine
-                );
+        private void formLog_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.showLogToolStripMenuItem.Checked = false;
         }
 
         private void propDBConnectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -164,38 +145,22 @@ from r where r.id = {0}
             // this <enter> key meant to be pressed by scaner after code
             if ((e.KeyChar == (char)Keys.Enter) && (textBoxCode.Text.Length > 0))
             {
-                Sell(textBoxCode.Text);
+                // textBoxCode.Text
+
                 textBoxCode.SelectAll();
             }
         }
 
         private void newReceipt_Click(object sender, EventArgs e)
         {
-            if (r_id != -1)
+            if (active_r_id != -1)
             {
-                PrintLog("[Warning] r_id <> -1");
+                PrintLog("[Warning] active_r_id <> -1");
                 // ask to interrupt or complete current receipt
             }
 
             CallStored_StartSell();
         }
-
-        private void countEndChanging_KeyPress(object sender, KeyPressEventArgs e)
-        {/*
-            // ?? intended situation: 'count' is in focus, cashier corrects value, 
-            // then <enter> pressed by scaner, signaling that the new code starts
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                //try
-                int count = int.Parse(textBoxHowmuch.Text);
-
-                CallStored_Sell(count);
-
-                textBoxCode.Focus();
-                textBoxCode.SelectAll();
-                PrintLog("focus is passed to the textbox1 on <enter> (" + sender.ToString() + ")");
-            }
-        */}
 
         private void complete_Click(object sender, EventArgs e)
         {
@@ -267,10 +232,10 @@ from r where r.id = {0}
             // try
 
             // sell or correct?
-            if (q_id == -1)
+            if (active_q_id == -1)
             {
                 CallStored_CorrectW(
-                       (int)resche.Rows[e.RowIndex]["q_id"],
+                       (int)resche.Rows[e.RowIndex]["active_q_id"],
                        int.Parse(dgv1[e.ColumnIndex, e.RowIndex].Value.ToString())
                        );
             }
@@ -281,14 +246,14 @@ from r where r.id = {0}
                 textBoxCode.SelectAll();
             }
 
-            q_id = -1;
+            active_q_id = -1;
         }
 
         private void ShowCurrentReceiptPositions()
         {
             MySqlDataAdapter adapter;
             adapter = new MySqlDataAdapter(qSelectReceiptByRid, connection);
-            adapter.SelectCommand.Parameters.AddWithValue("?rid", r_id);
+            adapter.SelectCommand.Parameters.AddWithValue("?rid", active_r_id);
 
             dataSet1.Tables["resche"].Clear();
             adapter.Fill(dataSet1.Tables["resche"]);
@@ -299,25 +264,14 @@ from r where r.id = {0}
             dgv1.DataMember = "resche";
         }
 
-        private void Sell(string strCode)
+        private void Sell(int Code)
         {
-            int code = -1;
-            try
-            {
-                code = int.Parse(strCode);
-            }
-            catch (FormatException)
-            {
-                PrintLog("[Error] bad code: Int.Parse threw FormatException");
-                return;
-            }
-
             DataTable tableToFill;
             tableToFill = new DataTable("tableToFill");
 
             MySqlDataAdapter adapter;
             adapter = new MySqlDataAdapter(qSelectWareByCode, connection);
-            adapter.SelectCommand.Parameters.AddWithValue("?pcode", code);
+            adapter.SelectCommand.Parameters.AddWithValue("?pcode", Code.ToString());
             adapter.Fill(tableToFill);
 
             // TODO: fillschema() only if no schema
@@ -326,9 +280,9 @@ from r where r.id = {0}
             tableToFill.PrimaryKey = new DataColumn[] { tableToFill.Columns["id"] };
 
             int n = tableToFill.Rows.Count;
-            q_id = -1;
+            active_q_id = -1;
 
-            #region Determine exact ware q_id
+            #region Determine exact ware active_q_id
             if (n == 0)
             {
                 PrintLog("[Oops] The ware is not found by the code: count(*) == 0");
@@ -343,16 +297,16 @@ from r where r.id = {0}
                     PrintLog("[Abort] Search canceled (fs.ShowDialog != OK)");
                     return;
                 }
-                q_id = fs.SelectedId;
+                active_q_id = fs.SelectedId;
                 fs.Dispose();
             }
             else
             {
-                q_id = (int)tableToFill.Rows[0].ItemArray[0];
+                active_q_id = (int)tableToFill.Rows[0].ItemArray[0];
             }
             #endregion
 
-            DataRow wareRow = tableToFill.Rows.Find(q_id);
+            DataRow wareRow = tableToFill.Rows.Find(active_q_id);
             dataSet1.Tables["chetab"].ImportRow(wareRow);
             dgv1.DataMember = "chetab";
 
@@ -368,8 +322,8 @@ from r where r.id = {0}
             cmdStartSell.Parameters.Add("?rv", MySqlDbType.Int32).Direction =
                 ParameterDirection.ReturnValue;
             cmdStartSell.ExecuteNonQuery();
-            r_id = (int)cmdStartSell.Parameters["?rv"].Value;
-            PrintLog("Start_sell returned:" + r_id);
+            active_r_id = (int)cmdStartSell.Parameters["?rv"].Value;
+            PrintLog("Start_sell returned:" + active_r_id);
 
             dgv1.DataMember = "chetab";
             textBoxReceiptNumber.Text = ReceiptNumber;
@@ -377,40 +331,40 @@ from r where r.id = {0}
 
         private void CallStored_Sell(int count)
         {
-            if (r_id == -1)
+            if (active_r_id == -1)
             {
                 CallStored_StartSell();
             }
 
             MySqlCommand cmdSell = new MySqlCommand("sell", connection);
             cmdSell.CommandType = CommandType.StoredProcedure;
-            cmdSell.Parameters.AddWithValue("?q_id", q_id);
-            cmdSell.Parameters.AddWithValue("?r_id", r_id);
+            cmdSell.Parameters.AddWithValue("?active_q_id", active_q_id);
+            cmdSell.Parameters.AddWithValue("?active_r_id", active_r_id);
             cmdSell.Parameters.AddWithValue("?howmuch", count);
             cmdSell.ExecuteNonQuery();
-            PrintLog(string.Format("[Call] leplus.sell(q_id = {0}, r_id = {1}, howmuch = {2});",
-                q_id, r_id, count));
+            PrintLog(string.Format("[Call] leplus.sell(active_q_id = {0}, active_r_id = {1}, howmuch = {2});",
+                active_q_id, active_r_id, count));
 
-            q_id = -1;
+            active_q_id = -1;
             ShowCurrentReceiptPositions();
         }
 
         private void CallStored_CorrectW(int q_id, int howmuch)
         {
-            if (r_id == -1)
+            if (active_r_id == -1)
             {
-                throw new Exception("r_id == -1!");
+                throw new Exception("active_r_id == -1!");
             }
 
             //try
             MySqlCommand cmd = new MySqlCommand("correctw", connection);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("?qid", q_id);
-            cmd.Parameters.AddWithValue("?rid", r_id);
+            cmd.Parameters.AddWithValue("?rid", active_r_id);
             cmd.Parameters.AddWithValue("?howmuch", howmuch);
             cmd.ExecuteNonQuery();
             PrintLog(string.Format("[Call] leplus.correctw(qid = {0}, rid = {1}, howmuch = {2});",
-                q_id, r_id, howmuch));
+                q_id, active_r_id, howmuch));
 
             q_id = -1;
         }
@@ -418,9 +372,9 @@ from r where r.id = {0}
         private float SelectTotalByRid()
         {
             MySqlCommand cmdSell = new MySqlCommand(qSelectTotalByRid, connection);
-            cmdSell.Parameters.AddWithValue("?rid", r_id);
-            PrintLog(string.Format("[Query] sum(count*price_rozn) from w, r_id = {0}, returned: {1}",
-                r_id, total));
+            cmdSell.Parameters.AddWithValue("?rid", active_r_id);
+            PrintLog(string.Format("[Query] sum(count*price_rozn) from w, active_r_id = {0}, returned: {1}",
+                active_r_id, total));
 
             //try
             return (float)(double)cmdSell.ExecuteScalar();
@@ -435,14 +389,14 @@ where code=?pcode
         const string qSelectReceiptByRid = @"
 select w.*
   from w,r
- where w.r_id = r.id
+ where w.active_r_id = r.id
    and r.id = ?rid
    and r.state = 'proc';
 ";
         const string qSelectTotalByRid = @"
 select sum(count*price_rozn)
   from w,r
- where w.r_id = r.id
+ where w.active_r_id = r.id
    and r.id = ?rid
    and r.state = 'proc';
 ";
@@ -472,7 +426,7 @@ select sum(count*price_rozn)
                 PrintLog("[Abort] Search canceled (fs.ShowDialog != OK)");
                 return;
             }
-            q_id = fs.SelectedId;
+            active_q_id = fs.SelectedId;
             fs.Dispose();
 
             // тут надо продать найденное
