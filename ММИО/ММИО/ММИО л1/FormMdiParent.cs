@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Lab3_Transport;
 
 namespace ММИО_л1
 {
@@ -32,10 +33,24 @@ namespace ММИО_л1
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                Form1 childForm = new Form1();
+                IForm1 iForm;
+                Form childForm;
+                switch (openFileDialog1.FilterIndex)
+                {
+                    case 1:
+                        iForm = new Form1();
+                        break;
+                    case 2:
+                        iForm = new Form3();
+                        break;
+                    default:
+                        MessageBox.Show("What's that?");
+                        return;
+                }
+                childForm = (Form)iForm;
                 childForm.MdiParent = this;
                 childForm.WindowState = FormWindowState.Maximized;
-                childForm.LoadData(openFileDialog1.FileName);
+                iForm.LoadData(openFileDialog1.FileName);
                 childForm.Show();
             }
         }
@@ -49,6 +64,11 @@ namespace ММИО_л1
                     (ActiveMdiChild as Form1).SaveData(saveFileDialog1.FileName);
                 }
             }
+        }
+
+        private void saveFileDialog2_FileOk(object sender, CancelEventArgs e)
+        {
+
         }
     }
 }

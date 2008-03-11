@@ -62,6 +62,7 @@
             this.toolStripPanel4 = new System.Windows.Forms.ToolStripPanel();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog3 = new System.Windows.Forms.SaveFileDialog();
             this.toolStripPanel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -329,10 +330,15 @@
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.Filter = "Задание к ММИО л2 (*.mmiol2)|*.mmiol2|All files (*.*)|*.*";
+            this.openFileDialog1.Filter = "Задание к ММИО л2 (*.mmiol2)|*.mmiol2|Задание к ММИО л3 (*.mmiol3)|*.mmiol3|All f" +
+                "iles (*.*)|*.*";
             this.openFileDialog1.ShowReadOnly = true;
             this.openFileDialog1.SupportMultiDottedExtensions = true;
             this.openFileDialog1.Title = "Выберите файл-задание";
+            // 
+            // saveFileDialog3
+            // 
+            this.saveFileDialog3.Filter = "Задание к ММИО л3 (*.mmiol3)|*.mmiol3|All files (*.*)|*.*";
             // 
             // FormMdiParent
             // 
@@ -393,5 +399,6 @@
         private System.Windows.Forms.ToolStripMenuItem windowStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog3;
     }
 }

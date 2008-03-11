@@ -13,7 +13,7 @@ using Fractions;
 
 namespace ММИО_л1
 {
-    public partial class Form1 : Form
+    public partial class Form1 : Form, IForm1
     {
         protected bool IsNewDocument = true;
         Fraction[][] A;
@@ -40,6 +40,7 @@ namespace ММИО_л1
             S = (short[])formatter.Deserialize(zipStream);
 
             zipStream.Close();
+            stream.Close();
 
             n = A[0].Length;
             m = B.GetLength(0);
@@ -452,5 +453,6 @@ namespace ММИО_л1
             df.Show();
             df.Update2();
         }
+
     }
 }
