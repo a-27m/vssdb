@@ -24,6 +24,8 @@ namespace ММИО_л1
         Fraction[] u;
         Fraction[] v;
 
+        List<Point> cycle;
+
         int n, m;
 
         protected bool IsNewDocument = true;
@@ -31,6 +33,7 @@ namespace ММИО_л1
         public Form3()
         {
             InitializeComponent();
+            dataGridView1.CellPainting += new DataGridViewCellPaintingEventHandler(dataGridView1_CellPainting);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -40,16 +43,10 @@ namespace ММИО_л1
             n = 5;
             m = 5;
 
-            dataGridView1.Columns.Add("", "B1");
-            dataGridView1.Columns.Add("", "B2");
-            dataGridView1.Columns.Add("", "B3");
-            dataGridView1.Columns.Add("", "B4");
-            dataGridView1.Columns.Add("", "B5");
-            dataGridView1.Columns.Add("", "SA");
+            GridMyResize();
 
-            dataGridView1.Rows.Add(4);
-
-            dataGridView1.CellPainting += new DataGridViewCellPaintingEventHandler(dataGridView1_CellPainting);
+            x = new Fraction[m, n];
+            c = new Fraction[m, n];
 
             Random rnd = new Random();
             for (int i = 0; i < m; i++)
@@ -59,22 +56,44 @@ namespace ММИО_л1
                     x[i, j] = (Fraction)(rnd.Next(20) * 10 + 100);
                 }
 
+            a = new Fraction[m];
+            b = new Fraction[n];
+
+            for (int i = 0; i < m; i++)
+            {
+                a[i] = new Fraction();
+                for (int j = 0; j < n; j++)
+                    a[i] += x[i, j];
+            }
+
+            for (int j = 0; j < n; j++)
+            {
+                b[j] = new Fraction();
+                for (int i = 0; i < m; i++)
+                    b[j] += x[i, j];
+            }
+
+            cycle = new List<Point>();
+            cycle.Add(new Point(2, 2));
+            cycle.Add(new Point(4, 2));
+            cycle.Add(new Point(4, 0));
+            cycle.Add(new Point(2, 0));
+            cycle.Add(new Point(2, 3));
+            cycle.Add(new Point(2, 0));
+            cycle.Add(new Point(2, 2));
+
             CToGrid();
+            UpdateGrid();
         }
 
         private void CToGrid()
         {
             for (int i = 0; i < c.GetLength(0); i++)
-            {
-                dataGridView1.Rows[i].HeaderCell.Value = "A" + (i + 1).ToString();
-
                 for (int j = 0; j < c.GetLength(1); j++)
-                {
                     dataGridView1[j, i].Value = c[i, j];
-                }
-            }
         }
 
+        Point tmp = new Point(-1,-1);
         void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if ((e.ColumnIndex < 0) || (e.RowIndex < 0))
@@ -114,6 +133,17 @@ namespace ММИО_л1
                     recfBounds,
                     sfx);
 
+                if (cycle != null)
+                {
+                    tmp.X = e.ColumnIndex;
+                    tmp.Y = e.RowIndex;
+                    int i = cycle.IndexOf(tmp);
+                    if (i < 0)
+                    {
+                        a
+                    }
+                }
+
                 e.Handled = true;
             }
         }
@@ -129,31 +159,39 @@ namespace ММИО_л1
             {
                 MessageBox.Show(eF.Message, "Ошибка ввода", MessageBoxButtons.OK);
             }
+            catch (IndexOutOfRangeException)
+            {
+            }
         }
 
+        /// <summary>
+        /// Для записи значений в ячейки, которые отрисовываются стандартным методом
+        /// </summary>
         private void UpdateGrid()
         {
             for (int i = 0; i < m; i++)
             {
-                for (int j = 0; j < n; j++)
-                    dataGridView1[j, i + 1].Value = c[i, j].ToString();
-
-                dataGridView1[n + 1, i + 1].Value = a[i].ToString();
-            }
-
-            for (int i = 0; i < m; i++)
-            {
-                dataGridView1[n + 1, i].Value = a[i].ToString();
+                dataGridView1[n, i].Value = a[i].ToString();
 
                 if (u == null)
-                    dataGridView1.Rows[i].HeaderText =
-                            "A" + (i + 1).ToString();
+                    dataGridView1.Rows[i].HeaderCell.Value =
+                        "A" + (i + 1).ToString();
                 else
-                    dataGridView1.Columns[j].HeaderText =
+                    dataGridView1.Rows[i].HeaderCell.Value =
                         "A" + (i + 1).ToString() + ", u=" + u[i].ToString();
             }
 
-            dataGridView1.AutoResizeColumns();
+            for (int j= 0; j < n; j++)
+            {
+                dataGridView1[j, m].Value = b[j].ToString();
+
+                if (v == null)
+                    dataGridView1.Columns[j].HeaderText =
+                        "B" + (j + 1).ToString();
+                else
+                    dataGridView1.Columns[j].HeaderText =
+                        "B" + (j + 1).ToString() + ", v=" + v[j].ToString();
+            }
 
             //dataGridView1[n + 1, 0].ReadOnly = true;
             //dataGridView1[n, 0].ReadOnly = true;
@@ -162,12 +200,16 @@ namespace ММИО_л1
         private void GridMyResize()
         {
             dataGridView1.Columns.Clear();
-            dataGridView1.Rows.Clear();           
+            dataGridView1.Rows.Clear();
 
             dataGridView1.RowTemplate.Height = 60;
-            
+            int colWidth = dataGridView1.RowTemplate.Height + dataGridView1.RowTemplate.Height / 2;
+
             for (int j = 0; j < n; j++)
-                    dataGridView1.Columns.Add("", "B" + (j+1).ToString());
+            {
+                dataGridView1.Columns.Add("", "B" + (j + 1).ToString());
+                dataGridView1.Columns[j].Width = colWidth; 
+            }
             dataGridView1.Columns.Add("", "Σa");
 
             dataGridView1.Rows.Add(m+1);
@@ -175,9 +217,7 @@ namespace ММИО_л1
                 dataGridView1.Rows[i].HeaderCell.Value = "A" + (i + 1).ToString();
             dataGridView1.Rows[m].HeaderCell.Value = "Σb";
 
-            dataGridView1.CellPainting += new DataGridViewCellPaintingEventHandler(dataGridView1_CellPainting);
-
-            dataGridView1.AutoResizeColumns();
+            //dataGridView1.AutoResizeColumns();
         }
 
         #region IForm1 Members
