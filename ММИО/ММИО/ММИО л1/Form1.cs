@@ -402,18 +402,18 @@ namespace ММИО_л1
 
             for (float percent = 0; ; percent += .05f)
             {
-                //int id1 = df.AddPolygon(Color.Black, DrawModes.DrawLines,
-                //       new PointF(1000 + max.X * percent, -1 / f_tan * 1000 + max.Y * percent),
-                //       new PointF(-1000 + max.X * percent, 1 / f_tan * 1000 + max.Y * percent));
-                //int id2 = df.AddPolygon(Color.Black, DrawModes.DrawLines,
-                //    new PointF(1000 + min.X * percent, -1 / f_tan * 1000 + min.Y * percent),
-                //    new PointF(-1000 + min.X * percent, 1 / f_tan * 1000 + min.Y * percent));
-                int id1 = df.AddPolygon(Color.Orange, DrawModes.DrawLines,
+                int id1 = df.AddPolygon(Color.Black, DrawModes.DrawLines,
                        new PointF(1000 + max.X * percent, -1 / f_tan * 1000 + max.Y * percent),
                        new PointF(-1000 + max.X * percent, 1 / f_tan * 1000 + max.Y * percent));
-                int id2 = df.AddPolygon(Color.CornflowerBlue, DrawModes.DrawLines,
+                int id2 = df.AddPolygon(Color.Black, DrawModes.DrawLines,
                     new PointF(1000 + min.X * percent, -1 / f_tan * 1000 + min.Y * percent),
                     new PointF(-1000 + min.X * percent, 1 / f_tan * 1000 + min.Y * percent));
+                //int id1 = df.AddPolygon(Color.Orange, DrawModes.DrawLines,
+                //       new PointF(1000 + max.X * percent, -1 / f_tan * 1000 + max.Y * percent),
+                //       new PointF(-1000 + max.X * percent, 1 / f_tan * 1000 + max.Y * percent));
+                //int id2 = df.AddPolygon(Color.CornflowerBlue, DrawModes.DrawLines,
+                //    new PointF(1000 + min.X * percent, -1 / f_tan * 1000 + min.Y * percent),
+                //    new PointF(-1000 + min.X * percent, 1 / f_tan * 1000 + min.Y * percent));
                 if (percent >= 0.99f)
                     break;
                 df.Update2();
@@ -422,11 +422,11 @@ namespace ММИО_л1
                 df.RemoveGraphic(id1);
             }
 
-            df.AddPolygon(Color.Orange, 3f, DrawModes.DrawPoints, new PointF(max.X, max.Y));
-            df.AddPolygon(Color.CornflowerBlue, 3f, DrawModes.DrawPoints, new PointF(min.X, min.Y));
+            //df.AddPolygon(Color.Orange, 3f, DrawModes.DrawPoints, new PointF(max.X, max.Y));
+            //df.AddPolygon(Color.CornflowerBlue, 3f, DrawModes.DrawPoints, new PointF(min.X, min.Y));
 
-            //df.AddPolygon(Color.Black, 3f, DrawModes.DrawPoints, new PointF(max.X, max.Y));
-            //df.AddPolygon(Color.Black, 3f, DrawModes.DrawPoints, new PointF(min.X, min.Y));
+            df.AddPolygon(Color.Black, 3f, DrawModes.DrawPoints, new PointF(max.X, max.Y));
+            df.AddPolygon(Color.Black, 3f, DrawModes.DrawPoints, new PointF(min.X, min.Y));
 
             df.Show();
             df.Update2();

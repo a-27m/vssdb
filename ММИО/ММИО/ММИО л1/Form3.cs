@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Drawing.Drawing2D;
 
 namespace ММИО_л1
 {
@@ -74,13 +75,13 @@ namespace ММИО_л1
             }
 
             cycle = new List<Point>();
-            cycle.Add(new Point(2, 2));
-            cycle.Add(new Point(4, 2));
-            cycle.Add(new Point(4, 0));
-            cycle.Add(new Point(2, 0));
+            cycle.Add(new Point(1, 3));
             cycle.Add(new Point(2, 3));
             cycle.Add(new Point(2, 0));
-            cycle.Add(new Point(2, 2));
+            cycle.Add(new Point(4, 0));
+            cycle.Add(new Point(4, 2));
+            cycle.Add(new Point(1, 2));
+            cycle.Add(new Point(1, 3));
 
             CToGrid();
             UpdateGrid();
@@ -116,6 +117,8 @@ namespace ММИО_л1
                     DataGridViewPaintParts.All ^
                     DataGridViewPaintParts.ContentForeground);
 
+                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
                 RectangleF recfBounds = new RectangleF(e.CellBounds.X, e.CellBounds.Y,
                     e.CellBounds.Width, e.CellBounds.Height);
 
@@ -133,18 +136,59 @@ namespace ММИО_л1
                     recfBounds,
                     sfx);
 
-                if (cycle != null)
-                {
-                    tmp.X = e.ColumnIndex;
-                    tmp.Y = e.RowIndex;
-                    int i = cycle.IndexOf(tmp);
-                    if (i > 0) 
-                    {
-                        
-                    }
-                }
-
                 e.Handled = true;
+            }
+        }
+
+        private void DrawCycle(Graphics g)
+        {
+            StringFormat sfs = new StringFormat();
+            sfs.Alignment = StringAlignment.Near;
+            sfs.LineAlignment = StringAlignment.Near;
+
+            float r = 1.5f;
+            Pen linePen = new Pen(Color.DarkSlateGray, 2f);
+            Pen ellPen = new Pen(Color.DarkSlateGray, 2*r);
+
+            Font signFont = new Font(FontFamily.GenericSerif, 12f, FontStyle.Bold);
+
+            List<Point>.Enumerator enumer = cycle.GetEnumerator();
+            enumer.MoveNext();
+            Point firstPt = enumer.Current;
+            PointF pt1;
+            PointF pt2;
+
+            Rectangle bnds1;
+            bnds1 = dataGridView1.GetCellDisplayRectangle(
+                enumer.Current.Y,
+                enumer.Current.X,
+                false);
+            pt2 = new PointF(
+                (bnds1.Left + bnds1.Right) / 2f,
+                (bnds1.Top + bnds1.Bottom) / 2f);
+
+            int i = 1;
+            while (enumer.MoveNext())
+            {
+                bnds1 = dataGridView1.GetCellDisplayRectangle(
+                    enumer.Current.Y,
+                    enumer.Current.X,
+                    false);
+                pt1 = new PointF(
+                    (bnds1.Left + bnds1.Right) / 2f,
+                    (bnds1.Top + bnds1.Bottom) / 2f);
+
+                g.DrawLine(linePen, pt1, pt2);
+                //g.FillEllipse(Brushes.White, pt1.X - r, ptTo.Y - r, 2 * r, 2 * r);
+                g.DrawEllipse(ellPen, pt1.X - r, pt1.Y - r, 2 * r, 2 * r);
+                g.DrawString(
+                    ((i++ & 1) == 1) ? "-" : "+",
+                    signFont,
+                    Brushes.Black,
+                    pt1.X, pt1.Y,
+                    sfs);
+
+                pt2 = pt1;
             }
         }
 
@@ -152,16 +196,25 @@ namespace ММИО_л1
         {
             try
             {
-                c[e.RowIndex, e.ColumnIndex] =
+                // provocation of IndexOutOfRange
+                c[e.RowIndex, e.ColumnIndex].Equals(null);
+
+                c[e.RowIndex, e.ColumnIndex] = 
                     Fraction.Parse(dataGridView1[e.ColumnIndex, e.RowIndex].Value.ToString());
             }
             catch (FormatException eF)
             {
                 MessageBox.Show(eF.Message, "Ошибка ввода", MessageBoxButtons.OK);
             }
+            catch (NullReferenceException)
+            {
+                c[e.RowIndex, e.ColumnIndex] = new Fraction();
+            }
             catch (IndexOutOfRangeException)
             {
             }
+
+            dataGridView1.InvalidateCell(e.ColumnIndex, e.RowIndex);
         }
 
         /// <summary>
@@ -216,8 +269,6 @@ namespace ММИО_л1
             for (int i = 0; i < m; i++)
                 dataGridView1.Rows[i].HeaderCell.Value = "A" + (i + 1).ToString();
             dataGridView1.Rows[m].HeaderCell.Value = "Σb";
-
-            //dataGridView1.AutoResizeColumns();
         }
 
         #region IForm1 Members
@@ -258,5 +309,13 @@ namespace ММИО_л1
         }
 
         #endregion
+
+        private void dataGridView1_Paint(object sender, PaintEventArgs e)
+        {
+            if (cycle != null)
+            {
+                DrawCycle(e.Graphics);
+            }
+        }
     }
 }
