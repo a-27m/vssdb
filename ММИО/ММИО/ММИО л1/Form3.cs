@@ -138,9 +138,9 @@ namespace ММИО_л1
                     tmp.X = e.ColumnIndex;
                     tmp.Y = e.RowIndex;
                     int i = cycle.IndexOf(tmp);
-                    if (i < 0)
+                    if (i > 0) 
                     {
-                        a
+                        
                     }
                 }
 
