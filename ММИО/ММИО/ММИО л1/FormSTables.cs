@@ -22,7 +22,7 @@ namespace ММИО_л1
 
         public void ResetIterationCounter() { tableCount = 0; }
 
-        public void AddTable(int[] basis, Fraction[] c, Fraction[,] table)
+        public void AddTable(int[] basisJ, Fraction[] c, Fraction[,] table)
         {
             maxCols = table.GetLength(1) > maxCols ? table.GetLength(1) : maxCols;
 
@@ -41,8 +41,8 @@ namespace ММИО_л1
                 line = new string[table.GetLength(1) + 4];
                 line[0] = tableCount.ToString();
                 line[1] = (i + 1).ToString();
-                line[2] = "A" + basis[i].ToString();
-                line[3] = c[basis[i] - 1].ToString(frFormat);
+                line[2] = "A" + basisJ[i].ToString();
+                line[3] = c[basisJ[i] - 1].ToString(frFormat);
                 for (int j = 0; j < table.GetLength(1); j++)
                     line[j + 4] = table[i, j].ToString(frFormat);
 

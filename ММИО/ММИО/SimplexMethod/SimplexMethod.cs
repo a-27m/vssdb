@@ -55,15 +55,15 @@ namespace SimplexMethod
 
     public class SimplexSolver : Solver
     {
-        public delegate void DebugSimplexTableHandler(int[] basis, Fraction[] c, Fraction[,] table);
+        public delegate void DebugSimplexTableHandler(int[] basisJ, Fraction[] c, Fraction[,] table);
         public event DebugSimplexTableHandler DebugNewSimplexTable;
       
         public delegate bool DelegateBoolIntInt(int i, int j);
 
-        protected void OnNewSimplexTable(int[] basis, Fraction[] c, Fraction[,] table)
+        protected void OnNewSimplexTable(int[] basisJ, Fraction[] c, Fraction[,] table)
         {
             if (DebugNewSimplexTable != null)
-                DebugNewSimplexTable(basis, c, table);
+                DebugNewSimplexTable(basisJ, c, table);
         }
 
         public override void AddLimtation(Fraction[] a, short sign, Fraction b)
@@ -152,6 +152,13 @@ namespace SimplexMethod
                 n += k;
             }
 
+            // sort basis?
+            int[] basis = new int[basisIndicesJ.Length];
+            for (int i = 0; i < basis.Length; i++)
+                basis[basisIndicesI[i]-1] = basisIndicesJ[i];
+            basisIndicesJ = basis;
+            basisIndicesI = null;
+
             // create new simplex-table
             Fraction[,] simplexTab = new Fraction[m + 1, n + 1];
 
@@ -167,19 +174,19 @@ namespace SimplexMethod
             }
 
             // restore art. 1s in the s-table
-            for (int i = b; i < m; i++)
-                simplexTab[basisIndicesI[i] - 1, basisIndicesJ[i]] = 1;
+            for (int i = 0; i < m; i++)
+                simplexTab[i, basisIndicesJ[i]] = 1;
 
             // fill m+1st row with deltas
             simplexTab[m, 0] = 0;
             for (int t = 0; t < m; t++)
-                simplexTab[m, 0] += m_c[basisIndicesJ[t] - 1] * simplexTab[basisIndicesI[t] - 1, 0];
+                simplexTab[m, 0] += m_c[basisIndicesJ[t] - 1] * simplexTab[t, 0];
 
             for (int j = 1; j <= n; j++)
             {
                 Fraction delta = 0;
                 for (int t = 0; t < m; t++)
-                    delta += m_c[basisIndicesJ[t] - 1] * simplexTab[basisIndicesI[t] - 1, j];
+                    delta += m_c[basisIndicesJ[t] - 1] * simplexTab[t, j];
                 simplexTab[m, j] = delta - m_c[j - 1];
             }
 
@@ -210,7 +217,6 @@ namespace SimplexMethod
                     Solver.GGaussProcess(ref simplexTab, (uint)i, (uint)j);
 
                     // fix basis changes
-                    basisIndicesI[i] = i + 1;
                     basisIndicesJ[i] = j;
                 }
                 else
