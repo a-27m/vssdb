@@ -54,25 +54,16 @@ namespace ММИО_л1
                 for (int j = 0; j < n; j++)
                 {
                     c[i, j] = (Fraction)rnd.Next(20);
-                    x[i, j] = (Fraction)(rnd.Next(20) * 10 + 100);
+                    //x[i, j] = (Fraction)(rnd.Next(20) * 10 + 100);
                 }
 
             a = new Fraction[m];
             b = new Fraction[n];
 
             for (int i = 0; i < m; i++)
-            {
-                a[i] = new Fraction();
-                for (int j = 0; j < n; j++)
-                    a[i] += x[i, j];
-            }
-
+                a[i] = (Fraction)rnd.Next(300) + 200;
             for (int j = 0; j < n; j++)
-            {
-                b[j] = new Fraction();
-                for (int i = 0; i < m; i++)
-                    b[j] += x[i, j];
-            }
+                b[j] = (Fraction)rnd.Next(300) + 200;
 
             cycle = new List<Point>();
             cycle.Add(new Point(1, 3));
@@ -82,6 +73,7 @@ namespace ММИО_л1
             cycle.Add(new Point(4, 2));
             cycle.Add(new Point(1, 2));
             cycle.Add(new Point(1, 3));
+            cycle = null;
 
             CToGrid();
             UpdateGrid();
@@ -122,19 +114,28 @@ namespace ММИО_л1
                 RectangleF recfBounds = new RectangleF(e.CellBounds.X, e.CellBounds.Y,
                     e.CellBounds.Width, e.CellBounds.Height);
 
-                e.Graphics.DrawString(
-                    c[e.RowIndex, e.ColumnIndex].ToString("Wrong"),
-                    e.CellStyle.Font,
-                    Brushes.Black,
-                    recfBounds,
-                    sfc);
+                Fraction val;
+                StringFormat sf;
 
-                e.Graphics.DrawString(
-                    x[e.RowIndex, e.ColumnIndex].ToString("Wrong"),
-                    e.CellStyle.Font,
-                    Brushes.Black,
-                    recfBounds,
-                    sfx);
+                val = c[e.RowIndex, e.ColumnIndex];
+                sf = sfc;
+                if (val != null)
+                    e.Graphics.DrawString(
+                        val.ToString("Wrong"),
+                        e.CellStyle.Font,
+                        Brushes.Black,
+                        recfBounds,
+                        sf);
+
+                val = x[e.RowIndex, e.ColumnIndex];
+                sf = sfx;
+                if (val != null)
+                    e.Graphics.DrawString(
+                            val.ToString("Wrong"),
+                            e.CellStyle.Font,
+                            Brushes.Black,
+                            recfBounds,
+                            sf);
 
                 e.Handled = true;
             }
@@ -194,27 +195,52 @@ namespace ММИО_л1
 
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
+            Fraction value;
+            
             try
             {
-                // provocation of IndexOutOfRange
-                c[e.RowIndex, e.ColumnIndex].Equals(null);
-
-                c[e.RowIndex, e.ColumnIndex] = 
-                    Fraction.Parse(dataGridView1[e.ColumnIndex, e.RowIndex].Value.ToString());
+                value = Fraction.Parse(
+                    dataGridView1[e.ColumnIndex, e.RowIndex].Value.ToString()
+                    );
             }
             catch (FormatException eF)
             {
                 MessageBox.Show(eF.Message, "Ошибка ввода", MessageBoxButtons.OK);
-            }
-            catch (NullReferenceException)
-            {
-                c[e.RowIndex, e.ColumnIndex] = new Fraction();
-            }
-            catch (IndexOutOfRangeException)
-            {
+                return;
             }
 
-            dataGridView1.InvalidateCell(e.ColumnIndex, e.RowIndex);
+            if (e.ColumnIndex == n && e.RowIndex < m)
+            {
+                a[e.RowIndex] = value;
+                UpdateGrid();
+                return;
+            }
+
+            if (e.RowIndex == m && e.ColumnIndex < n)
+            {
+                b[e.ColumnIndex] = value;
+                UpdateGrid();
+                return;
+            }
+
+            if (e.RowIndex < m && e.ColumnIndex < n)
+            {
+                //try
+                //{
+                // provocation of IndexOutOfRange
+                //if (c[e.RowIndex, e.ColumnIndex].Equals(null))
+                //{
+                //    c[e.RowIndex, e.ColumnIndex] = new Fraction();
+                //}
+
+                c[e.RowIndex, e.ColumnIndex] =
+                    Fraction.Parse(dataGridView1[e.ColumnIndex, e.RowIndex].Value.ToString());
+                //}
+                //catch (IndexOutOfRangeException)
+                //{
+                //}
+            }
+           // dataGridView1.InvalidateCell(e.ColumnIndex, e.RowIndex);
         }
 
         /// <summary>
@@ -316,6 +342,11 @@ namespace ММИО_л1
             {
                 DrawCycle(e.Graphics);
             }
+        }
+
+        private void act1ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            x = Solver
         }
     }
 }

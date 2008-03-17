@@ -481,7 +481,7 @@ namespace Fractions
         //     true if f1 and f2 are not equal; otherwise, false.
         public static bool operator !=(Fraction f1, Fraction f2)
         {
-            return !f1.Equals(f2);
+            return !(f1 == f2);
         }
         //
         // Summary:
