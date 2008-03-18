@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
+using System.IO.Compression;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Windows.Forms;
 using Fractions;
-using System.Runtime.Serialization;
-using System.IO;
-using System.IO.Compression;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Drawing.Drawing2D;
+using Lab3_Transport;
 
 namespace ММИО_л1
 {
@@ -59,11 +60,20 @@ namespace ММИО_л1
 
             a = new Fraction[m];
             b = new Fraction[n];
+            Fraction s = new Fraction();
 
             for (int i = 0; i < m; i++)
-                a[i] = (Fraction)rnd.Next(300) + 200;
-            for (int j = 0; j < n; j++)
+            {
+                a[i] = (Fraction)rnd.Next(400) + 200;
+                s += a[i];
+
+            }
+            for (int j = 0; j < n - 1; j++)
+            {
                 b[j] = (Fraction)rnd.Next(300) + 200;
+                s -= b[j];
+            }
+            b[n - 1] = s;
 
             cycle = new List<Point>();
             cycle.Add(new Point(1, 3));
@@ -86,7 +96,7 @@ namespace ММИО_л1
                     dataGridView1[j, i].Value = c[i, j];
         }
 
-        Point tmp = new Point(-1,-1);
+        //Point tmp = new Point(-1,-1);
         void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if ((e.ColumnIndex < 0) || (e.RowIndex < 0))
@@ -346,7 +356,8 @@ namespace ММИО_л1
 
         private void act1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            x = Solver
+            x = new Solver(c, a, b).NWCorner();
+            dataGridView1.Refresh();
         }
     }
 }
