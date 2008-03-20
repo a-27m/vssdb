@@ -356,7 +356,19 @@ namespace ММИО_л1
 
         private void act1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            x = new Solver(c, a, b).NWCorner();
+            int i, j;
+            Solver s = new Solver(c, a, b);
+            x = s.x = s.NWCorner();
+            cycle = new List<Point>();
+            
+            s.MkPotentials(out u, out v);
+            s.FindDelta(i, j);
+
+            cycle.Clear();
+            cycle.Add(new Point(i, j));
+
+
+            UpdateGrid();
             dataGridView1.Refresh();
         }
     }
