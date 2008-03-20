@@ -367,7 +367,6 @@ namespace ММИО_л1
             cycle.Clear();
             cycle.Add(new Point(i, j));
 
-
             UpdateGrid();
             dataGridView1.Refresh();
         }

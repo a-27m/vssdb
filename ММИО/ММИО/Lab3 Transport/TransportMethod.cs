@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Fractions;
+using System.Drawing;
 
 namespace Lab3_Transport
 {
@@ -13,6 +14,8 @@ namespace Lab3_Transport
         public Fraction[] u;
         public Fraction[] v;
         int m, n;
+
+        List<Point> cycle;
 
         public Solver()
         {
@@ -121,5 +124,65 @@ namespace Lab3_Transport
 
             return maxDelta != 0;
         }
+
+        int i0, j0, contmp;
+        public void MkCycle(int i, int j)
+        {
+            if (cycle == null)
+                cycle = new List<Point>();
+            else
+                cycle.Clear();
+
+            //x[i, j] == null;
+            i0 = i;
+            j0 = j;
+            contmp = 0;
+            ch(i,j);
+        }
+
+        private bool ch(int i, int j, int di, int dj)
+        {
+            if (Math.Abs(di) == Math.Abs(dj))
+                throw new ArgumentException("either di or oj has to be 0");
+
+            for(i >= 0 && i < m && j >= 0 && j < n)
+            {
+                if (i == i0 && j == j0)
+                    return true;
+                if (x[i, j] == null)
+                    continue;
+                else
+                {
+                    x[i, j] = null;
+                    if (cv(i, j))
+                    {
+                        cycle.Add(new Point(i, j));
+                        return true;
+                    }
+                }
+
+                i += di;
+                j += dj;
+            }
+        }
+        private bool cv(int j)
+        {
+            for (int i = 0; i < m; i++)
+            {
+                if (i == i0 && j == j0 && contmp++>0)
+                    return true;
+                else
+                    if (x[i, j] != null)
+                    {
+                        x[i, j] = null;
+                        if (cv(i,j))
+                        {
+                            cycle.Add(new Point(i, j));
+                            return true;
+                        }
+                    }
+            }
+        }
+
     }
 }
