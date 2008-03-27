@@ -206,7 +206,7 @@ namespace ММИО_л1
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             Fraction value;
-            
+
             try
             {
                 value = Fraction.Parse(
@@ -216,6 +216,10 @@ namespace ММИО_л1
             catch (FormatException eF)
             {
                 MessageBox.Show(eF.Message, "Ошибка ввода", MessageBoxButtons.OK);
+                return;
+            }
+            catch (NullReferenceException)
+            {
                 return;
             }
 
@@ -235,20 +239,8 @@ namespace ММИО_л1
 
             if (e.RowIndex < m && e.ColumnIndex < n)
             {
-                //try
-                //{
-                // provocation of IndexOutOfRange
-                //if (c[e.RowIndex, e.ColumnIndex].Equals(null))
-                //{
-                //    c[e.RowIndex, e.ColumnIndex] = new Fraction();
-                //}
-
                 c[e.RowIndex, e.ColumnIndex] =
                     Fraction.Parse(dataGridView1[e.ColumnIndex, e.RowIndex].Value.ToString());
-                //}
-                //catch (IndexOutOfRangeException)
-                //{
-                //}
             }
            // dataGridView1.InvalidateCell(e.ColumnIndex, e.RowIndex);
         }
@@ -362,10 +354,17 @@ namespace ММИО_л1
             cycle = new List<Point>();
             
             s.MkPotentials(out u, out v);
-            s.FindDelta(i, j);
+            s.FindDelta(out i, out j);
 
-            cycle.Clear();
-            cycle.Add(new Point(i, j));
+            try
+            {
+                s.MkCycle(i, j);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+            }
+            cycle = s.cycle;
 
             UpdateGrid();
             dataGridView1.Refresh();

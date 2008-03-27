@@ -15,7 +15,7 @@ namespace Lab3_Transport
         public Fraction[] v;
         int m, n;
 
-        List<Point> cycle;
+        public List<Point> cycle;
 
         public Solver()
         {
@@ -111,7 +111,7 @@ namespace Lab3_Transport
 
             for (int i = 0; i < m; i++)
                 for (int j = 0; j < n; j++)
-                    if (x[i, j] != null)
+                    if (x[i, j] == null)
                     {
                         delta = u[i] + v[j] - c[i, j];
                         if (delta > maxDelta)
@@ -125,64 +125,85 @@ namespace Lab3_Transport
             return maxDelta != 0;
         }
 
-        int i0, j0, contmp;
+        int i0, j0;
         public void MkCycle(int i, int j)
         {
             if (cycle == null)
                 cycle = new List<Point>();
             else
                 cycle.Clear();
+            
 
-            //x[i, j] == null;
+            Fraction[,] backupX = (Fraction[,])x.Clone();
+            Fraction[,] t = x;
+            x = backupX;
+
             i0 = i;
             j0 = j;
-            contmp = 0;
-            ch(i,j);
+
+            if (!_c(i, j, 1, 0))
+                if (!_c(i, j, 0, 1))
+                    if (!_c(i, j, -1, 0))
+                        if (!_c(i, j, 0, -1))
+                        {
+                            x = backupX;
+                            throw new Exception("cant find cycle");
+                        }
+
+            cycle.Add(new Point(i, j));
+            x = backupX;
         }
 
-        private bool ch(int i, int j, int di, int dj)
+        private bool _c(int i, int j, int di, int dj)
         {
             if (Math.Abs(di) == Math.Abs(dj))
                 throw new ArgumentException("either di or oj has to be 0");
-
-            for(i >= 0 && i < m && j >= 0 && j < n)
+            
+            bool isStart;
+            do
             {
-                if (i == i0 && j == j0)
-                    return true;
-                if (x[i, j] == null)
-                    continue;
-                else
-                {
-                    x[i, j] = null;
-                    if (cv(i, j))
-                    {
-                        cycle.Add(new Point(i, j));
-                        return true;
-                    }
-                }
-
                 i += di;
                 j += dj;
-            }
-        }
-        private bool cv(int j)
-        {
-            for (int i = 0; i < m; i++)
-            {
-                if (i == i0 && j == j0 && contmp++>0)
-                    return true;
-                else
-                    if (x[i, j] != null)
-                    {
-                        x[i, j] = null;
-                        if (cv(i,j))
-                        {
-                            cycle.Add(new Point(i, j));
-                            return true;
-                        }
-                    }
-            }
-        }
+                isStart = i == i0 && j == j0;
+                if (i < 0 || i >= m || j < 0 || j >= n)
+                    return false;
+            } while (x[i, j] == null && !isStart);
 
+            if (isStart)
+            {
+                cycle.Add(new Point(i, j));
+                return true;
+            }
+
+            x[i, j] = null;
+
+            if (di == 0)
+            {
+                if (_c(i, j, 1, 0))
+                {
+                    cycle.Add(new Point(i, j));
+                    return true;
+                }
+                if (_c(i, j, -1, 0))
+                {
+                    cycle.Add(new Point(i, j));
+                    return true;
+                }
+            }
+            if (dj == 0)
+            {
+                if (_c(i, j, 0, 1))
+                {
+                    cycle.Add(new Point(i, j));
+                    return true;
+                }
+                if (_c(i, j, 0, -1))
+                {
+                    cycle.Add(new Point(i, j));
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
