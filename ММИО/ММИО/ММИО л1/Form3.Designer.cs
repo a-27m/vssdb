@@ -32,6 +32,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.act1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.act2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -46,8 +47,8 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(572, 424);
             this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             this.dataGridView1.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGridView1_Paint);
+            this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             // 
             // menuStrip1
             // 
@@ -63,7 +64,8 @@
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.act1ToolStripMenuItem});
+            this.act1ToolStripMenuItem,
+            this.act2ToolStripMenuItem});
             this.toolsToolStripMenuItem.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -75,6 +77,13 @@
             this.act1ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.act1ToolStripMenuItem.Text = "act1";
             this.act1ToolStripMenuItem.Click += new System.EventHandler(this.act1ToolStripMenuItem_Click);
+            // 
+            // act2ToolStripMenuItem
+            // 
+            this.act2ToolStripMenuItem.Name = "act2ToolStripMenuItem";
+            this.act2ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.act2ToolStripMenuItem.Text = "act2";
+            this.act2ToolStripMenuItem.Click += new System.EventHandler(this.act2ToolStripMenuItem_Click);
             // 
             // Form3
             // 
@@ -101,6 +110,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem act1ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem act2ToolStripMenuItem;
     }
 }
 

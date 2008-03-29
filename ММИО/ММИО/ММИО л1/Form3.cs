@@ -346,11 +346,15 @@ namespace ММИО_л1
             }
         }
 
+        Solver s;
         private void act1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int i, j;
-            Solver s = new Solver(c, a, b);
-            x = s.x = s.NWCorner();
+            if (s == null)
+            {
+                s = new Solver(c, a, b);
+                x = s.x = s.NWCorner();
+            }
             cycle = new List<Point>();
             
             s.MkPotentials(out u, out v);
@@ -365,6 +369,40 @@ namespace ММИО_л1
                 MessageBox.Show(exception.Message);
             }
             cycle = s.cycle;
+
+            Fraction F = s.CalcF();
+            Text = F.ToString();
+
+            UpdateGrid();
+            dataGridView1.Refresh();
+        }
+
+        private void act2ToolStripMenuItem_Click(object sender, EventArgs e)
+        {            
+            Point[] aCycle = cycle.ToArray();
+            Fraction minminus = -1;
+            for (int i = 1; i < aCycle.Length; i += 2)
+            {
+                if (s.x[aCycle[i].X, aCycle[i].Y] > minminus)
+                {
+                    minminus = s.x[aCycle[i].X, aCycle[i].Y];
+                }
+            }
+
+            bool add = true;
+            s.x[aCycle[0].X, aCycle[0].Y] = 0;
+            foreach (Point p in cycle)
+            {
+                if (add)
+                    s.x[p.X, p.Y] += minminus;
+                else
+                    s.x[p.X, p.Y] -= minminus;
+
+                add = !add;
+            }
+
+            Fraction F = s.CalcF();
+            Text = F.ToString();
 
             UpdateGrid();
             dataGridView1.Refresh();

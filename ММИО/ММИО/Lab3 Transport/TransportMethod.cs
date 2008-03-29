@@ -205,5 +205,16 @@ namespace Lab3_Transport
             }
             return false;
         }
+
+        public Fraction CalcF()
+        {
+            Fraction result = 0;
+            for (int i = 0; i < m; i++)
+                for (int j = 0; j < n; j++)
+                    if (x[i, j] != null)
+                        result += x[i, j] * c[i, j];
+
+            return result;
+        }
     }
 }
