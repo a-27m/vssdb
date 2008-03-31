@@ -15,13 +15,30 @@ namespace Lab3_Transport
         public Fraction[] v;
         int m, n;
 
-        public List<Point> cycle;
+        private List<Point> cycle;
+
+        public Point[] Cycle
+        {
+            get
+            {
+                if (cycle == null)
+                    return null;
+                return cycle.ToArray();
+            }
+        }
 
         public Solver()
         {
         }
         public Solver(Fraction[,] C, Fraction[] A, Fraction[] B)
         {
+            if (C == null)
+                throw new ArgumentNullException("C");
+            if (A == null)
+                throw new ArgumentNullException("A");
+            if (B == null)
+                throw new ArgumentNullException("B");
+
             this.c = C;
             this.a = A;
             this.b = B;
@@ -151,59 +168,61 @@ namespace Lab3_Transport
                         }
 
             cycle.Add(new Point(i, j));
-            x = backupX;
+            x = t;
         }
 
         private bool _c(int i, int j, int di, int dj)
         {
             if (Math.Abs(di) == Math.Abs(dj))
                 throw new ArgumentException("either di or oj has to be 0");
-            
-            bool isStart;
             do
             {
-                i += di;
-                j += dj;
-                isStart = i == i0 && j == j0;
-                if (i < 0 || i >= m || j < 0 || j >= n)
-                    return false;
-            } while (x[i, j] == null && !isStart);
+                bool isStart;
+                do
+                {
+                    i += di;
+                    j += dj;
+                    isStart = i == i0 && j == j0;
+                    if (i < 0 || i >= m || j < 0 || j >= n)
+                        return false;
+                } while (x[i, j] == null && !isStart);
 
-            if (isStart)
-            {
-                cycle.Add(new Point(i, j));
-                return true;
-            }
+                if (isStart)
+                {
+                    cycle.Add(new Point(i, j));
+                    return true;
+                }
 
-            x[i, j] = null;
+                x[i, j] = null;
 
-            if (di == 0)
-            {
-                if (_c(i, j, 1, 0))
+                if (di == 0)
                 {
-                    cycle.Add(new Point(i, j));
-                    return true;
+                    if (_c(i, j, 1, 0))
+                    {
+                        cycle.Add(new Point(i, j));
+                        return true;
+                    }
+                    if (_c(i, j, -1, 0))
+                    {
+                        cycle.Add(new Point(i, j));
+                        return true;
+                    }
                 }
-                if (_c(i, j, -1, 0))
+                if (dj == 0)
                 {
-                    cycle.Add(new Point(i, j));
-                    return true;
+                    if (_c(i, j, 0, 1))
+                    {
+                        cycle.Add(new Point(i, j));
+                        return true;
+                    }
+                    if (_c(i, j, 0, -1))
+                    {
+                        cycle.Add(new Point(i, j));
+                        return true;
+                    }
                 }
             }
-            if (dj == 0)
-            {
-                if (_c(i, j, 0, 1))
-                {
-                    cycle.Add(new Point(i, j));
-                    return true;
-                }
-                if (_c(i, j, 0, -1))
-                {
-                    cycle.Add(new Point(i, j));
-                    return true;
-                }
-            }
-            return false;
+            while (true);
         }
 
         public Fraction CalcF()
@@ -215,6 +234,43 @@ namespace Lab3_Transport
                         result += x[i, j] * c[i, j];
 
             return result;
+        }
+
+        public void Traverse()
+        {
+            if (cycle.Count < 5)
+                throw new Exception("Wrong cycle");
+            Point[] aCycle = cycle.ToArray();
+
+            int min_i = aCycle[1].X, min_j = aCycle[1].Y;
+            Fraction minminus = x[aCycle[1].X, aCycle[1].Y];
+
+            for (int i = 1; i < aCycle.Length; i += 2)
+            {
+                if (x[aCycle[i].X, aCycle[i].Y] < minminus)
+                {
+                    minminus = x[aCycle[i].X, aCycle[i].Y];
+                    min_i = aCycle[i].X;
+                    min_j = aCycle[i].Y;
+                }
+            }
+            
+            bool add = true;
+            x[aCycle[0].X, aCycle[0].Y] = 0;
+
+            for (int i = 0; i < aCycle.Length - 1; i++)
+            {
+                if (add)
+                    x[aCycle[i].X, aCycle[i].Y] += minminus;
+                else
+                    x[aCycle[i].X, aCycle[i].Y] -= minminus;
+
+                add = !add;
+            }
+
+            x[min_i, min_j] = null;
+
+            cycle.Clear();
         }
     }
 }
