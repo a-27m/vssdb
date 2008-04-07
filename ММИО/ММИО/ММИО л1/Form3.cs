@@ -482,6 +482,7 @@ namespace ММИО_л1
             {
 
             }
+            s = null;
             RandomizeTask();
         }
     }
