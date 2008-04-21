@@ -59,6 +59,8 @@ namespace AlgTheory
                 textBox2.Text = x2.ToString();
             }
 
+            listBox1.Items.Add(string.Format("Интервал: [{0}; {1}]", x1, x2));
+
             DekartForm df = new DekartForm(50, 50, 30, 150);
             df.Text = "y ≈ sin(x)";
             df.AddGraphic(new DoubleFunction(delegate(double x)
