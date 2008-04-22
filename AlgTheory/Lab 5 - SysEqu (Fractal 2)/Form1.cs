@@ -12,7 +12,7 @@ using DekartGraphic;
 
 namespace Lab_5___SysEqu__Fractal_2_
 {
-    public delegate double DoubleOfVectorFunction(params double[] X);
+    public delegate double DoubleOfVectorFunction(double x, double y);
 
     public partial class Form1 : Form
     {
@@ -35,6 +35,8 @@ namespace Lab_5___SysEqu__Fractal_2_
 
             textX1.Text = (-1.5).ToString();
             textX2.Text = 1.5.ToString();
+
+            textH.Text = 0.01.ToString();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -56,6 +58,23 @@ namespace Lab_5___SysEqu__Fractal_2_
                 errorProvider.SetError(textE, "Has to be > 0");
                 return;
             }
+
+            try
+            {
+                hx = float.Parse(textH.Text);
+            }
+            catch (FormatException)
+            {
+                errorProvider.SetError(textH, "Wrong float number");
+                return;
+            }
+            if (eps < 0)
+            {
+                errorProvider.SetError(textH, "Has to be > 0");
+                return;
+            }
+
+            hy = hx;
 
             try
             {
@@ -103,27 +122,27 @@ namespace Lab_5___SysEqu__Fractal_2_
             }
         }
 
-        double f1(params double[] X)
+        double f1(double x, double y)
         {
 #if debug
             if (X.Length < 2)
                 throw new ArgumentException("Too few args", "X");
 #endif
             // original
-            double x = X[0];
-            double y = X[1];
+            //double x = X[0];
+            //double y = X[1];
             return x * x * x - 2 * Math.Sin(x) - y;
             //return x * x - 4;
         }
-        double f2(params double[] X)
+        double f2(double x, double y)
         {
 #if debug
             if (X.Length < 2)
                 throw new ArgumentException("Too few args", "X");
 #endif
             // original
-            double x = X[0];
-            double y = X[1];
+            //double x = X[0];
+            //double y = X[1];
             return Math.Sqrt(y + 7) * Math.Cos(y) - x;
             //return 0;
         }
@@ -147,7 +166,22 @@ namespace Lab_5___SysEqu__Fractal_2_
         {
             return t;
         }
-
+        double df1x(double z0, double z1)
+        {
+            return (f1(z0 + h, z1) - f1(z0 - h, z1)) / 2 / h;
+        }
+        double df1y(double z0, double z1)
+        {
+            return (f1(z0, z1 + h) - f1(z0, z1 - h)) / 2 / h;
+        }
+        double df2x(double z0, double z1)
+        {
+            return (f2(z0 + h, z1) - f2(z0 - h, z1)) / 2 / h;
+        }
+        double df2y(double z0, double z1)
+        {
+            return (f2(z0, z1 + h) - f2(z0, z1 - h)) / 2 / h;
+        }
 
         double h = 1e-3;
 
@@ -163,13 +197,59 @@ namespace Lab_5___SysEqu__Fractal_2_
 
         #endregion
 
+        //private Complex Newtone(DoubleOfVectorFunction[] Fns,
+        //    Complex z0, double eps, out int iterations)
+        //{  //a:=eval(diff(f,x),[x=x0,y=y0]);b:=eval(diff(f,y),[x=x0,y=y0]);d:=eval(f,[x=x0,y=y0]);k(x,y):=a*(x-x0)+b*(y-y0)+d
+        //    double x = z0.re;
+        //    double y = z0.im;
+        //    double x0, y0;
+        //    DoubleOfVectorFunction F = Fns[0];
+        //    DoubleOfVectorFunction G = Fns[1];
+        //    iterations = 0;
+
+        //    do
+        //    {
+        //        x0 = x;
+        //        y0 = y;
+
+        //        #region eval {F, G, dFx, dFy, dGx, dGy} @ (x0,y0)
+        //        double F0 = F(x0, y0);
+        //        double G0 = G(x0, y0);
+        //        double dFx0 = dFx(F, x0, y0);
+        //        double dFy0 = dFy(F, x0, y0);
+        //        double dGx0 = dFx(G, x0, y0);
+        //        double dGy0 = dFy(G, x0, y0);
+        //        double t = -dGx0 * dFy0 + dFx0 * dGy0;
+
+        //        if (t == 0)
+        //            return Complex.NaN;
+        //        if (double.IsNaN(t))
+        //            return Complex.NaN;
+
+        //        #endregion
+
+        //        x = (G0 * dFy0 - dGy0 * F0) / t + x0;
+        //        y = (dGx0 * F0 - dFx0 * G0) / t + y0;
+
+        //        if (++iterations % 200 == 0)
+        //            return Complex.NaN;
+
+        //    } while (Math.Sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0)) >= eps);
+
+        //    return new Complex(x, y);
+        //}
+
         private Complex Newtone(DoubleOfVectorFunction[] Fns,
             Complex z0, double eps, out int iterations)
-        {  //a:=eval(diff(f,x),[x=x0,y=y0]);b:=eval(diff(f,y),[x=x0,y=y0]);d:=eval(f,[x=x0,y=y0]);k(x,y):=a*(x-x0)+b*(y-y0)+d
+        {   //a:=eval(diff(f,x),[x=x0,y=y0]);
+            //b:=eval(diff(f,y),[x=x0,y=y0]);
+            //d:=eval(f,[x=x0,y=y0]);
+            //k(x,y):=a*(x-x0)+b*(y-y0)+d
             double x = z0.re;
             double y = z0.im;
             double x0, y0;
-            DoubleOfVectorFunction F = Fns[0], G = Fns[1];
+            DoubleOfVectorFunction F = Fns[0];
+            DoubleOfVectorFunction G = Fns[1];
             iterations = 0;
 
             do
@@ -178,12 +258,14 @@ namespace Lab_5___SysEqu__Fractal_2_
                 y0 = y;
 
                 #region eval {F, G, dFx, dFy, dGx, dGy} @ (x0,y0)
-                double F0 = F(x0, y0);
-                double G0 = G(x0, y0);
-                double dFx0 = dFx(F, x0, y0);
-                double dFy0 = dFy(F, x0, y0);
-                double dGx0 = dFx(G, x0, y0);
-                double dGy0 = dFy(G, x0, y0);
+
+                double F0 = f1(x0, y0);
+                double G0 = f2(x0, y0);
+                double dFx0 = df1x(x0, y0);
+                double dFy0 = df1y(x0, y0);
+                double dGx0 = df2x(x0, y0);
+                double dGy0 = df2y(x0, y0);
+
                 double t = -dGx0 * dFy0 + dFx0 * dGy0;
 
                 if (t == 0)
@@ -199,7 +281,8 @@ namespace Lab_5___SysEqu__Fractal_2_
                 if (++iterations % 200 == 0)
                     return Complex.NaN;
 
-            } while (Math.Sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0)) >= eps);
+            } while (Math.Abs(x - x0) >= eps || Math.Abs(y - y0) >= eps);
+            //} while (Math.Sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0)) >= eps);
 
             return new Complex(x, y);
         }
@@ -212,6 +295,9 @@ namespace Lab_5___SysEqu__Fractal_2_
                 return true;
             return false;
         }
+
+        double hx = 0.01;
+        double hy = 0.01;
 
         private void FindRoot()
         {
@@ -247,17 +333,19 @@ namespace Lab_5___SysEqu__Fractal_2_
                 Color.Violet
             };
 
-            double hx = 0.01;
-            double hy = 0.01;
-
             double y1 = x1, y2 = x2;
+
+            DoubleOfVectorFunction[] dovf = new DoubleOfVectorFunction[] { f1, f2 };
+            Complex c = new Complex(0);
 
             for (double y = y1; y < y2; y += hy)
                 for (double x = x1; x < x2; x += hx)
                 {
                     int iterations;
                     float percent;
-                    res = Newtone(new DoubleOfVectorFunction[] { f1, f2 }, new Complex(x, y), eps, out iterations);
+                    c.re = x;
+                    c.im = y;
+                    res = Newtone(dovf, c, eps, out iterations);
 
                     bool inRange = true;
                     inRange &= res.re > x1;
@@ -281,7 +369,7 @@ namespace Lab_5___SysEqu__Fractal_2_
                             roots.Add(newRoot);
                         }
 
-                        percent = iterations / 30f;
+                        percent = iterations / 15f;
                         if (percent > 1f)
                             percent = 1f;
 
@@ -309,10 +397,10 @@ namespace Lab_5___SysEqu__Fractal_2_
                     }
                 }
 
-            //DotGraphic dotGraphic = new DotGraphic(pts.ToArray(), colors.ToArray());
-            //dotGraphic.CurrentColorSchema = new MathGraphic.ColorSchema(
-            //    Color.Black, Color.DimGray, Color.DimGray, Color.Gray);
-            //dForm.AddGraphic(dotGraphic);
+            DotGraphic dotGraphic = new DotGraphic(pts.ToArray(), colors.ToArray());
+            dotGraphic.CurrentColorSchema = new MathGraphic.ColorSchema(
+                Color.Black, Color.DimGray, Color.DimGray, Color.Gray);
+            dForm.AddGraphic(dotGraphic);
 
             MathGraphic mg;
             mg = new MathGraphic(Color.White, DrawModes.DrawLines, f1x, f1y,
