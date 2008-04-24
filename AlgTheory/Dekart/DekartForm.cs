@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
@@ -205,15 +207,6 @@ namespace DekartGraphic
             return grs.Count - 1;
 		}
 
-        public int AddGraphic(MathGraphic mg)
-        {
-            if (grs == null)
-                grs = new List<MathGraphic>(100);
-
-            grs.Add(mg);
-            return grs.Count - 1;
-        }
-
 		/// <summary>
 		/// </summary>
 		/// <param name="penWidth">Is zooming with graphics of not zero :(</param>
@@ -351,8 +344,6 @@ namespace DekartGraphic
 
 		private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            Bitmap bmp = new Bitmap(100, 100);
-            
 			float px = ClientRectangle.Width / 2f;
 			float py = ClientRectangle.Height / 2f;
 
