@@ -30,6 +30,7 @@ BEGIN_MESSAGE_MAP(CMocaidDlg, CDialog)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
+	ON_BN_CLICKED(IDOK, &CMocaidDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -45,6 +46,9 @@ BOOL CMocaidDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+
+	// Get 
+
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -85,3 +89,10 @@ HCURSOR CMocaidDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+void CMocaidDlg::OnBnClickedOk()
+{
+	// TODO: Add your control notification handler code here
+	OnOK();
+	
+}
