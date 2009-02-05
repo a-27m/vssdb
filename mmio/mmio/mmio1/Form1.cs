@@ -15,5 +15,10 @@ namespace mmio1
         {
             InitializeComponent();
         }
+
+        private void buttonTaskOne_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
