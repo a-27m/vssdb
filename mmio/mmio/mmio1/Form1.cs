@@ -16,9 +16,10 @@ namespace mmio1
             InitializeComponent();
         }
 
-        private void buttonTaskOne_Click(object sender, EventArgs e)
+        private void menuItemNewTask1_Click(object sender, EventArgs e)
         {
-
+            FormTaskOne fto = new FormTaskOne();
+            fto.Show();
         }
     }
 }
