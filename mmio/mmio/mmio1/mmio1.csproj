@@ -77,6 +77,12 @@
       <DependentUpon>FormTaskOne.cs</DependentUpon>
     </Compile>
     <Compile Include="Fraction.cs" />
+    <Compile Include="MobGridView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MobGridView.Designer.cs">
+      <DependentUpon>MobGridView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -89,6 +95,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormTaskOne.resx">
       <DependentUpon>FormTaskOne.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MobGridView.resx">
+      <DependentUpon>MobGridView.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
