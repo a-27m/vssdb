@@ -1,14 +1,14 @@
 ﻿using System;
-
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
+
+using DekartGraphic;
 using Fractions;
-using System.IO;
-using Dek
 
 namespace mmio1
 {
@@ -141,8 +141,7 @@ namespace mmio1
 
         private void GridMyResize(int vars, int conds)
         {
-            DataTable dt = new DataTable();
-            dt.
+            MobGridView dataGridView1;
             dataGridView1.Columns.Clear();
             dataGridView1.Rows.Clear();
             DataGridViewColumn col;
