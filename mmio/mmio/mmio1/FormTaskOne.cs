@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Fractions;
 using System.IO;
+using Dek
 
 namespace mmio1
 {
@@ -19,8 +20,8 @@ namespace mmio1
         short[] S;
 
         private int n, m;
-        //FormSTables formTables;
-        //DekartForm df;
+        FormSTables formTables;
+        DekartForm df;
 
         public FormTaskOne()
         {
@@ -178,7 +179,7 @@ namespace mmio1
             if (this.IsNewDocument)
             {
                 FormAskDim fad = new FormAskDim();
-                if (fad.ShowDialog(this) != DialogResult.OK)
+                if (fad.ShowDialog() != DialogResult.OK)
                     Close();
                 n = fad.N;
                 m = fad.M;

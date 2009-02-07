@@ -17,7 +17,7 @@ namespace Fractions
         public Fraction(long numerator, long denominator)
         {
             if (denominator == 0)
-                throw new NotFiniteNumberException("Denominator is zero!", denominator);
+                throw new NotFiniteNumberException("Denominator is zero!");
 
             this.m_sign = (sbyte)(MySign(numerator) * MySign(denominator));
 
@@ -29,7 +29,7 @@ namespace Fractions
         public Fraction(sbyte sign, ulong numerator, ulong denominator)
         {
             if (denominator == 0)
-                throw new NotFiniteNumberException("Denominator is zero!", denominator);
+                throw new NotFiniteNumberException("Denominator is zero!");
 
             this.m_sign = sign;
 
@@ -63,7 +63,7 @@ namespace Fractions
 
                 int digitsCount = 0;
                 Decimal decfrac = value;
-                while (!decfrac.Equals(Math.Truncate(decfrac)))
+                while (!decfrac.Equals((ulong)decfrac)) // !!!! trunc was used before migration
                 {
                     digitsCount++;
                     decfrac *= 10m;
@@ -282,7 +282,7 @@ namespace Fractions
 
             if (iSlash > -1 && s.LastIndexOf('/') != iSlash)
                 throw new FormatException("Only one line in a fraction is permitted." +
-                    Environment.NewLine + "Format: [{+|-}][iii] nnn/ddd");
+                    '\n' + "Format: [{+|-}][iii] nnn/ddd");
 
             sbyte sign = 1;
 
@@ -306,19 +306,33 @@ namespace Fractions
                     throw new FormatException("Please, check the fraction format.");
 
                 ulong denominator;
-                if (!ulong.TryParse(s.Substring(iSlash + 1), out denominator))
+                try
+                {
+                    denominator = ulong.Parse(s.Substring(iSlash + 1));
+                }
+                catch
+                {
                     throw new FormatException("Please, check the denominator format.");
+                }
 
                 string[] sIntAndNum;
                 sIntAndNum = s.Substring(0, iSlash).Split(
-                    new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    new char[] { ' ' });
+
+                // do RemoveEmptyEntries()
 
                 ulong numerator = 0;
                 ulong integer = 0;
                 if (sIntAndNum.Length >= 1)
                 {
-                    if (!ulong.TryParse(sIntAndNum[0], out numerator))
+                    try
+                    {
+                        numerator = ulong.Parse(sIntAndNum[0]);
+                    }
+                    catch
+                    {
                         throw new FormatException("Please, check the numerator format.");
+                    }
                 }
                 if (sIntAndNum.Length == 2)
                 {
@@ -327,8 +341,14 @@ namespace Fractions
                     if (sIntAndNum[1] == "")
                         throw new FormatException("Please, check the integer part format.");
 
-                    if (!ulong.TryParse(sIntAndNum[1], out numerator))
+                    try
+                    {
+                        numerator = ulong.Parse(sIntAndNum[1]);
+                    }
+                    catch
+                    {
                         throw new FormatException("Please, check the integer part format.");
+                    }
 
                     if ((integer < 0) || (numerator < 0))
                         throw new FormatException("Please, check the integer part format.");
@@ -715,10 +735,10 @@ namespace Fractions
         // Exceptions:
         //   System.OverflowException:
         //     value is less than System.Int16.MinValue or greater than System.Int16.MaxValue.
-        public static explicit operator char(Fraction value)
-        {
-            return (char)value.Value;
-        }
+        //public static explicit operator char(Fraction value)
+        //{
+//            return (char)value.Value;
+  //      }
         //
         // Summary:
         //     Converts a Fraction to a 64-bit signed integer.
