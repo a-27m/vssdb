@@ -40,63 +40,9 @@ namespace mmio1
         //BufferedGraphics grBuf;
         //BufferedGraphicsContext grCntxt;
 
-        public bool Use_IsVisible = true;
+        //public bool Use_IsVisible = true;
+        Bitmap bitmap;
 
-        public class Zoom
-        {
-            public const float zoomStepFactor = 1.25f;
-            protected const float max_zoom_x = 40000f;
-            protected const float max_zoom_y = 40000f;
-            protected const float min_zoom_x = float.Epsilon;
-            protected const float min_zoom_y = float.Epsilon;
-
-            protected float zoom_x, zoom_y;
-
-            public float X
-            {
-                get { return zoom_x; }
-                set
-                {
-                    if ((value < max_zoom_x) &&
-                        (value > min_zoom_x))
-                        zoom_x = value;
-                }
-            }
-
-            public float Y
-            {
-                get { return zoom_y; }
-                set
-                {
-                    if ((value < max_zoom_y) &&
-                        (value > min_zoom_y))
-                        zoom_y = value;
-                }
-            }
-
-            public float XY
-            {
-                set { X = Y = value; }
-            }
-
-            public Zoom()
-            { zoom_x = 1f; zoom_y = 1f; }
-
-            public Zoom(float X, float Y)
-            { zoom_x = X; zoom_y = Y; }
-
-            public void ZoomIn()
-            {
-                X *= zoomStepFactor;
-                Y *= zoomStepFactor;
-            }
-
-            public void ZoomOut()
-            {
-                X /= zoomStepFactor;
-                Y /= zoomStepFactor;
-            }
-        }
         public Zoom zoom;
 
         protected float ox, oy;
@@ -116,10 +62,10 @@ namespace mmio1
             ox = Ox;
             oy = Oy;
 
-            SetStyle(ControlStyles.AllPaintingInWmPaint
-                | ControlStyles.UserPaint
-                | ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, false);
+            //SetStyle(ControlStyles.AllPaintingInWmPaint
+            //    | ControlStyles.UserPaint
+            //    | ControlStyles.ResizeRedraw, true);
+            //SetStyle(ControlStyles.OptimizedDoubleBuffer, false);
 
             InitializeComponent();
 
@@ -137,30 +83,34 @@ namespace mmio1
 
         private void InitGrafixBuffer()
         {
-            grCntxt = BufferedGraphicsManager.Current;
-            grCntxt.MaximumBuffer = this.toolStripContainer1.ContentPanel.Size + new Size(1, 1);
+        //    grCntxt = BufferedGraphicsManager.Current;
+        //    grCntxt.MaximumBuffer = this.toolStripContainer1.ContentPanel.Size + new Size(1, 1);
 
-            grBuf = grCntxt.Allocate(this.toolStripContainer1.ContentPanel.CreateGraphics(),
-                this.toolStripContainer1.ContentPanel.ClientRectangle);
+        //    grBuf = grCntxt.Allocate(this.toolStripContainer1.ContentPanel.CreateGraphics(),
+        //        this.toolStripContainer1.ContentPanel.ClientRectangle);
 
-            //grCntxt.MaximumBuffer = Size + new Size(1, 1);
+        //    //grCntxt.MaximumBuffer = Size + new Size(1, 1);
 
-            //grBuf = grCntxt.Allocate(CreateGraphics(),
-            //	ClientRectangle);
+        //    //grBuf = grCntxt.Allocate(CreateGraphics(),
+        //    //	ClientRectangle);
 
-            grBuf.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            grBuf.Graphics.Clear(BackColor);
+        //    grBuf.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+        //    grBuf.Graphics.Clear(BackColor);
+            bitmap = new Bitmap(Size.Width + 1, Size.Height + 1);
         }
 
         private void DekartForm_Resize(object sender, EventArgs e)
         {
-            BufferedGraphics grOld = grBuf;
+            Bitmap bmpOld = bitmap;
+
             InitGrafixBuffer();
 
-            if (grOld != null)
+            Graphics.FromImage(bitmap).DrawImage(bmpOld, 0, 0);
+
+            if (bmpOld != null)
             {
-                grOld.Dispose();
-                grOld = null;
+                bmpOld.Dispose();
+                bmpOld = null;
             }
 
             Update2();
@@ -239,19 +189,25 @@ namespace mmio1
             Update2();
         }
 
-        private void DrawAllGraphicsToTheBuffer()
+        private void DrawAllGraphics()
         {
-            grBuf.Graphics.Transform = new Matrix(zoom.X, 0f, 0f, -zoom.Y, ox, oy);
+            //grBuf.Graphics.Transform = new Matrix(zoom.X, 0f, 0f, -zoom.Y, ox, oy);
+
+            GTranslator gt = new GTranslator();
+            gt.g = Graphics.FromImage(bitmap);
+            gt.zoom = zoom;
+            gt.Ox = ox;
+            gt.Oy = oy;
+            
             if (grs != null)
             {
-                grs[0].Draw(grBuf.Graphics);
+                grs[0].Draw(gt);
 
-                OnCoordinateSystemDrawn(grBuf.Graphics);
+                OnCoordinateSystemDrawn(gt.g);
 
                 foreach (MathGraphic gr in grs.GetRange(1, grs.Count - 1))
                 {
-                    gr.Use_IsVisible = Use_IsVisible;
-                    gr.DrawGraphic(grBuf.Graphics);
+                    gr.DrawGraphic(gt);
                 }
 
                 PrintCurrentZoom();
@@ -261,10 +217,10 @@ namespace mmio1
         protected virtual void OnCoordinateSystemDrawn(Graphics graphics)
         {
             Rectangle rect = new Rectangle();
-            rect.Location = new Point((int)graphics.ClipBounds.Location.X,
-                (int)graphics.ClipBounds.Location.Y);
-            rect.Size = new Size((int)graphics.ClipBounds.Size.Width,
-                (int)graphics.ClipBounds.Size.Height);
+            rect.Location = new Point((int)graphics.ClipBounds.X,
+                (int)graphics.ClipBounds.Y);
+            rect.Size = new Size((int)graphics.ClipBounds.Width,
+                (int)graphics.ClipBounds.Height);
 
 
             if (this.CoodrinateSystemDrawn != null)
@@ -273,8 +229,8 @@ namespace mmio1
 
         private void PrintCurrentZoom()
         {
-            if (Visible)
-                toolComboBoxZoom.Text = string.Format("{0:0.###}", zoom.X);
+            //if (Visible)
+            //    toolComboBoxZoom.Text = string.Format("{0:0.###}", zoom.X);
         }
 
         public void RemoveGraphic()
@@ -302,20 +258,20 @@ namespace mmio1
 
         public void Update2()
         {
-            DrawAllGraphicsToTheBuffer();
+            DrawAllGraphics();
             Render();
             //Refresh();
         }
 
         private void Render()
         {
-            Graphics g = this.toolStripContainer1.ContentPanel.CreateGraphics();
-            grBuf.Render(g);
+            Graphics g = this.CreateGraphics();
+            g.DrawImage(bitmap, 0, 0);
         }
 
         private void Render(Graphics g)
         {
-            grBuf.Render(g);
+            g.DrawImage(bitmap, 0, 0);
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -323,7 +279,7 @@ namespace mmio1
             Render(e.Graphics);
         }
 
-
+        /*
         #region toolStrip Methods
 
         private void zoomInToolStripMenuItem_Click(object sender, EventArgs e)
@@ -481,7 +437,8 @@ namespace mmio1
         }
 
         #endregion
-
+        */
+        /*
         #region mouseOverPictureEvents
 
         private int mouseX0 = 0, mouseY0 = 0;
@@ -569,7 +526,7 @@ namespace mmio1
         }
 
         #endregion
-
+        */
         private void DekartForm_MouseClick(object sender, MouseEventArgs e)
         {
         }

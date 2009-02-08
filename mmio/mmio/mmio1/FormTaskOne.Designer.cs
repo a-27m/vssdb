@@ -35,7 +35,8 @@
             this.menuItemSlvBasic = new System.Windows.Forms.MenuItem();
             this.menuItemSlvOptimize = new System.Windows.Forms.MenuItem();
             this.menuItemBack = new System.Windows.Forms.MenuItem();
-            this.dataGridView1 = new System.Windows.Forms.DataGrid();
+            this.dataGridView1 = new MobGridView();
+            this.richTextBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -68,7 +69,7 @@
             // 
             // dataGridView1
             // 
-            this.dataGridView1.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.dataGridView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
@@ -91,11 +92,12 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGrid dataGridView1;
+        private MobGridView dataGridView1;
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem menuItemSlvGraph;
         private System.Windows.Forms.MenuItem menuItemSlvBasic;
         private System.Windows.Forms.MenuItem menuItemSlvOptimize;
         private System.Windows.Forms.MenuItem menuItemBack;
+        private System.Windows.Forms.TextBox richTextBox1;
     }
 }

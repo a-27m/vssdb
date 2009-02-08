@@ -4,6 +4,7 @@ using System.Text;
 using Fractions;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using DekartGraphic;
 
 namespace SimplexMethod
 {
@@ -50,6 +51,27 @@ namespace SimplexMethod
                 for (int j = 0; j < n; j++)
                     a[i, j] += -a[Row, j] * x;
             }
+        }
+
+        // Array.Resize<Fraction>() cf replacement
+        public static void ArrayResize<Type>(ref Type[] array, int NewSize)
+        {
+            if (array.Length == NewSize) return; // ?
+
+            Type[] tmpArray = new Type[NewSize];
+            if (array.Length < NewSize)
+            {
+                array.CopyTo(tmpArray, 0);
+            }
+            else
+            {
+                for(int i=0; i<tmpArray.Length;i++)
+                {
+                    tmpArray[i] = array[i];
+                }
+            }
+
+            array = tmpArray;
         }
     }
 
@@ -116,7 +138,7 @@ namespace SimplexMethod
             int[] basisIndicesJ = FindBasis(la, out basisIndicesI);
 
             int oldMcLen = m_c.Length;
-            Array.Resize<Fraction>(ref m_c, n);
+            ArrayResize<Fraction>(ref m_c, n);
             for (int j = oldMcLen; j < n; j++)
                 m_c[j] = 0;
 
@@ -127,10 +149,10 @@ namespace SimplexMethod
             {
                 k = m - b;
 
-                Array.Resize<Fraction>(ref m_c, n + k);
+                ArrayResize<Fraction>(ref m_c, n + k);
 
-                Array.Resize<int>(ref basisIndicesI, m);
-                Array.Resize<int>(ref basisIndicesJ, m);
+                ArrayResize<int>(ref basisIndicesI, m);
+                ArrayResize<int>(ref basisIndicesJ, m);
 
                 for (int j = n; j < n + k; m_c[j++] = -M)
                     basisIndicesJ[b + j - n] = j + 1;
@@ -245,7 +267,7 @@ namespace SimplexMethod
 
             }
 
-            Array.Resize<Fraction>(ref m_c, oldMcLen);
+            ArrayResize<Fraction>(ref m_c, oldMcLen);
             n -= k;
             return solution;
         }
@@ -425,7 +447,7 @@ namespace SimplexMethod
             a.CopyTo(row, 1);
             la.Add(row);
 
-            Array.Resize<short>(ref signs, signs.Length + 1);
+            ArrayResize<short>(ref signs, signs.Length + 1);
             signs[signs.Length - 1] = sign;
         }
         public override void RemoveLimitation(uint index)
@@ -440,7 +462,7 @@ namespace SimplexMethod
 
             for (uint i = index; i < signs.Length - 1; i++)
                 signs[i] = signs[i + 1];
-            Array.Resize<short>(ref signs, signs.Length - 1);
+            ArrayResize<short>(ref signs, signs.Length - 1);
         }
         /// <summary>
         /// Solves exterm(maximum) problem
@@ -717,7 +739,7 @@ namespace SimplexMethod
             minIndex = 0;
 
             Matrix normalize = new Matrix();
-            normalize.Rotate((float)(Math.Atan2(Xf, Yf) * 180f / Math.PI));
+            normalize.SetAngle(Math.Atan2(Xf, Yf));
 
             PointF[] pt = new PointF[A.Length];
             for (int t = 0; t < A.Length; t++)
@@ -774,5 +796,27 @@ namespace SimplexMethod
             if (DebugGaussProcessMatrix != null)
                 DebugGaussProcessMatrix(matrix);
         }
+        class Matrix
+        {
+            private float sinA, cosA;
+
+            public void SetAngle(double A)
+            {
+                sinA = (float)Math.Sin(A);
+                cosA = (float)Math.Cos(A);
+            }
+
+            public void TransformVectors(PointF[] pts)
+            {
+                for(int i = 0; i< pts.GetLength(0); i++)
+                {
+                    float x1 = pts[i].X * cosA - pts[i].Y * sinA;
+                    float y1 = pts[i].X * sinA + pts[i].Y * cosA;
+                    pts[i].X = x1;
+                    pts[i].Y = y1;
+                }
+            }
+        }
     }
+
 }

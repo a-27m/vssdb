@@ -19,6 +19,16 @@ namespace mmio1
             set { rows[row][column] = value; }
         }
 
+        public ICollection<object[]> Rows { get { return rows; } }
+
+        public int ColumnCount
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public MobGridView()
         {
             InitializeComponent();
@@ -27,6 +37,51 @@ namespace mmio1
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+        }
+
+        internal void RowsAdd(int Count)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void ColumnsAdd(int Count)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void SetColumnHeaderText(int ColumnIndex, string Caption)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void ClearColumns()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void ClearRows()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void AddColumn()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void AddColumn(string p)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void AddRow(string p)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void SetRowHeaderText(int p, string p_2)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Fractions;
+using System.ComponentModel;
 
 namespace mmio1
 {
@@ -66,23 +67,22 @@ namespace mmio1
             dataGridView1.Rows.Clear();
             for (int i = dataGridView1.ColumnCount; i < maxCols + 4; i++)
             {
-                dataGridView1.Columns.Add((DataGridViewColumn)(colA0.Clone()));
-                dataGridView1.Columns.GetLastColumn(DataGridViewElementStates.None,
-                    DataGridViewElementStates.None).HeaderText = "A" + (dataGridView1.ColumnCount - 5).ToString();
+                dataGridView1.ColumnsAdd(1);
+                dataGridView1.SetColumnHeaderText(i, "A" + (dataGridView1.ColumnCount - 5).ToString());
             }
 
-            dataGridView1.Rows.Add(dataToPopulate.Count);
+            dataGridView1.RowsAdd(dataToPopulate.Count);
             List<string[]>.Enumerator enu = dataToPopulate.GetEnumerator();
             for (int i = 0; enu.MoveNext(); i++)
             {
                 for (int j = 0; j < enu.Current.Length; j++)
-                    dataGridView1[j, i].Value = enu.Current[j];
+                    dataGridView1[j, i] = enu.Current[j];
             }
 
-            dataGridView1.AutoResizeColumns();
+            //dataGridView1.AutoResizeColumns();
         }
 
-        private void FormSTables_FormClosing(object sender, EventArgs e)
+        private void FormSTables_FormClosing(object sender, CancelEventArgs e)
         {
             e.Cancel = true;
             //dataToPopulate = new List<string[]>();
@@ -93,7 +93,7 @@ namespace mmio1
         private void FormSTables_Shown(object sender, EventArgs e)
         {
             UpdateGrid();
-            Size = dataGridView1.GetPreferredSize(Size);
+            //Size = dataGridView1.GetPreferredSize(Size);
         }
 
         public void AddTable(Fraction[,] table)

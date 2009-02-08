@@ -46,7 +46,7 @@ namespace DekartGraphic
                     ColorSchema cs;
                     cs.axesColor = Color.Black;
                     cs.backgroundColor = Color.BlanchedAlmond;
-                    cs.gridColor = Color.FromArgb(180, Color.Blue);
+                    cs.gridColor = Color.FromArgb(0, 0, 180);
                     cs.textColor = Color.Black;
                     return cs;
                 }
@@ -78,7 +78,6 @@ namespace DekartGraphic
             }
         }
 
-        public bool Use_IsVisible = false;
         protected PointF[][] graphic;
         private bool tabulated = false;
 
@@ -157,35 +156,34 @@ namespace DekartGraphic
             tabulated = true;
         }
 
-        public void Draw(Graphics g)
+        public void Draw(GTranslator gt)
         {
-            Draw(g, true);
+            Draw(gt, true);
         }
-        public void Draw(Graphics g, bool EraseBkGnd)
+        public void Draw(GTranslator gt, bool EraseBkGnd)
         {
             if (!tabulated)
-                return;
+                return; // ?
 
             if (EraseBkGnd)
             {
-                g.Clear(CurrentColorSchema.backgroundColor);
+                gt.Clear(CurrentColorSchema.backgroundColor);
             }
 
-            DrawCoordinateSystem(g);
-            DrawGraphic(g);
+            DrawCoordinateSystem(gt);
+            DrawGraphic(gt);
         }
-        public virtual void DrawGraphic(Graphics g)
+        public virtual void DrawGraphic(GTranslator gt)
         {
-            float m_zoom = g.Transform.Elements[0];
+            float m_zoom = gt.zoom.X;
             Pen pen = new Pen(penColor, penWidth / m_zoom);
 
-            g.SmoothingMode = SmoothingMode.HighQuality;
+            //g.SmoothingMode = SmoothingMode.HighQuality;
 
             switch (drawingMode)
             {
+                    /*
                 case DrawModes.DrawLines:
-                    if (!Use_IsVisible)
-                    {
                         #region For each ( PointF[] segment in graphic ) check visibility and draw
                         foreach (PointF[] segment in graphic)
                         {
@@ -218,61 +216,47 @@ namespace DekartGraphic
                                 if (g.ClipBounds.Bottom < pt2.Y)
                                     pt2.Y = g.ClipBounds.Bottom;
 
-                                g.DrawLine(pen, pt1, pt2);
+                                g.DrawLine(pen, pt1.X, pt1.Y, pt2.X, pt2.Y);
                             }
                         }
                         #endregion
-                    }
-                    else
-                    {
-                        foreach (PointF[] segment in graphic)
-                        {
-                            for (int i = 0; i < segment.Length - 1; i++)
-                            {
-                                if ((g.IsVisible(segment[i])
-                                    && (g.IsVisible(segment[i + 1]))))
-                                    g.DrawLine(pen, segment[i], segment[i + 1]);
-                            }
-                        }
-                    }
                     break;
-
+                */
                 case DrawModes.DrawPoints:
                     float dotWidth = pen.Width;
                     foreach (PointF[] segment in graphic)
                         for (int i = 0; i < segment.Length; i++)
-                            g.DrawEllipse(pen,
+                            gt.DrawEllipse(pen,
                                 segment[i].X - dotWidth / 2f, segment[i].Y - dotWidth / 2f,
                                 dotWidth, dotWidth);
                     break;
 
                 case DrawModes.DrawFilledPolygon:
-                    HatchBrush brush = new HatchBrush(HatchStyle.ForwardDiagonal, pen.Color, Color.Transparent);
+                    SolidBrush brush = new SolidBrush(pen.Color);
                     Pen pen1 = (Pen)pen.Clone();
                     pen1.Width = 2f / m_zoom;
                     foreach (PointF[] segment in graphic)
                     {
                         if (segment.Length < 2)
                             continue;
-                        g.FillPolygon(brush, segment, FillMode.Alternate);
-                        g.DrawPolygon(pen1, segment);
+                        gt.FillPolygon(brush, segment);
+                        
+                        gt.DrawPolygon(pen1, segment);
                     }
                     break;
             }
         }
-        public virtual void DrawCoordinateSystem(Graphics g)
+        public virtual void DrawCoordinateSystem(GTranslator gt)
         {
-            g.SmoothingMode = SmoothingMode.HighQuality;
-
-            float m_zoom_x = Math.Abs(g.Transform.Elements[0]);
-            float m_zoom_y = Math.Abs(g.Transform.Elements[3]);
-            float ox = g.Transform.OffsetX;
-            float oy = g.Transform.OffsetY;
+            float m_zoom_x = gt.zoom.X;
+            float m_zoom_y = gt.zoom.Y;
+            float ox = gt.Ox;
+            float oy = gt.Oy;
 
             Pen GridPen = new Pen(CurrentColorSchema.gridColor, 0f);
             GridPen.DashStyle = DashStyle.Solid;
 
-            Pen AxePen = new Pen(new SolidBrush(CurrentColorSchema.axesColor),
+            Pen AxePen = new Pen(CurrentColorSchema.axesColor,
                 2 / (m_zoom_x > m_zoom_y ?
                 m_zoom_y : m_zoom_x));
 
@@ -281,59 +265,60 @@ namespace DekartGraphic
             stringFormatX.LineAlignment = StringAlignment.Center;
             stringFormatY.LineAlignment = StringAlignment.Center;
             stringFormatX.Alignment = StringAlignment.Far;
-            stringFormatX.FormatFlags = StringFormatFlags.DirectionVertical;
+            //stringFormatX.FormatFlags = StringFormatFlags..DirectionVertical;
 
             Font font = new Font("Arial",
-                8 / (m_zoom_x + m_zoom_y) * 2);
+                8 / (m_zoom_x + m_zoom_y) * 2, FontStyle.Regular);
 
 
-            g.ScaleTransform(1, -1);
+            //gt.ScaleTransform(1, -1);
 
             float x1, x2, y1, y2;
-            x1 = g.VisibleClipBounds.Left;
-            x2 = g.VisibleClipBounds.Right;
-            y1 = g.VisibleClipBounds.Top;
-            y2 = g.VisibleClipBounds.Bottom;
+
+            x1 = gt.VisibleClipBounds.Left;
+            x2 = gt.VisibleClipBounds.Right;
+            y1 = gt.VisibleClipBounds.Top;
+            y2 = gt.VisibleClipBounds.Bottom;
 
             #region Grid and text
 
             float dx = 30f / m_zoom_x, dy = 30f / m_zoom_y;// шаг сетки
 
             float textX = -(ox - 3) / m_zoom_x;
-            float textY = -oy / m_zoom_y + g.VisibleClipBounds.Height;
+            float textY = -oy / m_zoom_y + gt.VisibleClipBounds.Height;
 
             for (float x = (float)(int)Math.Ceiling(x1 / dx) * dx; x < x2; x += dx)
             {
                 string label = x.ToString("#0.###");
-                g.DrawLine(GridPen, x, y1, x, y2);
-                g.DrawString(label, font, Brushes.Black,
+                gt.DrawLine(GridPen, x, y1, x, y2);
+                gt.DrawString(label, font, Color.Black,
                     new PointF(x, textY), stringFormatX);
             }
 
             for (float y = (float)(int)Math.Ceiling(y1 / dy) * dy; y < y2; y += dy)
             {
-                g.DrawString((-y).ToString("#0.####"), font, Brushes.Black,
+                gt.DrawString((-y).ToString("#0.####"), font, Color.Black,
                    new PointF(textX, y), stringFormatY);
-                g.DrawLine(GridPen, x1, y, x2, y);
+                gt.DrawLine(GridPen, x1, y, x2, y);
             }
 
             #endregion
 
             #region Axes
-            g.DrawLine(AxePen, x1, 0, x2, 0);
-            g.DrawLine(AxePen, x2 - 10 / m_zoom_x, 0 - 3 / m_zoom_y, x2, 0);
-            g.DrawLine(AxePen, x2 - 10 / m_zoom_x, 0 + 3 / m_zoom_y, x2, 0);
+            gt.DrawLine(AxePen, x1, 0, x2, 0);
+            gt.DrawLine(AxePen, x2 - 10 / m_zoom_x, 0 - 3 / m_zoom_y, x2, 0);
+            gt.DrawLine(AxePen, x2 - 10 / m_zoom_x, 0 + 3 / m_zoom_y, x2, 0);
 
-            g.DrawLine(AxePen, 0, y1, 0, y2);
-            g.DrawLine(AxePen, 0, y1, 0 - 3 / m_zoom_x, y1 + 10 / m_zoom_y);
-            g.DrawLine(AxePen, 0, y1, 0 + 3 / m_zoom_x, y1 + 10 / m_zoom_y);
+            gt.DrawLine(AxePen, 0, y1, 0, y2);
+            gt.DrawLine(AxePen, 0, y1, 0 - 3 / m_zoom_x, y1 + 10 / m_zoom_y);
+            gt.DrawLine(AxePen, 0, y1, 0 + 3 / m_zoom_x, y1 + 10 / m_zoom_y);
 
             AxePen.Width = 0;
-            g.DrawLine(AxePen, x1, y2 - 1 / m_zoom_y, x2, y2 - 1f / m_zoom_y);
-            g.DrawLine(AxePen, x1, y1, x1, y2);
+            gt.DrawLine(AxePen, x1, y2 - 1 / m_zoom_y, x2, y2 - 1f / m_zoom_y);
+            gt.DrawLine(AxePen, x1, y1, x1, y2);
             #endregion
 
-            g.ScaleTransform(1, -1);
+            //g.ScaleTransform(1, -1);
         }
 
         public static PointF[][] Tabulate(DoubleFunction fx, DoubleFunction fy,
@@ -407,5 +392,116 @@ namespace DekartGraphic
         public float Y { get { return y; } set { y = value; } }
 
         public PointF(float x, float y) { this.x = x; this.y = y; }
+    }
+
+    public class Zoom
+    {
+        public const float zoomStepFactor = 1.25f;
+        protected const float max_zoom_x = 40000f;
+        protected const float max_zoom_y = 40000f;
+        protected const float min_zoom_x = float.Epsilon;
+        protected const float min_zoom_y = float.Epsilon;
+
+        protected float zoom_x, zoom_y;
+
+        public float X
+        {
+            get { return zoom_x; }
+            set
+            {
+                if ((value < max_zoom_x) &&
+                    (value > min_zoom_x))
+                    zoom_x = value;
+            }
+        }
+
+        public float Y
+        {
+            get { return zoom_y; }
+            set
+            {
+                if ((value < max_zoom_y) &&
+                    (value > min_zoom_y))
+                    zoom_y = value;
+            }
+        }
+
+        public float XY
+        {
+            set { X = Y = value; }
+        }
+
+        public Zoom()
+        { zoom_x = 1f; zoom_y = 1f; }
+
+        public Zoom(float X, float Y)
+        { zoom_x = X; zoom_y = Y; }
+
+        public void ZoomIn()
+        {
+            X *= zoomStepFactor;
+            Y *= zoomStepFactor;
+        }
+
+        public void ZoomOut()
+        {
+            X /= zoomStepFactor;
+            Y /= zoomStepFactor;
+        }
+    }
+
+    public class GTranslator
+    {
+        public Graphics g;
+        public Zoom zoom;
+        float ox, oy;
+
+        public float Ox
+        {
+            get { return ox; }
+            set { ox = value; }
+        }
+
+        public float Oy
+        {
+            get { return oy; }
+            set { oy = value; }
+        }
+
+
+        internal void Clear(Color color)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void DrawEllipse(Pen pen, float p, float p_3, float dotWidth, float dotWidth_5)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void FillPolygon(SolidBrush brush, PointF[] segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void DrawPolygon(Pen pen1, PointF[] segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Rectangle VisibleClipBounds
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        internal void DrawLine(Pen GridPen, float x, float y1, float x_4, float y2)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void DrawString(string label, Font font, Color color, PointF pointF, StringFormat stringFormatX)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

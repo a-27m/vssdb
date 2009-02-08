@@ -9,6 +9,7 @@ using System.Windows.Forms;
 
 using DekartGraphic;
 using Fractions;
+using SimplexMethod;
 
 namespace mmio1
 {
@@ -17,6 +18,9 @@ namespace mmio1
         protected bool IsNewDocument = true;
         Fraction[][] A;
         Fraction[] B, C;
+        /// <summary>
+        /// Signs of limitations
+        /// </summary>
         short[] S;
 
         private int n, m;
@@ -34,11 +38,11 @@ namespace mmio1
                 if (fad.ShowDialog() != DialogResult.OK)
                     Close();
 
-                n = fad.n;
-                m = fad.m;
+                n = fad.N;
+                m = fad.M;
                 GridMyResize(n, m);
 
-                dataGridView1.Select(0);
+                //dataGridView1.Select(0);
             }
 
         }
@@ -91,6 +95,8 @@ namespace mmio1
         }
         */
 
+        string[] SignStrs = new string[3] {"<", "=", ">"};
+
         private void UpdateGrid()
         {
             for (int i = 0; i < m; i++)
@@ -100,7 +106,7 @@ namespace mmio1
 
                 dataGridView1[n + 1, i + 1] = B[i].ToString();
 
-                dataGridView1[n, i + 1] = SignCol.Items[S[i] + 1];
+                dataGridView1[n, i + 1] = SignStrs[S[i] + 1];
             }
 
             for (int j = 0; j < n; j++)
@@ -125,7 +131,7 @@ namespace mmio1
 
                     B[i] = Fraction.Parse(dataGridView1[n + 1, i + 1].ToString());
 
-                    S[i] = (short)(SignCol.Items.IndexOf(dataGridView1[n, i + 1]) - 1);
+                    S[i] = (short)(Array.IndexOf<string>(SignStrs, (string)dataGridView1[n, i + 1]) - 1);
                 }
 
                 for (int j = 0; j < n; j++)
@@ -141,36 +147,28 @@ namespace mmio1
 
         private void GridMyResize(int vars, int conds)
         {
-            MobGridView dataGridView1;
-            dataGridView1.Columns.Clear();
-            dataGridView1.Rows.Clear();
-            DataGridViewColumn col;
+            dataGridView1.ClearColumns();
+            dataGridView1.ClearRows();
 
             for (int i = 0; i < vars; i++)
             {
-                col = new DataGridViewColumn(CoefCol0.CellTemplate);
-                col.HeaderText = "x" + (i + 1).ToString();
-                dataGridView1.Columns.Add(col);
+                dataGridView1.AddColumn("x" + (i + 1).ToString());
+                //dataGridView1.SetColumnHeaderText(i, );                
             }
 
-            col = new DataGridViewColumn(SignCol.CellTemplate);
-            col.HeaderText = SignCol.HeaderText;
-            dataGridView1.Columns.Add(col);
+            dataGridView1.AddColumn("#");
 
-            col = new DataGridViewColumn(CoefCol0.CellTemplate);
-            col.HeaderText = "b";
-            dataGridView1.Columns.Add(col);
+            dataGridView1.AddColumn("b"); 
 
-            dataGridView1.Rows.Add();
-            dataGridView1.Rows[0].HeaderCell.Value = "F = ";
+            dataGridView1.AddRow("");
+            dataGridView1.SetRowHeaderText(0, "F = ");
 
             for (int i = 1; i <= conds; i++)
             {
-                dataGridView1.Rows.Add();
-                dataGridView1.Rows[i].HeaderCell.Value = "(" + i.ToString() + ")";
+                dataGridView1.AddRow("(" + i.ToString() + ")");
             }
 
-            dataGridView1.AutoResizeColumns();
+            //dataGridView1.AutoResizeColumns();
         }
 
         private void Form1_Shown(object sender, EventArgs e)
@@ -183,7 +181,7 @@ namespace mmio1
                 n = fad.N;
                 m = fad.M;
                 GridMyResize(n, m);
-                dataGridView1.Select();
+                //dataGridView1.Select();
             }
         }
 
@@ -317,13 +315,13 @@ namespace mmio1
             catch (InvalidOperationException exc)
             {
                 MessageBox.Show(exc.Message, "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 return;
             }
 
             #region specialno dlya djema))) podrobnosti
 
-            richTextBox1.Text += " ---===== Детали ====--- " + Environment.NewLine;
+            richTextBox1.Text += " ---===== Детали ====--- " + "\n";
             for (int i = 0; i < m; i++)
             {
                 richTextBox1.Text += string.Format(
@@ -334,7 +332,7 @@ namespace mmio1
                        -solver.A[i, 2], // 3
                        Math.Sign(solver.A[i, 0]) < 0 ? "" : "+", // 4
                        solver.A[i, 0] // 5
-                       ) + Environment.NewLine;
+                       ) + "\n";
             }
 
             // F(x1,x2) = c1x1 + c2x2 + d
@@ -345,7 +343,7 @@ namespace mmio1
                        solver.C2, // 2
                        Math.Sign(solver.D) < 0 ? "" : "+", // 3
                        solver.D // 4
-                ) + Environment.NewLine;
+                ) + "\n";
 
             #endregion
         }
@@ -366,13 +364,13 @@ namespace mmio1
                 value += coordinates[i] * C[i];
 
             richTextBox1.Text += "Minimum: F= " + value.ToString() + " ≈ " + value.Value.ToString("f3");
-            richTextBox1.Text += Environment.NewLine;
+            richTextBox1.Text += "\n";
             for (int i = 0; i < coordinates.Length - 1; i++)
                 richTextBox1.Text += string.Format(" x{0} = {1},", i + 1, coordinates[i]);
             richTextBox1.Text += string.Format(" x{0} = {1}.", coordinates.Length, coordinates[coordinates.Length - 1]);
-            richTextBox1.Text += Environment.NewLine + Environment.NewLine;
+            richTextBox1.Text += "\n" + "\n";
 
-            splitContainer1.Panel2Collapsed = false;
+            //splitContainer1.Panel2Collapsed = false;
         }
 
         void solver_DebugMaxSolution(Fraction[] coordinates)
@@ -382,13 +380,13 @@ namespace mmio1
                 value += coordinates[i] * C[i];
 
             richTextBox1.Text += "Maximum: F= " + value.ToString() + " ≈ " + value.Value.ToString("f3");
-            richTextBox1.Text += Environment.NewLine;
+            richTextBox1.Text += "\n";
             for (int i = 0; i < coordinates.Length - 1; i++)
                 richTextBox1.Text += string.Format(" x{0} = {1},", i + 1, coordinates[i]);
             richTextBox1.Text += string.Format(" x{0} = {1}.", coordinates.Length, coordinates[coordinates.Length - 1]);
-            richTextBox1.Text += Environment.NewLine + Environment.NewLine;
+            richTextBox1.Text += "\n" + "\n";
 
-            splitContainer1.Panel2Collapsed = false;
+            //splitContainer1.Panel2Collapsed = false;
         }
 
         void solver_DebugMaxMin(FractionPoint max, FractionPoint min, Fraction f_tan)
@@ -399,7 +397,7 @@ namespace mmio1
                 df.Text = "max & min";
             }
 
-            df.Use_IsVisible = false;
+            //df.Use_IsVisible = false;
 
             // n
             df.AddPolygon(Color.Black, DrawModes.DrawLines,
@@ -448,7 +446,7 @@ namespace mmio1
             {
                 df = new DekartForm(75, 75, 250, 200);
                 df.Text = this.Text + " - графическое решение";
-                df.FormClosed += new FormClosedEventHandler(delegate(object sender, FormClosedEventArgs e)
+                df.Closed += new EventHandler(delegate(object sender, EventArgs e)
                 {
                     df = null;
                 });

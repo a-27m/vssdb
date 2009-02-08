@@ -11,19 +11,19 @@ namespace mmio1
 {
     public partial class FormAskDim : Form
     {
-        public int n
+        public int N
         {
             get
             {
-                return numericUpDownN.Value as int;
+                return (int)numericUpDownN.Value;
             }
         }
 
-        public int m
+        public int M
         {
             get
             {
-                return numericUpDownM.Value as int;
+                return (int)numericUpDownM.Value;
             }
         }
 
