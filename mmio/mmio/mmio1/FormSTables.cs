@@ -67,11 +67,10 @@ namespace mmio1
             dataGridView1.Rows.Clear();
             for (int i = dataGridView1.ColumnCount; i < maxCols + 4; i++)
             {
-                dataGridView1.ColumnsAdd(1);
-                dataGridView1.SetColumnHeaderText(i, "A" + (dataGridView1.ColumnCount - 5).ToString());
+                dataGridView1.AddColumn("A" + (dataGridView1.ColumnCount - 5).ToString());
             }
 
-            dataGridView1.RowsAdd(dataToPopulate.Count);
+            dataGridView1.AddRows(dataToPopulate.Count);
             List<string[]>.Enumerator enu = dataToPopulate.GetEnumerator();
             for (int i = 0; enu.MoveNext(); i++)
             {

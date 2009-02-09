@@ -279,6 +279,9 @@ namespace mmio1
 
         private void графическийМетодToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            dataGridView1[2, 2] = new Fraction(21 / 24);
+            return;
+
             try
             {
                 DowndateGrid();

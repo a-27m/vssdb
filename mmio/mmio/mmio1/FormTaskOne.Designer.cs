@@ -29,14 +29,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.menuItemSlvGraph = new System.Windows.Forms.MenuItem();
-            this.menuItemSlvBasic = new System.Windows.Forms.MenuItem();
-            this.menuItemSlvOptimize = new System.Windows.Forms.MenuItem();
-            this.menuItemBack = new System.Windows.Forms.MenuItem();
-            this.dataGridView1 = new MobGridView();
-            this.richTextBox1 = new System.Windows.Forms.TextBox();
+            this.mainMenu1          = new System.Windows.Forms.MainMenu();
+
+            this.menuItem1          = new System.Windows.Forms.MenuItem();
+            this.menuItemSlvGraph   = new System.Windows.Forms.MenuItem();
+            this.menuItemSlvBasic   = new System.Windows.Forms.MenuItem();
+            this.menuItemSlvOptimize= new System.Windows.Forms.MenuItem();
+            this.menuItemBack       = new System.Windows.Forms.MenuItem();
+
+            this.dataGridView1      = new MobGridView();
+
+            this.richTextBox1       = new System.Windows.Forms.TextBox();
+
             this.SuspendLayout();
             // 
             // mainMenu1
