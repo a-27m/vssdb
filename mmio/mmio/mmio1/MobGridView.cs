@@ -37,6 +37,10 @@ namespace mmio1
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+
+            SolidBrush br = new SolidBrush(Color.PaleGreen);
+
+            e.Graphics.FillRectangle(br, e.ClipRectangle);
         }
 
         internal void RowsAdd(int Count)
