@@ -471,12 +471,13 @@ namespace DekartGraphic
 
         internal void Clear(Color color)
         {
-            throw new NotImplementedException();
+            g.Clear(color);
         }
 
-        internal void DrawEllipse(Pen pen, float p, float p_3, float dotWidth, float dotWidth_5)
+        internal void DrawEllipse(Pen pen, float x, float y, float dotWidthX, float dotWidthY)
         {
-            throw new NotImplementedException();
+
+            g.DrawEllipse(pen, x1, y1, dotWidth1, dotWidth1);
         }
 
         internal void FillPolygon(SolidBrush brush, PointF[] segment)

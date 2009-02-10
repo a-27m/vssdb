@@ -279,8 +279,8 @@ namespace mmio1
 
         private void графическийМетодToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            dataGridView1[2, 2] = new Fraction(21 / 24);
-            return;
+            //dataGridView1[2, 2] = new Fraction(21 / 24);
+            //return;
 
             try
             {
@@ -461,9 +461,9 @@ namespace mmio1
             df.Update2();
         }
 
-        private void dataGridView1_CurrentCellChanged(object sender, EventArgs e)
+        private void menuItemBack_Click(object sender, EventArgs e)
         {
-
+            //Close();
         }
     }
 }

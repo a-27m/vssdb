@@ -29,18 +29,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mainMenu1          = new System.Windows.Forms.MainMenu();
-
-            this.menuItem1          = new System.Windows.Forms.MenuItem();
-            this.menuItemSlvGraph   = new System.Windows.Forms.MenuItem();
-            this.menuItemSlvBasic   = new System.Windows.Forms.MenuItem();
-            this.menuItemSlvOptimize= new System.Windows.Forms.MenuItem();
-            this.menuItemBack       = new System.Windows.Forms.MenuItem();
-
-            this.dataGridView1      = new MobGridView();
-
-            this.richTextBox1       = new System.Windows.Forms.TextBox();
-
+            this.mainMenu1 = new System.Windows.Forms.MainMenu();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.menuItemSlvGraph = new System.Windows.Forms.MenuItem();
+            this.menuItemSlvBasic = new System.Windows.Forms.MenuItem();
+            this.menuItemSlvOptimize = new System.Windows.Forms.MenuItem();
+            this.menuItemBack = new System.Windows.Forms.MenuItem();
+            this.dataGridView1 = new mmio1.MobGridView();
+            this.richTextBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -58,27 +54,38 @@
             // menuItemSlvGraph
             // 
             this.menuItemSlvGraph.Text = "Графический";
+            this.menuItemSlvGraph.Click += new System.EventHandler(this.графическийМетодToolStripMenuItem_Click);
             // 
             // menuItemSlvBasic
             // 
             this.menuItemSlvBasic.Text = "Базис матрицы";
+            this.menuItemSlvBasic.Click += new System.EventHandler(this.выделитьБазисМатрицыAToolStripMenuItem_Click);
             // 
             // menuItemSlvOptimize
             // 
             this.menuItemSlvOptimize.Text = "Оптимизировать";
+            this.menuItemSlvOptimize.Click += new System.EventHandler(this.оптимизироватьToolStripMenuItem_Click);
             // 
             // menuItemBack
             // 
             this.menuItemBack.Text = "Назад";
+            this.menuItemBack.Click += new System.EventHandler(this.menuItemBack_Click);
             // 
             // dataGridView1
             // 
-            this.dataGridView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.dataGridView1.BackColor = System.Drawing.Color.LightBlue;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(240, 268);
             this.dataGridView1.TabIndex = 0;
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(0, 0);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(100, 21);
+            this.richTextBox1.TabIndex = 0;
             // 
             // FormTaskOne
             // 

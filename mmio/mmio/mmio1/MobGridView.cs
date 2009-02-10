@@ -50,8 +50,8 @@ namespace mmio1
             rowHeaders = new string[1];
             colHeaders = new string[1];
             colcount = 0;
-            rH = 30;
-            cW = 40;
+            rH = 20;
+            cW = 30;
 
             InitializeComponent();
         }
@@ -190,6 +190,7 @@ namespace mmio1
             editingCell.X = c;
             editingCell.Y = r;
             textBox1.Visible = true;
+            textBox1.Focus();
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
