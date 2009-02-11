@@ -51,7 +51,7 @@ namespace mmio1
             colHeaders = new string[1];
             colcount = 0;
             rH = oy = 20;
-            cW = ox = 30;
+            cW = ox = 50;
 
             InitializeComponent();
         }
