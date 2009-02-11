@@ -21,5 +21,10 @@ namespace mmio1
             FormTaskOne fto = new FormTaskOne();
             fto.Show();
         }
+
+        private void menuItemExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }

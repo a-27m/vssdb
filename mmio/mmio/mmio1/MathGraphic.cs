@@ -268,7 +268,8 @@ namespace DekartGraphic
             //stringFormatX.FormatFlags = StringFormatFlags..DirectionVertical;
 
             Font font = new Font("Arial",
-                8 / (m_zoom_x + m_zoom_y) * 2, FontStyle.Regular);
+                8, //8 / (m_zoom_x + m_zoom_y) * 2,
+                FontStyle.Regular);
 
 
             //gt.ScaleTransform(1, -1);
@@ -468,41 +469,73 @@ namespace DekartGraphic
             set { oy = value; }
         }
 
+        public Point Translate(PointF pt)
+        {
+            Point p1 = new Point();
+            p1.X = (int)Math.Round(pt.X * zoom.X + ox, 0);
+            p1.Y = (int)Math.Round(pt.Y * zoom.Y + oy, 0);
 
-        internal void Clear(Color color)
+            return p1;
+        }
+
+        public int TranslateX(float x)
+        {
+            return (int)Math.Round(x * zoom.X + ox, 0);
+        }
+
+        public int TranslateY(float y)
+        {
+            return (int)Math.Round(y * zoom.Y + oy, 0);
+        }
+
+        private Point[] TranslateSegment(PointF[] segment)
+        {
+            int len = segment.GetLength(0);
+            Point[] segment1 = new Point[len];
+            for (int i = 0; i < len; i++)
+            {
+                segment1[i] = Translate(segment[i]);
+            }
+
+            return segment1;
+        }
+
+        public void Clear(Color color)
         {
             g.Clear(color);
         }
 
-        internal void DrawEllipse(Pen pen, float x, float y, float dotWidthX, float dotWidthY)
+        public void DrawEllipse(Pen pen, float x, float y, float dotWidthX, float dotWidthY)
         {
-
-            g.DrawEllipse(pen, x1, y1, dotWidth1, dotWidth1);
+            g.DrawEllipse(pen, TranslateX(x), TranslateY(y), (int)(dotWidthX*zoom.X), (int)(dotWidthY*zoom.Y));
         }
 
-        internal void FillPolygon(SolidBrush brush, PointF[] segment)
+        public void FillPolygon(SolidBrush brush, PointF[] segment)
         {
-            throw new NotImplementedException();
+            g.FillPolygon(brush, TranslateSegment(segment));
         }
 
-        internal void DrawPolygon(Pen pen1, PointF[] segment)
+        public void DrawPolygon(Pen pen, PointF[] segment)
         {
-            throw new NotImplementedException();
+            g.DrawPolygon(pen, TranslateSegment(segment));
         }
 
-        public Rectangle VisibleClipBounds
+        public RectangleF VisibleClipBounds
         {
-            get { throw new NotImplementedException(); }
+            get { return g.ClipBounds; }
         }
 
-        internal void DrawLine(Pen GridPen, float x, float y1, float x_4, float y2)
+        public void DrawLine(Pen pen, float x1, float y1, float x2, float y2)
         {
-            throw new NotImplementedException();
+            g.DrawLine(pen, 
+                TranslateX(x1), TranslateY(y1),
+                TranslateX(x2), TranslateY(y2));
         }
 
-        internal void DrawString(string label, Font font, Color color, PointF pointF, StringFormat stringFormatX)
+        public void DrawString(string label, Font font, Color color, PointF point, StringFormat stringFormat)
         {
-            throw new NotImplementedException();
+            g.DrawString(label, font, new SolidBrush(color),
+                TranslateX(point.X), TranslateY(point.Y), stringFormat);
         }
     }
 }

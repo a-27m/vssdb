@@ -46,7 +46,6 @@ namespace mmio1
             }
 
         }
-
         /*
         public void LoadData(string FileName)
         {

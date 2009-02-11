@@ -46,12 +46,12 @@ namespace mmio1
 
         public MobGridView()
         {
-   			rows = new List<object[]>();
+            rows = new List<object[]>();
             rowHeaders = new string[1];
             colHeaders = new string[1];
             colcount = 0;
-            rH = 20;
-            cW = 30;
+            rH = oy = 20;
+            cW = ox = 30;
 
             InitializeComponent();
         }
@@ -65,14 +65,16 @@ namespace mmio1
             Pen gridPen = new Pen(Color.Black, 1f);
 
             //draw grid
-            int maxX = e.ClipRectangle.Width < colcount * cW ? e.ClipRectangle.Width : colcount * cW;
-            int maxY = e.ClipRectangle.Height < rows.Count * rH ? e.ClipRectangle.Height : rows.Count * rH;
+            //int maxX = e.ClipRectangle.Width < colcount * cW ? e.ClipRectangle.Width : colcount * cW;
+            //int maxY = e.ClipRectangle.Height < rows.Count * rH ? e.ClipRectangle.Height : rows.Count * rH;
+            int maxX = colcount * cW;
+            int maxY = rows.Count * rH;
 
-            for (int y = 0; y <= maxY; y += rH)
-                g.DrawLine(gridPen, 0, y, maxX, y);
+            for (int y = oy-rH; y <= maxY + oy; y += rH)
+                g.DrawLine(gridPen, ox - cW, y, maxX + ox, y);
 
-            for (int x = 0; x <= maxX; x += cW) //cW[k]
-                g.DrawLine(gridPen, x, 0, x, maxY);
+            for (int x = ox-cW; x <= maxX + ox; x += cW) //cW[k]
+                g.DrawLine(gridPen, x, oy - rH, x, maxY + oy);
 
 
             // draw text
@@ -82,16 +84,39 @@ namespace mmio1
             SizeF strSize;
             bndRect.Width = cW;
             bndRect.Height = rH;
-            
+
+
+            bndRect.Y = oy - rH;
+            for (int i = 0; i < colHeaders.GetLength(0); i++)
+            {
+                if (colHeaders[i] == null) continue;
+
+                strSize = g.MeasureString(colHeaders[i].ToString(), valueTextFont);
+                bndRect.X = i * cW + (cW - strSize.Width) / 2 + ox - cW;
+
+                g.DrawString(colHeaders[i].ToString(),
+                    valueTextFont, valueTextBrush, bndRect, valueStrFormat);
+            }
+
             foreach (object[] line in rows)
             {
-                bndRect.Y = j * rH;
+                if (rowHeaders[j] != null)
+                {
+                    strSize = g.MeasureString(rowHeaders[j].ToString(), valueTextFont);
+                    bndRect.X = ox - cW + (cW - strSize.Width - 2);
+                    bndRect.Y = j * rH + oy - rH;
+
+                    g.DrawString(rowHeaders[j].ToString(),
+                        valueTextFont, valueTextBrush, bndRect, valueStrFormat);
+                }
+
+                bndRect.Y = j * rH + oy;
                 for (int i = 0; i < line.GetLength(0); i++)
                 {
                     if (line[i] == null) continue;
 
                     strSize = g.MeasureString(line[i].ToString(), valueTextFont);
-                    bndRect.X = i * cW + (cW - strSize.Width) / 2;
+                    bndRect.X = i * cW + (cW - strSize.Width) / 2 + ox;
 
                     g.DrawString(line[i].ToString(), valueTextFont, valueTextBrush, bndRect, valueStrFormat);
                 }
@@ -116,7 +141,7 @@ namespace mmio1
 
         public void AddColumn(string Title)
         {
-            colcount ++;
+            colcount++;
             for (int i = 0; i < rows.Count; i++)
             {
                 object[] tmp = rows[i];
@@ -175,15 +200,42 @@ namespace mmio1
 
             array = tmpArray;
         }
+
+        int mx, my;
         protected override void OnMouseDown(MouseEventArgs e)
+        {
+            mx = e.X;
+            my = e.Y;
+        }
+
+        int ox, oy;
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ox += (e.X - mx);
+                oy += (e.Y - my);
+
+                mx = e.X;
+                my = e.Y;
+
+                Refresh();
+            }
+        }
+
+        protected override void OnMouseUp(MouseEventArgs e)
         {
             int r, c;
 
-            c = (int)(e.X / cW);
-            r = (int)(e.Y / rH);
+            c = (int)((e.X - ox) / cW);
+            r = (int)((e.Y - oy) / rH);
 
-            if (r > rows.Count - 1) return;
-            if (c > colcount - 1) return;
+            if ((r > rows.Count - 1)
+                || (c > colcount - 1)
+                || (c < 0) || (r < 0))
+            {
+                textBox1.Visible = false; return;
+            }
 
             if (rows[r][c] != null)
                 textBox1.Text = rows[r][c].ToString();
@@ -191,13 +243,15 @@ namespace mmio1
             editingCell.Y = r;
             textBox1.Visible = true;
             textBox1.Focus();
+            textBox1.SelectAll();            
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
-            { 
+            {
                 rows[editingCell.Y][editingCell.X] = textBox1.Text;
+                textBox1.Text = "";
                 textBox1.Visible = false;
                 this.Refresh();
             }
