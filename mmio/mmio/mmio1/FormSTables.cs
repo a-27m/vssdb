@@ -64,7 +64,7 @@ namespace mmio1
 
         void UpdateGrid()
         {
-            dataGridView1.Rows.Clear();
+            dataGridView1.ClearRows();
             for (int i = dataGridView1.ColumnCount; i < maxCols + 4; i++)
             {
                 dataGridView1.AddColumn("A" + (dataGridView1.ColumnCount - 5).ToString());

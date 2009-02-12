@@ -29,12 +29,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this.Menu = this.mainMenu1;
+            this.SuspendLayout();
+            // 
+            // DekartForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(240, 294);
+            this.KeyPreview = true;
+            this.Name = "DekartForm";
             this.Text = "DekartForm";
-            this.AutoScroll = true;
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.DekartForm_Paint);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DekartForm_KeyDown);
+            this.ResumeLayout(false);
+
         }
 
         #endregion

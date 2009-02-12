@@ -19,9 +19,10 @@ namespace mmio1
         Font valueTextFont = new Font("Arial", 10, FontStyle.Regular);
         SolidBrush valueTextBrush = new SolidBrush(Color.Black);
         StringFormat valueStrFormat = new StringFormat();
+        Pen selectedCellPen = new Pen(Color.DarkOrange, 2f);
 
         /// <summary>
-        /// max col number
+        /// last col number
         /// </summary>
         int colcount;
 
@@ -57,18 +58,16 @@ namespace mmio1
         }
         
         Pen gridPen = new Pen(Color.Black, 1f);
-        //Pen borderPen = new Pen(Color.Black, 1.5f);
+        Pen borderPen = new Pen(Color.Black, 2f);
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            this.BackColor = Color.LightBlue;
+            this.BackColor = Color.SeaShell;
             base.OnPaint(e);
             Graphics g = e.Graphics;
 
 
             //draw grid
-            //int maxX = e.ClipRectangle.Width < colcount * cW ? e.ClipRectangle.Width : colcount * cW;
-            //int maxY = e.ClipRectangle.Height < rows.Count * rH ? e.ClipRectangle.Height : rows.Count * rH;
             int maxX = colcount * cW;
             int maxY = rows.Count * rH;
 
@@ -78,8 +77,10 @@ namespace mmio1
             for (int x = ox-cW; x <= maxX + ox; x += cW) //cW[k]
                 g.DrawLine(gridPen, x, oy - rH, x, maxY + oy);
 
-            //g.DrawRectangle(borderPen, ox - cW, oy - rH, maxX + ox, maxY + oy);
-
+            // draw bold grid bounds and header boundary
+            g.DrawRectangle(borderPen, ox - cW, oy - rH, maxX + cW, maxY + rH); // outer
+            g.DrawLine(borderPen, ox, oy - rH, ox, oy + maxY);
+            g.DrawLine(borderPen, ox - cW, oy, ox + maxX, oy);
 
             // draw text
 
@@ -90,6 +91,7 @@ namespace mmio1
 
             bndRect.Y = oy - rH;
 
+            // print headers
             if (colHeaders != null)
             {
                 for (int i = 0; i < colHeaders.GetLength(0); i++)
@@ -107,6 +109,7 @@ namespace mmio1
             int j = 0;
             foreach (object[] line in rows)
             {
+                // print headers
                 if (rowHeaders != null)
                 {
                     if (rowHeaders[j] != null)
@@ -120,6 +123,7 @@ namespace mmio1
                     }
                 }
 
+                // print values
                 bndRect.Y = j * rH + oy;
                 for (int i = 0; i < line.GetLength(0); i++)
                 {
@@ -132,22 +136,26 @@ namespace mmio1
                 }
                 j++;
             }
+
+            // highlights selected cell
+            g.DrawRectangle(selectedCellPen,
+                ox + editingCell.X * cW, oy + editingCell.Y * rH, cW, rH);
         }
 
         public void ClearColumns()
         {
             colcount = 0;
             colHeaders = null;
+            ox = cW;
+            oy = rH;
         }
 
         public void ClearRows()
         {
-            //for (IEnumerator<object[]> i = rows.GetEnumerator(); i.MoveNext(); )
-            //{
-            //    i.Current = null;
-            //}
             rowHeaders = null;
             rows.Clear();
+            ox = cW;
+            oy = rH;
         }
 
         public void AddColumn(string Title)
@@ -280,6 +288,7 @@ namespace mmio1
                 textBox1.Text = rows[r][c].ToString();
             editingCell.X = c;
             editingCell.Y = r;
+            Refresh();
             textBox1.Visible = true;
             textBox1.Focus();
             textBox1.SelectAll();            

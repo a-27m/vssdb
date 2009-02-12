@@ -298,9 +298,9 @@ namespace DekartGraphic
 
             for (float y = (float)(int)Math.Ceiling(y1 / dy) * dy; y < y2; y += dy)
             {
-                gt.DrawString((-y).ToString("#0.####"), font, Color.Black,
-                   new PointF(textX, y), stringFormatY);
-                gt.DrawLine(GridPen, x1, y, x2, y);
+                gt.DrawString((y).ToString("#0.####"), font, Color.Black,
+                   new PointF(textX, -y), stringFormatY);
+                gt.DrawLine(GridPen, x1, -y, x2, -y);
             }
 
             #endregion
@@ -315,7 +315,7 @@ namespace DekartGraphic
             gt.DrawLine(AxePen, 0, y1, 0 + 3 / m_zoom_x, y1 + 10 / m_zoom_y);
 
             AxePen.Width = 0;
-            gt.DrawLine(AxePen, x1, y2 - 1 / m_zoom_y, x2, y2 - 1f / m_zoom_y);
+            gt.DrawLine(AxePen, x1, y2 - 1f / m_zoom_y, x2, y2 - 1f / m_zoom_y);
             gt.DrawLine(AxePen, x1, y1, x1, y2);
             #endregion
 
@@ -512,7 +512,7 @@ namespace DekartGraphic
 
         public void FillPolygon(SolidBrush brush, PointF[] segment)
         {
-            g.FillPolygon(brush, TranslateSegment(segment));
+            g.DrawPolygon(new Pen(brush.Color, 2), TranslateSegment(segment));
         }
 
         public void DrawPolygon(Pen pen, PointF[] segment)
@@ -522,7 +522,11 @@ namespace DekartGraphic
 
         public RectangleF VisibleClipBounds
         {
-            get { return g.ClipBounds; }
+            get
+            {
+                return new RectangleF(0, 0, 320, 240);
+                //return g.ClipBounds; 
+            }
         }
 
         public void DrawLine(Pen pen, float x1, float y1, float x2, float y2)

@@ -11,6 +11,7 @@ using DekartGraphic;
 using Fractions;
 using SimplexMethod;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace mmio1
 {
@@ -19,9 +20,6 @@ namespace mmio1
         protected bool IsNewDocument = true;
         Fraction[][] A;
         Fraction[] B, C;
-        /// <summary>
-        /// Signs of limitations
-        /// </summary>
         short[] S;
 
         private int n, m;
@@ -42,34 +40,56 @@ namespace mmio1
                 n = fad.N;
                 m = fad.M;
                 GridMyResize(n, m);
-
-                //dataGridView1.Select(0);
             }
-
         }
 
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            if (this.IsNewDocument)
+            {
+                FormAskDim fad = new FormAskDim();
+                if (fad.ShowDialog() != DialogResult.OK)
+                    Close();
+                n = fad.N;
+                m = fad.M;
+                GridMyResize(n, m);
+                //dataGridView1.Select();
+            }
+        }
+
+        #region Load/Save
+        [Serializable()]
+        public struct TaskData
+        {
+            public Fraction[][] A;
+            public Fraction[] B, C;
+            public short[] S;
+        };
+
         public void LoadData(string FileName)
-        { }
-        //    IFormatter formatter = new BinaryFormatter();
-        //    Stream stream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.None);
-        //    A = (Fraction[][])formatter.Deserialize(stream);
-        //    B = (Fraction[])formatter.Deserialize(stream);
-        //    C = (Fraction[])formatter.Deserialize(stream);
-        //    S = (short[])formatter.Deserialize(stream);
+        {
+            XmlSerializer serial = new XmlSerializer(typeof(TaskData));
 
-        //    stream.Close();
+            Stream stream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.None);
+            TaskData td = (TaskData)serial.Deserialize(stream);
+            stream.Close(); 
+            
+            A = td.A;
+            B = td.B;
+            C = td.C;
+            S = td.S;
 
-        //    n = A[0].Length;
-        //    m = B.GetLength(0);
+            n = A[0].Length;
+            m = B.GetLength(0);
 
-        //    if (C.Length != n || S.Length != m || A.Length != m)
-        //        throw new SerializationException("Bad file format");
+            if (C.Length != n || S.Length != m || A.Length != m)
+                throw new Exception("Bad file format");
 
-        //    GridMyResize(n, m);
-        //    UpdateGrid();
+            GridMyResize(n, m);
+            UpdateGrid();
 
-        //    IsNewDocument = false;
-        //}
+            IsNewDocument = false;
+        }
 
         public void SaveData(string FileName)
         {
@@ -84,34 +104,23 @@ namespace mmio1
                 return;
             }
 
+            XmlSerializer serial = new XmlSerializer(typeof(TaskData));
+
             Stream stream = new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.None);
-            XmlTextWriter xtw = new XmlTextWriter(stream, Encoding.Default);
 
-            xtw.WriteValue(A.GetLength(0));
+            TaskData td = new TaskData();
+            td.A = A;
+            td.B = B;
+            td.C = C;
+            td.S = S;
 
-            foreach (Fraction[] line in A)
-            {
-                xtw.WriteValue(line.GetLength(0));
-                foreach (Fraction fr in line)
-                    xtw.WriteValue(fr.ToString("Wrong"));
-            }
-            xtw.WriteValue(B.GetLength(0));
-            foreach (Fraction fr in B)
-                xtw.WriteValue(fr.ToString("Wrong"));
+            serial.Serialize(stream, td);
 
-            xtw.WriteValue(C.GetLength(0));
-            foreach (Fraction fr in C)
-                xtw.WriteValue(fr.ToString("Wrong"));
-
-            xtw.WriteValue(S.GetLength(0));
-            foreach (short fr in S)
-                xtw.WriteValue(fr.ToString("Wrong"));
-
-            xtw.Close();
             stream.Close();
         }
+        #endregion
 
-        string[] SignStrs = new string[3] {"<", "=", ">"};
+        string[] SignStrs = new string[3] { "<", "=", ">" };
 
         private void UpdateGrid()
         {
@@ -185,28 +194,6 @@ namespace mmio1
             }
 
             //dataGridView1.AutoResizeColumns();
-        }
-
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            if (this.IsNewDocument)
-            {
-                FormAskDim fad = new FormAskDim();
-                if (fad.ShowDialog() != DialogResult.OK)
-                    Close();
-                n = fad.N;
-                m = fad.M;
-                GridMyResize(n, m);
-                //dataGridView1.Select();
-            }
-        }
-
-        void solver_DebugNewSimplexTable(int[] basisJ, Fraction[] c, Fraction[,] table)
-        {
-            if (formTables == null)
-                formTables = new FormSTables();
-            formTables.AddTable(basisJ, c, table);
-            formTables.Show();
         }
 
         private void оптимизироватьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -367,6 +354,14 @@ namespace mmio1
             #endregion
         }
 
+        void solver_DebugNewSimplexTable(int[] basisJ, Fraction[] c, Fraction[,] table)
+        {
+            if (formTables == null)
+                formTables = new FormSTables();
+            formTables.AddTable(basisJ, c, table);
+            formTables.Show();
+        }
+
         void solver_DebugGaussProcessMatrix(Fraction[,] matrix)
         {
             if (formTables == null)
@@ -416,40 +411,22 @@ namespace mmio1
                 df.Text = "max & min";
             }
 
-            //df.Use_IsVisible = false;
-
             // n
             df.AddPolygon(Color.Black, DrawModes.DrawLines,
                 new PointF(1000, f_tan * 1000),
                 new PointF(-1000, -f_tan * 1000));
 
-            for (float percent = 0; ; percent += .05f)
-            {
-                int id1 = df.AddPolygon(Color.Black, DrawModes.DrawLines,
-                       new PointF(1000 + max.X * percent, -1 / f_tan * 1000 + max.Y * percent),
-                       new PointF(-1000 + max.X * percent, 1 / f_tan * 1000 + max.Y * percent));
-                int id2 = df.AddPolygon(Color.Black, DrawModes.DrawLines,
-                    new PointF(1000 + min.X * percent, -1 / f_tan * 1000 + min.Y * percent),
-                    new PointF(-1000 + min.X * percent, 1 / f_tan * 1000 + min.Y * percent));
-                //int id1 = df.AddPolygon(Color.Orange, DrawModes.DrawLines,
-                //       new PointF(1000 + max.X * percent, -1 / f_tan * 1000 + max.Y * percent),
-                //       new PointF(-1000 + max.X * percent, 1 / f_tan * 1000 + max.Y * percent));
-                //int id2 = df.AddPolygon(Color.CornflowerBlue, DrawModes.DrawLines,
-                //    new PointF(1000 + min.X * percent, -1 / f_tan * 1000 + min.Y * percent),
-                //    new PointF(-1000 + min.X * percent, 1 / f_tan * 1000 + min.Y * percent));
-                if (percent >= 0.99f)
-                    break;
-                df.Update2();
-                Application.DoEvents();
-                df.RemoveGraphic(id2);
-                df.RemoveGraphic(id1);
-            }
+            int id1 = df.AddPolygon(Color.Orange, DrawModes.DrawLines,
+                   new PointF(1000 + max.X, -1 / f_tan * 1000 + max.Y),
+                   new PointF(-1000 + max.X, 1 / f_tan * 1000 + max.Y));
+            int id2 = df.AddPolygon(Color.CornflowerBlue, DrawModes.DrawLines,
+                new PointF(1000 + min.X, -1 / f_tan * 1000 + min.Y),
+                new PointF(-1000 + min.X, 1 / f_tan * 1000 + min.Y));
 
-            //df.AddPolygon(Color.Orange, 3f, DrawModes.DrawPoints, new PointF(max.X, max.Y));
-            //df.AddPolygon(Color.CornflowerBlue, 3f, DrawModes.DrawPoints, new PointF(min.X, min.Y));
+            df.Update2();
 
-            df.AddPolygon(Color.Black, 3f, DrawModes.DrawPoints, new PointF(max.X, max.Y));
-            df.AddPolygon(Color.Black, 3f, DrawModes.DrawPoints, new PointF(min.X, min.Y));
+            df.AddPolygon(Color.Orange, 3f, DrawModes.DrawPoints, new PointF(max.X, max.Y));
+            df.AddPolygon(Color.CornflowerBlue, 3f, DrawModes.DrawPoints, new PointF(min.X, min.Y));
 
             df.Show();
             df.Update2();
@@ -463,7 +440,7 @@ namespace mmio1
 
             if (df == null)
             {
-                df = new DekartForm(75, 75, 250, 200);
+                df = new DekartForm(75, 75, 50, 100);
                 df.Text = this.Text + " - графическое решение";
                 df.Closed += new EventHandler(delegate(object sender, EventArgs e)
                 {
@@ -495,7 +472,7 @@ namespace mmio1
             if (openFileDialog1.ShowDialog() != DialogResult.OK)
                 return;
 
-            LoadData(saveFileDialog1.FileName);
+            LoadData(openFileDialog1.FileName);
         }
     }
 }

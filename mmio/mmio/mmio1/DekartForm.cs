@@ -37,10 +37,6 @@ namespace mmio1
             }
         }
 
-        //BufferedGraphics grBuf;
-        //BufferedGraphicsContext grCntxt;
-
-        //public bool Use_IsVisible = true;
         Bitmap bitmap;
 
         public Zoom zoom;
@@ -83,17 +79,6 @@ namespace mmio1
 
         private void InitGrafixBuffer()
         {
-        //    grCntxt = BufferedGraphicsManager.Current;
-        //    grCntxt.MaximumBuffer = this.toolStripContainer1.ContentPanel.Size + new Size(1, 1);
-
-        //    grBuf = grCntxt.Allocate(this.toolStripContainer1.ContentPanel.CreateGraphics(),
-        //        this.toolStripContainer1.ContentPanel.ClientRectangle);
-
-        //    //grCntxt.MaximumBuffer = Size + new Size(1, 1);
-
-        //    //grBuf = grCntxt.Allocate(CreateGraphics(),
-        //    //	ClientRectangle);
-
         //    grBuf.Graphics.SmoothingMode = SmoothingMode.HighQuality;
         //    grBuf.Graphics.Clear(BackColor);
             bitmap = new Bitmap(Size.Width + 1, Size.Height + 1);
@@ -274,9 +259,10 @@ namespace mmio1
             g.DrawImage(bitmap, 0, 0);
         }
 
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        private void DekartForm_Paint(object sender, PaintEventArgs e)
         {
             Render(e.Graphics);
+            this.Text += "|";
         }
 
         /*
@@ -372,34 +358,6 @@ namespace mmio1
             toolComboBoxZoom.SelectionLength =
 
                 toolComboBoxZoom.Text.Length;
-        }
-
-        private void shiftLeftToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ox -= 10;
-            grBuf.Graphics.Transform = new Matrix(zoom.X, 0, 0, -zoom.Y, ox, oy);
-            Update2();
-        }
-
-        private void shiftRightToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ox += 10;
-            grBuf.Graphics.Transform = new Matrix(zoom.X, 0, 0, -zoom.Y, ox, oy);
-            Update2();
-        }
-
-        private void shiftUpToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            oy -= 10;
-            grBuf.Graphics.Transform = new Matrix(zoom.X, 0, 0, -zoom.Y, ox, oy);
-            Update2();
-        }
-
-        private void shiftDownToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            oy += 10;
-            grBuf.Graphics.Transform = new Matrix(zoom.X, 0, 0, -zoom.Y, ox, oy);
-            Update2();
         }
 
         private void toolStripButtonCenter_Click(object sender, EventArgs e)
@@ -529,6 +487,35 @@ namespace mmio1
         */
         private void DekartForm_MouseClick(object sender, MouseEventArgs e)
         {
+        }
+
+        private void DekartForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if ((e.KeyCode == System.Windows.Forms.Keys.Up))
+            {
+                oy -= 10;
+                Update2();
+            }
+            if ((e.KeyCode == System.Windows.Forms.Keys.Down))
+            {
+                oy += 10;
+                Update2();
+            }
+            if ((e.KeyCode == System.Windows.Forms.Keys.Left))
+            {
+                ox -= 10;
+                Update2();
+            }
+            if ((e.KeyCode == System.Windows.Forms.Keys.Right))
+            {
+                ox += 10;
+                Update2();
+            }
+            if ((e.KeyCode == System.Windows.Forms.Keys.Enter))
+            {
+                // Enter
+            }
+
         }
     }
 }
