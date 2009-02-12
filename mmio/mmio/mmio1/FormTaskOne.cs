@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using DekartGraphic;
 using Fractions;
 using SimplexMethod;
+using System.Xml;
 
 namespace mmio1
 {
@@ -46,29 +47,29 @@ namespace mmio1
             }
 
         }
-        /*
+
         public void LoadData(string FileName)
-        {
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.None);
-            A = (Fraction[][])formatter.Deserialize(stream);
-            B = (Fraction[])formatter.Deserialize(stream);
-            C = (Fraction[])formatter.Deserialize(stream);
-            S = (short[])formatter.Deserialize(stream);
+        { }
+        //    IFormatter formatter = new BinaryFormatter();
+        //    Stream stream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.None);
+        //    A = (Fraction[][])formatter.Deserialize(stream);
+        //    B = (Fraction[])formatter.Deserialize(stream);
+        //    C = (Fraction[])formatter.Deserialize(stream);
+        //    S = (short[])formatter.Deserialize(stream);
 
-            stream.Close();
+        //    stream.Close();
 
-            n = A[0].Length;
-            m = B.GetLength(0);
+        //    n = A[0].Length;
+        //    m = B.GetLength(0);
 
-            if (C.Length != n || S.Length != m || A.Length != m)
-                throw new SerializationException("Bad file format");
+        //    if (C.Length != n || S.Length != m || A.Length != m)
+        //        throw new SerializationException("Bad file format");
 
-            GridMyResize(n, m);
-            UpdateGrid();
+        //    GridMyResize(n, m);
+        //    UpdateGrid();
 
-            IsNewDocument = false;
-        }
+        //    IsNewDocument = false;
+        //}
 
         public void SaveData(string FileName)
         {
@@ -79,20 +80,36 @@ namespace mmio1
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message, "Ошибка в данных",
-                    MessageBoxButtons.OK, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1);
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 return;
             }
 
-            IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.None);
-            GZipStream zipStream = new GZipStream(stream, CompressionMode.Compress, false);
-            formatter.Serialize(zipStream, A);
-            formatter.Serialize(zipStream, B);
-            formatter.Serialize(zipStream, C);
-            formatter.Serialize(zipStream, S);
-            zipStream.Close();
+            XmlTextWriter xtw = new XmlTextWriter(stream, Encoding.Default);
+
+            xtw.WriteValue(A.GetLength(0));
+
+            foreach (Fraction[] line in A)
+            {
+                xtw.WriteValue(line.GetLength(0));
+                foreach (Fraction fr in line)
+                    xtw.WriteValue(fr.ToString("Wrong"));
+            }
+            xtw.WriteValue(B.GetLength(0));
+            foreach (Fraction fr in B)
+                xtw.WriteValue(fr.ToString("Wrong"));
+
+            xtw.WriteValue(C.GetLength(0));
+            foreach (Fraction fr in C)
+                xtw.WriteValue(fr.ToString("Wrong"));
+
+            xtw.WriteValue(S.GetLength(0));
+            foreach (short fr in S)
+                xtw.WriteValue(fr.ToString("Wrong"));
+
+            xtw.Close();
+            stream.Close();
         }
-        */
 
         string[] SignStrs = new string[3] {"<", "=", ">"};
 
@@ -463,6 +480,22 @@ namespace mmio1
         private void menuItemBack_Click(object sender, EventArgs e)
         {
             //Close();
+        }
+
+        private void menuItemSave_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog1.ShowDialog() != DialogResult.OK)
+                return;
+
+            SaveData(saveFileDialog1.FileName);
+        }
+
+        private void menuItemOpen_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() != DialogResult.OK)
+                return;
+
+            LoadData(saveFileDialog1.FileName);
         }
     }
 }

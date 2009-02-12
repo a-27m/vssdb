@@ -47,14 +47,17 @@ namespace mmio1
         public MobGridView()
         {
             rows = new List<object[]>();
-            rowHeaders = new string[1];
-            colHeaders = new string[1];
+            //rowHeaders = new string[1];
+            //colHeaders = new string[1];
             colcount = 0;
             rH = oy = 20;
             cW = ox = 50;
 
             InitializeComponent();
         }
+        
+        Pen gridPen = new Pen(Color.Black, 1f);
+        //Pen borderPen = new Pen(Color.Black, 1.5f);
 
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -62,7 +65,6 @@ namespace mmio1
             base.OnPaint(e);
             Graphics g = e.Graphics;
 
-            Pen gridPen = new Pen(Color.Black, 1f);
 
             //draw grid
             //int maxX = e.ClipRectangle.Width < colcount * cW ? e.ClipRectangle.Width : colcount * cW;
@@ -76,38 +78,46 @@ namespace mmio1
             for (int x = ox-cW; x <= maxX + ox; x += cW) //cW[k]
                 g.DrawLine(gridPen, x, oy - rH, x, maxY + oy);
 
+            //g.DrawRectangle(borderPen, ox - cW, oy - rH, maxX + ox, maxY + oy);
+
 
             // draw text
 
-            int j = 0;
             RectangleF bndRect = new RectangleF();
             SizeF strSize;
             bndRect.Width = cW;
             bndRect.Height = rH;
 
-
             bndRect.Y = oy - rH;
-            for (int i = 0; i < colHeaders.GetLength(0); i++)
+
+            if (colHeaders != null)
             {
-                if (colHeaders[i] == null) continue;
+                for (int i = 0; i < colHeaders.GetLength(0); i++)
+                {
+                    if (colHeaders[i] == null) continue;
 
-                strSize = g.MeasureString(colHeaders[i].ToString(), valueTextFont);
-                bndRect.X = i * cW + (cW - strSize.Width) / 2 + ox - cW;
+                    strSize = g.MeasureString(colHeaders[i].ToString(), valueTextFont);
+                    bndRect.X = i * cW + (cW - strSize.Width) / 2 + ox;
 
-                g.DrawString(colHeaders[i].ToString(),
-                    valueTextFont, valueTextBrush, bndRect, valueStrFormat);
+                    g.DrawString(colHeaders[i].ToString(),
+                        valueTextFont, valueTextBrush, bndRect, valueStrFormat);
+                }
             }
 
+            int j = 0;
             foreach (object[] line in rows)
             {
-                if (rowHeaders[j] != null)
+                if (rowHeaders != null)
                 {
-                    strSize = g.MeasureString(rowHeaders[j].ToString(), valueTextFont);
-                    bndRect.X = ox - cW + (cW - strSize.Width - 2);
-                    bndRect.Y = j * rH + oy - rH;
+                    if (rowHeaders[j] != null)
+                    {
+                        strSize = g.MeasureString(rowHeaders[j].ToString(), valueTextFont);
+                        bndRect.X = ox - cW + (cW - strSize.Width - 2);
+                        bndRect.Y = j * rH + oy;
 
-                    g.DrawString(rowHeaders[j].ToString(),
-                        valueTextFont, valueTextBrush, bndRect, valueStrFormat);
+                        g.DrawString(rowHeaders[j].ToString(),
+                            valueTextFont, valueTextBrush, bndRect, valueStrFormat);
+                    }
                 }
 
                 bndRect.Y = j * rH + oy;
@@ -127,6 +137,7 @@ namespace mmio1
         public void ClearColumns()
         {
             colcount = 0;
+            colHeaders = null;
         }
 
         public void ClearRows()
@@ -135,7 +146,7 @@ namespace mmio1
             //{
             //    i.Current = null;
             //}
-
+            rowHeaders = null;
             rows.Clear();
         }
 
@@ -149,15 +160,27 @@ namespace mmio1
                 rows[i] = tmp;
             }
 
-
-            ArrayResize<string>(ref colHeaders, colHeaders.GetLength(0) + 1);
-            colHeaders[colHeaders.GetLength(0) - 1] = Title;
+            if (colHeaders == null)
+            {
+                colHeaders = new string[1];
+                colHeaders[0] = Title;
+            }
+            else
+            {
+                ArrayResize<string>(ref colHeaders, colHeaders.GetLength(0) + 1);
+                colHeaders[colHeaders.GetLength(0) - 1] = Title;
+            }
         }
 
         public void AddRow(string Title)
         {
             rows.Add(new object[colcount]);
-            ArrayResize<string>(ref rowHeaders, rowHeaders.GetLength(0) + 1);
+            
+            if (rowHeaders == null)
+                rowHeaders = new string[1];
+            else
+                ArrayResize<string>(ref rowHeaders, rowHeaders.GetLength(0) + 1);
+
             rowHeaders[rowHeaders.GetLength(0) - 1] = Title;
         }
 
@@ -167,7 +190,10 @@ namespace mmio1
             {
                 rows.Add(new object[colcount]);
             }
-            ArrayResize(ref rowHeaders, rowHeaders.GetLength(0) + Count);
+            if (rowHeaders == null)
+                rowHeaders = new string[Count];
+            else
+                ArrayResize(ref rowHeaders, rowHeaders.GetLength(0) + Count);
         }
 
         public void SetRowHeaderText(int index, string Caption)
@@ -219,6 +245,13 @@ namespace mmio1
                 mx = e.X;
                 my = e.Y;
 
+                //if (ox > this.Size.Width) ox = this.Size.Width;
+                if (ox > cW) ox = cW;
+                if (oy > this.Size.Height) oy = this.Size.Height;
+
+                if (ox > this.Size.Width) ox = this.Size.Width;
+                if (oy > this.Size.Height) oy = this.Size.Height;
+
                 Refresh();
             }
         }
@@ -227,14 +260,20 @@ namespace mmio1
         {
             int r, c;
 
+            if ((e.X - ox < 0) || (e.Y - oy < 0))
+            {
+                textBox1.Visible = false; 
+                return;
+            }
+
             c = (int)((e.X - ox) / cW);
             r = (int)((e.Y - oy) / rH);
 
             if ((r > rows.Count - 1)
-                || (c > colcount - 1)
-                || (c < 0) || (r < 0))
+                || (c > colcount - 1))
             {
-                textBox1.Visible = false; return;
+                textBox1.Visible = false; 
+                return;
             }
 
             if (rows[r][c] != null)

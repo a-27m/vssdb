@@ -35,8 +35,12 @@
             this.menuItemSlvBasic = new System.Windows.Forms.MenuItem();
             this.menuItemSlvOptimize = new System.Windows.Forms.MenuItem();
             this.menuItemBack = new System.Windows.Forms.MenuItem();
+            this.menuItemOpen = new System.Windows.Forms.MenuItem();
+            this.menuItemSave = new System.Windows.Forms.MenuItem();
             this.dataGridView1 = new mmio1.MobGridView();
             this.richTextBox1 = new System.Windows.Forms.TextBox();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -68,8 +72,20 @@
             // 
             // menuItemBack
             // 
-            this.menuItemBack.Text = "Назад";
+            this.menuItemBack.MenuItems.Add(this.menuItemOpen);
+            this.menuItemBack.MenuItems.Add(this.menuItemSave);
+            this.menuItemBack.Text = "Файл";
             this.menuItemBack.Click += new System.EventHandler(this.menuItemBack_Click);
+            // 
+            // menuItemOpen
+            // 
+            this.menuItemOpen.Text = "Открыть...";
+            this.menuItemOpen.Click += new System.EventHandler(this.menuItemOpen_Click);
+            // 
+            // menuItemSave
+            // 
+            this.menuItemSave.Text = "Сохранить...";
+            this.menuItemSave.Click += new System.EventHandler(this.menuItemSave_Click);
             // 
             // dataGridView1
             // 
@@ -86,6 +102,15 @@
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(100, 21);
             this.richTextBox1.TabIndex = 0;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "MMIO tasks (*.mmiox)|*.mmiox";
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.Filter = "MMIO tasks (*.mmiox)|*.mmiox";
             // 
             // FormTaskOne
             // 
@@ -110,5 +135,9 @@
         private System.Windows.Forms.MenuItem menuItemSlvOptimize;
         private System.Windows.Forms.MenuItem menuItemBack;
         private System.Windows.Forms.TextBox richTextBox1;
+        private System.Windows.Forms.MenuItem menuItemOpen;
+        private System.Windows.Forms.MenuItem menuItemSave;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
