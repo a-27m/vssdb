@@ -42,6 +42,7 @@
             this.графическийМетодToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.gaussProcessSelectedBasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -89,7 +90,7 @@
             this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(482, 338);
+            this.dataGridView1.Size = new System.Drawing.Size(482, 314);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             // 
@@ -133,7 +134,8 @@
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.оптимизироватьToolStripMenuItem,
             this.выделитьБазисМатрицыAToolStripMenuItem,
-            this.графическийМетодToolStripMenuItem});
+            this.графическийМетодToolStripMenuItem,
+            this.gaussProcessSelectedBasesToolStripMenuItem});
             this.toolsToolStripMenuItem.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -142,28 +144,28 @@
             // оптимизироватьToolStripMenuItem
             // 
             this.оптимизироватьToolStripMenuItem.Name = "оптимизироватьToolStripMenuItem";
-            this.оптимизироватьToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.оптимизироватьToolStripMenuItem.Size = new System.Drawing.Size(248, 22);
             this.оптимизироватьToolStripMenuItem.Text = "Оптимизировать";
             this.оптимизироватьToolStripMenuItem.Click += new System.EventHandler(this.оптимизироватьToolStripMenuItem_Click);
             // 
             // выделитьБазисМатрицыAToolStripMenuItem
             // 
             this.выделитьБазисМатрицыAToolStripMenuItem.Name = "выделитьБазисМатрицыAToolStripMenuItem";
-            this.выделитьБазисМатрицыAToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.выделитьБазисМатрицыAToolStripMenuItem.Size = new System.Drawing.Size(248, 22);
             this.выделитьБазисМатрицыAToolStripMenuItem.Text = "Выделить базис матрицы A";
             this.выделитьБазисМатрицыAToolStripMenuItem.Click += new System.EventHandler(this.выделитьБазисМатрицыAToolStripMenuItem_Click);
             // 
             // графическийМетодToolStripMenuItem
             // 
             this.графическийМетодToolStripMenuItem.Name = "графическийМетодToolStripMenuItem";
-            this.графическийМетодToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.графическийМетодToolStripMenuItem.Size = new System.Drawing.Size(248, 22);
             this.графическийМетодToolStripMenuItem.Text = "Графический метод";
             this.графическийМетодToolStripMenuItem.Click += new System.EventHandler(this.графическийМетодToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 24);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -175,7 +177,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.richTextBox1);
             this.splitContainer1.Panel2Collapsed = true;
-            this.splitContainer1.Size = new System.Drawing.Size(482, 338);
+            this.splitContainer1.Size = new System.Drawing.Size(482, 314);
             this.splitContainer1.SplitterDistance = 214;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -190,6 +192,13 @@
             this.richTextBox1.Size = new System.Drawing.Size(150, 46);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
+            // 
+            // gaussProcessSelectedBasesToolStripMenuItem
+            // 
+            this.gaussProcessSelectedBasesToolStripMenuItem.Name = "gaussProcessSelectedBasesToolStripMenuItem";
+            this.gaussProcessSelectedBasesToolStripMenuItem.Size = new System.Drawing.Size(248, 22);
+            this.gaussProcessSelectedBasesToolStripMenuItem.Text = "GaussProcess, selected cell based";
+            this.gaussProcessSelectedBasesToolStripMenuItem.Click += new System.EventHandler(this.gaussProcessSelectedBasesToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -226,6 +235,7 @@
         private System.Windows.Forms.ToolStripMenuItem графическийМетодToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.ToolStripMenuItem gaussProcessSelectedBasesToolStripMenuItem;
 	}
 }
 

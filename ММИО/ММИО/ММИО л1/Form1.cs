@@ -454,5 +454,47 @@ namespace ММИО_л1
             df.Update2();
         }
 
+        private void gaussProcessSelectedBasesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DowndateGrid();
+            }
+            catch
+            {
+                MessageBox.Show("Input error!");
+                return;
+            }
+
+            if (dataGridView1.SelectedCells.Count == 1)
+            {
+                int maxJ = 0;
+                for (int i = 0; i < A.Length; i++)
+                    if (A[i].Length > maxJ)
+                        maxJ = A[i].Length;
+
+                maxJ++; // A0
+                Fraction[,] a = new Fraction[A.Length, maxJ];
+                for (int i = 0; i < A.Length; i++)
+                    for (int j = 0; j < A[i].Length; j++)
+                        a[i, j] = A[i][j];
+                for (int i = 0; i < B.Length; i++)
+                    a[i, maxJ-1] = B[i];
+
+                uint r, c;
+
+                c = (uint)dataGridView1.SelectedCells[0].ColumnIndex;
+                r = (uint)dataGridView1.SelectedCells[0].RowIndex-1;
+                SimplexSolver.GGaussProcess(ref a, r, c);
+
+                for (int i = 0; i < a.GetLength(0); i++)
+                    for (int j = 0; j < a.GetLength(1)-1; j++)
+                        A[i][j] = a[i, j];
+                for (int i = 0; i < B.Length; i++)
+                    B[i] = a[i, maxJ-1];
+
+                UpdateGrid();
+            }
+        }
     }
 }
