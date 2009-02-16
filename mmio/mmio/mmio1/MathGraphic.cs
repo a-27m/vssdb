@@ -267,26 +267,22 @@ namespace DekartGraphic
             stringFormatX.Alignment = StringAlignment.Far;
             //stringFormatX.FormatFlags = StringFormatFlags..DirectionVertical;
 
-            Font font = new Font("Arial",
-                8, //8 / (m_zoom_x + m_zoom_y) * 2,
-                FontStyle.Regular);
+            Font font = new Font("Arial", 8, FontStyle.Regular);
 
+            int x1, x2, y1, y2;
 
-            //gt.ScaleTransform(1, -1);
-
-            float x1, x2, y1, y2;
-
-            x1 = gt.VisibleClipBounds.Left;
-            x2 = gt.VisibleClipBounds.Right;
-            y1 = gt.VisibleClipBounds.Top;
-            y2 = gt.VisibleClipBounds.Bottom;
+            //x1 = gt.VisibleClipBounds.Left;
+            //x2 = gt.VisibleClipBounds.Right;
+            //y1 = gt.VisibleClipBounds.Top;
+            //y2 = gt.VisibleClipBounds.Bottom;
+            x1 = 0; x2 = 240; y1 = 0; y2 = 320;
 
             #region Grid and text
 
-            float dx = 30f / m_zoom_x, dy = 30f / m_zoom_y;// шаг сетки
+            float dx = 30f, dy = 30f;// шаг сетки
 
-            float textX = -(ox - 3) / m_zoom_x;
-            float textY = -oy / m_zoom_y + gt.VisibleClipBounds.Height;
+            float textX = -(ox - 3);
+            float textY = -oy + gt.VisibleClipBounds.Height;
 
             for (float x = (float)(int)Math.Ceiling(x1 / dx) * dx; x < x2; x += dx)
             {
@@ -306,20 +302,18 @@ namespace DekartGraphic
             #endregion
 
             #region Axes
-            gt.DrawLine(AxePen, x1, 0, x2, 0);
-            gt.DrawLine(AxePen, x2 - 10 / m_zoom_x, 0 - 3 / m_zoom_y, x2, 0);
-            gt.DrawLine(AxePen, x2 - 10 / m_zoom_x, 0 + 3 / m_zoom_y, x2, 0);
+            gt.g.DrawLine(AxePen, x1, 0, x2, 0);
+            gt.g.DrawLine(AxePen, x2 - 6, 0 - 3, x2, 0);
+            gt.g.DrawLine(AxePen, x2 - 6, 0 + 3, x2, 0);
 
-            gt.DrawLine(AxePen, 0, y1, 0, y2);
-            gt.DrawLine(AxePen, 0, y1, 0 - 3 / m_zoom_x, y1 + 10 / m_zoom_y);
-            gt.DrawLine(AxePen, 0, y1, 0 + 3 / m_zoom_x, y1 + 10 / m_zoom_y);
+            gt.g.DrawLine(AxePen, 0, y1, 0, y2);
+            gt.g.DrawLine(AxePen, 0, y1, 0 - 3, y1 + 6);
+            gt.g.DrawLine(AxePen, 0, y1, 0 + 3, y1 + 6);
 
             AxePen.Width = 0;
-            gt.DrawLine(AxePen, x1, y2 - 1f / m_zoom_y, x2, y2 - 1f / m_zoom_y);
-            gt.DrawLine(AxePen, x1, y1, x1, y2);
+            gt.g.DrawLine(AxePen, x1, y2 - 1, x2, y2 - 1);
+            gt.g.DrawLine(AxePen, x1, y1, x1, y2);
             #endregion
-
-            //g.ScaleTransform(1, -1);
         }
 
         public static PointF[][] Tabulate(DoubleFunction fx, DoubleFunction fy,
@@ -486,6 +480,16 @@ namespace DekartGraphic
         public int TranslateY(float y)
         {
             return (int)Math.Round(y * zoom.Y + oy, 0);
+        }
+
+        public float UnTranslateX(int x)
+        {
+            return (x - ox) / zoom.X;
+        }
+
+        public float UnTranslateY(int y)
+        {
+            return (y - oy) / zoom.Y;
         }
 
         private Point[] TranslateSegment(PointF[] segment)
