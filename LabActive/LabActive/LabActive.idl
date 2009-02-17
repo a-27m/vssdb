@@ -1,0 +1,50 @@
+// LabActive.idl : type library source for ActiveX Control project.
+
+// This file will be processed by the MIDL compiler tool to
+// produce the type library (LabActive.tlb) that will become a resource in
+// LabActive.ocx.
+
+#include <olectl.h>
+#include <idispids.h>
+
+[ uuid(692CA497-D0C7-44AA-82B7-497E46B5FBF7), version(1.0),
+  helpfile("LabActive.hlp"),
+  helpstring("LabActive ActiveX Control module"),
+  control ]
+library LabActiveLib
+{
+	importlib(STDOLE_TLB);
+
+	//  Primary dispatch interface for CLabActiveCtrl
+
+	[ uuid(CE2537D5-2F5A-4D95-8148-00316D302B6B),
+	  helpstring("Dispatch interface for LabActive Control")]
+	dispinterface _DLabActive
+	{
+		properties:
+		methods:
+	};
+
+	//  Event dispatch interface for CLabActiveCtrl
+
+	[ uuid(88BFBC5E-D807-42C5-839D-1311FB208974),
+	  helpstring("Event interface for LabActive Control") ]
+	dispinterface _DLabActiveEvents
+	{
+		properties:
+			//  Event interface has no properties
+
+		methods:
+	};
+
+	//  Class information for CLabActiveCtrl
+
+	[ uuid(CF4DEAEF-F3CD-4E00-9425-46CE35F6BCDE),
+	  helpstring("LabActive Control"), control ]
+	coclass LabActive
+	{
+		[default] dispinterface _DLabActive;
+		[default, source] dispinterface _DLabActiveEvents;
+	};
+
+};

@@ -1,0 +1,170 @@
+// LabActiveCtrl.cpp : Implementation of the CLabActiveCtrl ActiveX Control class.
+
+#include "stdafx.h"
+#include "LabActive.h"
+#include "LabActiveCtrl.h"
+#include "LabActivePropPage.h"
+
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#endif
+
+
+IMPLEMENT_DYNCREATE(CLabActiveCtrl, COleControl)
+
+
+
+// Message map
+
+BEGIN_MESSAGE_MAP(CLabActiveCtrl, COleControl)
+	ON_OLEVERB(AFX_IDS_VERB_PROPERTIES, OnProperties)
+END_MESSAGE_MAP()
+
+
+
+// Dispatch map
+
+BEGIN_DISPATCH_MAP(CLabActiveCtrl, COleControl)
+END_DISPATCH_MAP()
+
+
+
+// Event map
+
+BEGIN_EVENT_MAP(CLabActiveCtrl, COleControl)
+END_EVENT_MAP()
+
+
+
+// Property pages
+
+// TODO: Add more property pages as needed.  Remember to increase the count!
+BEGIN_PROPPAGEIDS(CLabActiveCtrl, 1)
+	PROPPAGEID(CLabActivePropPage::guid)
+END_PROPPAGEIDS(CLabActiveCtrl)
+
+
+
+// Initialize class factory and guid
+
+IMPLEMENT_OLECREATE_EX(CLabActiveCtrl, "LABACTIVE.LabActiveCtrl.1",
+	0xcf4deaef, 0xf3cd, 0x4e00, 0x94, 0x25, 0x46, 0xce, 0x35, 0xf6, 0xbc, 0xde)
+
+
+
+// Type library ID and version
+
+IMPLEMENT_OLETYPELIB(CLabActiveCtrl, _tlid, _wVerMajor, _wVerMinor)
+
+
+
+// Interface IDs
+
+const IID BASED_CODE IID_DLabActive =
+		{ 0xCE2537D5, 0x2F5A, 0x4D95, { 0x81, 0x48, 0x0, 0x31, 0x6D, 0x30, 0x2B, 0x6B } };
+const IID BASED_CODE IID_DLabActiveEvents =
+		{ 0x88BFBC5E, 0xD807, 0x42C5, { 0x83, 0x9D, 0x13, 0x11, 0xFB, 0x20, 0x89, 0x74 } };
+
+
+
+// Control type information
+
+static const DWORD BASED_CODE _dwLabActiveOleMisc =
+	OLEMISC_ACTIVATEWHENVISIBLE |
+	OLEMISC_SETCLIENTSITEFIRST |
+	OLEMISC_INSIDEOUT |
+	OLEMISC_CANTLINKINSIDE |
+	OLEMISC_RECOMPOSEONRESIZE;
+
+IMPLEMENT_OLECTLTYPE(CLabActiveCtrl, IDS_LABACTIVE, _dwLabActiveOleMisc)
+
+
+
+// CLabActiveCtrl::CLabActiveCtrlFactory::UpdateRegistry -
+// Adds or removes system registry entries for CLabActiveCtrl
+
+BOOL CLabActiveCtrl::CLabActiveCtrlFactory::UpdateRegistry(BOOL bRegister)
+{
+	// TODO: Verify that your control follows apartment-model threading rules.
+	// Refer to MFC TechNote 64 for more information.
+	// If your control does not conform to the apartment-model rules, then
+	// you must modify the code below, changing the 6th parameter from
+	// afxRegApartmentThreading to 0.
+
+	if (bRegister)
+		return AfxOleRegisterControlClass(
+			AfxGetInstanceHandle(),
+			m_clsid,
+			m_lpszProgID,
+			IDS_LABACTIVE,
+			IDB_LABACTIVE,
+			afxRegApartmentThreading,
+			_dwLabActiveOleMisc,
+			_tlid,
+			_wVerMajor,
+			_wVerMinor);
+	else
+		return AfxOleUnregisterClass(m_clsid, m_lpszProgID);
+}
+
+
+
+// CLabActiveCtrl::CLabActiveCtrl - Constructor
+
+CLabActiveCtrl::CLabActiveCtrl()
+{
+	InitializeIIDs(&IID_DLabActive, &IID_DLabActiveEvents);
+	// TODO: Initialize your control's instance data here.
+}
+
+
+
+// CLabActiveCtrl::~CLabActiveCtrl - Destructor
+
+CLabActiveCtrl::~CLabActiveCtrl()
+{
+	// TODO: Cleanup your control's instance data here.
+}
+
+
+
+// CLabActiveCtrl::OnDraw - Drawing function
+
+void CLabActiveCtrl::OnDraw(
+			CDC* pdc, const CRect& rcBounds, const CRect& rcInvalid)
+{
+	if (!pdc)
+		return;
+
+	// TODO: Replace the following code with your own drawing code.
+	pdc->FillRect(rcBounds, CBrush::FromHandle((HBRUSH)GetStockObject(WHITE_BRUSH)));
+	pdc->Ellipse(rcBounds);
+}
+
+
+
+// CLabActiveCtrl::DoPropExchange - Persistence support
+
+void CLabActiveCtrl::DoPropExchange(CPropExchange* pPX)
+{
+	ExchangeVersion(pPX, MAKELONG(_wVerMinor, _wVerMajor));
+	COleControl::DoPropExchange(pPX);
+
+	// TODO: Call PX_ functions for each persistent custom property.
+}
+
+
+
+// CLabActiveCtrl::OnResetState - Reset control to default state
+
+void CLabActiveCtrl::OnResetState()
+{
+	COleControl::OnResetState();  // Resets defaults found in DoPropExchange
+
+	// TODO: Reset any other control state here.
+}
+
+
+
+// CLabActiveCtrl message handlers
