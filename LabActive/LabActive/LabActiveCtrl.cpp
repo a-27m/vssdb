@@ -41,7 +41,7 @@ END_EVENT_MAP()
 
 // TODO: Add more property pages as needed.  Remember to increase the count!
 BEGIN_PROPPAGEIDS(CLabActiveCtrl, 1)
-	PROPPAGEID(CLabActivePropPage::guid)
+PROPPAGEID(CLabActivePropPage::guid)
 END_PROPPAGEIDS(CLabActiveCtrl)
 
 
@@ -49,33 +49,33 @@ END_PROPPAGEIDS(CLabActiveCtrl)
 // Initialize class factory and guid
 
 IMPLEMENT_OLECREATE_EX(CLabActiveCtrl, "LABACTIVE.LabActiveCtrl.1",
-	0xcf4deaef, 0xf3cd, 0x4e00, 0x94, 0x25, 0x46, 0xce, 0x35, 0xf6, 0xbc, 0xde)
+					   0xcf4deaef, 0xf3cd, 0x4e00, 0x94, 0x25, 0x46, 0xce, 0x35, 0xf6, 0xbc, 0xde)
 
 
 
-// Type library ID and version
+					   // Type library ID and version
 
-IMPLEMENT_OLETYPELIB(CLabActiveCtrl, _tlid, _wVerMajor, _wVerMinor)
+					   IMPLEMENT_OLETYPELIB(CLabActiveCtrl, _tlid, _wVerMajor, _wVerMinor)
 
 
 
-// Interface IDs
+					   // Interface IDs
 
-const IID BASED_CODE IID_DLabActive =
-		{ 0xCE2537D5, 0x2F5A, 0x4D95, { 0x81, 0x48, 0x0, 0x31, 0x6D, 0x30, 0x2B, 0x6B } };
+					   const IID BASED_CODE IID_DLabActive =
+{ 0xCE2537D5, 0x2F5A, 0x4D95, { 0x81, 0x48, 0x0, 0x31, 0x6D, 0x30, 0x2B, 0x6B } };
 const IID BASED_CODE IID_DLabActiveEvents =
-		{ 0x88BFBC5E, 0xD807, 0x42C5, { 0x83, 0x9D, 0x13, 0x11, 0xFB, 0x20, 0x89, 0x74 } };
+{ 0x88BFBC5E, 0xD807, 0x42C5, { 0x83, 0x9D, 0x13, 0x11, 0xFB, 0x20, 0x89, 0x74 } };
 
 
 
 // Control type information
 
 static const DWORD BASED_CODE _dwLabActiveOleMisc =
-	OLEMISC_ACTIVATEWHENVISIBLE |
-	OLEMISC_SETCLIENTSITEFIRST |
-	OLEMISC_INSIDEOUT |
-	OLEMISC_CANTLINKINSIDE |
-	OLEMISC_RECOMPOSEONRESIZE;
+OLEMISC_ACTIVATEWHENVISIBLE |
+OLEMISC_SETCLIENTSITEFIRST |
+OLEMISC_INSIDEOUT |
+OLEMISC_CANTLINKINSIDE |
+OLEMISC_RECOMPOSEONRESIZE;
 
 IMPLEMENT_OLECTLTYPE(CLabActiveCtrl, IDS_LABACTIVE, _dwLabActiveOleMisc)
 
@@ -94,16 +94,16 @@ BOOL CLabActiveCtrl::CLabActiveCtrlFactory::UpdateRegistry(BOOL bRegister)
 
 	if (bRegister)
 		return AfxOleRegisterControlClass(
-			AfxGetInstanceHandle(),
-			m_clsid,
-			m_lpszProgID,
-			IDS_LABACTIVE,
-			IDB_LABACTIVE,
-			afxRegApartmentThreading,
-			_dwLabActiveOleMisc,
-			_tlid,
-			_wVerMajor,
-			_wVerMinor);
+		AfxGetInstanceHandle(),
+		m_clsid,
+		m_lpszProgID,
+		IDS_LABACTIVE,
+		IDB_LABACTIVE,
+		afxRegApartmentThreading,
+		_dwLabActiveOleMisc,
+		_tlid,
+		_wVerMajor,
+		_wVerMinor);
 	else
 		return AfxOleUnregisterClass(m_clsid, m_lpszProgID);
 }
@@ -128,19 +128,83 @@ CLabActiveCtrl::~CLabActiveCtrl()
 }
 
 
+void CLabActiveCtrl::Рассчитать(float x1,
+								float x2,
+								float t1,
+								float t2,
+								float** f,
+								float* mju1,
+								float* mju2,
+								/*float (*f) (float, float),	// u(x, t1) = f(x, t)
+								float (*mju1)(float),	// u(x1, t) = mju1(t)
+								float (*mju2)(float),	// u(x2, t) = mju1(t)*/
+								float h, float tau)
+{
+	int T = (t2-t1)/tau;
+	int N = (x2-x1)/h;
+
+	float k = 1;
+
+	// if (T <= 0 blah blah blah
+
+	u = new float*[T];
+	for(int i = 0; i< T;i++)
+		u[i] = new float[N];
+
+	// init 1st row (t=0) with f(x)
+	for(int n = 0; n < N; n++)
+	{
+		u[0][n] = f[0][n];
+	}
+
+	// рассчитываем границы
+	float tt = t1;
+	for(int t = 0; t < T; t++)
+	{
+		u[t][0] = mju1[t];
+		u[t][N-1] = mju2[t];
+	}
+
+	for(int t = 1; t < T; t++)
+	{
+		for(int n = 1; n < N-1; n++)
+		{
+			u[t][n] = k*tau / (h*h+k*tau) * (u[t][n-1] - u[t-1][n] + u[t-1][n+1]) +
+				h*h / (h*h + k*tau) * u[t-1][n] +
+				h*h / (h*h + k*tau) * tau * (f[t-1][n] + f[t][n]) * 0.5;
+		}
+
+		if (++t >= T) continue;
+
+		for(int n = N-1 - 1; n > 0; n--)
+		{
+			u[t][n] = k*tau / (h*h+k*tau) * (u[t][n+1] - u[t-1][n] + u[t-1][n-1]) +
+				h*h / (h*h + k*tau) * u[t-1][n] +
+				h*h / (h*h + k*tau) * tau * (f[t-1][n] + f[t][n]) * 0.5;
+		}
+	}
+}
 
 // CLabActiveCtrl::OnDraw - Drawing function
 
 void CLabActiveCtrl::OnDraw(
-			CDC* pdc, const CRect& rcBounds, const CRect& rcInvalid)
+							CDC* pdc, const CRect& rcBounds, const CRect& rcInvalid)
 {
 	if (!pdc)
 		return;
 
+	int ox = 10;
+	int oy = 10;
+	float mx = 5;
+	float my = 5;
+
 	pdc->FillRect(rcBounds, CBrush::FromHandle((HBRUSH)GetStockObject(WHITE_BRUSH)));
-	this->DrawGrid(pdc);
-	this->DrawValues(pdc);
-	pdc->Ellipse(rcBounds);
+
+	pdc->MoveTo(ox, oy);pdc->LineTo(10*mx + ox, oy);
+	pdc->MoveTo(ox, oy);pdc->LineTo(ox, 10*my + oy);
+	//this->DrawGrid(pdc);
+	//this->DrawValues(pdc);
+	//pdc->Ellipse(rcBounds);
 }
 
 
@@ -169,3 +233,7 @@ void CLabActiveCtrl::OnResetState()
 
 
 // CLabActiveCtrl message handlers
+
+void CLabActiveCtrl::Animate(float speed)
+{
+}

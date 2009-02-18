@@ -2,15 +2,15 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="LabActive"
-	ProjectGUID="{697D23D0-4BC4-46AF-B040-DA516F133354}"
-	RootNamespace="LabActive"
+	Name="LabTest"
+	ProjectGUID="{700BF8D0-1802-4D16-829D-6BAB5AD4B9F2}"
+	RootNamespace="LabTest"
 	
 	
 	
 	
-	Keyword="MFCActiveXProj"
-	TargetFrameworkVersion="196613"
+	Keyword="MFCProj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -24,7 +24,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
 			>
@@ -44,14 +44,12 @@
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="false"
-				TypeLibraryName="$(IntDir)/LabActive.tlb"
-				HeaderFileName="$(ProjectName)idl.h"
 				ValidateParameters="true"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -73,10 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				RegisterOutput="true"
-				OutputFile="$(OutDir)\$(ProjectName).ocx"
 				LinkIncremental="2"
-				ModuleDefinitionFile=".\LabActive.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -107,7 +102,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -128,15 +123,13 @@
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="false"
-				TypeLibraryName="$(IntDir)/LabActive.tlb"
-				HeaderFileName="$(ProjectName)idl.h"
 				ValidateParameters="true"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -158,10 +151,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				RegisterOutput="true"
-				OutputFile="$(OutDir)\$(ProjectName).ocx"
 				LinkIncremental="1"
-				ModuleDefinitionFile=".\LabActive.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -200,23 +190,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\LabActive.cpp"
+				RelativePath=".\labactivectrl1.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\LabActive.def"
+				RelativePath=".\LabTest.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\LabActive.idl"
-				>
-			</File>
-			<File
-				RelativePath=".\LabActiveCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\LabActivePropPage.cpp"
+				RelativePath=".\LabTestDlg.cpp"
 				>
 			</File>
 			<File
@@ -246,15 +228,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\LabActive.h"
+				RelativePath=".\labactivectrl1.h"
 				>
 			</File>
 			<File
-				RelativePath=".\LabActiveCtrl.h"
+				RelativePath=".\LabTest.h"
 				>
 			</File>
 			<File
-				RelativePath=".\LabActivePropPage.h"
+				RelativePath=".\LabTestDlg.h"
 				>
 			</File>
 			<File
@@ -265,6 +247,10 @@
 				RelativePath=".\stdafx.h"
 				>
 			</File>
+			<File
+				RelativePath=".\targetver.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -272,15 +258,15 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\LabActive.rc"
+				RelativePath=".\res\LabTest.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\LabActiveCtrl.bmp"
+				RelativePath=".\LabTest.rc"
 				>
 			</File>
 			<File
-				RelativePath=".\targetver.h"
+				RelativePath=".\res\LabTest.rc2"
 				>
 			</File>
 		</Filter>
@@ -292,7 +278,11 @@
 	<Globals>
 		<Global
 			Name="RESOURCE_FILE"
-			Value="LabActive.rc"
+			Value="LabTest.rc"
+		/>
+		<Global
+			Name="{CF4DEAEF-F3CD-4E00-9425-46CE35F6BCDE}"
+			Value="CLabactivectrl1"
 		/>
 	</Globals>
 </VisualStudioProject>

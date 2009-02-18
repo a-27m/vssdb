@@ -23,6 +23,14 @@ library LabActiveLib
 	{
 		properties:
 		methods:
+			[id(1)] void Animate(float speed);
+			[id(2)] void Рассчитать(
+				float x1, float x2,
+				float t1, float t2,
+				float** f,
+				float* m1,
+				float* m2,
+				float h, float tau);
 	};
 
 	//  Event dispatch interface for CLabActiveCtrl

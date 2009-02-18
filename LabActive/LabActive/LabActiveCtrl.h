@@ -13,6 +13,19 @@ class CLabActiveCtrl : public COleControl
 public:
 	CLabActiveCtrl();
 
+// Other methods
+public:
+	float ** u; // the 2D matrix for calculating U(x,t)
+	void Рассчитать(
+		float x1,
+		float x2,
+		float t1,
+		float t2,
+		float **f,		// u(x, t1) = f(x, t)
+		float *mju1,	// u(x1, t) = mju1(t)
+		float *mju2,	// u(x2, t) = mju1(t)
+		float h, float tau);
+
 // Overrides
 public:
 	virtual void OnDraw(CDC* pdc, const CRect& rcBounds, const CRect& rcInvalid);
@@ -41,5 +54,6 @@ protected:
 public:
 	enum {
 	};
+	void Animate(float speed);
 };
 
