@@ -125,6 +125,7 @@ CLabActiveCtrl::CLabActiveCtrl()
 CLabActiveCtrl::~CLabActiveCtrl()
 {
 	// TODO: Cleanup your control's instance data here.
+	delete xx;
 }
 
 
@@ -140,8 +141,8 @@ void CLabActiveCtrl::Рассчитать(float x1,
 								float (*mju2)(float),	// u(x2, t) = mju1(t)*/
 								float h, float tau)
 {
-	int T = (t2-t1)/tau;
-	int N = (x2-x1)/h;
+	T = (t2-t1)/tau;
+	N = (x2-x1)/h;
 
 	float k = 1;
 
@@ -150,11 +151,13 @@ void CLabActiveCtrl::Рассчитать(float x1,
 	u = new float*[T];
 	for(int i = 0; i< T;i++)
 		u[i] = new float[N];
+	xx = new float[N];
 
 	// init 1st row (t=0) with f(x)
 	for(int n = 0; n < N; n++)
 	{
 		u[0][n] = f[0][n];
+		xx[n] = x1 + h*n;
 	}
 
 	// рассчитываем границы
@@ -187,23 +190,29 @@ void CLabActiveCtrl::Рассчитать(float x1,
 
 // CLabActiveCtrl::OnDraw - Drawing function
 
-void CLabActiveCtrl::OnDraw(
-							CDC* pdc, const CRect& rcBounds, const CRect& rcInvalid)
+void CLabActiveCtrl::OnDraw(CDC* pdc, const CRect& rcBounds, const CRect& rcInvalid)
 {
 	if (!pdc)
 		return;
 
 	int ox = 10;
-	int oy = 10;
+	int oy = 100;
 	float mx = 5;
 	float my = 5;
 
 	pdc->FillRect(rcBounds, CBrush::FromHandle((HBRUSH)GetStockObject(WHITE_BRUSH)));
 
 	pdc->MoveTo(ox, oy);pdc->LineTo(10*mx + ox, oy);
-	pdc->MoveTo(ox, oy);pdc->LineTo(ox, 10*my + oy);
-	//this->DrawGrid(pdc);
-	//this->DrawValues(pdc);
+	pdc->MoveTo(ox, oy);pdc->LineTo(ox, -10*my + oy);
+	
+	pdc->MoveTo(xx[0] * mx + ox, u[snapshotTimeIndex][0] * (-my) + oy);
+	for(int i = 1; i < N; i++)
+	{
+		pdc->LineTo(
+			xx[i] * mx + ox,
+			u[snapshotTimeIndex][i] * (-my) + oy);
+	}
+
 	//pdc->Ellipse(rcBounds);
 }
 
@@ -236,4 +245,5 @@ void CLabActiveCtrl::OnResetState()
 
 void CLabActiveCtrl::Animate(float speed)
 {
+
 }

@@ -13,9 +13,14 @@ class CLabActiveCtrl : public COleControl
 public:
 	CLabActiveCtrl();
 
+protected:
+	float ** u; // the 2D matrix for calculating U(x,t)
+	float *xx;
+	int T;	int N;
+
 // Other methods
 public:
-	float ** u; // the 2D matrix for calculating U(x,t)
+	int snapshotTimeIndex;
 	void Рассчитать(
 		float x1,
 		float x2,

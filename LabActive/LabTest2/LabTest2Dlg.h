@@ -1,18 +1,19 @@
-// LabTestDlg.h : header file
+// LabTest2Dlg.h : header file
 //
 
 #pragma once
+#include "labactivectrl1.h"
 
 
-// CLabTestDlg dialog
-class CLabTestDlg : public CDialog
+// CLabTest2Dlg dialog
+class CLabTest2Dlg : public CDialog
 {
 // Construction
 public:
-	CLabTestDlg(CWnd* pParent = NULL);	// standard constructor
+	CLabTest2Dlg(CWnd* pParent = NULL);	// standard constructor
 
 // Dialog Data
-	enum { IDD = IDD_LABTEST_DIALOG };
+	enum { IDD = IDD_LABTEST2_DIALOG };
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
@@ -28,6 +29,6 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
+	CLabactivectrl1 m_labctct;
 	afx_msg void OnBnClickedOk();
-	CLabactivectrl1 m_labct;
 };
