@@ -49,12 +49,12 @@ public:
 	void Animate(float speed)
 	{
 		static BYTE parms[] = VTS_R4 ;
-		InvokeHelper(0x1, DISPATCH_METHOD, VT_EMPTY, NULL, parms, speed);
+		InvokeHelper(14, DISPATCH_METHOD, VT_EMPTY, NULL, parms, speed);
 	}
 	void Рассчитать(float x1, float x2, float t1, float t2, float * * f, float * m1, float * m2, float h, float tau)
 	{
-		static BYTE parms[] = VTS_R4 VTS_R4 VTS_R4 VTS_R4 VTS_UNKNOWN VTS_PR4 VTS_PR4 VTS_R4 VTS_R4 ;
-		InvokeHelper(0x2, DISPATCH_METHOD, VT_EMPTY, NULL, parms, x1, x2, t1, t2, f, m1, m2, h, tau);
+		static BYTE parms[] = VTS_R4 VTS_R4 VTS_R4 VTS_R4 VTS_PR4 VTS_PR4 VTS_PR4 VTS_R4 VTS_R4 ;
+		InvokeHelper(15, DISPATCH_METHOD, VT_EMPTY, NULL, parms, x1, x2, t1, t2, f, m1, m2, h, tau);
 	}
 
 // Properties

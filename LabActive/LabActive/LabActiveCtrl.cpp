@@ -116,6 +116,8 @@ CLabActiveCtrl::CLabActiveCtrl()
 {
 	InitializeIIDs(&IID_DLabActive, &IID_DLabActiveEvents);
 	// TODO: Initialize your control's instance data here.
+
+	xx = NULL;
 }
 
 
@@ -205,6 +207,7 @@ void CLabActiveCtrl::OnDraw(CDC* pdc, const CRect& rcBounds, const CRect& rcInva
 	pdc->MoveTo(ox, oy);pdc->LineTo(10*mx + ox, oy);
 	pdc->MoveTo(ox, oy);pdc->LineTo(ox, -10*my + oy);
 	
+	if (xx == NULL) return;
 	pdc->MoveTo(xx[0] * mx + ox, u[snapshotTimeIndex][0] * (-my) + oy);
 	for(int i = 1; i < N; i++)
 	{
