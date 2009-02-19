@@ -4,8 +4,8 @@
 #include "LabTest2.h"
 #include "LabTest2Dlg.h"
 
-#include <math.h>
 #define _USE_MATH_DEFINES
+#include <math.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -47,6 +47,7 @@ BOOL CLabTest2Dlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+	m_slider.SetRange(0, 1);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -91,22 +92,31 @@ HCURSOR CLabTest2Dlg::OnQueryDragIcon()
 float k = 1;
 float f(float x, float t)
 {
-	return sin(x/2)*5+1;
+	return -abs(x-4)+6;
+	//return (x-4)*(x-4)/8;
+	return sin(M_PI*x/4)*2+1;
+	return sqrt(-x+4)*0.2+1;
 }
 
-float mju1(float t) { return 1; }
-float mju2(float t) { return 1; }
+float mju1(float t)
+{
+	return cos(t*1.5)*0.5+1.5; 
+}
+float mju2(float t)
+{ 
+	return -sin(t*1.5)*0.3+1; 
+}
 
 
 void CLabTest2Dlg::OnBnClickedOk()
 {
 	float x1 = 0;
-	float x2 = 2;
+	float x2 = 4;
 	float h = 0.05;
 
 	float t1 = 0;
-	float t2 = 0.8;
-	float tau = 0.1;
+	float t2 = 100;
+	float tau = 0.05;
 
 	int T = (t2-t1)/tau;
 	int N = (x2-x1)/h;
@@ -135,6 +145,7 @@ void CLabTest2Dlg::OnBnClickedOk()
 	{
 		m1[t] = mju1(tt);
 		m2[t] = mju2(tt);
+		tt+=tau;
 	}
 
 	m_labctct.Рассчитать(
@@ -143,12 +154,18 @@ void CLabTest2Dlg::OnBnClickedOk()
 		u, m1, m2,
 		h, tau
 		);
-	//OnOK();
-	//m_cal.Today();
+
+	m_slider.SetRange(0, T);
+	Invalidate();
+
+	for(int i = 0; i< T;i++)
+		delete u[i];
+	delete u;
 }
 
 
 void CLabTest2Dlg::OnHScroll(UINT, UINT, CScrollBar* sb)
 {
-	m_labctct.SetSnapshotIndex(sb->GetScrollPos());
+	m_labctct.SetSnapshotIndex(m_slider.GetPos());
+	Invalidate();
 }

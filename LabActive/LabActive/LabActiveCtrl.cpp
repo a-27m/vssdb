@@ -191,6 +191,7 @@ void CLabActiveCtrl::Рассчитать(float x1,
 
 		++t;
 	}
+	snapshotTimeIndex = 0;
 }
 
 // CLabActiveCtrl::OnDraw - Drawing function
@@ -201,9 +202,9 @@ void CLabActiveCtrl::OnDraw(CDC* pdc, const CRect& rcBounds, const CRect& rcInva
 		return;
 
 	int ox = 10;
-	int oy = 100;
-	float mx = 5;
-	float my = 5;
+	int oy = 300;
+	float mx = 50;
+	float my = 50;
 
 	pdc->FillRect(rcBounds, CBrush::FromHandle((HBRUSH)GetStockObject(WHITE_BRUSH)));
 
@@ -254,5 +255,5 @@ void CLabActiveCtrl::Animate(float speed)
 
 void CLabActiveCtrl::SetSnapshotIndex(int index)
 {
-	snapshotTimeIndex = (snapshotTimeIndex >= T ? T-1 : index);	
+	snapshotTimeIndex = (index >= T ? T-1 : index);	
 }
