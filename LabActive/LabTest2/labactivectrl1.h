@@ -56,6 +56,11 @@ public:
 		static BYTE parms[] = VTS_R4 VTS_R4 VTS_R4 VTS_R4 VTS_UNKNOWN VTS_PR4 VTS_PR4 VTS_R4 VTS_R4 ;
 		InvokeHelper(15, DISPATCH_METHOD, VT_EMPTY, NULL, parms, x1, x2, t1, t2, f, m1, m2, h, tau);
 	}
+	void SetSnapshotIndex(int index)
+	{
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(16, DISPATCH_METHOD, VT_EMPTY, NULL, parms, index);
+	}
 
 // Properties
 //

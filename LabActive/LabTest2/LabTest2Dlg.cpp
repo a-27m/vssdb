@@ -1,5 +1,4 @@
 // LabTest2Dlg.cpp : implementation file
-//
 
 #include "stdafx.h"
 #include "LabTest2.h"
@@ -12,11 +11,7 @@
 #define new DEBUG_NEW
 #endif
 
-
 // CLabTest2Dlg dialog
-
-
-
 
 CLabTest2Dlg::CLabTest2Dlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CLabTest2Dlg::IDD, pParent)
@@ -28,7 +23,7 @@ void CLabTest2Dlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LABACTIVECTRL1, m_labctct);
-	DDX_Control(pDX, IDC_CALENDAR1, m_cal);
+	DDX_Control(pDX, IDC_SLIDER1, m_slider);
 }
 
 BEGIN_MESSAGE_MAP(CLabTest2Dlg, CDialog)
@@ -36,6 +31,7 @@ BEGIN_MESSAGE_MAP(CLabTest2Dlg, CDialog)
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDOK, &CLabTest2Dlg::OnBnClickedOk)
+	ON_WM_HSCROLL()
 END_MESSAGE_MAP()
 
 
@@ -91,22 +87,16 @@ HCURSOR CLabTest2Dlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-float f(float x, float t)
-{
-	return sin(x/2)*5+20;
-}
-
-float mju1(float t)
-{
-	return 20;
-}
-
-float mju2(float t)
-{
-	return 20;
-}
 
 float k = 1;
+float f(float x, float t)
+{
+	return sin(x/2)*5+1;
+}
+
+float mju1(float t) { return 1; }
+float mju2(float t) { return 1; }
+
 
 void CLabTest2Dlg::OnBnClickedOk()
 {
@@ -147,13 +137,18 @@ void CLabTest2Dlg::OnBnClickedOk()
 		m2[t] = mju2(tt);
 	}
 
-	//m_labctct.Animate(0);
-	//this->m_labctct.Рассчитать(
-	//	x1, x2,  // x
-	//	t1, t2, // t
-	//	u, m1, m2,
-	//	h, tau
-	//	);
+	m_labctct.Рассчитать(
+		x1, x2,  // x
+		t1, t2, // t
+		u, m1, m2,
+		h, tau
+		);
 	//OnOK();
-	m_cal.Today();
+	//m_cal.Today();
+}
+
+
+void CLabTest2Dlg::OnHScroll(UINT, UINT, CScrollBar* sb)
+{
+	m_labctct.SetSnapshotIndex(sb->GetScrollPos());
 }

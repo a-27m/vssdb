@@ -26,6 +26,10 @@ END_MESSAGE_MAP()
 // Dispatch map
 
 BEGIN_DISPATCH_MAP(CLabActiveCtrl, COleControl)
+	DISP_FUNCTION_ID(CLabActiveCtrl, "Animate", 14, Animate, VT_EMPTY, VTS_R4)
+	DISP_FUNCTION_ID(CLabActiveCtrl, "Рассчитать", 15, Рассчитать, VT_EMPTY, VTS_R4 VTS_R4 VTS_R4 VTS_R4 VTS_UNKNOWN VTS_PR4 VTS_PR4 VTS_R4 VTS_R4)
+	DISP_FUNCTION_ID(CLabActiveCtrl, "SetSnapshotIndex", 16, SetSnapshotIndex, VT_EMPTY, VTS_I4)
+
 END_DISPATCH_MAP()
 
 
@@ -135,12 +139,9 @@ void CLabActiveCtrl::Рассчитать(float x1,
 								float x2,
 								float t1,
 								float t2,
-								float** f,
-								float* mju1,
-								float* mju2,
-								/*float (*f) (float, float),	// u(x, t1) = f(x, t)
-								float (*mju1)(float),	// u(x1, t) = mju1(t)
-								float (*mju2)(float),	// u(x2, t) = mju1(t)*/
+								float** f,// u(x, t1) = f(x, t)
+								float* mju1,// u(x1, t) = mju1(t)
+								float* mju2,// u(x2, t) = mju1(t)
 								float h, float tau)
 {
 	T = (t2-t1)/tau;
@@ -170,7 +171,7 @@ void CLabActiveCtrl::Рассчитать(float x1,
 		u[t][N-1] = mju2[t];
 	}
 
-	for(int t = 1; t < T; t++)
+	for(int t = 1; t < T; )
 	{
 		for(int n = 1; n < N-1; n++)
 		{
@@ -187,6 +188,8 @@ void CLabActiveCtrl::Рассчитать(float x1,
 				h*h / (h*h + k*tau) * u[t-1][n] +
 				h*h / (h*h + k*tau) * tau * (f[t-1][n] + f[t][n]) * 0.5;
 		}
+
+		++t;
 	}
 }
 
@@ -215,8 +218,6 @@ void CLabActiveCtrl::OnDraw(CDC* pdc, const CRect& rcBounds, const CRect& rcInva
 			xx[i] * mx + ox,
 			u[snapshotTimeIndex][i] * (-my) + oy);
 	}
-
-	//pdc->Ellipse(rcBounds);
 }
 
 
@@ -249,4 +250,9 @@ void CLabActiveCtrl::OnResetState()
 void CLabActiveCtrl::Animate(float speed)
 {
 
+}
+
+void CLabActiveCtrl::SetSnapshotIndex(int index)
+{
+	snapshotTimeIndex = (snapshotTimeIndex >= T ? T-1 : index);	
 }

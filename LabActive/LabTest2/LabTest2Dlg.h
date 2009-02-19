@@ -3,7 +3,7 @@
 
 #pragma once
 #include "labactivectrl1.h"
-#include "calendar1.h"
+#include "afxcmn.h"
 
 
 // CLabTest2Dlg dialog
@@ -27,10 +27,11 @@ protected:
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
+	afx_msg void OnHScroll(UINT, UINT, CScrollBar*);
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
 	CLabactivectrl1 m_labctct;
 	afx_msg void OnBnClickedOk();
-	CCalendar1 m_cal;
+	CSliderCtrl m_slider;
 };

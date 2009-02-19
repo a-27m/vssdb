@@ -60,5 +60,6 @@ public:
 	enum {
 	};
 	void Animate(float speed);
+	void SetSnapshotIndex(int);
 };
 
