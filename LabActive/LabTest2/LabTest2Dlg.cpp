@@ -28,6 +28,7 @@ void CLabTest2Dlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LABACTIVECTRL1, m_labctct);
+	DDX_Control(pDX, IDC_CALENDAR1, m_cal);
 }
 
 BEGIN_MESSAGE_MAP(CLabTest2Dlg, CDialog)
@@ -146,7 +147,7 @@ void CLabTest2Dlg::OnBnClickedOk()
 		m2[t] = mju2(tt);
 	}
 
-	m_labctct.Animate(0);
+	//m_labctct.Animate(0);
 	//this->m_labctct.Рассчитать(
 	//	x1, x2,  // x
 	//	t1, t2, // t
@@ -154,4 +155,5 @@ void CLabTest2Dlg::OnBnClickedOk()
 	//	h, tau
 	//	);
 	//OnOK();
+	m_cal.Today();
 }

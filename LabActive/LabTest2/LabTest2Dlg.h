@@ -3,6 +3,7 @@
 
 #pragma once
 #include "labactivectrl1.h"
+#include "calendar1.h"
 
 
 // CLabTest2Dlg dialog
@@ -31,4 +32,5 @@ protected:
 public:
 	CLabactivectrl1 m_labctct;
 	afx_msg void OnBnClickedOk();
+	CCalendar1 m_cal;
 };

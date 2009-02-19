@@ -53,7 +53,7 @@ public:
 	}
 	void Рассчитать(float x1, float x2, float t1, float t2, float * * f, float * m1, float * m2, float h, float tau)
 	{
-		static BYTE parms[] = VTS_R4 VTS_R4 VTS_R4 VTS_R4 VTS_PR4 VTS_PR4 VTS_PR4 VTS_R4 VTS_R4 ;
+		static BYTE parms[] = VTS_R4 VTS_R4 VTS_R4 VTS_R4 VTS_UNKNOWN VTS_PR4 VTS_PR4 VTS_R4 VTS_R4 ;
 		InvokeHelper(15, DISPATCH_METHOD, VT_EMPTY, NULL, parms, x1, x2, t1, t2, f, m1, m2, h, tau);
 	}
 

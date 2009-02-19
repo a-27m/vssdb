@@ -190,6 +190,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\calendar1.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\labactivectrl1.cpp"
 				>
 			</File>
@@ -227,6 +231,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\calendar1.h"
+				>
+			</File>
 			<File
 				RelativePath=".\labactivectrl1.h"
 				>
@@ -279,6 +287,10 @@
 		<Global
 			Name="RESOURCE_FILE"
 			Value="LabTest2.rc"
+		/>
+		<Global
+			Name="{8E27C92B-1264-101C-8A2F-040224009C02}"
+			Value="CCalendar1"
 		/>
 		<Global
 			Name="{CF4DEAEF-F3CD-4E00-9425-46CE35F6BCDE}"
