@@ -92,18 +92,21 @@ HCURSOR CLabTest2Dlg::OnQueryDragIcon()
 float k = 1;
 float f(float x, float t)
 {
-	return -abs(x-4)+6;
-	//return (x-4)*(x-4)/8;
-	return sin(M_PI*x/4)*2+1;
-	return sqrt(-x+4)*0.2+1;
+	//return -abs(x-4)+6;
+	//return (x-1)*(x-3)/8+3./8.;
+	//return sin(M_PI*x/4)*2;
+	//return sqrt(-x+4)*0.2+1;
+	return x/4+sin(M_PI*x/4)*0.2;
 }
 
 float mju1(float t)
 {
-	return cos(t*1.5)*0.5+1.5; 
+	return t/3.; 
+	return 0;
 }
 float mju2(float t)
 { 
+	return 1;
 	return -sin(t*1.5)*0.3+1; 
 }
 
@@ -112,10 +115,10 @@ void CLabTest2Dlg::OnBnClickedOk()
 {
 	float x1 = 0;
 	float x2 = 4;
-	float h = 0.05;
+	float h = 0.015;
 
 	float t1 = 0;
-	float t2 = 100;
+	float t2 = 5;
 	float tau = 0.05;
 
 	int T = (t2-t1)/tau;

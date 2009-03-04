@@ -202,7 +202,7 @@ void CLabActiveCtrl::OnDraw(CDC* pdc, const CRect& rcBounds, const CRect& rcInva
 		return;
 
 	int ox = 10;
-	int oy = 300;
+	int oy = rcBounds.Height()-10;
 	float mx = 50;
 	float my = 50;
 
@@ -212,12 +212,33 @@ void CLabActiveCtrl::OnDraw(CDC* pdc, const CRect& rcBounds, const CRect& rcInva
 	pdc->MoveTo(ox, oy);pdc->LineTo(ox, -10*my + oy);
 	
 	if (xx == NULL) return;
+
+	int maxy = u[snapshotTimeIndex][0] * (-my) + oy;
+	int miny = u[snapshotTimeIndex][0] * (-my) + oy;
 	pdc->MoveTo(xx[0] * mx + ox, u[snapshotTimeIndex][0] * (-my) + oy);
 	for(int i = 1; i < N; i++)
 	{
 		pdc->LineTo(
 			xx[i] * mx + ox,
 			u[snapshotTimeIndex][i] * (-my) + oy);
+
+		if (maxy < u[snapshotTimeIndex][i] * (-my) + oy)
+			maxy = u[snapshotTimeIndex][i] * (-my) + oy;
+
+		if (miny > u[snapshotTimeIndex][i] * (-my) + oy)
+			miny = u[snapshotTimeIndex][i] * (-my) + oy;
+	}
+
+	int h = rcBounds.Height()/20;
+	int oy2 = rcBounds.Height()>>1;
+
+	for(int i = 1; i < N; i++)
+	{
+		float percent = (u[snapshotTimeIndex][i] * (-my) + oy - miny) / (maxy - miny);
+		CPen pen1(0, 1, RGB(int(255-255*percent), 0, int(255*percent)));
+		pdc->SelectObject(&pen1);
+		pdc->MoveTo(xx[i] * mx + ox, oy2 - h);
+		pdc->LineTo(xx[i] * mx + ox, oy2 + h);
 	}
 }
 
