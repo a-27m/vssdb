@@ -244,6 +244,8 @@ namespace mmio1
 
             formTables.AddLine("Решение (min):", solution);
             formTables.AddLine("Значение Fmin:", new Fraction[] { F });
+
+            formTables.UpdateGrid();
         }
 
         private void выделитьБазисМатрицыAToolStripMenuItem_Click(object sender, EventArgs e)

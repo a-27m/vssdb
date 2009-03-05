@@ -16,7 +16,7 @@ namespace mmio1
         int rH, cW;
         Point editingCell;
 
-        Font valueTextFont = new Font("Arial", 10, FontStyle.Regular);
+        Font valueTextFont = new Font("Arial", 8, FontStyle.Regular);
         SolidBrush valueTextBrush = new SolidBrush(Color.Black);
         StringFormat valueStrFormat = new StringFormat();
         Pen selectedCellPen = new Pen(Color.DarkOrange, 2f);

@@ -62,7 +62,7 @@ namespace mmio1
             dataToPopulate.Add(new string[] { "" });
         }
 
-        void UpdateGrid()
+        public void UpdateGrid()
         {
             dataGridView1.ClearRows();
             for (int i = dataGridView1.ColumnCount; i < maxCols + 4; i++)
