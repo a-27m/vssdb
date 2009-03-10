@@ -9,14 +9,3 @@
 #else
 #define COMICSRV_API __declspec(dllimport)
 #endif
-
-// This class is exported from the ComicSrv.dll
-class COMICSRV_API CComicSrv {
-public:
-	CComicSrv(void);
-	// TODO: add your methods here.
-};
-
-extern COMICSRV_API int nComicSrv;
-
-COMICSRV_API int fnComicSrv(void);
