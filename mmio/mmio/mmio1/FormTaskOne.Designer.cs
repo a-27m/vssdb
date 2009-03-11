@@ -29,6 +29,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.TabPage tabPage1;
+            System.Windows.Forms.TabPage tabPage2;
+            this.richTextBox1 = new System.Windows.Forms.TextBox();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItemSlvGraph = new System.Windows.Forms.MenuItem();
@@ -37,11 +40,45 @@
             this.menuItemBack = new System.Windows.Forms.MenuItem();
             this.menuItemOpen = new System.Windows.Forms.MenuItem();
             this.menuItemSave = new System.Windows.Forms.MenuItem();
-            this.dataGridView1 = new mmio1.MobGridView();
-            this.richTextBox1 = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.dataGridView1 = new mmio1.MobGridView();
+            tabPage1 = new System.Windows.Forms.TabPage();
+            tabPage2 = new System.Windows.Forms.TabPage();
+            tabPage1.SuspendLayout();
+            tabPage2.SuspendLayout();
+            this.tabControl1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // tabPage1
+            // 
+            tabPage1.Controls.Add(this.dataGridView1);
+            tabPage1.Location = new System.Drawing.Point(0, 0);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Size = new System.Drawing.Size(240, 245);
+            tabPage1.Text = "Условия";
+            // 
+            // tabPage2
+            // 
+            tabPage2.Controls.Add(this.richTextBox1);
+            tabPage2.Location = new System.Drawing.Point(0, 0);
+            tabPage2.Name = "tabPage2";
+            tabPage2.Size = new System.Drawing.Size(240, 245);
+            tabPage2.Text = "Ответ";
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.BackColor = System.Drawing.SystemColors.GrayText;
+            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox1.Location = new System.Drawing.Point(0, 0);
+            this.richTextBox1.Multiline = true;
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.richTextBox1.Size = new System.Drawing.Size(240, 245);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.Text = "Hello\r\n123";
             // 
             // mainMenu1
             // 
@@ -87,22 +124,6 @@
             this.menuItemSave.Text = "Сохранить...";
             this.menuItemSave.Click += new System.EventHandler(this.menuItemSave_Click);
             // 
-            // dataGridView1
-            // 
-            this.dataGridView1.BackColor = System.Drawing.Color.SeaShell;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(240, 268);
-            this.dataGridView1.TabIndex = 0;
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(0, 0);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(100, 21);
-            this.richTextBox1.TabIndex = 0;
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
@@ -112,16 +133,39 @@
             // 
             this.saveFileDialog1.Filter = "MMIO tasks (*.mmiox)|*.mmiox";
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(tabPage1);
+            this.tabControl1.Controls.Add(tabPage2);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(240, 268);
+            this.tabControl1.TabIndex = 1;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.BackColor = System.Drawing.Color.SeaShell;
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(240, 245);
+            this.dataGridView1.TabIndex = 0;
+            // 
             // FormTaskOne
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(240, 268);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.tabControl1);
             this.Menu = this.mainMenu1;
             this.Name = "FormTaskOne";
             this.Text = "Задача 1";
+            tabPage1.ResumeLayout(false);
+            tabPage2.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -139,5 +183,6 @@
         private System.Windows.Forms.MenuItem menuItemSave;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.TabControl tabControl1;
     }
 }

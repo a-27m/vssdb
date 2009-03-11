@@ -329,7 +329,7 @@ namespace mmio1
 
             #region specialno dlya djema))) podrobnosti
 
-            richTextBox1.Text += " ---===== Детали ====--- " + "\n";
+            richTextBox1.Text += " ---===== Детали ====--- " + "\r\n";
             for (int i = 0; i < m; i++)
             {
                 richTextBox1.Text += string.Format(
@@ -340,7 +340,7 @@ namespace mmio1
                        -solver.A[i, 2], // 3
                        Math.Sign(solver.A[i, 0]) < 0 ? "" : "+", // 4
                        solver.A[i, 0] // 5
-                       ) + "\n";
+                       ) + "\r\n";
             }
 
             // F(x1,x2) = c1x1 + c2x2 + d
@@ -351,9 +351,11 @@ namespace mmio1
                        solver.C2, // 2
                        Math.Sign(solver.D) < 0 ? "" : "+", // 3
                        solver.D // 4
-                ) + "\n";
+                ) + "\r\n";
 
             #endregion
+
+            formTables.UpdateGrid();
         }
 
         void solver_DebugNewSimplexTable(int[] basisJ, Fraction[] c, Fraction[,] table)
@@ -380,11 +382,11 @@ namespace mmio1
                 value += coordinates[i] * C[i];
 
             richTextBox1.Text += "Minimum: F= " + value.ToString() + " ≈ " + value.Value.ToString("f3");
-            richTextBox1.Text += "\n";
+            richTextBox1.Text += "\r\n";
             for (int i = 0; i < coordinates.Length - 1; i++)
                 richTextBox1.Text += string.Format(" x{0} = {1},", i + 1, coordinates[i]);
             richTextBox1.Text += string.Format(" x{0} = {1}.", coordinates.Length, coordinates[coordinates.Length - 1]);
-            richTextBox1.Text += "\n" + "\n";
+            richTextBox1.Text += "\r\n" + "\r\n";
 
             //splitContainer1.Panel2Collapsed = false;
         }
@@ -396,11 +398,11 @@ namespace mmio1
                 value += coordinates[i] * C[i];
 
             richTextBox1.Text += "Maximum: F= " + value.ToString() + " ≈ " + value.Value.ToString("f3");
-            richTextBox1.Text += "\n";
+            richTextBox1.Text += "\r\n";
             for (int i = 0; i < coordinates.Length - 1; i++)
                 richTextBox1.Text += string.Format(" x{0} = {1},", i + 1, coordinates[i]);
             richTextBox1.Text += string.Format(" x{0} = {1}.", coordinates.Length, coordinates[coordinates.Length - 1]);
-            richTextBox1.Text += "\n" + "\n";
+            richTextBox1.Text += "\r\n" + "\r\n";
 
             //splitContainer1.Panel2Collapsed = false;
         }
