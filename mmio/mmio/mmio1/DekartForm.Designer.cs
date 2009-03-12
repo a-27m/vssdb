@@ -41,11 +41,13 @@
             this.Name = "DekartForm";
             this.Text = "DekartForm";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.DekartForm_Paint);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DekartForm_MouseDown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DekartForm_KeyDown);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
     }
 }

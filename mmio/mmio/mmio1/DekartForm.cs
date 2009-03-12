@@ -515,7 +515,12 @@ namespace mmio1
             {
                 // Enter
             }
+        }
+
+        private void DekartForm_MouseDown(object sender, MouseEventArgs e)
+        {
 
         }
     }
 }
+
