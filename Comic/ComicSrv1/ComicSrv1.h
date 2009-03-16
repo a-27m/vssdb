@@ -9,19 +9,3 @@
 
 #include "resource.h"		// main symbols
 
-
-// CComicSrv1App
-// See ComicSrv1.cpp for the implementation of this class
-//
-
-class CComicSrv1App : public CWinApp
-{
-public:
-	CComicSrv1App();
-
-// Overrides
-public:
-	virtual BOOL InitInstance();
-
-	DECLARE_MESSAGE_MAP()
-};
