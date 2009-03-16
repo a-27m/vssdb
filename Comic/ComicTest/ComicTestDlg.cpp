@@ -24,7 +24,7 @@ CComicTestDlg::CComicTestDlg(CWnd* pParent /*=NULL*/)
 	, m_y(0)
 	, m_x1(0)
 	, m_x2(1)
-	, m_step(0.1)
+	, m_step((float)0.1)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	pMath = NULL;
