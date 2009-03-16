@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComicSrv", "ComicSrv\ComicSrv.vcproj", "{E9866756-A7B7-48BC-8B12-A405F88D5FEC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComicTest", "ComicTest\ComicTest.vcproj", "{9D3B3370-BB51-4F75-A3A8-2ABE2A14900F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComicSrv1", "ComicSrv1\ComicSrv1.vcproj", "{24077E02-CE30-4140-BDFD-D2138C4C204B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +17,14 @@ Global
 		{E9866756-A7B7-48BC-8B12-A405F88D5FEC}.Debug|Win32.Build.0 = Debug|Win32
 		{E9866756-A7B7-48BC-8B12-A405F88D5FEC}.Release|Win32.ActiveCfg = Release|Win32
 		{E9866756-A7B7-48BC-8B12-A405F88D5FEC}.Release|Win32.Build.0 = Release|Win32
+		{9D3B3370-BB51-4F75-A3A8-2ABE2A14900F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9D3B3370-BB51-4F75-A3A8-2ABE2A14900F}.Debug|Win32.Build.0 = Debug|Win32
+		{9D3B3370-BB51-4F75-A3A8-2ABE2A14900F}.Release|Win32.ActiveCfg = Release|Win32
+		{9D3B3370-BB51-4F75-A3A8-2ABE2A14900F}.Release|Win32.Build.0 = Release|Win32
+		{24077E02-CE30-4140-BDFD-D2138C4C204B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{24077E02-CE30-4140-BDFD-D2138C4C204B}.Debug|Win32.Build.0 = Debug|Win32
+		{24077E02-CE30-4140-BDFD-D2138C4C204B}.Release|Win32.ActiveCfg = Release|Win32
+		{24077E02-CE30-4140-BDFD-D2138C4C204B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
