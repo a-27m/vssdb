@@ -96,10 +96,10 @@ namespace Lab3_Transport
             Fraction min;
             int mi=0, mj=0;
 
-            min = c[0, 0];
             for (int i = 0; i < m; i++)
             {
-                for (int j = 0; j < n; j++)
+            min = c[i, 0];
+                for (int j = 1; j < n; j++)
                 {
                     if ((c[i, j] < min) && (c[i, j] > 0))
                     {
@@ -107,13 +107,15 @@ namespace Lab3_Transport
                         mj = j;
                     }
                 }
-                v[i, mj]++;
+
+                for (int j = 0; j < n; j++)
+                    if (c[i, j] == min) v[i, j]++;
             }
 
-            min = c[0, 0];
             for (int j = 0; j < n; j++)
             {
-                for (int i = 0; i < m; i++)
+            min = c[0, j];
+                for (int i = 1; i < m; i++)
                 {
                     if ((c[i, j] < min) && (c[i, j] > 0))
                     {
@@ -121,7 +123,8 @@ namespace Lab3_Transport
                         mi = i;
                     }
                 }
-                v[mi, j]++;
+                for (int i = 0; i < m; i++)
+                    if (c[i,j] == min) v[i, j]++;
             }
 
             List<Point> toFill2 = new List<Point>();
@@ -143,7 +146,6 @@ namespace Lab3_Transport
                             break;
                         default:
                             throw new Exception("Unexpected value");
-                            break;
                     }
 
             toFill2.AddRange(toFill1);
@@ -155,13 +157,13 @@ namespace Lab3_Transport
                 int j = p.Y;
 
                 if (ta[i] == 0) continue;
-                if (tb[i] == 0) continue;
+                if (tb[j] == 0) continue;
 
                 if (ta[i] < tb[j])
                 {
                     x[i, j] = ta[i];
-                    ta[i] = 0;
                     tb[j] -= ta[i];
+                    ta[i] = 0;
                 }
                 else
                 {

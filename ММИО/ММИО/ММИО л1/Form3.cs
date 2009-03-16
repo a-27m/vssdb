@@ -375,7 +375,7 @@ namespace ММИО_л1
                 s = new Solver(c, a, b);
                 //x = s.x = s.NWCorner();
                 x = s.x = s.DoublePreference();
-                return;
+                //return;
                 s.MkPotentials(out u, out v);
             }
 
