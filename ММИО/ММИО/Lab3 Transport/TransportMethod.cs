@@ -58,6 +58,7 @@ namespace Lab3_Transport
             tb = (Fraction[])b.Clone();
 
             Fraction[,] x = new Fraction[m, n];
+
             do
             {
                 if (ta[i] < tb[j])
@@ -76,13 +77,109 @@ namespace Lab3_Transport
             return x;
         }
 
+        public Fraction[,] DoublePreference()
+        {
+            m = c.GetLength(0);
+            n = c.GetLength(1);
+            //int i, j;
+
+            //i = 0;
+            //j = 0;
+
+            Fraction[] ta, tb;
+            ta = (Fraction[])a.Clone();
+            tb = (Fraction[])b.Clone();
+
+            Fraction[,] x = new Fraction[m, n];
+            byte[,] v = new byte[m, n];
+
+            Fraction min;
+            int mi=0, mj=0;
+
+            min = c[0, 0];
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if ((c[i, j] < min) && (c[i, j] > 0))
+                    {
+                        min = c[i, j];
+                        mj = j;
+                    }
+                }
+                v[i, mj]++;
+            }
+
+            min = c[0, 0];
+            for (int j = 0; j < n; j++)
+            {
+                for (int i = 0; i < m; i++)
+                {
+                    if ((c[i, j] < min) && (c[i, j] > 0))
+                    {
+                        min = c[i, j];
+                        mi = i;
+                    }
+                }
+                v[mi, j]++;
+            }
+
+            List<Point> toFill2 = new List<Point>();
+            List<Point> toFill1 = new List<Point>();
+            List<Point> toFill0 = new List<Point>();
+
+            for (int i = 0; i < m; i++)
+                for (int j = 0; j < n; j++)
+                    switch (v[i, j])
+                    {
+                        case 2:
+                            toFill2.Add(new Point(i, j));
+                            break;
+                        case 1:
+                            toFill1.Add(new Point(i, j));
+                            break;
+                        case 0:
+                            toFill0.Add(new Point(i, j));
+                            break;
+                        default:
+                            throw new Exception("Unexpected value");
+                            break;
+                    }
+
+            toFill2.AddRange(toFill1);
+            toFill2.AddRange(toFill0);
+
+            foreach (Point p in toFill2)
+            {
+                int i = p.X;
+                int j = p.Y;
+
+                if (ta[i] == 0) continue;
+                if (tb[i] == 0) continue;
+
+                if (ta[i] < tb[j])
+                {
+                    x[i, j] = ta[i];
+                    ta[i] = 0;
+                    tb[j] -= ta[i];
+                }
+                else
+                {
+                    x[i, j] = tb[j];
+                    ta[i] -= tb[j];
+                    tb[j] = 0;
+                }
+            }
+            return x;
+        }
+
         public void MkPotentials(out Fraction[] pu, out Fraction[] pv)
         {
             u = new Fraction[m];
             v = new Fraction[n];
             u[0] = 0;
 
-            Fraction[,] backupX = (Fraction[,])x.Clone();            
+            Fraction[,] backupX = (Fraction[,])x.Clone();
             Fraction[,] t = x;
             x = backupX;
 
@@ -149,7 +246,7 @@ namespace Lab3_Transport
                 cycle = new List<Point>();
             else
                 cycle.Clear();
-            
+
 
             Fraction[,] backupX = (Fraction[,])x.Clone();
             Fraction[,] t = x;
@@ -254,7 +351,7 @@ namespace Lab3_Transport
                     min_j = aCycle[i].Y;
                 }
             }
-            
+
             bool add = true;
             x[aCycle[0].X, aCycle[0].Y] = 0;
 
