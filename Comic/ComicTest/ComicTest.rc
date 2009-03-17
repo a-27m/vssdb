@@ -96,7 +96,6 @@ CAPTION "COM Test Application"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "Add",IDOK,14,199,41,14
-    PUSHBUTTON      "Remove",IDCANCEL,70,199,41,14
     LISTBOX         IDC_LIST1,14,20,97,127,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     EDITTEXT        IDC_EDIT1,159,200,48,14,ES_AUTOHSCROLL
     LTEXT           "Interpolation polynom graphic",IDC_STATIC,126,7,96,8
@@ -113,6 +112,7 @@ BEGIN
     LTEXT           "Y*=",IDC_STATIC,22,172,14,8
     GROUPBOX        "Interpolation data",IDC_STATIC,7,7,111,220
     CONTROL         "",IDC_ANIMATE1,"SysAnimate32",WS_BORDER,126,20,273,155
+    PUSHBUTTON      "Remove",IDC_BUTTON2,61,199,50,14
 END
 
 
@@ -138,13 +138,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "TODO: <Company name>"
-            VALUE "FileDescription", "TODO: <File description>"
+            VALUE "CompanyName", "Alexey Mironenko, ZSEA, 2009"
+            VALUE "FileDescription", "COM-server 'Math' test client"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "ComicTest.exe"
-            VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
+            VALUE "LegalCopyright", "(c) Alexey Mironenko.  All rights reserved."
             VALUE "OriginalFilename", "ComicTest.exe"
-            VALUE "ProductName", "TODO: <Product name>"
+            VALUE "ProductName", "COM-server Math client"
             VALUE "ProductVersion", "1.0.0.1"
         END
     END

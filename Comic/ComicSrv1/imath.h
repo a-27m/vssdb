@@ -1,6 +1,7 @@
 //
 // imath.h
 //
+#include <initguid.h>
 
 // {8E771142-3F6B-4d86-A0E9-A44E1A2CA3BB}
 DEFINE_GUID( CLSID_Math, 

@@ -46,6 +46,6 @@ public:
 	CListBox m_list;
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedButtonSet();
-	afx_msg void OnBnClickedCancel();
+	afx_msg void OnBnClickedButtonRemove();
 	CAnimateCtrl m_pic;
 };

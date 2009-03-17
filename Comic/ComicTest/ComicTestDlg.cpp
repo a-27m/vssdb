@@ -53,7 +53,7 @@ BEGIN_MESSAGE_MAP(CComicTestDlg, CDialog)
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDOK, &CComicTestDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_BUTTON1, &CComicTestDlg::OnBnClickedButtonSet)
-	ON_BN_CLICKED(IDCANCEL, &CComicTestDlg::OnBnClickedCancel)
+	ON_BN_CLICKED(IDC_BUTTON2, &CComicTestDlg::OnBnClickedButtonRemove)
 END_MESSAGE_MAP()
 
 
@@ -265,31 +265,10 @@ void CComicTestDlg::OnBnClickedButtonSet()
 */
 }
 
-void CComicTestDlg::OnBnClickedCancel()
-{
-	if (l_x == NULL) return;
-	if (l_y == NULL) return;
-	if (l_x->GetCount() == 0) return;
-	if (l_y->GetCount() == 0) return;
-
-	int pre = m_list.GetCurSel()-1;
-	CMyList<float>::Node* tmp;
-
-	CMyList<float>::Iterator ix(l_x);
-	ix.GoNext(pre); // get predcessor
-	tmp = ix.GetCurrent()->next;
-	ix.GetCurrent()->next = ix.GetCurrent()->next->next;
-	delete tmp;
-
-	CMyList<float>::Iterator iy(l_y);
-	iy.GoNext(pre); // get predcessor
-	tmp = iy.GetCurrent()->next;
-	iy.GetCurrent()->next = iy.GetCurrent()->next->next;
-	delete tmp;
-
-	this->UpdateList();
-}
-
+//void CComicTestDlg::OnBnClickedCancel()
+//{
+//}
+//
 float CComicTestDlg::f(float x)
 {
 	float result;
@@ -314,4 +293,32 @@ float CComicTestDlg::f(float x)
 	pMath->Interpol(l_x->GetCount(), xi, yi, x, &result);
 	TRACE("%.5f;%.5f\n", x, result);
 	return result;
+}
+void CComicTestDlg::OnBnClickedButtonRemove()
+{
+	//if (
+	if (l_x == NULL) return;
+	if (l_y == NULL) return;
+	if (l_x->GetCount() == 0) return;
+	if (l_y->GetCount() == 0) return;
+
+	int pre = m_list.GetCurSel()-1;
+	//if (pre < -1) pre = 0;
+	CMyList<float>::Node* tmp;
+
+	CMyList<float>::Iterator ix(l_x);
+	ix.GoNext(pre); // get predcessor
+	tmp = ix.GetCurrent()->next;
+	if (tmp)
+	{ix.GetCurrent()->next = ix.GetCurrent()->next->next;
+	delete tmp;}
+
+	CMyList<float>::Iterator iy(l_y);
+	iy.GoNext(pre); // get predcessor
+	tmp = iy.GetCurrent()->next;
+	if (tmp)
+	{iy.GetCurrent()->next = iy.GetCurrent()->next->next;
+	delete tmp;}
+
+	this->UpdateList();
 }
