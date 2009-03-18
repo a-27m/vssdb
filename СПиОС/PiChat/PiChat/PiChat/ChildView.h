@@ -15,10 +15,10 @@ public:
 
 // Attributes
 public:
-
+	CFont* simpleFont;
+	int fontHeight;
 // Operations
 public:
-
 // Overrides
 	protected:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
@@ -29,6 +29,9 @@ public:
 
 	// Generated message map functions
 protected:
+	CWinThread* srvMainThread;
+	UINT __cdecl ServerMainThread( LPVOID pParam ); 
+	UINT __cdecl ClientThread( LPVOID pParam ); 
 	afx_msg void OnPaint();
 	DECLARE_MESSAGE_MAP()
 };
