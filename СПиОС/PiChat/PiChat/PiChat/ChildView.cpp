@@ -28,7 +28,7 @@ UINT __cdecl CChildView::ServerMainThread( LPVOID pParam )
 			0,                        // client time-out 
 			NULL);                    // default security attribute 
 
-		// if (HANDLE == NULL) ...
+		// if (HANDLE == INVALID_HANDLE_VALUE) ...
 
 		if (ConnectNamedPipe(newPipe, NULL))
 		{
@@ -43,7 +43,16 @@ UINT __cdecl CChildView::ClientThread( LPVOID pParam )
 {
 	HANDLE hPipe = *(LPHANDLE*)pParam;
 
+	char buffer[BUFSIZE];
+	int len = 0;
 
+	while(1)
+	{
+		if (ReadFile(hPipe, &buf, BUFSIZE, &len, NULL))
+		{
+
+		}
+	}
 }
 
 CChildView::CChildView()
