@@ -95,7 +95,13 @@ namespace Лаб2
             public int w;
             public int h;
             private float pos;
-            public Form1.ScaleParams scale;
+            private Form1.ScaleParams scale;
+
+            public Form1.ScaleParams Scale
+            {
+                get { return scale; }
+                set { scale = value; }
+            }
             private Form1.ScaleParams scale0;
             private Form1.ScaleParams scaleG;
 
@@ -144,7 +150,19 @@ namespace Лаб2
                     h = value.Height;
                 }
             }
-        
+
+            public float Value
+            {
+                get 
+                {
+                    return ScaleParams.Translate(pos, scale0, scale);
+                }
+                set
+                {
+                    pos = ScaleParams.Translate(value, scale, scale0);
+                }
+            }
+
             public void Click(Point where)
             {
                 pos = (float)where.X / (float)w;
@@ -158,7 +176,7 @@ namespace Лаб2
                 scaleG.S1 = x + w;
 
                 int strokeSize = 2;
-                int midY = y + h / 2;
+                int midY = y + h / 3;
 
                 g.DrawLine(Pens.Black, x, midY, x + w, midY);
 
@@ -176,16 +194,16 @@ namespace Лаб2
 
                 float currX = ScaleParams.Translate(pos, scale0, scaleG);
                 g.DrawLine(Pens.Red,
-                    currX - strokeSize, midY - 10,
+                    currX - 2 * strokeSize, midY - 15,
                     currX, midY);
 
                 g.DrawLine(Pens.Red,
-                    currX + strokeSize, midY - 10,
+                    currX + 2 * strokeSize, midY - 15,
                     currX, midY);
 
                 g.DrawLine(Pens.Red,
-                    currX - strokeSize, midY - 10,
-                    currX + strokeSize, midY - 10);
+                    currX - 2 * strokeSize, midY - 15,
+                    currX + 2 * strokeSize, midY - 15);
 
             }
         }
@@ -211,17 +229,17 @@ namespace Лаб2
             p.Offset(panel1.Width + 10, 0);
             myBar1.Location = p;
             myBar1.h = panel1.Height;
-            myBar1.w = this.Width - panel1.Width - 20;
+            myBar1.w = this.Width - panel1.Width - 40;
 
             myBar2 = new MyBar();
             p = panel2.Location;
             p.Offset(panel2.Width + 10, 0);
             myBar2.Location = p;
             myBar2.h = panel2.Height;
-            myBar2.w = this.Width - panel2.Width - 20;
+            myBar2.w = this.Width - panel2.Width - 40;
 
-            myBar1.scale = scale1;
-            myBar2.scale = scale2;
+            myBar1.Scale = scale1;
+            myBar2.Scale = scale2;
         }
 
         private void linkLabel1_TextChanged(object sender, EventArgs e)
@@ -307,21 +325,19 @@ namespace Лаб2
 
                 try
                 {
-                    trackBar2.Value = (int)((value - scale2.S0) / (scale2.S1 - scale2.S0) * trackBar2.Maximum);
+                   myBar2.Value = value;
                 }
                 catch (ArgumentOutOfRangeException)
                 {
-                    trackBar2.Value = value > scale2.S1 ?
-                        trackBar2.Maximum : trackBar2.Minimum;
+                    myBar2.Value = value > scale2.S1 ? scale2.S1 : scale2.S0;
                 }
                 try
                 {
-                    trackBar1.Value = (int)((old_value - scale1.S0) / (scale1.S1 - scale1.S0) * trackBar1.Maximum);
+                    myBar1.Value = old_value;
                 }
                 catch (ArgumentOutOfRangeException)
                 {
-                    trackBar1.Value = old_value > scale1.S1 ?
-                        trackBar1.Maximum : trackBar1.Minimum;
+                    myBar1.Value = old_value > scale1.S1 ? scale1.S1 : scale1.S0;
                 }
 
 
@@ -349,23 +365,20 @@ namespace Лаб2
 
                 try
                 {
-                    trackBar1.Value = (int)((value - scale1.S0) / (scale1.S1 - scale1.S0) * trackBar1.Maximum);
+                    myBar1.Value = value;
                 }
                 catch (ArgumentOutOfRangeException)
                 {
-                    trackBar1.Value = value > scale1.S1 ?
-                        trackBar1.Maximum : trackBar1.Minimum;
+                    myBar1.Value = value > scale1.S1 ? scale1.S1 : scale1.S0;
                 }
                 try
                 {
-                    trackBar2.Value = (int)((old_value - scale2.S0) / (scale2.S1 - scale2.S0) * trackBar2.Maximum);
+                    myBar2.Value = old_value;
                 }
                 catch (ArgumentOutOfRangeException)
                 {
-                    trackBar2.Value = old_value > scale2.S1 ?
-                        trackBar2.Maximum : trackBar2.Minimum;
+                    myBar2.Value = old_value > scale2.S1 ? scale2.S1 : scale2.S0;
                 }
-
 
                 textBox1.Text = value.ToString();
 
@@ -383,12 +396,59 @@ namespace Лаб2
 
         private void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
         {
+            MyBar myBar, myBarOther;
+
+            ScaleParams sc1, sc2;
+            TextBox tx1, tx2;
+
             if (myBar1.BoundRect.Contains(e.X, e.Y))
             {
-                int x = e.X - myBar1.Location.X;
-                int y = e.Y - myBar1.Location.Y;
-                myBar1.Click(new Point(x, y));
+                myBar = myBar1;
+                myBarOther = myBar2;
+                sc1 = scale1;
+                sc2 = scale2;
+                tx1 = textBox1;
+                tx2 = textBox2;
             }
+            else
+            {
+                if (myBar2.BoundRect.Contains(e.X, e.Y))
+                {
+                    myBar = myBar2;
+                    myBarOther = myBar1;
+                    sc1 = scale2;
+                    sc2 = scale1;
+                    tx1 = textBox2;
+                    tx2 = textBox1;
+                }
+                else return;
+            }
+
+            int x = e.X - myBar.Location.X;
+            int y = e.Y - myBar.Location.Y;
+            myBar.Click(new Point(x, y));
+
+            #region
+
+            float value = ScaleParams.Translate(myBar.Value, sc1, sc2);
+
+            tx1.Text = myBar.Value.ToString();
+            tx2.Text = value.ToString();
+
+            try
+            {
+                myBarOther.Value = value;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                myBarOther.Value = value > scale2.S1 ? sc2.S1 : sc2.S0;
+            }
+
+            statusLabel1.Text = string.Format("{0} {1} = {2} {3}",
+                myBar.Value, sc1.UnitsName, value, sc2.UnitsName);
+            #endregion
+
+            Refresh();
         }
     }
 

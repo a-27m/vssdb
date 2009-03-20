@@ -57,16 +57,16 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.linkLabelMy7 = new Лаб2.LinkLabelMy();
             this.linkLabelMy4 = new Лаб2.LinkLabelMy();
             this.linkLabelMy6 = new Лаб2.LinkLabelMy();
             this.linkLabelMy5 = new Лаб2.LinkLabelMy();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.linkLabelMy0 = new Лаб2.LinkLabelMy();
             this.linkLabelMy1 = new Лаб2.LinkLabelMy();
             this.linkLabelMy2 = new Лаб2.LinkLabelMy();
             this.linkLabelMy3 = new Лаб2.LinkLabelMy();
-            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -147,7 +147,7 @@
             // textBox2
             // 
             this.textBox2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.textBox2.BackColor = System.Drawing.SystemColors.Control;
+            this.textBox2.BackColor = System.Drawing.SystemColors.Window;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox2.ForeColor = System.Drawing.SystemColors.WindowText;
             this.textBox2.Location = new System.Drawing.Point(290, 173);
@@ -161,7 +161,7 @@
             // textBox1
             // 
             this.textBox1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.textBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.textBox1.BackColor = System.Drawing.SystemColors.Window;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox1.ForeColor = System.Drawing.SystemColors.WindowText;
             this.textBox1.Location = new System.Drawing.Point(290, 75);
@@ -187,6 +187,28 @@
             this.tableLayoutPanel1.SetRowSpan(this.panel2, 2);
             this.panel2.Size = new System.Drawing.Size(144, 92);
             this.panel2.TabIndex = 1;
+            // 
+            // panel1
+            // 
+            this.panel1.AutoSize = true;
+            this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.linkLabelMy0);
+            this.panel1.Controls.Add(this.linkLabelMy1);
+            this.panel1.Controls.Add(this.linkLabelMy2);
+            this.panel1.Controls.Add(this.linkLabelMy3);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Padding = new System.Windows.Forms.Padding(16, 0, 16, 0);
+            this.tableLayoutPanel1.SetRowSpan(this.panel1, 2);
+            this.panel1.Size = new System.Drawing.Size(144, 92);
+            this.panel1.TabIndex = 0;
+            // 
+            // errorProvider1
+            // 
+            this.errorProvider1.BlinkRate = 125;
+            this.errorProvider1.ContainerControl = this;
             // 
             // linkLabelMy7
             // 
@@ -245,23 +267,6 @@
             this.linkLabelMy5.Visible = false;
             this.linkLabelMy5.TextChanged += new System.EventHandler(this.linkLabel1_TextChanged);
             // 
-            // panel1
-            // 
-            this.panel1.AutoSize = true;
-            this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.linkLabelMy0);
-            this.panel1.Controls.Add(this.linkLabelMy1);
-            this.panel1.Controls.Add(this.linkLabelMy2);
-            this.panel1.Controls.Add(this.linkLabelMy3);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Padding = new System.Windows.Forms.Padding(16, 0, 16, 0);
-            this.tableLayoutPanel1.SetRowSpan(this.panel1, 2);
-            this.panel1.Size = new System.Drawing.Size(144, 92);
-            this.panel1.TabIndex = 0;
-            // 
             // linkLabelMy0
             // 
             this.linkLabelMy0.AutoSize = true;
@@ -319,17 +324,13 @@
             this.linkLabelMy3.Value = "";
             this.linkLabelMy3.TextChanged += new System.EventHandler(this.linkLabel1_TextChanged);
             // 
-            // errorProvider1
-            // 
-            this.errorProvider1.BlinkRate = 125;
-            this.errorProvider1.ContainerControl = this;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(530, 216);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.DoubleBuffered = true;
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(10000, 250);
             this.MinimizeBox = false;
