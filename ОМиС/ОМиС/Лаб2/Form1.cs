@@ -86,6 +86,109 @@ namespace Лаб2
         }
 
         ScaleParams scale1, scale2;
+        MyBar myBar1, myBar2;
+
+        public class MyBar
+        {
+            private int x;
+            private int y;
+            public int w;
+            public int h;
+            private float pos;
+            public Form1.ScaleParams scale;
+            private Form1.ScaleParams scale0;
+            private Form1.ScaleParams scaleG;
+
+            StringFormat strFormat;
+
+            public MyBar()
+            {
+                strFormat = new StringFormat(StringFormatFlags.DirectionVertical);
+                strFormat.Alignment = StringAlignment.Near;
+                strFormat.LineAlignment = StringAlignment.Center;
+
+                scale0 = new ScaleParams();
+                scale0.S0 = 0;
+                scale0.S1 = 1;
+
+                scaleG = new ScaleParams();
+
+                // to del
+                pos = 0.5f;
+            }
+
+            public Point Location
+            {
+                get
+                {
+                    return new Point(x, y);
+                }
+                set
+                {
+                    x = value.X;
+                    y = value.Y;
+                }
+            }
+
+            public Rectangle BoundRect
+            {
+                get
+                {
+                    return new Rectangle(x, y, w, h);
+                }
+                set
+                {
+                    x = value.X;
+                    y = value.Y;
+                    w = value.Width;
+                    h = value.Height;
+                }
+            }
+        
+            public void Click(Point where)
+            {
+                pos = (float)where.X / (float)w;
+            }
+
+            public void Draw(Graphics g)
+            {
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+
+                scaleG.S0 = x;
+                scaleG.S1 = x + w;
+
+                int strokeSize = 2;
+                int midY = y + h / 2;
+
+                g.DrawLine(Pens.Black, x, midY, x + w, midY);
+
+                for (float ix = x; ix <= x + w + 1; ix += w / 20f)
+                {
+                    g.DrawLine(Pens.Black, ix, midY - strokeSize, ix, midY + strokeSize);
+                    g.DrawString(
+                        (ScaleParams.Translate((ix - x) / w, scale0, scale))
+                        .ToString("F2"),
+                        new Font("Arial", 8f),
+                        Brushes.Black,
+                        ix, midY + strokeSize + 1,
+                        strFormat);
+                }
+
+                float currX = ScaleParams.Translate(pos, scale0, scaleG);
+                g.DrawLine(Pens.Red,
+                    currX - strokeSize, midY - 10,
+                    currX, midY);
+
+                g.DrawLine(Pens.Red,
+                    currX + strokeSize, midY - 10,
+                    currX, midY);
+
+                g.DrawLine(Pens.Red,
+                    currX - strokeSize, midY - 10,
+                    currX + strokeSize, midY - 10);
+
+            }
+        }
 
         public Form1()
         {
@@ -101,6 +204,24 @@ namespace Лаб2
             linkLabelMy6.DataBindings.Add("Value", scale2, "S1");
             linkLabelMy5.DataBindings.Add("Value", scale2, "N");
             linkLabelMy4.DataBindings.Add("Value", scale2, "UnitsName");
+
+            Point p;
+            myBar1 = new MyBar();
+            p = panel1.Location;
+            p.Offset(panel1.Width + 10, 0);
+            myBar1.Location = p;
+            myBar1.h = panel1.Height;
+            myBar1.w = this.Width - panel1.Width - 20;
+
+            myBar2 = new MyBar();
+            p = panel2.Location;
+            p.Offset(panel2.Width + 10, 0);
+            myBar2.Location = p;
+            myBar2.h = panel2.Height;
+            myBar2.w = this.Width - panel2.Width - 20;
+
+            myBar1.scale = scale1;
+            myBar2.scale = scale2;
         }
 
         private void linkLabel1_TextChanged(object sender, EventArgs e)
@@ -251,6 +372,22 @@ namespace Лаб2
                 statusLabel1.Text = string.Format("{0} {1} = {2} {3}",
     old_value, scale2.UnitsName, value, scale1.UnitsName);
 
+            }
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            myBar1.Draw(e.Graphics);
+            myBar2.Draw(e.Graphics);
+        }
+
+        private void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (myBar1.BoundRect.Contains(e.X, e.Y))
+            {
+                int x = e.X - myBar1.Location.X;
+                int y = e.Y - myBar1.Location.Y;
+                myBar1.Click(new Point(x, y));
             }
         }
     }
