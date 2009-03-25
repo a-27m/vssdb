@@ -33,13 +33,12 @@ UINT __cdecl CChildView::ServerMainThread( LPVOID pParam )
 		if (ConnectNamedPipe(newPipe, NULL))
 		{
 			// start new thread for client interaction
-			AfxBeginThread(ClientThread, &newPipe);
-
+			AfxBeginThread(ClientThread, NULL);
 		}
 	}
 }
 
-UINT __cdecl CChildView::ClientThread( LPVOID pParam )
+UINT CChildView::ClientThread( LPVOID pParam )
 {
 	HANDLE hPipe = *(LPHANDLE*)pParam;
 
@@ -61,9 +60,9 @@ CChildView::CChildView()
 
 	simpleFont = new CFont();
 	simpleFont->CreateFontW(
-		fontHeight, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0,fs 0, L"Cambria");
+		fontHeight, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, L"Cambria");
 
-	srvMainThread = AfxBeginThread(ServerMainThread, NULL);
+	srvMainThread = AfxBeginThread(&CChildView::ServerMainThread, NULL);
 }
 
 CChildView::~CChildView()
