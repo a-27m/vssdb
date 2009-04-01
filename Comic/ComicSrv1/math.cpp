@@ -92,6 +92,8 @@ STDMETHODIMP Math::Interpol(int n, float* xi, float* yi, float x, /*out*/ float*
 		for (int i = 0; i <= n; i++)
 		{
 			if (i == k) continue;
+			if (xi[i] == xi[k]) continue;
+
 			numerator *= (x - xi[i]);
 			denominator *= (xi[k] - xi[i]);
 		}

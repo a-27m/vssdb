@@ -33,6 +33,12 @@ CComicTestDlg::CComicTestDlg(CWnd* pParent /*=NULL*/)
 CComicTestDlg::~CComicTestDlg()
 {
 	CoUninitialize();
+
+	l_x->~CMyList();
+	l_y->~CMyList();
+
+	delete l_x;
+	delete l_y;
 }
 
 void CComicTestDlg::DoDataExchange(CDataExchange* pDX)
@@ -291,6 +297,8 @@ float CComicTestDlg::f(float x)
 	}
 
 	pMath->Interpol(l_x->GetCount(), xi, yi, x, &result);
+	delete [] xi;
+	delete [] yi;
 	TRACE("%.5f;%.5f\n", x, result);
 	return result;
 }
@@ -303,6 +311,7 @@ void CComicTestDlg::OnBnClickedButtonRemove()
 	if (l_y->GetCount() == 0) return;
 
 	int pre = m_list.GetCurSel()-1;
+
 	//if (pre < -1) pre = 0;
 	CMyList<float>::Node* tmp;
 
