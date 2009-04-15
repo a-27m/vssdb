@@ -12,7 +12,7 @@
 #define BUFSIZE 1024
 // CChildView
 
-UINT __cdecl CChildView::ServerMainThread( LPVOID pParam )
+UINT ServerMainThread( LPVOID pParam )
 {
 	while(1)
 	{
@@ -33,21 +33,35 @@ UINT __cdecl CChildView::ServerMainThread( LPVOID pParam )
 		if (ConnectNamedPipe(newPipe, NULL))
 		{
 			// start new thread for client interaction
-			AfxBeginThread(ClientThread, NULL);
+			AfxBeginThread((AFX_THREADPROC)&ClientThread, NULL);
 		}
 	}
 }
 
-UINT CChildView::ClientThread( LPVOID pParam )
+// MessageType
+//#define
+enum MessageType
+{
+	mtLogin = 1, mtLogout,	mtQuery, mt
+}
+
+struct SMessageHeader
+{
+	MessageType type;
+	UINT lenght;
+	UINT toWhom; // for messages, 0 means broadcast
+};
+
+UINT ClientThread( LPVOID pParam )
 {
 	HANDLE hPipe = *(LPHANDLE*)pParam;
 
 	char buffer[BUFSIZE];
-	int len = 0;
+	DWORD len = 0;
 
 	while(1)
 	{
-		if (ReadFile(hPipe, &buf, BUFSIZE, &len, NULL))
+		if (ReadFile(hPipe, &buffer, BUFSIZE, &len, NULL))
 		{
 
 		}
@@ -56,13 +70,13 @@ UINT CChildView::ClientThread( LPVOID pParam )
 
 CChildView::CChildView()
 {
-	fontHeight = 28;
+	fontHeight = 18;
 
 	simpleFont = new CFont();
 	simpleFont->CreateFontW(
 		fontHeight, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, L"Cambria");
 
-	srvMainThread = AfxBeginThread(&CChildView::ServerMainThread, NULL);
+	srvMainThread = AfxBeginThread(&ServerMainThread, NULL);
 }
 
 CChildView::~CChildView()

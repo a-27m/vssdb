@@ -30,8 +30,8 @@ public:
 	// Generated message map functions
 protected:
 	CWinThread* srvMainThread;
-	UINT __cdecl ServerMainThread( LPVOID pParam ); 
-	UINT __cdecl ClientThread( LPVOID pParam ); 
+	friend UINT ServerMainThread( LPVOID pParam ); 
+	friend UINT ClientThread( LPVOID pParam ); 
 	afx_msg void OnPaint();
 	DECLARE_MESSAGE_MAP()
 };
