@@ -36,3 +36,4 @@ group by
 	Customers.PostalCode, 
 	Customers.Country
 order by [Company name], [Employee name]
+
