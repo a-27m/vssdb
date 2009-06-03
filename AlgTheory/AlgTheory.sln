@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pre3d", "pre3d\pre3d.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 5 - SysEqu (Fractal 2)", "Lab 5 - SysEqu (Fractal 2)\Lab 5 - SysEqu (Fractal 2).csproj", "{94900FC3-3207-4C86-87E1-990B878596AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 7 - Fourier", "Lab 7 Fourier\Lab 7 - Fourier.csproj", "{889D5905-7A5E-476E-AA45-1E32E6DB2A5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{94900FC3-3207-4C86-87E1-990B878596AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94900FC3-3207-4C86-87E1-990B878596AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94900FC3-3207-4C86-87E1-990B878596AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{889D5905-7A5E-476E-AA45-1E32E6DB2A5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{889D5905-7A5E-476E-AA45-1E32E6DB2A5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{889D5905-7A5E-476E-AA45-1E32E6DB2A5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{889D5905-7A5E-476E-AA45-1E32E6DB2A5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
