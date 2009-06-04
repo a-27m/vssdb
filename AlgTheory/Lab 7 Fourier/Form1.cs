@@ -45,8 +45,8 @@ namespace Lab_7_Fourier
             return s;
         }
 
-        float mx { get { return (rectBox.Width - 2 * marg) / (x2 - x1); } }
-        float my { get { return (rectBox.Height - 2 * marg) / (y2 - y1); } }
+        float mx { get { return (pictureBox1.Width - 2 * marg) / (x2 - x1); } }
+        float my { get { return (pictureBox1.Height - 2 * marg) / (y2 - y1); } }
 
         float ox, oy;
         int marg;
@@ -133,26 +133,26 @@ namespace Lab_7_Fourier
         }
 
         public float TrX(float x) { return x * mx + marg + ox; }
-        public float TrY(float y) { return -y * my + rectBox.Height - marg + oy; }
+        public float TrY(float y) { return -y * my + pictureBox1.Height - marg + oy; }
 
         private void DrawAxes(Graphics g)
         {
-            g.DrawRectangle(penBox,
-                rectBox.X + marg,
-                rectBox.Y + marg,
-                rectBox.Width - 2 * marg,
-                rectBox.Height - 2 * marg);
-
             for (float x = x1; x < x2 + dT / 2f; x += dT)
             {
                 g.DrawLine(penGrid, TrX(x), TrY(y1), TrX(x), TrY(y2));
-                g.DrawString(x.ToString("F2"), fontBox, fontBrush, TrX(x), rectBox.Bottom - marg, strFromatBoxX);
+                g.DrawString(x.ToString("F2"), fontBox, fontBrush, TrX(x), pictureBox1.Bottom - marg, strFromatBoxX);
             }
             for (float y = y1; y < y2 + dY / 2f; y += dY)
             {
                 g.DrawLine(penGrid, TrX(x1), TrY(y), TrX(x2), TrY(y));
                 g.DrawString(y.ToString("F2"), fontBox, fontBrush, marg, TrY(y), strFromatBoxY);
             }
+
+            g.DrawRectangle(penBox,
+                0 + marg,
+                0 + marg,
+                pictureBox1.Width - 2 * marg,
+                pictureBox1.Height - 2 * marg);
         }
 
         private void pictureBox1_Resize(object sender, EventArgs e)
@@ -217,7 +217,7 @@ namespace Lab_7_Fourier
 
                 if (i < 0 || i >= X.Length) return;
 
-                X[i] = -(e.Y - oy + marg - rectBox.Height) / my;
+                X[i] = -(e.Y - oy + marg - pictureBox1.Height) / my;
                 Text += "X" + X[i].ToString("F1");
 
                 Fourier();
