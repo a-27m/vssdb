@@ -34,4 +34,5 @@ protected:
 public:
 	CListBox m_log;
 	CListBox m_usr;
+	CString* pText;
 };

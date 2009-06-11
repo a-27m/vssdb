@@ -26,10 +26,16 @@ struct SMessageHeader
 	UINT lenght;
 	UINT toWhom; // for messages, 0 means broadcast
 };
-
+struct ThParam 
+{
+	HANDLE h;
+	CPiSrvDlg* pisrv; 
+};
 
 UINT ServerMainThread( LPVOID pParam )
 {
+	ThParam* tp = (ThParam*) pParam;
+
 	while(1)
 	{
 		HANDLE newPipe = CreateNamedPipe( 
@@ -45,32 +51,45 @@ UINT ServerMainThread( LPVOID pParam )
 			NULL);                    // default security attribute 
 
 		// if (HANDLE == INVALID_HANDLE_VALUE) ...
+		//Sleep(10000);
+		//while ();
+
+		tp->pisrv->pText = new CString(L"Pipe created. Waiting for clients...");
+		tp->pisrv->UpdateWindow();
 
 		if (ConnectNamedPipe(newPipe, NULL))
 		{
-			HANDLE hCurrentProcess = GetCurrentProcess();
-			HANDLE hPipe;
-			DuplicateHandle(hCurrentProcess, newPipe,
-				hCurrentProcess, &hPipe,	0, TRUE, DUPLICATE_SAME_ACCESS);
+			ThParam* tp2 = new ThParam();
+			tp2->pisrv = tp->pisrv;
 
-			// start new thread for client interaction
-			AfxBeginThread((AFX_THREADPROC)&ClientThread, &hPipe);
+			HANDLE hCurrentProcess = GetCurrentProcess();
+			DuplicateHandle(hCurrentProcess, newPipe,
+				hCurrentProcess, &(tp2->h),	0, TRUE, DUPLICATE_SAME_ACCESS);
+
+			tp->pisrv->pText = new CString(L"New client is connected, starting his worker thread...");
+			tp->pisrv->UpdateWindow();
+			AfxBeginThread(&ClientThread,  (LPVOID)tp2);
 		}
 	}
 }
 
 UINT ClientThread( LPVOID pParam )
 {
-	HANDLE hPipe = *(LPHANDLE*)pParam;
+	ThParam* tp = (ThParam*) pParam;
 
-	char buffer[BUFSIZE];
+	HANDLE hPipe = tp->h;
+
+	wchar_t buffer[BUFSIZE];
 	DWORD len = 0;
 
 	while(1)
 	{
 		if (ReadFile(hPipe, &buffer, BUFSIZE, &len, NULL))
 		{
-			//GetDocument()->->text.AddTail(CString(buffer));
+			CString msg;
+			msg.Format(L"New message: %s", (wchar_t*)buffer);
+			tp->pisrv->pText = new CString(msg);
+			tp->pisrv->RedrawWindow();
 		}
 	}
 }
@@ -82,6 +101,7 @@ CPiSrvDlg::CPiSrvDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CPiSrvDlg::IDD, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	pText = NULL;
 }
 
 void CPiSrvDlg::DoDataExchange(CDataExchange* pDX)
@@ -117,14 +137,15 @@ BOOL CPiSrvDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	srvMainThread = AfxBeginThread(&ServerMainThread, NULL);
-
 	// Set the icon for this dialog.  The framework does this automatically
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+	ThParam* tp = new ThParam();
+	tp->pisrv = this;
+	srvMainThread = AfxBeginThread(&ServerMainThread, (LPVOID)tp);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -140,24 +161,30 @@ void CPiSrvDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 void CPiSrvDlg::OnPaint()
 {
-	if (IsIconic())
+	if (pText != NULL)
 	{
-		CPaintDC dc(this); // device context for painting
-
-		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
-
-		// Center icon in client rectangle
-		int cxIcon = GetSystemMetrics(SM_CXICON);
-		int cyIcon = GetSystemMetrics(SM_CYICON);
-		CRect rect;
-		GetClientRect(&rect);
-		int x = (rect.Width() - cxIcon + 1) / 2;
-		int y = (rect.Height() - cyIcon + 1) / 2;
-
-		// Draw the icon
-		dc.DrawIcon(x, y, m_hIcon);
+		m_log.AddString(*pText);
+		delete pText;
+		pText = NULL;
 	}
-	else
+	//if (IsIconic())
+	//{
+	//	CPaintDC dc(this); // device context for painting
+
+	//	SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
+
+	//	// Center icon in client rectangle
+	//	int cxIcon = GetSystemMetrics(SM_CXICON);
+	//	int cyIcon = GetSystemMetrics(SM_CYICON);
+	//	CRect rect;
+	//	GetClientRect(&rect);
+	//	int x = (rect.Width() - cxIcon + 1) / 2;
+	//	int y = (rect.Height() - cyIcon + 1) / 2;
+
+	//	// Draw the icon
+	//	dc.DrawIcon(x, y, m_hIcon);
+	//}
+	//else
 	{
 		CDialog::OnPaint();
 	}
