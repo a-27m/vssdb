@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PiChat", "PiChat\PiChat.vcp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PiChatClient", "PiChatClient\PiChatClient.vcproj", "{16CFE233-7B67-4948-882E-61F355DC4CAD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PiChatServer", "PiChatServer\PiChatServer.vcproj", "{F9A27231-618A-4087-90F4-5C2D0891E468}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{16CFE233-7B67-4948-882E-61F355DC4CAD}.Debug|Win32.Build.0 = Debug|Win32
 		{16CFE233-7B67-4948-882E-61F355DC4CAD}.Release|Win32.ActiveCfg = Release|Win32
 		{16CFE233-7B67-4948-882E-61F355DC4CAD}.Release|Win32.Build.0 = Release|Win32
+		{F9A27231-618A-4087-90F4-5C2D0891E468}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F9A27231-618A-4087-90F4-5C2D0891E468}.Debug|Win32.Build.0 = Debug|Win32
+		{F9A27231-618A-4087-90F4-5C2D0891E468}.Release|Win32.ActiveCfg = Release|Win32
+		{F9A27231-618A-4087-90F4-5C2D0891E468}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

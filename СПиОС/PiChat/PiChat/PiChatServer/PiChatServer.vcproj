@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="PiChatClient"
-	ProjectGUID="{16CFE233-7B67-4948-882E-61F355DC4CAD}"
-	RootNamespace="PiChatClient"
+	Name="PiChatServer"
+	ProjectGUID="{F9A27231-618A-4087-90F4-5C2D0891E468}"
+	RootNamespace="PiChatServer"
 	
 	
 	
@@ -190,11 +190,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\PiChatClient.cpp"
+				RelativePath=".\PiChatServer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\PiChatClientDlg.cpp"
+				RelativePath=".\PiChatServerDlg.cpp"
 				>
 			</File>
 			<File
@@ -224,11 +224,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\PiChatClient.h"
+				RelativePath=".\PiChatServer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\PiChatClientDlg.h"
+				RelativePath=".\PiChatServerDlg.h"
 				>
 			</File>
 			<File
@@ -250,15 +250,15 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\res\PiChatClient.ico"
+				RelativePath=".\res\PiChatServer.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\PiChatClient.rc"
+				RelativePath=".\PiChatServer.rc"
 				>
 			</File>
 			<File
-				RelativePath=".\res\PiChatClient.rc2"
+				RelativePath=".\res\PiChatServer.rc2"
 				>
 			</File>
 		</Filter>
@@ -270,7 +270,7 @@
 	<Globals>
 		<Global
 			Name="RESOURCE_FILE"
-			Value="PiChatClient.rc"
+			Value="PiChatServer.rc"
 		/>
 	</Globals>
 </VisualStudioProject>

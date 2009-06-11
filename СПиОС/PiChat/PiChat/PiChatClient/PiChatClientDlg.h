@@ -2,6 +2,7 @@
 //
 
 #pragma once
+#include "afxwin.h"
 
 
 // CPiClientDlg dialog
@@ -27,4 +28,18 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedButton1();
+
+	BOOL ConnectServer();
+
+	// Where user write text of the message
+	CString m_input;
+
+	CListBox m_buddylist;
+
+	// Chat flow itself
+	CString m_chat;
+
+	CButton m_button;
 };
