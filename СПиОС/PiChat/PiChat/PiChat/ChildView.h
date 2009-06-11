@@ -6,8 +6,9 @@
 
 
 // CChildView window
+class CChatDocument;
 
-class CChildView : public CWnd
+class CChildView : public CEditView//CWnd
 {
 // Construction
 public:
@@ -34,5 +35,12 @@ protected:
 	friend UINT ClientThread( LPVOID pParam ); 
 	afx_msg void OnPaint();
 	DECLARE_MESSAGE_MAP()
+
+	CChatDocument* GetDocument() { return (CChatDocument*)m_pDocument; }
 };
 
+class CChatDocument : public CDocument
+{
+public:
+	CList<CString> text;
+};

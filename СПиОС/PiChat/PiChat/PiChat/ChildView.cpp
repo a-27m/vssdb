@@ -10,14 +10,27 @@
 #endif
 
 #define BUFSIZE 1024
+
 // CChildView
+
+enum MessageType
+{
+	mtLogin = 1, mtLogout,	mtQuery, 
+};
+
+struct SMessageHeader
+{
+	MessageType type;
+	UINT lenght;
+	UINT toWhom; // for messages, 0 means broadcast
+};
 
 UINT ServerMainThread( LPVOID pParam )
 {
 	while(1)
 	{
 		HANDLE newPipe = CreateNamedPipe( 
-			L"\\\\.\\pipe\\chatsrv",
+			L"\\\\.\\pipe\\chatpipe",
 			PIPE_ACCESS_DUPLEX,       // read/write access 
 			PIPE_TYPE_MESSAGE |       // message type pipe 
 			PIPE_READMODE_MESSAGE |   // message-read mode 
@@ -32,25 +45,16 @@ UINT ServerMainThread( LPVOID pParam )
 
 		if (ConnectNamedPipe(newPipe, NULL))
 		{
+			HANDLE hCurrentProcess = GetCurrentProcess();
+			HANDLE hPipe;
+			DuplicateHandle(hCurrentProcess, newPipe,
+				hCurrentProcess, &hPipe,	0, TRUE, DUPLICATE_SAME_ACCESS);
+
 			// start new thread for client interaction
-			AfxBeginThread((AFX_THREADPROC)&ClientThread, NULL);
+			AfxBeginThread((AFX_THREADPROC)&ClientThread, &hPipe);
 		}
 	}
 }
-
-// MessageType
-//#define
-enum MessageType
-{
-	mtLogin = 1, mtLogout,	mtQuery, mt
-}
-
-struct SMessageHeader
-{
-	MessageType type;
-	UINT lenght;
-	UINT toWhom; // for messages, 0 means broadcast
-};
 
 UINT ClientThread( LPVOID pParam )
 {
@@ -63,6 +67,7 @@ UINT ClientThread( LPVOID pParam )
 	{
 		if (ReadFile(hPipe, &buffer, BUFSIZE, &len, NULL))
 		{
+			//GetDocument()->->text.AddTail(CString(buffer));
 
 		}
 	}
@@ -77,6 +82,9 @@ CChildView::CChildView()
 		fontHeight, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, L"Cambria");
 
 	srvMainThread = AfxBeginThread(&ServerMainThread, NULL);
+
+	//m_pDocument = new CChatDocument();
+	
 }
 
 CChildView::~CChildView()
@@ -85,7 +93,7 @@ CChildView::~CChildView()
 }
 
 
-BEGIN_MESSAGE_MAP(CChildView, CWnd)
+BEGIN_MESSAGE_MAP(CChildView, CEditView)
 	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
@@ -95,16 +103,27 @@ END_MESSAGE_MAP()
 
 BOOL CChildView::PreCreateWindow(CREATESTRUCT& cs) 
 {
-	if (!CWnd::PreCreateWindow(cs))
+		if (!CEditView::PreCreateWindow(cs))
 		return FALSE;
 
-	cs.dwExStyle |= WS_EX_CLIENTEDGE;
-	cs.style &= ~WS_BORDER;
-	cs.lpszClass = AfxRegisterWndClass(CS_HREDRAW|CS_VREDRAW|CS_DBLCLKS, 
-		::LoadCursor(NULL, IDC_ARROW), reinterpret_cast<HBRUSH>(COLOR_WINDOW+1), NULL);
+	//if (m_bDefWordWrap)
+	//	cs.style &= ~(WS_HSCROLL|ES_AUTOHSCROLL);
+
+	return TRUE;
+
+
+	//if (!CWnd::PreCreateWindow(cs))
+	//	return FALSE;
+
+	//cs.dwExStyle |= WS_EX_CLIENTEDGE;
+	//cs.style &= ~WS_BORDER;
+	//cs.lpszClass = AfxRegisterWndClass(CS_HREDRAW|CS_VREDRAW|CS_DBLCLKS, 
+	//	::LoadCursor(NULL, IDC_ARROW), reinterpret_cast<HBRUSH>(COLOR_WINDOW+1), NULL);
 
 	return TRUE;
 }
+
+
 
 void CChildView::OnPaint() 
 {
@@ -114,8 +133,18 @@ void CChildView::OnPaint()
 	this->GetClientRect(&rc);
 
 	dc.SelectObject(simpleFont);
-	dc.DrawText(L"Привет! Съешь еще этих ленивых собак. And jump over the fox.", 
-		79-19, &rc, 0);
+	dc.DrawText(L"Привет! Съешь еще этих ленивых собак. And jump over the fox.", 	79-19, &rc, 0);
+
+	CList<CString>* txt= &(GetDocument()->text);
+	POSITION pos;
+	pos = txt->GetTailPosition();
+	while(pos)
+	{
+		CString line = (CString)(txt->GetAt(pos));
+		dc.DrawText(line, &rc, 0);
+		rc.top += 20;
+		txt->GetPrev(pos);
+	}
 	// Do not call CWnd::OnPaint() for painting messages
 }
 
