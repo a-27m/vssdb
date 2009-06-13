@@ -9,11 +9,24 @@
 #define new DEBUG_NEW
 #endif
 
+enum MessageType
+{
+	mtLogin = 1,
+	mtLogout,
+	mtQuery, 
+	mtText
+};
+
+struct SMessage
+{
+	MessageType type;
+	UINT lenght;
+	UINT toWhom; // for messages, 0 means broadcast
+	wchar_t* text;
+};
+
 
 // CPiClientDlg dialog
-
-
-
 
 CPiClientDlg::CPiClientDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CPiClientDlg::IDD, pParent)
@@ -37,6 +50,7 @@ BEGIN_MESSAGE_MAP(CPiClientDlg, CDialog)
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_BUTTON1, &CPiClientDlg::OnBnClickedButton1)
+	ON_LBN_DBLCLK(IDC_LIST1, &CPiClientDlg::OnLbnDblclkList1)
 END_MESSAGE_MAP()
 
 
@@ -164,15 +178,24 @@ void CPiClientDlg::OnBnClickedButton1()
 
 	if (!weAreConnected) 
 	{
-		if (!ConnectServer())
-			return;
+		ConnectServer();
+		return;
 	}
+
+	    // Convert to a wchar_t*
+	USES_CONVERSION;
+	wchar_t*  pws = T2W(m_input.GetBuffer());
+	m_input.ReleaseBuffer();
+
+	SMessage sm;
+	sm.type = mtText;
+	sm.text = pws;
 
 	DWORD cbWritten;
 	BOOL fSuccess = WriteFile(
 		pServer,                  // pipe handle 
-		m_input,             // message 
-		m_input.GetLength()*sizeof(WCHAR),//(lstrlen(lpvMessage)+1)*sizeof(TCHAR), // message length 
+		pws,             // message 
+		(wcslen(pws)+1)*sizeof(wchar_t), // message length 
 		&cbWritten,             // bytes written 
 		NULL);                  // not overlapped 
 
@@ -185,6 +208,21 @@ void CPiClientDlg::OnBnClickedButton1()
 	}
 	
 	m_chat.Append(L"Sent\r\n"); 
+	m_buddylist.AddString(L"Sent"); 
 
 	UpdateData(FALSE);
+}
+
+void CPiClientDlg::OnLbnDblclkList1()
+{
+	UpdateData(TRUE);
+	CString msg;
+	int i = m_buddylist.GetCurSel();
+	if (i != -1)
+	{
+		m_buddylist.GetText(i, msg);
+		msg.AppendFormat(L":%s", m_input);
+		m_input.SetString(msg);
+		UpdateData(FALSE);
+	}
 }

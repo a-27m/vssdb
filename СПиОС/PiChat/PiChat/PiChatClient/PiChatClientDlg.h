@@ -42,4 +42,5 @@ public:
 	CString m_chat;
 
 	CButton m_button;
+	afx_msg void OnLbnDblclkList1();
 };

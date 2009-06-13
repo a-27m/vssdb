@@ -4,7 +4,9 @@
 
 #pragma once
 #include "afxwin.h"
+#include "mylist.h"
 
+#define MAX_CLIENT 100
 
 // CPiSrvDlg dialog
 class CPiSrvDlg : public CDialog
@@ -24,6 +26,7 @@ public:
 protected:
 	HICON m_hIcon;
 	CWinThread* srvMainThread;
+	CMyList<CString> listText;
 
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -34,5 +37,6 @@ protected:
 public:
 	CListBox m_log;
 	CListBox m_usr;
-	CString* pText;
+
+	void WriteLine(CString str) { listText.AddFirst(str); }
 };

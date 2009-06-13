@@ -17,20 +17,31 @@ UINT ServerMainThread( LPVOID pParam );
 
 enum MessageType
 {
-	mtLogin = 1, mtLogout,	mtQuery, 
+	mtLogin = 1, mtLogout,	mtQuery, mtText
 };
 
-struct SMessageHeader
+struct SMessage
 {
 	MessageType type;
 	UINT lenght;
 	UINT toWhom; // for messages, 0 means broadcast
+	wchar_t* text;
 };
+
 struct ThParam 
 {
 	HANDLE h;
 	CPiSrvDlg* pisrv; 
 };
+struct Client
+{
+	HANDLE m_h;
+	CString m_name;
+};
+
+CMyList<Client> cls;
+CString ClientNameByHandle(HANDLE h);
+HANDLE ClientHandleByName(CString str);
 
 UINT ServerMainThread( LPVOID pParam )
 {
@@ -54,20 +65,27 @@ UINT ServerMainThread( LPVOID pParam )
 		//Sleep(10000);
 		//while ();
 
-		tp->pisrv->pText = new CString(L"Pipe created. Waiting for clients...");
-		tp->pisrv->UpdateWindow();
+		tp->pisrv->WriteLine(CString(L"Pipe created, ready for client connection..."));
+			tp->pisrv->PostMessage(WM_PAINT);
 
 		if (ConnectNamedPipe(newPipe, NULL))
 		{
-			ThParam* tp2 = new ThParam();
-			tp2->pisrv = tp->pisrv;
+			CString name;
+			name.Format(L"<Unnamed%d>", cls.GetCount()+1);
 
-			HANDLE hCurrentProcess = GetCurrentProcess();
-			DuplicateHandle(hCurrentProcess, newPipe,
-				hCurrentProcess, &(tp2->h),	0, TRUE, DUPLICATE_SAME_ACCESS);
+			Client client;
+			client.m_h = newPipe;
+			client.m_name = name;
 
-			tp->pisrv->pText = new CString(L"New client is connected, starting his worker thread...");
-			tp->pisrv->UpdateWindow();
+			cls.AddLast(client);
+
+			tp->pisrv->WriteLine(CString(L"New client is connected, starting it's worker thread..."));
+			tp->pisrv->PostMessage(WM_PAINT);
+
+			ThParam* tp2 = new ThParam;
+			tp2->pisrv = tp->pisrv;			
+			tp2->h = newPipe;
+
 			AfxBeginThread(&ClientThread,  (LPVOID)tp2);
 		}
 	}
@@ -86,10 +104,11 @@ UINT ClientThread( LPVOID pParam )
 	{
 		if (ReadFile(hPipe, &buffer, BUFSIZE, &len, NULL))
 		{
+
 			CString msg;
 			msg.Format(L"New message: %s", (wchar_t*)buffer);
-			tp->pisrv->pText = new CString(msg);
-			tp->pisrv->RedrawWindow();
+			tp->pisrv->WriteLine(msg);
+			tp->pisrv->PostMessage(WM_PAINT);
 		}
 	}
 }
@@ -101,7 +120,6 @@ CPiSrvDlg::CPiSrvDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CPiSrvDlg::IDD, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-	pText = NULL;
 }
 
 void CPiSrvDlg::DoDataExchange(CDataExchange* pDX)
@@ -143,7 +161,7 @@ BOOL CPiSrvDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-	ThParam* tp = new ThParam();
+	ThParam* tp = new ThParam;
 	tp->pisrv = this;
 	srvMainThread = AfxBeginThread(&ServerMainThread, (LPVOID)tp);
 
@@ -161,30 +179,32 @@ void CPiSrvDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 void CPiSrvDlg::OnPaint()
 {
-	if (pText != NULL)
+	m_log.ResetContent();
+	CMyList<CString>::Iterator i(&listText);
+	while(!i.EOL)
 	{
-		m_log.AddString(*pText);
-		delete pText;
-		pText = NULL;
+		m_log.InsertString(0, i.GetCurrent()->data);
+		i.GoNext();
 	}
-	//if (IsIconic())
-	//{
-	//	CPaintDC dc(this); // device context for painting
 
-	//	SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
+	if (IsIconic())
+	{
+		CPaintDC dc(this); // device context for painting
 
-	//	// Center icon in client rectangle
-	//	int cxIcon = GetSystemMetrics(SM_CXICON);
-	//	int cyIcon = GetSystemMetrics(SM_CYICON);
-	//	CRect rect;
-	//	GetClientRect(&rect);
-	//	int x = (rect.Width() - cxIcon + 1) / 2;
-	//	int y = (rect.Height() - cyIcon + 1) / 2;
+		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
-	//	// Draw the icon
-	//	dc.DrawIcon(x, y, m_hIcon);
-	//}
-	//else
+		// Center icon in client rectangle
+		int cxIcon = GetSystemMetrics(SM_CXICON);
+		int cyIcon = GetSystemMetrics(SM_CYICON);
+		CRect rect;
+		GetClientRect(&rect);
+		int x = (rect.Width() - cxIcon + 1) / 2;
+		int y = (rect.Height() - cyIcon + 1) / 2;
+
+		// Draw the icon
+		dc.DrawIcon(x, y, m_hIcon);
+	}
+	else
 	{
 		CDialog::OnPaint();
 	}
@@ -198,3 +218,29 @@ HCURSOR CPiSrvDlg::OnQueryDragIcon()
 }
 
 // CAboutDlg dialog used for App About
+
+CString ClientNameByHandle(HANDLE h)
+{
+	Client c;
+
+	CMyList<Client>::Iterator i(&cls);
+	while(!i.EOL)
+	{
+		c = i.GetCurrent()->data;
+		if (c.m_h == h) return c.m_name;
+		i.GoNext();
+	}
+}
+HANDLE ClientHandleByName(CString str)
+{
+	Client c;
+
+	CMyList<Client>::Iterator i(&cls);
+	while(!i.EOL)
+	{
+		c = i.GetCurrent()->data;
+		if (c.m_name.Compare(str) == 0) return c.m_h;
+		i.GoNext();
+	}
+
+}
