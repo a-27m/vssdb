@@ -1,8 +1,6 @@
 
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PiChat", "PiChat\PiChat.vcproj", "{CD1FEB8B-5D28-4AC7-943E-DD1CA7352CB2}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PiChatClient", "PiChatClient\PiChatClient.vcproj", "{16CFE233-7B67-4948-882E-61F355DC4CAD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PiChatServer", "PiChatServer\PiChatServer.vcproj", "{F9A27231-618A-4087-90F4-5C2D0891E468}"
@@ -13,10 +11,6 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CD1FEB8B-5D28-4AC7-943E-DD1CA7352CB2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{CD1FEB8B-5D28-4AC7-943E-DD1CA7352CB2}.Debug|Win32.Build.0 = Debug|Win32
-		{CD1FEB8B-5D28-4AC7-943E-DD1CA7352CB2}.Release|Win32.ActiveCfg = Release|Win32
-		{CD1FEB8B-5D28-4AC7-943E-DD1CA7352CB2}.Release|Win32.Build.0 = Release|Win32
 		{16CFE233-7B67-4948-882E-61F355DC4CAD}.Debug|Win32.ActiveCfg = Debug|Win32
 		{16CFE233-7B67-4948-882E-61F355DC4CAD}.Debug|Win32.Build.0 = Debug|Win32
 		{16CFE233-7B67-4948-882E-61F355DC4CAD}.Release|Win32.ActiveCfg = Release|Win32
