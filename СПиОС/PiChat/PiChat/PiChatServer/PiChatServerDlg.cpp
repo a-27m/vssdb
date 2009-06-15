@@ -14,19 +14,8 @@
 
 UINT ClientThread( LPVOID pParam );
 UINT ServerMainThread( LPVOID pParam );
-
-enum MessageType
-{
-	mtLogin = 1, mtLogout,	mtQuery, mtText
-};
-
-struct SMessage
-{
-	MessageType type;
-	UINT lenght;
-	UINT toWhom; // for messages, 0 means broadcast
-	wchar_t* text;
-};
+void SendList();
+void SendTo(CString* name, CString* msg);
 
 struct ThParam 
 {
@@ -35,13 +24,17 @@ struct ThParam
 };
 struct Client
 {
+	OVERLAPPED ovlp;
 	HANDLE m_h;
 	CString m_name;
 };
 
 CMyList<Client> cls;
-CString ClientNameByHandle(HANDLE h);
-HANDLE ClientHandleByName(CString str);
+int clientsCount = 1;
+
+CString* ClientNameByHandle(HANDLE h);
+HANDLE ClientHandleByName(CString* str);
+VOID WINAPI CompletedWrite(DWORD, DWORD, LPOVERLAPPED); 
 
 UINT ServerMainThread( LPVOID pParam )
 {
@@ -62,8 +55,6 @@ UINT ServerMainThread( LPVOID pParam )
 			NULL);                    // default security attribute 
 
 		// if (HANDLE == INVALID_HANDLE_VALUE) ...
-		//Sleep(10000);
-		//while ();
 
 		tp->pisrv->WriteLine(CString(L"Pipe created, ready for client connection..."));
 			tp->pisrv->PostMessage(WM_PAINT);
@@ -71,7 +62,7 @@ UINT ServerMainThread( LPVOID pParam )
 		if (ConnectNamedPipe(newPipe, NULL))
 		{
 			CString name;
-			name.Format(L"<Unnamed%d>", cls.GetCount()+1);
+			name.Format(L"Unnamed%d", clientsCount++);
 
 			Client client;
 			client.m_h = newPipe;
@@ -87,6 +78,8 @@ UINT ServerMainThread( LPVOID pParam )
 			tp2->h = newPipe;
 
 			AfxBeginThread(&ClientThread,  (LPVOID)tp2);
+
+			SendList();
 		}
 	}
 }
@@ -99,20 +92,199 @@ UINT ClientThread( LPVOID pParam )
 
 	wchar_t buffer[BUFSIZE];
 	DWORD len = 0;
+	DWORD cbRead, cbAvail, cbLeft;
 
 	while(1)
 	{
-		if (ReadFile(hPipe, &buffer, BUFSIZE, &len, NULL))
+		if(!PeekNamedPipe(hPipe,
+			buffer, BUFSIZE*sizeof(wchar_t),
+			&cbRead, &cbAvail, &cbLeft))
 		{
+			CMyList<Client> ncls;
+			int j = 0;
+			CMyList<Client>::Iterator i(&cls);
+			while(!i.EOL)
+			{ 
+				if (i.GetCurrent()->data.m_h == hPipe)//if (!result[j++])
+				{
+					CString log;
+					log.Format(L"Client '%s' is now disconnected.", cls.GetByIndex(j)->m_name);
+					tp->pisrv->WriteLine(log);
 
-			CString msg;
-			msg.Format(L"New message: %s", (wchar_t*)buffer);
-			tp->pisrv->WriteLine(msg);
+					cls.RemoveAt(j);//.GetCurrent()->data.m_h = INVALID_HANDLE_VALUE;
+					break;
+				}
+				i.GoNext(); j++;
+			}// looking for ourself and remove
+
 			tp->pisrv->PostMessage(WM_PAINT);
-		}
+			SendList();
+
+			CloseHandle(hPipe);
+
+			delete tp;
+			return FALSE; 
+		}  // Peek fail 
+
+		if(cbAvail != 0 )
+		{
+			if (ReadFile(hPipe, &buffer, BUFSIZE, &len, NULL))
+			{
+				CString msg(buffer);
+				if (msg.GetAt(0) == L'!')
+				{
+					CMyList<Client>::Iterator i(&cls);
+					while(!i.EOL)
+					{ 
+						if (i.GetCurrent()->data.m_h == hPipe)
+						{
+							i.GetCurrent()->data.m_name = msg.Right(msg.GetLength()-1);
+							goto awayLabel;
+						}
+
+						i.GoNext();
+					}
+
+awayLabel:
+					tp->pisrv->PostMessage(WM_PAINT);
+					SendList();
+
+					continue;
+				} // name change request
+
+				msg.Trim();
+
+				CString log;
+				log.Format(L"New message: %s", msg);
+				tp->pisrv->WriteLine(log);
+				tp->pisrv->PostMessage(WM_PAINT);
+
+				CString name;
+				CString fromName = *ClientNameByHandle(hPipe);
+					CString stamp;
+
+				int pos = msg.Find(L':');
+				if ( (pos == -1) || (pos == 0) )
+				{
+					name = L"*";
+					stamp.Format(L"%s: ", fromName);
+					msg.Insert(0, stamp);
+					SendTo(&name, &msg);
+				}
+				else
+				{
+					name = msg.Left(pos);
+					msg = msg.Right(msg.GetLength()-pos-1);
+					CString msg1 = msg;
+					stamp.Format(L"%s Ч> You: ", fromName);					
+					msg.Insert(0, stamp);
+					stamp.Format(L"%s Ч> %s: ", fromName, name);					
+					msg1.Insert(0, stamp);
+					SendTo(&name, &msg);
+					SendTo(&fromName, &msg1);
+				} // рассылка
+
+			} // read file
+		} // avail > 0
+
+		::Sleep(300);
 	}
+
+	delete tp;
+	return 0;
 }
 
+void SendList()
+{
+	if (cls.GetCount() == 0) return;
+
+	UINT buflen = cls.GetCount()*sizeof(wchar_t)*255;
+	BYTE* buffer = new BYTE[buflen];
+	CMemFile f;
+	f.Attach(buffer, buflen);
+
+	CArchive ar(&f, CArchive::store);
+	CMyList<Client>::Iterator iNames(&cls);
+
+	ar<<(BYTE)27;
+	ar<<cls.GetCount();
+	while(!iNames.EOL)
+	{
+		ar<<(iNames.GetCurrent()->data.m_name);
+		iNames.GoNext();
+	}
+	ar.Close();
+
+	CMyList<Client>::Iterator i(&cls);
+	while(!i.EOL)
+	{
+		DWORD written;
+
+		//BOOL fSuccess = ::WriteFileEx(
+		//	i.GetCurrent()->data.m_h,
+		//	buffer, 
+		//	buflen,
+		//	(LPOVERLAPPED) & i.GetCurrent()->data.ovlp.,
+		//	&CompletedWrite
+		//	);
+
+		BOOL fSuccess = ::WriteFile(
+			i.GetCurrent()->data.m_h,
+			buffer, 
+			buflen,
+			&written,
+			NULL
+			);
+
+		i.GoNext();
+	}
+
+	delete buffer;
+}
+
+void SendTo(CString* strTo, CString* msg)
+{
+	int* result = new int[cls.GetCount()];
+	int j = 0;
+	msg->LockBuffer();
+	DWORD written;
+
+	CMyList<Client>::Iterator i(&cls);
+	while(!i.EOL)
+	{
+		if (*strTo != L"*")
+		{
+			if (i.GetCurrent()->data.m_name != *strTo)
+			{	
+				i.GoNext();
+				continue;
+			}
+		}
+
+		BOOL fSuccess = ::WriteFile(
+			i.GetCurrent()->data.m_h,
+			msg->GetBuffer(), 
+			(msg->GetLength()+1)*sizeof(wchar_t),
+			&written,//(LPOVERLAPPED) & i.GetCurrent()->data,
+			NULL//&CompletedWrite
+			);
+
+		result[j++] = fSuccess;
+
+		i.GoNext();
+	}
+
+	msg->ReleaseBuffer();
+
+
+	delete result;
+}
+
+VOID WINAPI CompletedWrite(DWORD dwErr, DWORD cbWritten, LPOVERLAPPED po)
+{
+	Client* pClient = (Client*)po;
+
+}
 
 // CPiSrvDlg dialog
 
@@ -129,18 +301,7 @@ void CPiSrvDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST1, m_usr);
 }
 
-/*
-	CList<CString>* txt= &(GetDocument()->text);
-	POSITION pos;
-	pos = txt->GetTailPosition();
-	while(pos)
-	{
-		CString line = (CString)(txt->GetAt(pos));
-		dc.DrawText(line, &rc, 0);
-		rc.top += 20;
-		txt->GetPrev(pos);
-	}
-*/
+
 BEGIN_MESSAGE_MAP(CPiSrvDlg, CDialog)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
@@ -187,6 +348,14 @@ void CPiSrvDlg::OnPaint()
 		i.GoNext();
 	}
 
+	m_usr.ResetContent();
+	CMyList<Client>::Iterator j(&cls);
+	while(!j.EOL)
+	{
+		m_usr.AddString(j.GetCurrent()->data.m_name);
+		j.GoNext();
+	}
+
 	if (IsIconic())
 	{
 		CPaintDC dc(this); // device context for painting
@@ -219,7 +388,7 @@ HCURSOR CPiSrvDlg::OnQueryDragIcon()
 
 // CAboutDlg dialog used for App About
 
-CString ClientNameByHandle(HANDLE h)
+CString* ClientNameByHandle(HANDLE h)
 {
 	Client c;
 
@@ -227,11 +396,13 @@ CString ClientNameByHandle(HANDLE h)
 	while(!i.EOL)
 	{
 		c = i.GetCurrent()->data;
-		if (c.m_h == h) return c.m_name;
+		if (c.m_h == h) return &c.m_name;
 		i.GoNext();
 	}
+
+	return NULL;
 }
-HANDLE ClientHandleByName(CString str)
+HANDLE ClientHandleByName(CString *pstr)
 {
 	Client c;
 
@@ -239,8 +410,9 @@ HANDLE ClientHandleByName(CString str)
 	while(!i.EOL)
 	{
 		c = i.GetCurrent()->data;
-		if (c.m_name.Compare(str) == 0) return c.m_h;
+		if (c.m_name.Compare(*pstr) == 0) return c.m_h;
 		i.GoNext();
 	}
-
+	
+	return NULL;
 }

@@ -3,6 +3,7 @@
 
 #pragma once
 #include "afxwin.h"
+#include "mylist.h"
 
 
 // CPiClientDlg dialog
@@ -21,6 +22,8 @@ public:
 
 // Implementation
 protected:
+	CMyList<CString> listText;
+
 	HICON m_hIcon;
 
 	// Generated message map functions
@@ -43,4 +46,9 @@ public:
 
 	CButton m_button;
 	afx_msg void OnLbnDblclkList1();
+	void AddBuddy(CString* str) { listText.AddFirst(*str); }
+	void ClearBuddies() { while(listText.GetCount()) listText.RemoveFirst(); }
+	//void WriteLine(CString* str) { .AddFirst(*str); }
+	CEdit m_textChat;
+	CEdit m_textInput;
 };

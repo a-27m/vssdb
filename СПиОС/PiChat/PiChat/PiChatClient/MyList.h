@@ -24,7 +24,6 @@ class CMyList
 public:
 	class Iterator
 	{
-		CMyList*	m_List;
 		Node*	Current;
 		int		Offset;
 	public:
@@ -48,7 +47,6 @@ public:
 
 	void RemoveFirst(void);
 	void RemoveLast (void);
-	void RemoveAt(int index);
 
 	int	GetCount (void);
 	T*	GetByIndex(int index);
@@ -103,14 +101,11 @@ void CMyList<T>::AddFirst(T dat)
 template <class T>
 void CMyList<T>::AddFirst(CMyList * List)
 {
-	if (List == NULL) return;
-	if (List->first == NULL) return;
-
-	Node* oldFirst = this->first, *tmp;
+	Node* oldFirst = this->first, tmp;
 
 	this->first = List->first;
 
-	tmp=List->first;count++;
+	tmp=List->first;
 	while(tmp->next!=NULL)	{tmp=tmp->next;count++;}//goto the end of 'List'
 
 	tmp->next=oldFirst;
@@ -160,7 +155,7 @@ void CMyList<T>::RemoveFirst(void)
 template <class T>
 void CMyList<T>::RemoveLast(void)
 {
-	Node* tmp, *w;
+	Node* tmp,w;
 	tmp = this->first;
 	while( tmp->next != NULL )
 	{
@@ -171,26 +166,6 @@ void CMyList<T>::RemoveLast(void)
 	delete tmp;
 	tmp = NULL;//released memory
 	count--;
-}
-
-template <class T>
-void CMyList<T>::RemoveAt(int index)
-{
-	if (count == 0) return;
-	ASSERT(index < count);
-	if (index == 0) { RemoveFirst(); return; }
-	if (index == count-1) { RemoveLast(); return; }
-
-	int i = 0;
-	Node* pNode = this->first;
-
-	while(i < (index - 1)) { pNode = pNode->next; i++; }
-
-	Node* pDelete = pNode->next;
-	pNode->next = pNode->next->next;
-
-	count--;
-	delete pDelete;
 }
 
 template <class T>
@@ -254,7 +229,6 @@ CArchive& operator>> (CArchive& ar, CMyList<T> &Ob)
 template <class T>
 CMyList<T>::Iterator::Iterator(CMyList *List)
 {
-	m_List = List;
 	Current = List->first;
 	Offset=0;
 	EOL = (List->count == 0);
@@ -266,7 +240,7 @@ void CMyList<T>::Iterator::GoNext(void)
 	if (EOL) return;
 	Current=Current->next;
 	if (Current==NULL) EOL=true;
-	if (Offset++ > m_List->count-1)  EOL=true;
+	Offset++;
 }
 
 template <class T>

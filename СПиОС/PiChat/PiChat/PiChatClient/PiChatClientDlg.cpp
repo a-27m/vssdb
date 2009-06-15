@@ -9,22 +9,9 @@
 #define new DEBUG_NEW
 #endif
 
-enum MessageType
-{
-	mtLogin = 1,
-	mtLogout,
-	mtQuery, 
-	mtText
-};
+#define BUFSIZE 1000
 
-struct SMessage
-{
-	MessageType type;
-	UINT lenght;
-	UINT toWhom; // for messages, 0 means broadcast
-	wchar_t* text;
-};
-
+UINT PipeReader( LPVOID pParam );
 
 // CPiClientDlg dialog
 
@@ -43,6 +30,8 @@ void CPiClientDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST1, m_buddylist);
 	DDX_Text(pDX, IDC_EDIT2, m_chat);
 	DDX_Control(pDX, IDC_BUTTON1, m_button);
+	DDX_Control(pDX, IDC_EDIT2, m_textChat);
+	DDX_Control(pDX, IDC_EDIT1, m_textInput);
 }
 
 BEGIN_MESSAGE_MAP(CPiClientDlg, CDialog)
@@ -66,6 +55,7 @@ BOOL CPiClientDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+	AfxBeginThread(&PipeReader, this);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -76,6 +66,17 @@ BOOL CPiClientDlg::OnInitDialog()
 
 void CPiClientDlg::OnPaint()
 {
+	m_buddylist.ResetContent();
+	CMyList<CString>::Iterator i(&listText);
+	while(!i.EOL)
+	{
+		m_buddylist.InsertString(0, i.GetCurrent()->data);
+		i.GoNext();
+	}
+
+	UpdateData(FALSE);
+	m_textChat.LineScroll(10);
+
 	if (IsIconic())
 	{
 		CPaintDC dc(this); // device context for painting
@@ -182,14 +183,12 @@ void CPiClientDlg::OnBnClickedButton1()
 		return;
 	}
 
-	    // Convert to a wchar_t*
+	if (m_input.GetLength() == 0) return;
+
+	 // Convert to a wchar_t*
 	USES_CONVERSION;
 	wchar_t*  pws = T2W(m_input.GetBuffer());
 	m_input.ReleaseBuffer();
-
-	SMessage sm;
-	sm.type = mtText;
-	sm.text = pws;
 
 	DWORD cbWritten;
 	BOOL fSuccess = WriteFile(
@@ -206,11 +205,17 @@ void CPiClientDlg::OnBnClickedButton1()
 		AfxMessageBox(msg);
 		return;
 	}
-	
-	m_chat.Append(L"Sent\r\n"); 
-	m_buddylist.AddString(L"Sent"); 
 
+	if (pws[0] == L'!')
+	{
+		this->SetWindowText(++pws);
+		m_input.Empty();
+	}
+	
 	UpdateData(FALSE);
+	m_textChat.SetScrollPos(SB_VERT, 100);
+	m_textInput.SetFocus();
+	m_textInput.SetSel(0, m_input.GetLength());
 }
 
 void CPiClientDlg::OnLbnDblclkList1()
@@ -225,4 +230,80 @@ void CPiClientDlg::OnLbnDblclkList1()
 		m_input.SetString(msg);
 		UpdateData(FALSE);
 	}
+}
+
+UINT PipeReader( LPVOID pParam )
+{
+	CPiClientDlg* pThis = (CPiClientDlg*)pParam;
+	DWORD len;
+	DWORD cbRead, cbAvail, cbLeft;
+	wchar_t buffer[BUFSIZE];
+
+	while(1)
+	{
+		if (!weAreConnected) continue;
+
+		/*begin*/
+		if(!PeekNamedPipe(pServer,
+			buffer, BUFSIZE*sizeof(wchar_t),
+			&cbRead, &cbAvail, &cbLeft))
+		{
+			//KillTimer(m_nTimer);
+			CloseHandle(pServer);
+			//m_txtText.AppendFormat(L"%s", L"\r\nServer has closed pipe, end of transmission.\r\n");
+			weAreConnected = FALSE;
+			//pThis->m_button.SetWindowText(L"Connect");
+			return FALSE; 
+		}
+
+		if(cbAvail != 0 )
+		{
+			BOOL fSuccess = ::ReadFile(
+				pServer, 
+				&buffer, 
+				1000*sizeof(wchar_t), 
+				&len,
+				NULL);
+
+			BYTE* pRaw = (BYTE*)&buffer;
+			if ( *pRaw == 27) // we've received users list
+			{		
+				pRaw++;
+
+				pThis->ClearBuddies();
+
+				CMemFile f;
+				f.Attach(pRaw, 1000*sizeof(wchar_t));
+
+				CArchive ar(&f, CArchive::load);
+
+				int count;
+				ar>>count;
+				CString name;
+				for(int i = 0; i < count; i++)
+				{
+					ar>>(name);
+					pThis->AddBuddy(&name);
+				}
+
+				pThis->PostMessage(WM_PAINT);
+			}
+			else
+			{
+				pThis->m_chat.Append(buffer);
+				pThis->m_chat.Append(L"\r\n");
+				pThis->PostMessage(WM_PAINT);
+			}
+		}
+
+		::Sleep(300);
+	}
+
+	//	CDialog::OnTimer(nIDEvent);
+
+	/*end*/
+
+/*
+*/
+	return TRUE;
 }
