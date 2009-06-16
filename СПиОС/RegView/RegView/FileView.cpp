@@ -4,12 +4,16 @@
 #include "FileView.h"
 #include "Resource.h"
 #include "RegView.h"
+#include "RegViewDoc.h"
+#include "RegViewView.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
+
+#define BUF_MAXLEN 256
 
 /////////////////////////////////////////////////////////////////////////////
 // CFileView
@@ -88,39 +92,43 @@ void CFileView::OnSize(UINT nType, int cx, int cy)
 	AdjustLayout();
 }
 
+#define STR_HKEY_LOCAL_MACHINE L"HKEY_LOCAL_MACHINE"
+#define STR_HKEY_CLASSES_ROOT L"HKEY_CLASSES_ROOT"
+#define STR_HKEY_USERS L"HKEY_USERS"
+#define STR_HKEY_CURRENT_USER L"HKEY_CURRENT_USER"
+#define LEN_HKEY_LOCAL_MACHINE (sizeof(STR_HKEY_LOCAL_MACHINE)-sizeof(L'\0'))
+#define LEN_HKEY_CLASSES_ROOT (sizeof(STR_HKEY_CLASSES_ROOT)-sizeof(L'\0'))
+#define LEN_HKEY_USERS (sizeof(STR_HKEY_USERS)-sizeof(L'\0'))
+#define LEN_HKEY_CURRENT_USER (sizeof(STR_HKEY_CURRENT_USER)-sizeof(L'\0'))
+#define SWAP_ENDIAN(x) (((x<<24)&0xFF000000)|((x<<8)&0xFF0000)|\
+                       ((x>>8)&0xFF00)|((x>>24)|0xFF))
+
 void CFileView::FillFileView()
 {
-	HTREEITEM hRoot = m_wndFileView.InsertItem(_T("FakeApp files"), 0, 0);
+/*
+STR_HKEY_LOCAL_MACHINE
+STR_HKEY_CLASSES_ROOT
+STR_HKEY_USERS
+STR_HKEY_CURRENT_USER 
+*/
+
+	hRoot = m_wndFileView.InsertItem(_T("Windows registry root"), 0, 0);
 	m_wndFileView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
 
-	HTREEITEM hSrc = m_wndFileView.InsertItem(_T("FakeApp Source Files"), 0, 0, hRoot);
+	hTiHKCR = m_wndFileView.InsertItem(STR_HKEY_CLASSES_ROOT, 0, 0, hRoot);
+	hTiHKCU = m_wndFileView.InsertItem(STR_HKEY_CURRENT_USER, 0, 0, hRoot);
+	hTiHKLM = m_wndFileView.InsertItem(STR_HKEY_LOCAL_MACHINE, 0, 0, hRoot);
+	hTiHKU = m_wndFileView.InsertItem(STR_HKEY_USERS, 0, 0, hRoot);
 
-	m_wndFileView.InsertItem(_T("FakeApp.cpp"), 1, 1, hSrc);
-	m_wndFileView.InsertItem(_T("FakeApp.rc"), 1, 1, hSrc);
-	m_wndFileView.InsertItem(_T("FakeAppDoc.cpp"), 1, 1, hSrc);
-	m_wndFileView.InsertItem(_T("FakeAppView.cpp"), 1, 1, hSrc);
-	m_wndFileView.InsertItem(_T("MainFrm.cpp"), 1, 1, hSrc);
-	m_wndFileView.InsertItem(_T("StdAfx.cpp"), 1, 1, hSrc);
+	// respective empty elenents to keep nodes openable
+	m_wndFileView.InsertItem(_T(""), 0, 0, hTiHKCR);
+	m_wndFileView.InsertItem(_T(""), 0, 0, hTiHKCU);
+	m_wndFileView.InsertItem(_T(""), 0, 0, hTiHKLM);
+	m_wndFileView.InsertItem(_T(""), 0, 0, hTiHKU);
 
-	HTREEITEM hInc = m_wndFileView.InsertItem(_T("FakeApp Header Files"), 0, 0, hRoot);
-
-	m_wndFileView.InsertItem(_T("FakeApp.h"), 2, 2, hInc);
-	m_wndFileView.InsertItem(_T("FakeAppDoc.h"), 2, 2, hInc);
-	m_wndFileView.InsertItem(_T("FakeAppView.h"), 2, 2, hInc);
-	m_wndFileView.InsertItem(_T("Resource.h"), 2, 2, hInc);
-	m_wndFileView.InsertItem(_T("MainFrm.h"), 2, 2, hInc);
-	m_wndFileView.InsertItem(_T("StdAfx.h"), 2, 2, hInc);
-
-	HTREEITEM hRes = m_wndFileView.InsertItem(_T("FakeApp Resource Files"), 0, 0, hRoot);
-
-	m_wndFileView.InsertItem(_T("FakeApp.ico"), 2, 2, hRes);
-	m_wndFileView.InsertItem(_T("FakeApp.rc2"), 2, 2, hRes);
-	m_wndFileView.InsertItem(_T("FakeAppDoc.ico"), 2, 2, hRes);
-	m_wndFileView.InsertItem(_T("FakeToolbar.bmp"), 2, 2, hRes);
-
+	//m_wndFileView.SetItemState(
 	m_wndFileView.Expand(hRoot, TVE_EXPAND);
-	m_wndFileView.Expand(hSrc, TVE_EXPAND);
-	m_wndFileView.Expand(hInc, TVE_EXPAND);
+	//m_wndFileView.Expand(hTiKHCR, TVE_EXPAND);
 }
 
 void CFileView::OnContextMenu(CWnd* pWnd, CPoint point)
@@ -170,12 +178,17 @@ void CFileView::AdjustLayout()
 
 void CFileView::OnProperties()
 {
-	AfxMessageBox(_T("Properties...."));
+	//AfxMessageBox(_T("Properties...."));
 
 }
 
 void CFileView::OnFileOpen()
 {
+	HTREEITEM hTVI=  m_wndFileView.GetSelectedItem();
+	if (hTVI != NULL)
+	{
+		AfxMessageBox(m_wndFileView.GetItemText(hTVI));
+	}
 	// TODO: Add your command handler code here
 }
 
@@ -253,4 +266,151 @@ void CFileView::OnChangeVisualStyle()
 	m_wndFileView.SetImageList(&m_FileViewImages, TVSIL_NORMAL);
 }
 
+BOOL CFileView::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT *pResult)
+{
+	NMHDR* pNMHDR = (NMHDR*)lParam;
+	ASSERT(pNMHDR != NULL);
 
+	if (pNMHDR->code == TVN_ITEMEXPANDING)
+	{
+			LPNMTREEVIEW pnmtv = (LPNMTREEVIEW) lParam;
+			HTREEITEM hItem = pnmtv->itemNew.hItem;
+			UINT action = pnmtv->action;
+
+			if (hItem == hRoot) return TRUE; // ignore expanding or collapsing of the root entry
+
+			CString itemText = m_wndFileView.GetItemText(hItem);
+
+			if (action == TVE_EXPAND)
+			{			
+				HTREEITEM hChild = m_wndFileView.GetChildItem(hItem);
+				if (! m_wndFileView.GetItemText(hChild).IsEmpty() ) // have been opened before
+					return CDockablePane::OnNotify(wParam, lParam, pResult);
+				
+				m_wndFileView.DeleteItem(hChild);
+
+				// enum keys and insert their names into hItem
+				LSTATUS fSuccess;
+				wchar_t wszBuffer[BUF_MAXLEN];
+				HKEY hKey = OpenParentKey(hItem);
+				DWORD i = 0;
+
+				do //while that enums keys in expanded branch
+				{
+					fSuccess = ::RegEnumKey(hKey, i++, (WCHAR *)(&wszBuffer), BUF_MAXLEN);
+
+					if (fSuccess != ERROR_SUCCESS) { break; } // return FALSE; // Should OnNotify() return FALSE now?
+
+					HTREEITEM hNewItem = m_wndFileView.InsertItem((CONST WCHAR *)&wszBuffer, 0, 0, hItem);
+					m_wndFileView.InsertItem(_T(""), 0, 0, hNewItem);
+
+				} while (fSuccess == ERROR_SUCCESS);
+				
+				RegCloseKey(hKey);
+			}
+	}
+	else if (pNMHDR->code == TVN_SELCHANGED)
+	{
+		HTREEITEM hItem = m_wndFileView.GetSelectedItem();
+		if (hItem == hRoot) 	return CDockablePane::OnNotify(wParam, lParam, pResult);
+
+		HKEY hKey = OpenParentKey(hItem);
+
+		CListCtrl& pListCtrl = ((CMainFrame*)this->GetParent())->GetRightPane()->GetListCtrl();
+		pListCtrl.DeleteAllItems();
+
+		BOOL fResult; int itemNumber = 0;
+		DWORD i = 0, cbData = 1024, dwType, dwBufLen = BUF_MAXLEN;		
+		WCHAR wszBuffer[BUF_MAXLEN];
+		BYTE bData[1024];
+		do 
+		{
+			cbData = 1024, dwBufLen = BUF_MAXLEN;
+
+			fResult = ::RegEnumValue(hKey, i++, wszBuffer, &dwBufLen, NULL, &dwType, bData, &cbData);
+
+			if (! fResult == ERROR_SUCCESS) break;
+			
+			CString strValue(L""); 
+
+			switch (dwType)
+			{
+			case  REG_NONE:												// No value type
+				strValue.SetString(L"(None)"); 
+				break;
+			case REG_SZ:														// Unicode nul terminated string
+				strValue.Format(TEXT("%s"), (WCHAR*)(bData), i);
+				break;
+			case REG_EXPAND_SZ:										// Unicode nul terminated string (with environment variable references)
+				strValue.Format(TEXT("Expandable: %s"), (WCHAR*)(bData), i);
+				break;
+			case REG_BINARY:												// Free form binary
+				for(DWORD k = 0; k<cbData; k++)
+					strValue.AppendFormat(TEXT("%XX "), bData[k], i);
+				break;
+			case REG_DWORD:												// 32-bit number
+			//case REG_DWORD_LITTLE_ENDIAN:				// 32-bit number (same as REG_DWORD)
+				for(DWORD k = 0; k<cbData; k++)
+					strValue.AppendFormat(TEXT("%d"), *(DWORD*)(bData), i);
+				break;
+			case REG_DWORD_BIG_ENDIAN:						// 32-bit number
+				break;
+			case REG_LINK:													// Symbolic Link (unicode)
+				break;
+			case REG_MULTI_SZ:											// Multiple Unicode strings
+				break;
+			case REG_RESOURCE_LIST:								// Resource list in the resource map
+				break;
+			case REG_FULL_RESOURCE_DESCRIPTOR:		// Resource list in the hardware description
+				break;
+			case REG_RESOURCE_REQUIREMENTS_LIST:	
+				break;
+			case REG_QWORD:											// 64-bit number
+			//case REG_QWORD_LITTLE_ENDIAN:				// 64-bit number (same as REG_QWORD)
+				break;
+			default:
+				break;
+			}
+
+			pListCtrl.InsertItem(LVIF_TEXT, itemNumber, wszBuffer, 0, 0, 0, NULL);			
+			pListCtrl.SetItemText(itemNumber, 0, wszBuffer);
+			pListCtrl.SetItemText(itemNumber, 1, strValue);
+			itemNumber++;
+		}
+		while (fResult == ERROR_SUCCESS);
+
+		::RegCloseKey(hKey);
+	}
+
+	return CDockablePane::OnNotify(wParam, lParam, pResult);
+}
+
+HKEY CFileView::OpenParentKey(HTREEITEM hItem)
+{
+	if (hItem == hTiHKCR) return HKEY_CLASSES_ROOT;
+	if (hItem == hTiHKCU) return HKEY_CURRENT_USER;
+	if (hItem == hTiHKLM) return HKEY_LOCAL_MACHINE;
+	if (hItem == hTiHKU) return HKEY_USERS;
+	if (hItem == hRoot) return (HKEY)INVALID_HANDLE_VALUE;  //error
+
+	// check if we're already at the root of m_wndFileView tree
+	if (hItem == TVI_ROOT) return (HKEY)INVALID_HANDLE_VALUE;
+	if (hItem == NULL) return (HKEY)INVALID_HANDLE_VALUE;
+
+	HKEY hKey = OpenParentKey(m_wndFileView.GetParentItem(hItem));
+	HKEY hKeyResult;
+
+	CString subName = m_wndFileView.GetItemText(hItem);
+	if (::RegOpenKeyEx(hKey, subName.GetBuffer(), 0, KEY_READ, &hKeyResult) != ERROR_SUCCESS)
+	{
+		// do error handling )
+		subName.ReleaseBuffer();
+		return (HKEY)INVALID_HANDLE_VALUE;
+	}
+	else
+	{
+		subName.ReleaseBuffer();
+		::RegCloseKey(hKey);
+		return hKeyResult;
+	}
+}

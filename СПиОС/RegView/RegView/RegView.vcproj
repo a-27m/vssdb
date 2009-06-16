@@ -388,5 +388,9 @@
 		</File>
 	</Files>
 	<Globals>
+		<Global
+			Name="RESOURCE_FILE"
+			Value="RegView.rc"
+		/>
 	</Globals>
 </VisualStudioProject>

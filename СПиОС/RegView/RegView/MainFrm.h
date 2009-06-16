@@ -39,9 +39,7 @@ public:
 protected:  // control bar embedded members
 	CMFCMenuBar       m_wndMenuBar;
 	CMFCToolBar       m_wndToolBar;
-	CMFCStatusBar     m_wndStatusBar;
 	CFileView         m_wndFileView;
-	CClassView        m_wndClassView;
 
 // Generated message map functions
 protected:

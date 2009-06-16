@@ -50,6 +50,12 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
 
+	virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult);
+
+	HTREEITEM hTiHKLM, hTiHKCR, hTiHKU, hTiHKCU, hRoot;
+
+	HKEY OpenParentKey(HTREEITEM hTItem);
+
 	DECLARE_MESSAGE_MAP()
 };
 

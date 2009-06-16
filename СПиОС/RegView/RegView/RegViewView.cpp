@@ -48,6 +48,9 @@ void CRegViewView::OnInitialUpdate()
 
 	// TODO: You may populate your ListView with items by directly accessing
 	//  its list control through a call to GetListCtrl().
+	GetListCtrl().InsertColumn(0, L"Name", 0, 150, 0);
+	GetListCtrl().InsertColumn(1, L"Value", 0, 300, 1);
+
 }
 
 void CRegViewView::OnRButtonUp(UINT nFlags, CPoint point)
@@ -88,4 +91,17 @@ void CRegViewView::OnStyleChanged(int nStyleType, LPSTYLESTRUCT lpStyleStruct)
 {
 	//TODO: add code to react to the user changing the view style of your window	
 	CListView::OnStyleChanged(nStyleType,lpStyleStruct);	
+}
+
+BOOL CRegViewView::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
+{
+	NMHDR* pNMHDR = (NMHDR*)lParam;
+	ASSERT(pNMHDR != NULL);
+
+	if (pNMHDR->code == TVN_ITEMEXPANDING)
+	{
+		AfxMessageBox(L"This is it again");
+	}
+
+	return CListView::OnNotify(wParam, lParam, pResult);
 }
