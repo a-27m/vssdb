@@ -9,11 +9,12 @@
 class CRegViewView : public CListView
 {
 protected: // create from serialization only
-	CRegViewView();
 	DECLARE_DYNCREATE(CRegViewView)
 
 // Attributes
 public:
+	CRegViewView();
+
 	CRegViewDoc* GetDocument() const;
 
 // Operations

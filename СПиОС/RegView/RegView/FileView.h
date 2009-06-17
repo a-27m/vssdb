@@ -55,6 +55,8 @@ protected:
 	HTREEITEM hTiHKLM, hTiHKCR, hTiHKU, hTiHKCU, hRoot;
 
 	HKEY OpenParentKey(HTREEITEM hTItem);
+	CString GetPathToItem(HTREEITEM hItem);
+
 
 	DECLARE_MESSAGE_MAP()
 };

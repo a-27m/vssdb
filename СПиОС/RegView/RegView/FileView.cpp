@@ -14,6 +14,12 @@ static char THIS_FILE[]=__FILE__;
 #endif
 
 #define BUF_MAXLEN 256
+#define STR_HKEY_LOCAL_MACHINE L"HKEY_LOCAL_MACHINE"
+#define STR_HKEY_CLASSES_ROOT L"HKEY_CLASSES_ROOT"
+#define STR_HKEY_USERS L"HKEY_USERS"
+#define STR_HKEY_CURRENT_USER L"HKEY_CURRENT_USER"
+#define SWAP_ENDIAN(x) (((x<<24)&0xFF000000)|((x<<8)&0xFF0000)|\
+                       ((x>>8)&0xFF00)|((x>>24)|0xFF))
 
 /////////////////////////////////////////////////////////////////////////////
 // CFileView
@@ -53,7 +59,7 @@ int CFileView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	rectDummy.SetRectEmpty();
 
 	// Create view:
-	const DWORD dwViewStyle = WS_CHILD | WS_VISIBLE | TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS;
+	const DWORD dwViewStyle = WS_CHILD | WS_VISIBLE | TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS | TVS_SHOWSELALWAYS;
 
 	if (!m_wndFileView.Create(dwViewStyle, rectDummy, this, 4))
 	{
@@ -65,14 +71,14 @@ int CFileView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_FileViewImages.Create(IDB_FILE_VIEW, 16, 0, RGB(255, 0, 255));
 	m_wndFileView.SetImageList(&m_FileViewImages, TVSIL_NORMAL);
 
-	m_wndToolBar.Create(this, AFX_DEFAULT_TOOLBAR_STYLE, IDR_EXPLORER);
-	m_wndToolBar.LoadToolBar(IDR_EXPLORER, 0, 0, TRUE /* Is locked */);
+	//m_wndToolBar.Create(this, AFX_DEFAULT_TOOLBAR_STYLE, IDR_EXPLORER);
+	//m_wndToolBar.LoadToolBar(IDR_EXPLORER, 0, 0, TRUE /* Is locked */);
 
 	OnChangeVisualStyle();
 
-	m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() | CBRS_TOOLTIPS | CBRS_FLYBY);
+	//m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() | CBRS_TOOLTIPS | CBRS_FLYBY);
 
-	m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() & ~(CBRS_GRIPPER | CBRS_SIZE_DYNAMIC | CBRS_BORDER_TOP | CBRS_BORDER_BOTTOM | CBRS_BORDER_LEFT | CBRS_BORDER_RIGHT));
+	//m_wndToolBar.SetPaneStyle(m_wndToolBar.GetPaneStyle() & ~(CBRS_GRIPPER | CBRS_SIZE_DYNAMIC | CBRS_BORDER_TOP | CBRS_BORDER_BOTTOM | CBRS_BORDER_LEFT | CBRS_BORDER_RIGHT));
 
 	m_wndToolBar.SetOwner(this);
 
@@ -92,26 +98,9 @@ void CFileView::OnSize(UINT nType, int cx, int cy)
 	AdjustLayout();
 }
 
-#define STR_HKEY_LOCAL_MACHINE L"HKEY_LOCAL_MACHINE"
-#define STR_HKEY_CLASSES_ROOT L"HKEY_CLASSES_ROOT"
-#define STR_HKEY_USERS L"HKEY_USERS"
-#define STR_HKEY_CURRENT_USER L"HKEY_CURRENT_USER"
-#define LEN_HKEY_LOCAL_MACHINE (sizeof(STR_HKEY_LOCAL_MACHINE)-sizeof(L'\0'))
-#define LEN_HKEY_CLASSES_ROOT (sizeof(STR_HKEY_CLASSES_ROOT)-sizeof(L'\0'))
-#define LEN_HKEY_USERS (sizeof(STR_HKEY_USERS)-sizeof(L'\0'))
-#define LEN_HKEY_CURRENT_USER (sizeof(STR_HKEY_CURRENT_USER)-sizeof(L'\0'))
-#define SWAP_ENDIAN(x) (((x<<24)&0xFF000000)|((x<<8)&0xFF0000)|\
-                       ((x>>8)&0xFF00)|((x>>24)|0xFF))
 
 void CFileView::FillFileView()
 {
-/*
-STR_HKEY_LOCAL_MACHINE
-STR_HKEY_CLASSES_ROOT
-STR_HKEY_USERS
-STR_HKEY_CURRENT_USER 
-*/
-
 	hRoot = m_wndFileView.InsertItem(_T("Windows registry root"), 0, 0);
 	m_wndFileView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
 
@@ -133,13 +122,14 @@ STR_HKEY_CURRENT_USER
 
 void CFileView::OnContextMenu(CWnd* pWnd, CPoint point)
 {
+		CDockablePane::OnContextMenu(pWnd, point);
+		return;
+		/*
 	CTreeCtrl* pWndTree = (CTreeCtrl*) &m_wndFileView;
 	ASSERT_VALID(pWndTree);
 
 	if (pWnd != pWndTree)
 	{
-		CDockablePane::OnContextMenu(pWnd, point);
-		return;
 	}
 
 	if (point != CPoint(-1, -1))
@@ -158,6 +148,7 @@ void CFileView::OnContextMenu(CWnd* pWnd, CPoint point)
 
 	pWndTree->SetFocus();
 	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EXPLORER, point.x, point.y, this, TRUE);
+	*/
 }
 
 void CFileView::AdjustLayout()
@@ -170,9 +161,9 @@ void CFileView::AdjustLayout()
 	CRect rectClient;
 	GetClientRect(rectClient);
 
-	int cyTlb = m_wndToolBar.CalcFixedLayout(FALSE, TRUE).cy;
-
-	m_wndToolBar.SetWindowPos(NULL, rectClient.left, rectClient.top, rectClient.Width(), cyTlb, SWP_NOACTIVATE | SWP_NOZORDER);
+	//int cyTlb = m_wndToolBar.CalcFixedLayout(FALSE, TRUE).cy;
+int cyTlb = 0;
+	//m_wndToolBar.SetWindowPos(NULL, rectClient.left, rectClient.top, rectClient.Width(), cyTlb, SWP_NOACTIVATE | SWP_NOZORDER);
 	m_wndFileView.SetWindowPos(NULL, rectClient.left + 1, rectClient.top + cyTlb + 1, rectClient.Width() - 2, rectClient.Height() - cyTlb - 2, SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
@@ -312,11 +303,18 @@ BOOL CFileView::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT *pResult)
 	else if (pNMHDR->code == TVN_SELCHANGED)
 	{
 		HTREEITEM hItem = m_wndFileView.GetSelectedItem();
+
+		((CMainFrame*) this->GetParent())->m_wndStatusBar.SetWindowText(GetPathToItem(hItem));
+
 		if (hItem == hRoot) 	return CDockablePane::OnNotify(wParam, lParam, pResult);
 
 		HKEY hKey = OpenParentKey(hItem);
 
-		CListCtrl& pListCtrl = ((CMainFrame*)this->GetParent())->GetRightPane()->GetListCtrl();
+		CListCtrl& pListCtrl = ( 
+			(CRegViewView*) (
+				((CMainFrame*) this->GetParent())->GetActiveView() 
+				) 
+			)->GetListCtrl();
 		pListCtrl.DeleteAllItems();
 
 		BOOL fResult; int itemNumber = 0;
@@ -332,49 +330,70 @@ BOOL CFileView::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT *pResult)
 			if (! fResult == ERROR_SUCCESS) break;
 			
 			CString strValue(L""); 
+			CString strType(L"");
 
 			switch (dwType)
 			{
 			case  REG_NONE:												// No value type
-				strValue.SetString(L"(None)"); 
+				strType.SetString(L"REG_NONE"); 
 				break;
 			case REG_SZ:														// Unicode nul terminated string
+				strType.SetString(L"REG_SZ"); 
 				strValue.Format(TEXT("%s"), (WCHAR*)(bData), i);
 				break;
 			case REG_EXPAND_SZ:										// Unicode nul terminated string (with environment variable references)
+				strType.SetString(L"REG_EXPAND_SZ"); 
 				strValue.Format(TEXT("Expandable: %s"), (WCHAR*)(bData), i);
 				break;
 			case REG_BINARY:												// Free form binary
+				strType.SetString(L"REG_BINARY"); 
 				for(DWORD k = 0; k<cbData; k++)
-					strValue.AppendFormat(TEXT("%XX "), bData[k], i);
+					strValue.AppendFormat(TEXT("%0X "), bData[k], i);
 				break;
 			case REG_DWORD:												// 32-bit number
 			//case REG_DWORD_LITTLE_ENDIAN:				// 32-bit number (same as REG_DWORD)
-				for(DWORD k = 0; k<cbData; k++)
-					strValue.AppendFormat(TEXT("%d"), *(DWORD*)(bData), i);
+				strType.SetString(L"REG_DWORD"); 
+				//for(DWORD k = 0; k<cbData; k++)
+					strValue.Format(TEXT("%d"), *(DWORD*)(bData), i);
 				break;
 			case REG_DWORD_BIG_ENDIAN:						// 32-bit number
+				strType.SetString(L"REG_DWORD_BIG_ENDIAN"); 
+				for(DWORD k = 0; k<cbData; k++)
+					strValue.AppendFormat(TEXT("%d"), SWAP_ENDIAN(*(DWORD*)(bData)), i);
 				break;
 			case REG_LINK:													// Symbolic Link (unicode)
+				strType.SetString(L"REG_LINK"); 
+				strValue.SetString(L"(Symbolic Link)");
 				break;
 			case REG_MULTI_SZ:											// Multiple Unicode strings
+				strType.SetString(L"REG_MULTI_SZ"); 
+				strValue.SetString(L"(Multiple Unicode strings)");
 				break;
 			case REG_RESOURCE_LIST:								// Resource list in the resource map
+				strType.SetString(L"REG_RESOURCE_LIST"); 
+				strValue.SetString(L"(Resource list in the resource map)");
 				break;
 			case REG_FULL_RESOURCE_DESCRIPTOR:		// Resource list in the hardware description
+				strType.SetString(L"REG_FULL_RESOURCE_DESCRIPTOR"); 
+				strValue.SetString(L"(value)");
 				break;
 			case REG_RESOURCE_REQUIREMENTS_LIST:	
+				strType.SetString(L"REG_RESOURCE_REQUIREMENTS_LIST"); 
+				strValue.SetString(L"(value)");
 				break;
 			case REG_QWORD:											// 64-bit number
 			//case REG_QWORD_LITTLE_ENDIAN:				// 64-bit number (same as REG_QWORD)
+				strType.SetString(L"REG_QWORD"); 
+				strValue.Format(TEXT("%d"), *(QWORD*)(bData), i);
 				break;
 			default:
 				break;
 			}
 
 			pListCtrl.InsertItem(LVIF_TEXT, itemNumber, wszBuffer, 0, 0, 0, NULL);			
-			pListCtrl.SetItemText(itemNumber, 0, wszBuffer);
-			pListCtrl.SetItemText(itemNumber, 1, strValue);
+			pListCtrl.SetItemText(itemNumber, 0, dwBufLen > 0 ? wszBuffer : L"(Default)");
+			pListCtrl.SetItemText(itemNumber, 1, strType);
+			pListCtrl.SetItemText(itemNumber, 2, strValue);
 			itemNumber++;
 		}
 		while (fResult == ERROR_SUCCESS);
@@ -413,4 +432,21 @@ HKEY CFileView::OpenParentKey(HTREEITEM hItem)
 		::RegCloseKey(hKey);
 		return hKeyResult;
 	}
+}
+
+CString CFileView::GetPathToItem(HTREEITEM hItem)
+{
+	if (hItem == hTiHKCR) return CString(L"HKCR");
+	if (hItem == hTiHKCU) return CString(L"HKCU");
+	if (hItem == hTiHKLM) return CString(L"HKLM");
+	if (hItem == hTiHKU) return CString(L"HKU");
+	if (hItem == hRoot) return CString(L"");
+
+	// check if we're already at the root of m_wndFileView tree
+	if (hItem == TVI_ROOT) return CString(L"");
+	if (hItem == NULL) return CString(L"");
+
+	CString path = GetPathToItem(m_wndFileView.GetParentItem(hItem)) + CString(L"\\") + m_wndFileView.GetItemText(hItem);
+
+	return path;
 }

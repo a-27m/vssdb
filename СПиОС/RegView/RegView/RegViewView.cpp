@@ -45,12 +45,12 @@ void CRegViewView::OnInitialUpdate()
 {
 	CListView::OnInitialUpdate();
 
+	ModifyStyle(LVS_TYPEMASK, LVS_REPORT);
+	//ModifyStyle(0, LVS_SORTASCENDING);
 
-	// TODO: You may populate your ListView with items by directly accessing
-	//  its list control through a call to GetListCtrl().
-	GetListCtrl().InsertColumn(0, L"Name", 0, 150, 0);
-	GetListCtrl().InsertColumn(1, L"Value", 0, 300, 1);
-
+	GetListCtrl().InsertColumn(0, L"Name",	0, 150,	0);
+	GetListCtrl().InsertColumn(1, L"Type",	0, 100,	1);
+	GetListCtrl().InsertColumn(2, L"Value",	0, 300,	2);
 }
 
 void CRegViewView::OnRButtonUp(UINT nFlags, CPoint point)

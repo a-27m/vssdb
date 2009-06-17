@@ -7,7 +7,7 @@
 
 #include "MainFrm.h"
 #include "LeftView.h"
-#include "RegViewView.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -65,36 +65,36 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// prevent the menu bar from taking the focus on activation
 	CMFCPopupMenu::SetForceMenuFocus(FALSE);
 
-	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
-		!m_wndToolBar.LoadToolBar(theApp.m_bHiColorIcons ? IDR_MAINFRAME_256 : IDR_MAINFRAME))
-	{
-		TRACE0("Failed to create toolbar\n");
-		return -1;      // fail to create
-	}
-
-	CString strToolBarName;
-	bNameValid = strToolBarName.LoadString(IDS_TOOLBAR_STANDARD);
-	ASSERT(bNameValid);
-	m_wndToolBar.SetWindowText(strToolBarName);
-
-	CString strCustomize;
-	bNameValid = strCustomize.LoadString(IDS_TOOLBAR_CUSTOMIZE);
-	ASSERT(bNameValid);
-	m_wndToolBar.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
-
-	//if (!m_wndStatusBar.Create(this))
+	//if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
+	//	!m_wndToolBar.LoadToolBar(theApp.m_bHiColorIcons ? IDR_MAINFRAME_256 : IDR_MAINFRAME))
 	//{
-	//	TRACE0("Failed to create status bar\n");
+	//	TRACE0("Failed to create toolbar\n");
 	//	return -1;      // fail to create
 	//}
-	//m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
+
+	//CString strToolBarName;
+	//bNameValid = strToolBarName.LoadString(IDS_TOOLBAR_STANDARD);
+	//ASSERT(bNameValid);
+	//m_wndToolBar.SetWindowText(strToolBarName);
+
+	//CString strCustomize;
+	//bNameValid = strCustomize.LoadString(IDS_TOOLBAR_CUSTOMIZE);
+	//ASSERT(bNameValid);
+	//m_wndToolBar.EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
+
+	if (!m_wndStatusBar.Create(this))
+	{
+		TRACE0("Failed to create status bar\n");
+		return -1;      // fail to create
+	}
+	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
 
 	// TODO: Delete these five lines if you don't want the toolbar and menubar to be dockable
 	m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
-	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
+	//m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
 	EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndMenuBar);
-	DockPane(&m_wndToolBar);
+	//DockPane(&m_wndToolBar);
 
 
 	// enable Visual Studio 2005 style docking window behavior
@@ -119,31 +119,46 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 //	m_wndClassView.AttachToTabWnd(&m_wndFileView, DM_SHOW, TRUE, &pTabbedBar);
 
 
-	// Enable toolbar and docking window menu replacement
-	EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, strCustomize, ID_VIEW_TOOLBAR);
+	//// Enable toolbar and docking window menu replacement
+	//EnablePaneMenu(TRUE, ID_VIEW_CUSTOMIZE, strCustomize, ID_VIEW_TOOLBAR);
 
-	// enable quick (Alt+drag) toolbar customization
-	CMFCToolBar::EnableQuickCustomization();
+	//// enable quick (Alt+drag) toolbar customization
+	//CMFCToolBar::EnableQuickCustomization();
 
 	return 0;
 }
 
-BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT /*lpcs*/,
+BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs,
 	CCreateContext* pContext)
 {
-	// create splitter window
-	if (!m_wndSplitter.CreateStatic(this, 1, 2))
-		return FALSE;
+	/*
+	m_RegViewView.
+	m_wndSplitter.CreateView(0, 1, RUNTIME_CLASS(CRegViewView), CSize(100, 100), pContext);
 
-	if (!m_wndSplitter.CreateView(0, 0, RUNTIME_CLASS(CLeftView), CSize(100, 100), pContext) ||
-		!m_wndSplitter.CreateView(0, 1, RUNTIME_CLASS(CRegViewView), CSize(100, 100), pContext))
+	// create splitter window
+	//if (!m_wndSplitter.CreateStatic(this, 1, 2))
+	//	return FALSE;
+
+	//if (!m_wndSplitter.CreateView(0, 0, RUNTIME_CLASS(CLeftView), CSize(100, 100), pContext) ||
+	//	!)
+	//{
+	//	m_wndSplitter.DestroyWindow();
+	//	return FALSE;
+	//}
+*/
+	if (CFrameWndEx::OnCreateClient(lpcs, pContext))
 	{
-		m_wndSplitter.DestroyWindow();
-		return FALSE;
+		//RECT rect;
+		//this->GetClientRect(&rect);
+
+		////m_RegViewView = (CRegViewView*)CRegViewView::CreateObject();
+		//m_RegViewView.Create(
+		//	NULL, lpcs->lpszName, lpcs->style, rect, this, 0, pContext);
+
+		return TRUE;
 	}
 
-	//m_wndSplitter.
-	return TRUE;
+   return FALSE;
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
@@ -211,12 +226,13 @@ void CMainFrame::Dump(CDumpContext& dc) const
 
 // CMainFrame message handlers
 
-CRegViewView* CMainFrame::GetRightPane()
-{
-	CWnd* pWnd = m_wndSplitter.GetPane(0, 1);
-	CRegViewView* pView = DYNAMIC_DOWNCAST(CRegViewView, pWnd);
-	return pView;
-}
+//CRegViewView* CMainFrame::GetRightPane()
+//{
+//	//return &m_RegViewView;
+//	//CWnd* pWnd = m_wndSplitter.GetPane(0, 1);
+//	//CRegViewView* pView = DYNAMIC_DOWNCAST(CRegViewView, pWnd);
+//	//return pView;
+//}
 
 void CMainFrame::OnUpdateViewStyles(CCmdUI* pCmdUI)
 {
@@ -225,104 +241,67 @@ void CMainFrame::OnUpdateViewStyles(CCmdUI* pCmdUI)
 
 	// TODO: customize or extend this code to handle choices on the View menu
 
-	CRegViewView* pView = GetRightPane();
+	//CRegViewView* pView = GetRightPane();
 
 	// if the right-hand pane hasn't been created or isn't a view,
 	// disable commands in our range
 
-	if (pView == NULL)
-		pCmdUI->Enable(FALSE);
-	else
-	{
-		DWORD dwStyle = pView->GetStyle() & LVS_TYPEMASK;
+	//if (pView == NULL)
+	//	pCmdUI->Enable(FALSE);
+	//else
+	//{
+	//	DWORD dwStyle = pView->GetStyle() & LVS_TYPEMASK;
 
-		// if the command is ID_VIEW_LINEUP, only enable command
-		// when we're in LVS_ICON or LVS_SMALLICON mode
+	//	// if the command is ID_VIEW_LINEUP, only enable command
+	//	// when we're in LVS_ICON or LVS_SMALLICON mode
 
-		if (pCmdUI->m_nID == ID_VIEW_LINEUP)
-		{
-			if (dwStyle == LVS_ICON || dwStyle == LVS_SMALLICON)
-				pCmdUI->Enable();
-			else
-				pCmdUI->Enable(FALSE);
-		}
-		else
-		{
-			// otherwise, use dots to reflect the style of the view
-			pCmdUI->Enable();
-			BOOL bChecked = FALSE;
+	//	if (pCmdUI->m_nID == ID_VIEW_LINEUP)
+	//	{
+	//		if (dwStyle == LVS_ICON || dwStyle == LVS_SMALLICON)
+	//			pCmdUI->Enable();
+	//		else
+	//			pCmdUI->Enable(FALSE);
+	//	}
+	//	else
+	//	{
+	//		// otherwise, use dots to reflect the style of the view
+	//		pCmdUI->Enable();
+	//		BOOL bChecked = FALSE;
 
-			switch (pCmdUI->m_nID)
-			{
-			case ID_VIEW_DETAILS:
-				bChecked = (dwStyle == LVS_REPORT);
-				break;
+		//	switch (pCmdUI->m_nID)
+		//	{
+		//	case ID_VIEW_DETAILS:
+		//		bChecked = (dwStyle == LVS_REPORT);
+		//		break;
 
-			case ID_VIEW_SMALLICON:
-				bChecked = (dwStyle == LVS_SMALLICON);
-				break;
+		//	case ID_VIEW_SMALLICON:
+		//		bChecked = (dwStyle == LVS_SMALLICON);
+		//		break;
 
-			case ID_VIEW_LARGEICON:
-				bChecked = (dwStyle == LVS_ICON);
-				break;
+		//	case ID_VIEW_LARGEICON:
+		//		bChecked = (dwStyle == LVS_ICON);
+		//		break;
 
-			case ID_VIEW_LIST:
-				bChecked = (dwStyle == LVS_LIST);
-				break;
+		//	case ID_VIEW_LIST:
+		//		bChecked = (dwStyle == LVS_LIST);
+		//		break;
 
-			default:
-				bChecked = FALSE;
-				break;
-			}
+		//	default:
+		//		bChecked = FALSE;
+		//		break;
+		//	}
 
-			pCmdUI->SetRadio(bChecked ? 1 : 0);
-		}
-	}
+		//	pCmdUI->SetRadio(bChecked ? 1 : 0);
+		//}
+	//}
 }
 
 void CMainFrame::OnViewStyle(UINT nCommandID)
 {
 	// TODO: customize or extend this code to handle choices on the View menu
-	CRegViewView* pView = GetRightPane();
+	//CRegViewView* pView = GetRightPane();
+	//pView->ModifyStyle(LVS_TYPEMASK, LVS_REPORT);
 
-	// if the right-hand pane has been created and is a CRegViewView,
-	// process the menu commands...
-	if (pView != NULL)
-	{
-		DWORD dwStyle = -1;
-
-		switch (nCommandID)
-		{
-		case ID_VIEW_LINEUP:
-			{
-				// ask the list control to snap to grid
-				CListCtrl& refListCtrl = pView->GetListCtrl();
-				refListCtrl.Arrange(LVA_SNAPTOGRID);
-			}
-			break;
-
-		// other commands change the style on the list control
-		case ID_VIEW_DETAILS:
-			dwStyle = LVS_REPORT;
-			break;
-
-		case ID_VIEW_SMALLICON:
-			dwStyle = LVS_SMALLICON;
-			break;
-
-		case ID_VIEW_LARGEICON:
-			dwStyle = LVS_ICON;
-			break;
-
-		case ID_VIEW_LIST:
-			dwStyle = LVS_LIST;
-			break;
-		}
-
-		// change the style; window will repaint automatically
-		if (dwStyle != -1)
-			pView->ModifyStyle(LVS_TYPEMASK, dwStyle);
-	}
 }
 
 void CMainFrame::OnViewCustomize()

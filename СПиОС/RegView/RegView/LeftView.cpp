@@ -43,8 +43,8 @@ void CLeftView::OnInitialUpdate()
 {
 	CTreeView::OnInitialUpdate();
 
-	// TODO: You may populate your TreeView with items by directly accessing
-	//  its tree control through a call to GetTreeCtrl().
+	GetTreeCtrl().InsertItem(L"Test");
+
 }
 
 

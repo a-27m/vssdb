@@ -8,7 +8,7 @@
 #include "MainFrm.h"
 
 #include "RegViewDoc.h"
-#include "LeftView.h"
+#include "RegViewView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -91,7 +91,7 @@ BOOL CRegViewApp::InitInstance()
 		IDR_MAINFRAME,
 		RUNTIME_CLASS(CRegViewDoc),
 		RUNTIME_CLASS(CMainFrame),       // main SDI frame window
-		RUNTIME_CLASS(CLeftView));
+		RUNTIME_CLASS(CRegViewView));
 	if (!pDocTemplate)
 		return FALSE;
 	AddDocTemplate(pDocTemplate);

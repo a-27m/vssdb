@@ -1,11 +1,12 @@
 
 // MainFrm.h : interface of the CMainFrame class
 //
-
+//class CRegViewView;
 #pragma once
-class CRegViewView;
 #include "FileView.h"
-#include "ClassView.h"
+//#include "RegViewDoc.h"
+//#include "RegViewView.h"
+
 
 class CMainFrame : public CFrameWndEx
 {
@@ -16,7 +17,8 @@ protected: // create from serialization only
 
 // Attributes
 protected:
-	CSplitterWnd m_wndSplitter;
+	//CRegViewView m_RegViewView;
+	//CSplitterWnd m_wndSplitter;
 public:
 
 // Operations
@@ -30,16 +32,17 @@ public:
 // Implementation
 public:
 	virtual ~CMainFrame();
-	CRegViewView* GetRightPane();
+	//CRegViewView* GetRightPane();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
 protected:  // control bar embedded members
-	CMFCMenuBar       m_wndMenuBar;
-	CMFCToolBar       m_wndToolBar;
-	CFileView         m_wndFileView;
+	CMFCMenuBar	m_wndMenuBar;
+	//CMFCToolBar	m_wndToolBar;
+	CFileView			m_wndFileView;
+	CMFCStatusBar	m_wndStatusBar;
 
 // Generated message map functions
 protected:
@@ -52,6 +55,8 @@ protected:
 
 	BOOL CreateDockingWindows();
 	void SetDockingWindowIcons(BOOL bHiColorIcons);
+
+	friend CFileView;
 };
 
 
