@@ -130,6 +130,8 @@ namespace DekartGraphic
 			this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(406, 305);
 			this.toolStripContainer1.ContentPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
 			this.toolStripContainer1.ContentPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
+            this.toolStripContainer1.ContentPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
+
 			this.toolStripContainer1.ContentPanel.Resize += new System.EventHandler(this.DekartForm_Resize);
 			this.toolStripContainer1.ContentPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
 			this.toolStripContainer1.ContentPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
@@ -274,7 +276,7 @@ namespace DekartGraphic
 			this.Name = "DekartForm";
 			this.Text = "Graphic";
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
-			this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DekartForm_MouseClick);
+            //this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
 			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
 			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
 			this.toolStrip1.ResumeLayout(false);

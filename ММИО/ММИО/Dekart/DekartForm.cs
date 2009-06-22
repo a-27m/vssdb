@@ -484,9 +484,20 @@ namespace DekartGraphic
 
 		#region mouseOverPictureEvents
 
-		private int mouseX0 = 0, mouseY0 = 0;
+        private int mouseX0 = 0, mouseY0 = 0;
+        private int mouseX = 0, mouseY = 0;
 
-		private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        public PointF MouseMathLocation
+        {
+            get
+            {
+                return new PointF(
+                    (mouseX - ox) / zoom.X,
+                    (mouseY - oy) / -zoom.Y);
+            }
+        }
+
+		protected void pictureBox1_MouseDown(object sender, MouseEventArgs e)
 		{
 			if ( e.Button == MouseButtons.Left )
 			{
@@ -504,6 +515,9 @@ namespace DekartGraphic
 
 		private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
 		{
+			mouseX = e.X;
+			mouseY = e.Y;
+
 			if ( e.Button == MouseButtons.Middle )
 			{
 				ox += ( e.X - mouseX0 );
@@ -570,9 +584,10 @@ namespace DekartGraphic
 
 		#endregion
 
-		private void DekartForm_MouseClick(object sender, MouseEventArgs e) {
-
-		}
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            OnMouseClick(e);
+        }
 	}
 
 	//public class FormReport : Form
