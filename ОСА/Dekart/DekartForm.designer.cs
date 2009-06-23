@@ -301,7 +301,7 @@ namespace DekartGraphic
 
         #endregion
 
-		private System.Windows.Forms.ToolStrip toolStrip1;
+		public System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButtonPlus;
         private System.Windows.Forms.ToolStripButton toolStripButtonMinus;
         private System.Windows.Forms.ToolStripComboBox toolComboBoxZoom;
