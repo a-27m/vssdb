@@ -73,14 +73,15 @@ CMyList<T>::CMyList()
 template <class T>
 CMyList<T>::~CMyList()
 {
-	Node * curr = first;
-	for(int i=count-1; i>=0; i--)
+	Node *next, *curr = first;
+
+	while(curr != NULL)
 	{
-		curr = first;
-		for(int j=0; j<i; j++)
-			curr = curr->next;
+		next = curr->next;
 		delete curr;
+		curr = next;
 	}
+
 	first = NULL;
 	count = 0;
 }
