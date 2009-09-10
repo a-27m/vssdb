@@ -1,0 +1,29 @@
+{VERSION 5 0 "IBM INTEL NT" "5.0" }
+{USTYLETAB {CSTYLE "Maple Input" -1 0 "Courier" 0 1 255 0 0 1 0 1 0 0 
+1 0 0 0 0 1 }{CSTYLE "2D Math" -1 2 "Times" 0 1 0 0 0 0 0 0 2 0 0 0 0 
+0 0 1 }{CSTYLE "2D Output" 2 20 "" 0 1 0 0 255 1 0 0 0 0 0 0 0 0 0 1 }
+{PSTYLE "Normal" -1 0 1 {CSTYLE "" -1 -1 "Times" 1 12 0 0 0 1 2 2 2 2 
+2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Maple Output" -1 
+11 1 {CSTYLE "" -1 -1 "Times" 1 12 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }3 3 0 
+0 0 0 1 0 1 0 2 2 0 1 }}
+{SECT 0 {EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 14 "with(simplex):" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 101 "conds:=\{10*x1+3*x2+1*x3+2*
+x4+3*x5 = 15,\n3*x1+5*x2-4*x3+2*x4-1*x5 = 17,\n3*x1-2*x2+4*x3+2*x4-1*x
+5 = 3\}:" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 33 "obj:=2*x1-12* x
+2 +8*x3-3*x4+2*x5:" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 61 "X:=0:
+X:=sort(maximize(obj, conds, NONNEGATIVE));eval(obj, X);" }}{PARA 11 "
+" 1 "" {XPPMATH 20 "6#>%\"XG<'/%#x5G\"\"!/%#x4G#\"#V\"#9/%#x1G#\"\"#\"
+\"(/%#x2GF1/%#x3GF(" }}{PARA 11 "" 1 "" {XPPMATH 20 "6##!$d%\"#9" }}}
+{PARA 0 "" 0 "" {TEXT -1 0 "" }}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+50 "X:=minimize(obj, conds, NONNEGATIVE);eval(obj, X);" }}{PARA 11 "" 
+1 "" {XPPMATH 20 "6#>%\"XG<'/%#x2G#\"#a\"#>/%#x4G#\"$4\"\"#Q/%#x3G#\"#
+9F*/%#x1G\"\"!/%#x5GF6" }}{PARA 11 "" 1 "" {XPPMATH 20 "6##!%*R\"\"#Q
+" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 83 "eval(obj, \{x3=7/8*x2-7
+/4,\nx4=-19/8*x1-67/64*x2+187/32, x5=-7/4*x1-19/32*x2+27/16\});" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6#,(%#x1G#\"#X\"\")*&#\"$&>\"#k\"\"\"%#x
+2GF,!\"\"#\"$,*\"#KF." }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 19 "-1
+9/32*54/19+27/16;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#\"\"!" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 27 "45/8*0-195/64*54/19-901/32;" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6##!%*R\"\"#Q" }}}{EXCHG {PARA 0 "> " 0 
+"" {MPLTEXT 1 0 0 "" }}}}{MARK "1 0 0" 8 }{VIEWOPTS 1 1 0 1 1 1803 1 
+1 1 1 }{PAGENUMBERS 0 1 2 33 1 1 }
