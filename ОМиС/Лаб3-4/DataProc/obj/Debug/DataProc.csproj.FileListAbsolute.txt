@@ -1,0 +1,14 @@
+D:\edpm\labs\DataProc\bin\Debug\DataProc.dll
+D:\edpm\labs\DataProc\bin\Debug\DataProc.pdb
+D:\edpm\labs\DataProc\obj\Debug\ResolveAssemblyReference.cache
+D:\edpm\labs\DataProc\obj\Debug\DataProc.FormAskTableValue.resources
+D:\edpm\labs\DataProc\obj\Debug\DataProc.csproj.GenerateResource.Cache
+D:\edpm\labs\DataProc\obj\Debug\DataProc.dll
+D:\edpm\labs\DataProc\obj\Debug\DataProc.pdb
+C:\Users\Axell\Desktop\edpm\labs\DataProc\bin\Debug\DataProc.dll
+C:\Users\Axell\Desktop\edpm\labs\DataProc\bin\Debug\DataProc.pdb
+C:\Users\Axell\Desktop\edpm\labs\DataProc\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Axell\Desktop\edpm\labs\DataProc\obj\Debug\DataProc.FormAskTableValue.resources
+C:\Users\Axell\Desktop\edpm\labs\DataProc\obj\Debug\DataProc.csproj.GenerateResource.Cache
+C:\Users\Axell\Desktop\edpm\labs\DataProc\obj\Debug\DataProc.dll
+C:\Users\Axell\Desktop\edpm\labs\DataProc\obj\Debug\DataProc.pdb

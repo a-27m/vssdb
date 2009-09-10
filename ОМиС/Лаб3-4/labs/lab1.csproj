@@ -1,0 +1,192 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6D7F83CF-747C-474E-BBAA-A81207A36588}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>lab1</RootNamespace>
+    <AssemblyName>lab1</AssemblyName>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Forms\FormAskDocuments.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormAskDocuments.Designer.cs">
+      <DependentUpon>FormAskDocuments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormAskLawSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormAskLawSelection.Designer.cs">
+      <DependentUpon>FormAskLawSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormAskExpParams.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormAskExpParams.Designer.cs">
+      <DependentUpon>FormAskExpParams.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormAskNormalParams.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormAskNormalParams.Designer.cs">
+      <DependentUpon>FormAskNormalParams.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormAskRavnomParams.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormAskRavnomParams.Designer.cs">
+      <DependentUpon>FormAskRavnomParams.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormChild.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormChild.Designer.cs">
+      <DependentUpon>FormChild.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormDiagram.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormDiagram.Designer.cs">
+      <DependentUpon>FormDiagram.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormOptions.Designer.cs">
+      <DependentUpon>FormOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormSysDiagram.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormSysDiagram.Designer.cs">
+      <DependentUpon>FormSysDiagram.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MDIParent.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MDIParent.Designer.cs">
+      <DependentUpon>MDIParent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="misc\Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\FormAskDocuments.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormAskDocuments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormAskLawSelection.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormAskLawSelection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormAskExpParams.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormAskExpParams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormAskNormalParams.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormAskNormalParams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormAskRavnomParams.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormAskRavnomParams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormChild.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormChild.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormDiagram.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormDiagram.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormOptions.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormSysDiagram.resx">
+      <DependentUpon>FormSysDiagram.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MDIParent.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MDIParent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Settings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataProc\DataProc.csproj">
+      <Project>{C2E7C2C2-879D-41A8-B1E5-A953092B1FAB}</Project>
+      <Name>DataProc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dekart\DekartGraphic.csproj">
+      <Project>{97B73544-29AE-4AFA-9DB4-957C6D16A13F}</Project>
+      <Name>DekartGraphic</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

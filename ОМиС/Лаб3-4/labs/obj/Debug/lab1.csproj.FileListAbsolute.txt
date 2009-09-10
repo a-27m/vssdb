@@ -1,0 +1,61 @@
+D:\edpm\labs\labs\bin\Debug\lab1.exe.config
+D:\edpm\labs\labs\bin\Debug\lab1.exe
+D:\edpm\labs\labs\bin\Debug\lab1.pdb
+D:\edpm\labs\labs\bin\Debug\DataProc.dll
+D:\edpm\labs\labs\bin\Debug\DataProc.pdb
+D:\edpm\labs\labs\obj\Debug\ResolveAssemblyReference.cache
+D:\edpm\labs\labs\obj\Debug\lab1.FormAskDocuments.resources
+D:\edpm\labs\labs\obj\Debug\lab1.FormAskLawSelection.resources
+D:\edpm\labs\labs\obj\Debug\lab1.Forms.FormAskExpParams.resources
+D:\edpm\labs\labs\obj\Debug\lab1.Forms.FormAskNormalParams.resources
+D:\edpm\labs\labs\obj\Debug\lab1.Forms.FormAskZnSelection.resources
+D:\edpm\labs\labs\obj\Debug\lab1.Forms.FormChild.resources
+D:\edpm\labs\labs\obj\Debug\lab1.Forms.FormDiagram.resources
+D:\edpm\labs\labs\obj\Debug\lab1.Forms.FormOptions.resources
+D:\edpm\labs\labs\obj\Debug\lab1.mdiParent.resources
+D:\edpm\labs\labs\obj\Debug\lab1.Properties.Resources.resources
+D:\edpm\labs\labs\obj\Debug\lab1.csproj.GenerateResource.Cache
+D:\edpm\labs\labs\obj\Debug\lab1.exe
+D:\edpm\labs\labs\obj\Debug\lab1.pdb
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\bin\Debug\lab1.exe.config
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\lab1.exe
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\lab1.pdb
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\lab1.FormAskDocuments.resources
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\lab1.FormAskLawSelection.resources
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\lab1.Forms.FormAskExpParams.resources
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\lab1.Forms.FormAskNormalParams.resources
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\lab1.Forms.FormAskZnSelection.resources
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\lab1.Forms.FormChild.resources
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\lab1.Forms.FormDiagram.resources
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\lab1.Forms.FormOptions.resources
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\lab1.Forms.FormSysDiagram.resources
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\lab1.mdiParent.resources
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\lab1.Properties.Resources.resources
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\obj\Debug\lab1.csproj.GenerateResource.Cache
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\bin\Debug\lab1.exe
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\bin\Debug\lab1.pdb
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\bin\Debug\DataProc.dll
+C:\Documents and Settings\sp106-19\Рабочий стол\edpm\labs\labs\bin\Debug\DataProc.pdb
+C:\Users\Axell\Desktop\edpm\labs\labs\bin\Debug\lab1.exe.config
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\lab1.exe
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\lab1.pdb
+C:\Users\Axell\Desktop\edpm\labs\labs\bin\Debug\lab1.exe
+C:\Users\Axell\Desktop\edpm\labs\labs\bin\Debug\lab1.pdb
+C:\Users\Axell\Desktop\edpm\labs\labs\bin\Debug\DataProc.dll
+C:\Users\Axell\Desktop\edpm\labs\labs\bin\Debug\DataProc.pdb
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\lab1.FormAskDocuments.resources
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\lab1.FormAskLawSelection.resources
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\lab1.Forms.FormAskExpParams.resources
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\lab1.Forms.FormAskNormalParams.resources
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\lab1.Forms.FormAskZnSelection.resources
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\lab1.Forms.FormChild.resources
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\lab1.Forms.FormDiagram.resources
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\lab1.Forms.FormOptions.resources
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\lab1.Forms.FormSysDiagram.resources
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\lab1.mdiParent.resources
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\lab1.Properties.Resources.resources
+C:\Users\Axell\Desktop\edpm\labs\labs\obj\Debug\lab1.csproj.GenerateResource.Cache
+C:\Users\Axell\Desktop\edpm\labs\labs\bin\Debug\Dekart.dll
+C:\Users\Axell\Desktop\edpm\labs\labs\bin\Debug\Dekart.pdb

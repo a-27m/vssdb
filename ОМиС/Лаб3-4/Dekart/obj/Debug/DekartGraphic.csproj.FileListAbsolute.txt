@@ -1,0 +1,14 @@
+C:\Axell's files\VSS WF\Labs NM\Labs NM\Dekart\bin\Debug\Dekart.dll
+C:\Axell's files\VSS WF\Labs NM\Labs NM\Dekart\bin\Debug\Dekart.pdb
+C:\Axell's files\VSS WF\Labs NM\Labs NM\Dekart\obj\Debug\ResolveAssemblyReference.cache
+C:\Axell's files\VSS WF\Labs NM\Labs NM\Dekart\obj\Debug\DekartGraphic.DekartForm.resources
+C:\Axell's files\VSS WF\Labs NM\Labs NM\Dekart\obj\Debug\DekartGraphic.csproj.GenerateResource.Cache
+C:\Axell's files\VSS WF\Labs NM\Labs NM\Dekart\obj\Debug\Dekart.dll
+C:\Axell's files\VSS WF\Labs NM\Labs NM\Dekart\obj\Debug\Dekart.pdb
+C:\Users\Axell\Desktop\edpm\labs\Dekart\bin\Debug\Dekart.dll
+C:\Users\Axell\Desktop\edpm\labs\Dekart\bin\Debug\Dekart.pdb
+C:\Users\Axell\Desktop\edpm\labs\Dekart\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Axell\Desktop\edpm\labs\Dekart\obj\Debug\DekartGraphic.DekartForm.resources
+C:\Users\Axell\Desktop\edpm\labs\Dekart\obj\Debug\DekartGraphic.csproj.GenerateResource.Cache
+C:\Users\Axell\Desktop\edpm\labs\Dekart\obj\Debug\Dekart.dll
+C:\Users\Axell\Desktop\edpm\labs\Dekart\obj\Debug\Dekart.pdb
