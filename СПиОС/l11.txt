@@ -1,0 +1,34 @@
+#!/bin/bash 
+File1=n$$ File2=m$$ trap 'rm /tmp/$File1; rm /tmp/$File2;
+exit' 2 1 9 if test $# -le 1 then
+echo You must enter parameter.
+ 
+exit
+else
+echo This program determines users, who have executed more than
+echo specified number of processes
+PP1=$1
+Time=$2
+while (true)
+do
+echo Users, who have executed more than $PP1 processes.
+Time: `date | cut -f4 -d ' '`:
+ps -a -u | grep ^'USER' -v | tr -s ' ' | cut -f1,7 -d ' '> /tmp/$File1
+NumParams=`cat /tmp/$File1 | wc -l | tr -d ' '`
+while test $NumParams -gt 0
+do
+set `cat /tmp/$File1`
+PP2=`cat /tmp/$File1 | grep $1 | grep $2 | wc -l | tr -d ' '`
+if test $PP2 -ge $PP1
+then
+echo User $1 has executed $PP2 processe'('s')' on $2 terminal.
+fi
+cat /tmp/$File1 | grep "$1 $2" -v > /tmp/$File2
+mv /tmp/$File2 /tmp/$File1
+NumParams=`cat /tmp/$File1 | wc -l | tr -d ' '`
+done
+rm /tmp/$File1
+echo ---------- End of list -----------
+sleep $Time
+done
+fi

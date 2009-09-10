@@ -1,0 +1,17 @@
+#!/bin/bash
+if test $# -le 0
+then
+echo Gimme the victim''s name
+exit
+fi
+
+pids=`ps -A | grep $1 | cut -f2,1 -d ' ' | tr -d ' '`
+
+if test -n $pids
+then
+echo Process $1 is not running, there is noone to kill, bye!
+exit
+fi
+
+echo Killing processes: $pids...
+kill -9 $pids

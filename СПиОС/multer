@@ -1,0 +1,14 @@
+#!/bin/bash
+trap 'echo Stop watching...; exit' 9
+while(true) do
+un=`ps -A u | cut -f1 -d ' ' | grep -v ^'USER' | sort -u`
+echo ----
+for usrname in $un; do
+num=`ps -A u | tr -s ' ' | cut -f1,7 -d ' ' | grep -v ^'USER' | sort -u | grep $usrname -c`
+if test $num -ge 2
+then
+echo $usrname logged at $num terminals
+fi
+done
+sleep 3s
+done
