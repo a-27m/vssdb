@@ -1,0 +1,2 @@
+C:\rip\f\MetroLab4\MetroLab3\obj\Debug\MetroLab3.exe
+C:\rip\f\MetroLab4\MetroLab3\obj\Debug\MetroLab3.pdb

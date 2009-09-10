@@ -1,0 +1,10 @@
+bin\Debug\MetroLab3.exe
+bin\Debug\MetroLab3.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\MetroLab3.Form1.resources
+obj\Debug\MetroLab3.FormAskTableValue.resources
+obj\Debug\MetroLab3.FormHowmuch.resources
+obj\Debug\MetroLab3.Properties.Resources.resources
+obj\Debug\MetroLab4.csproj.GenerateResource.Cache
+obj\Debug\MetroLab3.exe
+obj\Debug\MetroLab3.pdb
