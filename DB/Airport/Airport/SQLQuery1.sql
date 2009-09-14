@@ -87,20 +87,28 @@ create table AirRoute
 	ShortTitle varchar(20),
 )
 
-create table PlanedFlight
+create table PlannedRoute
 (
-	IDPerelet int PRIMARY KEY NOT NULL,
-	IDFlight int references Flight,
+	IDPlannedRoute int PRIMARY KEY NOT NULL,
 	IDAirRoute int references AirRoute,
+	Price money,
+)
+
+create table PlannedFlight
+(
+	IDPlannedFlight int PRIMARY KEY NOT NULL,
+	IDFlight int references Flight,
+	IDPlannedRoute int references PlannedRoute,
 	IDPlain	int references Plain,
 	Departure Datetime,
 	Price money,
+	FlightStatus int,
 )
 
 create table Ticket
 (
 	IDTicket int PRIMARY KEY NOT NULL,
-	IDAirRoute int references AirRoute,
+	IDPlannedRoute int references PlannedRoute,
 )
 
 --create table Passenger
