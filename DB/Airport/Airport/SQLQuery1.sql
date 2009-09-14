@@ -16,9 +16,11 @@ create table Person
 	FirstName varchar(50) NOT NULL,
 	MiddleName varchar(50),
 	LastName varchar(50) NOT NULL,
-	Birth Date,
+	Birth Datetime, -- Date
 	Sex	char(1), -- F or M
 	Children int,
+
+	check (Sex = 'F' or Sex = 'M')
 )
 
 create table Department
@@ -55,7 +57,7 @@ create table MedCheckup
 (
 	IDMedCheckup int PRIMARY KEY NOT NULL,
 	IDPilot int references Pilot,
-	CheckDate Date NOT NULL,
+	CheckDate Datetime NOT NULL, -- Date
 	Result int NOT NULL, -- пригодность 0..10
 	Comment varchar(1024),
 )
@@ -74,5 +76,34 @@ create table TechCheckup
 create table Flight
 (
 	IDFlight int PRIMARY KEY NOT NULL,
+	IDAviaCompany int, -- references AviaCompany
 	
+	ShortTitle varchar(10),
 )
+
+create table AirRoute
+(
+	IDRoute int PRIMARY KEY NOT NULL,
+	ShortTitle varchar(20),
+)
+
+create table PlanedFlight
+(
+	IDPerelet int PRIMARY KEY NOT NULL,
+	IDFlight int references Flight,
+	IDAirRoute int references AirRoute,
+	IDPlain	int references Plain,
+	Departure Datetime,
+	Price money,
+)
+
+create table Ticket
+(
+	IDTicket int PRIMARY KEY NOT NULL,
+	IDAirRoute int references AirRoute,
+)
+
+--create table Passenger
+--(
+--	IDPassanger
+--)
