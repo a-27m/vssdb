@@ -4,7 +4,7 @@ delete from Person;
 delete from Ticket;
 delete from PlannedFlight;
 delete from PlannedRoute;
-delete from Plain;
+delete from Plane;
 delete from Flight;
 delete from AirRoute;
 
@@ -14,10 +14,10 @@ insert into Person values (101, 'Алексей', 'Анатольевич', 'Мироненко', '1988-04-
 insert into Person values (102, 'Иван', 'Петрович', 'Сидоров', '1945-03-12','M',2)
 select * from Person;
 
-delete from Plain;
-insert into Plain values (1, 'Як-18Т', 'RA-13244', '2001-05-30', 5000, 20000, 653, 2005, '2009-09-30', 143581.26)
-insert into Plain values (2, 'Boeing-737', 'W3244', '2004-11-22', 4500, 22000, 212, 720, '2009-09-26', 351455.00)
-select * from Plain;
+delete from Plane;
+insert into Plane values (1, 'Як-18Т', 'RA-13244', '2001-05-30', 5000, 20000, 653, 2005, '2009-09-30', 143581.26)
+insert into Plane values (2, 'Boeing-737', 'W3244', '2004-11-22', 4500, 22000, 212, 720, '2009-09-26', 351455.00)
+select * from Plane;
 
 
 delete from Flight;

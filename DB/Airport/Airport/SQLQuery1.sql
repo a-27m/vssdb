@@ -10,21 +10,21 @@ GO
 
 use Airport;
 
-drop table Passenger
-drop table Ticket
-drop table PlannedFlight
-drop table PlannedRoute
-drop table AirRoute
-drop table RouteType
-drop table Flight
-drop table TechCheckup
-drop table Plain
-drop table MedCheckup
-drop table Worker
-drop table Pilot
-drop table Team
-drop table Department
-drop table Person
+--drop table Passenger
+--drop table Ticket
+--drop table PlannedFlight
+--drop table PlannedRoute
+--drop table AirRoute
+--drop table RouteType
+--drop table Flight
+--drop table TechCheckup
+--drop table Plane
+--drop table MedCheckup
+--drop table Worker
+--drop table Pilot
+--drop table Team
+--drop table Department
+--drop table Person
 
 create table Person
 (
@@ -64,7 +64,7 @@ create table Department
 Сертификат летной годности истек 31.12.2005 году, необходимо продление календарного срока эксплуатации. 
 Прописка - аэропорт
 */
-create table Plain
+create table Plane
 (
 	IDPlain int PRIMARY KEY NOT NULL,
 	Model varchar(20) NOT NULL,
@@ -113,7 +113,7 @@ create table MedCheckup
 create table TechCheckup
 (
 	IDCheckup int PRIMARY KEY NOT NULL,
-	IDPlain int references Plain
+	IDPlain int references Plane,
 )
 
 create table Flight
@@ -150,7 +150,7 @@ create table PlannedFlight
 	IDPlannedFlight int PRIMARY KEY NOT NULL,
 	IDFlight int references Flight,
 	IDPlannedRoute int references PlannedRoute,
-	IDPlain	int references Plain,
+	IDPlain	int references Plane,
 	Departure Datetime,
 	Price money,
 	FlightStatus int,
