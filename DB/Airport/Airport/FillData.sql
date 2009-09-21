@@ -28,10 +28,23 @@ insert into Flight values (4, 0, 'Zur-Frank')
 insert into Flight values (5, 0, 'Frank-BOM')
 select * from Flight;
 
+delete from RouteType;
+insert into RouteType values (1, 'Internal')
+insert into RouteType values (2, 'International')
+insert into RouteType values (3, 'Private')
+insert into RouteType values (4, 'Special')
+insert into RouteType values (5, 'Charter')
+select * from RouteType
+
 delete from AirRoute;
-insert into AirRoute values (10, 'BPL-NYC')
-insert into AirRoute values (21, 'NYC-BOM')
+insert into AirRoute values (10, 'BPL-NYC', 2)
+insert into AirRoute values (21, 'NYC-BOM', 2)
 select * from AirRoute;
+
+--delete from AirRouteTypes
+--insert into AirRouteTypes values (1, 10, 2)
+--insert into AirRouteTypes values (2, 21, 2)
+--select * from AirRoute;
 
 delete from PlannedRoute;
 insert into PlannedRoute values (1, 10, 1600)

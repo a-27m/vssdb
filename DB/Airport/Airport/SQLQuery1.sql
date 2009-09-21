@@ -10,6 +10,22 @@ GO
 
 use Airport;
 
+drop table Passenger
+drop table Ticket
+drop table PlannedFlight
+drop table PlannedRoute
+drop table AirRoute
+drop table RouteType
+drop table Flight
+drop table TechCheckup
+drop table Plain
+drop table MedCheckup
+drop table Worker
+drop table Pilot
+drop table Team
+drop table Department
+drop table Person
+
 create table Person
 (
 	IDPerson int PRIMARY KEY NOT NULL,
@@ -31,11 +47,43 @@ create table Department
 	IDMainDepartment int references Department,
 )
 
+/*
+ К р а т к а я   характеристика самолета Як-18Т:
+
+государственный и регистрационный знак ВС-RA-44289;
+марка двигателя – М14П № КЯ312013;
+марка воздушного винта – В530ТА-Д35 № 2000098;
+серийный (заводской) номер – 07-32 АО «Смоленский авиационный завод»;
+дата выпуска – 18.06.1993 года;
+установленный ресурс (часов, посадок) – 5000 ч., 20000 посадок;
+наработка с начала эксплуатации (часов, посадок) – 653 час. 18 мин., 2005 посадок;
+остаток ресурса (часов, посадок) – 4345 ч.,17995 посадок;
+дата последнего вылета – 15.08.2004 года;
+количество ремонтов – 2;
+Первоначальная стоимость самолета Як-18Т 458 459, 26 рублей. 
+Сертификат летной годности истек 31.12.2005 году, необходимо продление календарного срока эксплуатации. 
+Прописка - аэропорт
+*/
+create table Plain
+(
+	IDPlain int PRIMARY KEY NOT NULL,
+	Model varchar(20) NOT NULL,
+	RegNo varchar(15) NOT NULL,
+	ManufactDate datetime, -- Date
+	ResHours int,
+	ResLandings int,
+	WorkoutHours int,
+	WorkoutLandings int,
+	LastDeparture datetime,
+	Cost money,
+)
+
 create table Team
 (
 	IDTeam int PRIMARY KEY NOT NULL,
 	IDDepartment int references Department,
 	Boss int references Person,
+	IDPlane int null references Plane,
 )
 
 create table Pilot
@@ -62,40 +110,6 @@ create table MedCheckup
 	Comment varchar(1024),
 )
 
-/*
- К р а т к а я   характеристика самолета Як-18Т:
-
-государственный и регистрационный знак ВС-RA-44289;
-марка двигателя – М14П № КЯ312013;
-марка воздушного винта – В530ТА-Д35 № 2000098;
-серийный (заводской) номер – 07-32 АО «Смоленский авиационный завод»;
-дата выпуска – 18.06.1993 года;
-установленный ресурс (часов, посадок) – 5000 ч., 20000 посадок;
-наработка с начала эксплуатации (часов, посадок) – 653 час. 18 мин., 2005 посадок;
-остаток ресурса (часов, посадок) – 4345 ч.,17995 посадок;
-дата последнего вылета – 15.08.2004 года;
-количество ремонтов – 2;
-дата последнего ремонта – 19.09.2001 года;
-наработка после последнего ремонта – 163 час.18 мин., 479 посадок.
-Первоначальная стоимость самолета Як-18Т 458 459, 26 рублей. 
-Сертификат летной годности истек 31.12.2005 году, необходимо продление календарного срока эксплуатации. 
-
-Прописка - аэропорт
-*/
-create table Plain
-(
-	IDPlain int PRIMARY KEY NOT NULL,
-	Model varchar(20) NOT NULL,
-	RegNo varchar(15) NOT NULL,
-	ManufactDate datetime, -- Date
-	ResHours int,
-	ResLandings int,
-	WorkoutHours int,
-	WorkoutLandings int,
-	LastDeparture datetime,
-	Cost money,
-)
-
 create table TechCheckup
 (
 	IDCheckup int PRIMARY KEY NOT NULL,
@@ -110,11 +124,19 @@ create table Flight
 	ShortTitle varchar(10),
 )
 
+create table RouteType
+(
+	IDRouteType int PRIMARY KEY NOT NULL,
+	Title varchar(20) NOT NULL,
+)
+
 create table AirRoute
 (
 	IDRoute int PRIMARY KEY NOT NULL,
 	ShortTitle varchar(20),
+	IDRouteType int references RouteType,
 )
+
 
 create table PlannedRoute
 (
@@ -140,7 +162,16 @@ create table Ticket
 	IDPlannedRoute int references PlannedRoute,
 )
 
---create table Passenger
---(
---	IDPassanger
---)
+create table Passenger
+(
+	IDPassanger int PRIMARY KEY NOT NULL,
+	FirstName varchar(50) NOT NULL,
+	MiddleName varchar(50),
+	LastName varchar(50) NOT NULL,
+	Sex	char(1), -- F or M
+	Multipas char(8) NOT NULL, -- Ukr passport No
+	MultipasItl varchar(12) NULL, -- may be NULL if it's internal flight passenger
+	Customs	tinyint NULL, -- nullable, for internal flights
+
+	check (Sex = 'F' or Sex = 'M')
+)
