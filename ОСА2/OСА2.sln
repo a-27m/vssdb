@@ -1,0 +1,44 @@
+
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab1 (spec pts)", "LAB1\lab1 (spec pts).csproj", "{5DE3CE3C-306A-470F-A6BF-A4109E326651}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DekartGraphic", "Dekart\DekartGraphic.csproj", "{97B73544-29AE-4AFA-9DB4-957C6D16A13F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab3 (fluctuations)", "lab2 (fluctuations)\lab3 (fluctuations).csproj", "{95AE07CA-B452-4243-B6CA-70291B9CCD16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab4 (notDuffing)", "lab4 (Dufing)\lab4 (notDuffing).csproj", "{D95B270F-F294-48BF-AB24-A3AE8D0E5D42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab5  (À×Õ, nonlinear resonance)", "lab5  (À×Õ, nonlinear resonance)\lab5  (À×Õ, nonlinear resonance).csproj", "{F294E90A-B052-48CE-877F-F027D119FCA1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5DE3CE3C-306A-470F-A6BF-A4109E326651}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DE3CE3C-306A-470F-A6BF-A4109E326651}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DE3CE3C-306A-470F-A6BF-A4109E326651}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DE3CE3C-306A-470F-A6BF-A4109E326651}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97B73544-29AE-4AFA-9DB4-957C6D16A13F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95AE07CA-B452-4243-B6CA-70291B9CCD16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95AE07CA-B452-4243-B6CA-70291B9CCD16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95AE07CA-B452-4243-B6CA-70291B9CCD16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95AE07CA-B452-4243-B6CA-70291B9CCD16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D95B270F-F294-48BF-AB24-A3AE8D0E5D42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D95B270F-F294-48BF-AB24-A3AE8D0E5D42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D95B270F-F294-48BF-AB24-A3AE8D0E5D42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D95B270F-F294-48BF-AB24-A3AE8D0E5D42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F294E90A-B052-48CE-877F-F027D119FCA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F294E90A-B052-48CE-877F-F027D119FCA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F294E90A-B052-48CE-877F-F027D119FCA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F294E90A-B052-48CE-877F-F027D119FCA1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
