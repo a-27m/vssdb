@@ -90,9 +90,9 @@ namespace lab5___АЧХ__nonlinear_resonance_
         double a(double A) { return A; }
 
         double SigmaAPlus(double a)
-        { return 3.0 / 8.0 * a * a + Math.Sqrt(f * f / 4.0 / a / a - mju * mju); }
+        { return 3.0 / 8.0 * a * a + Math.Sqrt(f * f / (4.0 * a * a) - mju * mju); }
         double SigmaAMinus(double a) 
-        { return 3.0 / 8.0 * a * a - Math.Sqrt(f * f / 4.0 / a / a - mju * mju); }
+        { return 3.0 / 8.0 * a * a - Math.Sqrt(f * f / (4.0 * a * a) - mju * mju); }
 
         double fA(double a)
         { return 2.0 * a * Math.Sqrt(mju * mju + Math.Pow(sigma - 3.0 / 8.0 * a * a, 2)); }
@@ -104,12 +104,14 @@ namespace lab5___АЧХ__nonlinear_resonance_
             grsGammaT = new List<MathGraphic>();
             grsAGamma = new List<MathGraphic>();
 
-            sigma = 0.8;
+            sigma = 2;
             f = 2;
-            mju = 0.1;
+            mju = 0.4;
+
+            h = 1e-3f;
 
             a1 = 0;
-            a2 = 30;
+            a2 = 4;
 
             dx = pictureBox1.Width / 3f;
             dy = pictureBox1.Height / 2f;
@@ -231,6 +233,11 @@ namespace lab5___АЧХ__nonlinear_resonance_
                 dx += e.X - mx; dy += e.Y - my;
                 pictureBox1.Refresh();
             }
+        }
+
+        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        {
+            Text = trackBar1.Value.ToString();
         }
     }
 }
