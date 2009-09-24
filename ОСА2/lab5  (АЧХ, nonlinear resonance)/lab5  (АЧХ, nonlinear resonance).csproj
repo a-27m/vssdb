@@ -9,13 +9,14 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>lab5___À×Õ__nonlinear_resonance_</RootNamespace>
-    <AssemblyName>lab5  %28À×Õ, nonlinear resonance%29</AssemblyName>
+    <AssemblyName>lab5</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     
     
     
     
+    <StartupObject>lab5___À×Õ__nonlinear_resonance_.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
