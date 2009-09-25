@@ -28,9 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.textBoxA0 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.labelBallSpeed = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.buttonZoomOut = new System.Windows.Forms.Button();
             this.buttonZoomIn = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -51,23 +55,24 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.buttonPlay = new System.Windows.Forms.Button();
             this.buttonGO = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.buttonPlay = new System.Windows.Forms.Button();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.label9 = new System.Windows.Forms.Label();
+            this.ssLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBoxA0
             // 
             this.textBoxA0.Font = new System.Drawing.Font("Cambria", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxA0.Location = new System.Drawing.Point(259, 34);
+            this.textBoxA0.Location = new System.Drawing.Point(244, 34);
             this.textBoxA0.Name = "textBoxA0";
             this.textBoxA0.Size = new System.Drawing.Size(100, 23);
             this.textBoxA0.TabIndex = 2;
@@ -90,6 +95,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.labelBallSpeed);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.trackBar1);
             this.panel1.Controls.Add(this.buttonZoomOut);
@@ -119,6 +125,44 @@
             this.panel1.Size = new System.Drawing.Size(702, 128);
             this.panel1.TabIndex = 0;
             // 
+            // labelBallSpeed
+            // 
+            this.labelBallSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelBallSpeed.AutoSize = true;
+            this.labelBallSpeed.Location = new System.Drawing.Point(447, 76);
+            this.labelBallSpeed.Name = "labelBallSpeed";
+            this.labelBallSpeed.Size = new System.Drawing.Size(13, 13);
+            this.labelBallSpeed.TabIndex = 6;
+            this.labelBallSpeed.Text = "0";
+            // 
+            // label9
+            // 
+            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(382, 76);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(59, 13);
+            this.label9.TabIndex = 6;
+            this.label9.Text = "Ball speed:";
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBar1.AutoSize = false;
+            this.trackBar1.LargeChange = 10;
+            this.trackBar1.Location = new System.Drawing.Point(376, 92);
+            this.trackBar1.Maximum = 100;
+            this.trackBar1.Minimum = -100;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(224, 33);
+            this.trackBar1.SmallChange = 2;
+            this.trackBar1.TabIndex = 5;
+            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
+            // 
             // buttonZoomOut
             // 
             this.buttonZoomOut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -145,7 +189,7 @@
             // 
             this.groupBox1.Controls.Add(this.radioAF);
             this.groupBox1.Controls.Add(this.radioAS);
-            this.groupBox1.Location = new System.Drawing.Point(413, 11);
+            this.groupBox1.Location = new System.Drawing.Point(401, 11);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(160, 38);
             this.groupBox1.TabIndex = 3;
@@ -178,7 +222,7 @@
             // textBoxX2
             // 
             this.textBoxX2.Font = new System.Drawing.Font("Cambria", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxX2.Location = new System.Drawing.Point(271, 84);
+            this.textBoxX2.Location = new System.Drawing.Point(256, 84);
             this.textBoxX2.Name = "textBoxX2";
             this.textBoxX2.Size = new System.Drawing.Size(100, 23);
             this.textBoxX2.TabIndex = 2;
@@ -186,7 +230,7 @@
             // textBoxGamma0
             // 
             this.textBoxGamma0.Font = new System.Drawing.Font("Cambria", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxGamma0.Location = new System.Drawing.Point(259, 84);
+            this.textBoxGamma0.Location = new System.Drawing.Point(244, 84);
             this.textBoxGamma0.Name = "textBoxGamma0";
             this.textBoxGamma0.Size = new System.Drawing.Size(100, 23);
             this.textBoxGamma0.TabIndex = 2;
@@ -212,7 +256,7 @@
             // textBoxX1
             // 
             this.textBoxX1.Font = new System.Drawing.Font("Cambria", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxX1.Location = new System.Drawing.Point(271, 34);
+            this.textBoxX1.Location = new System.Drawing.Point(256, 34);
             this.textBoxX1.Name = "textBoxX1";
             this.textBoxX1.Size = new System.Drawing.Size(100, 23);
             this.textBoxX1.TabIndex = 2;
@@ -221,7 +265,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label8.Location = new System.Drawing.Point(268, 62);
+            this.label8.Location = new System.Drawing.Point(253, 62);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(26, 19);
             this.label8.TabIndex = 1;
@@ -231,7 +275,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Symbol", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            this.label4.Location = new System.Drawing.Point(255, 58);
+            this.label4.Location = new System.Drawing.Point(240, 58);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(28, 23);
             this.label4.TabIndex = 1;
@@ -258,7 +302,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label7.Location = new System.Drawing.Point(268, 11);
+            this.label7.Location = new System.Drawing.Point(253, 11);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(26, 19);
             this.label7.TabIndex = 1;
@@ -279,7 +323,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(256, 11);
+            this.label3.Location = new System.Drawing.Point(241, 11);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(26, 19);
             this.label3.TabIndex = 1;
@@ -316,6 +360,18 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "f";
             // 
+            // buttonPlay
+            // 
+            this.buttonPlay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPlay.Location = new System.Drawing.Point(618, 41);
+            this.buttonPlay.Name = "buttonPlay";
+            this.buttonPlay.Size = new System.Drawing.Size(75, 35);
+            this.buttonPlay.TabIndex = 0;
+            this.buttonPlay.Text = "Play";
+            this.buttonPlay.UseVisualStyleBackColor = true;
+            this.buttonPlay.Visible = false;
+            this.buttonPlay.Click += new System.EventHandler(this.buttonGO_Click);
+            // 
             // buttonGO
             // 
             this.buttonGO.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -342,50 +398,24 @@
             // 
             // statusStrip1
             // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ssLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 500);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(708, 22);
             this.statusStrip1.TabIndex = 5;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // buttonPlay
+            // ssLabel
             // 
-            this.buttonPlay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPlay.Location = new System.Drawing.Point(618, 41);
-            this.buttonPlay.Name = "buttonPlay";
-            this.buttonPlay.Size = new System.Drawing.Size(75, 35);
-            this.buttonPlay.TabIndex = 0;
-            this.buttonPlay.Text = "Play";
-            this.buttonPlay.UseVisualStyleBackColor = true;
-            this.buttonPlay.Visible = false;
-            this.buttonPlay.Click += new System.EventHandler(this.buttonGO_Click);
+            this.ssLabel.Name = "ssLabel";
+            this.ssLabel.Size = new System.Drawing.Size(188, 17);
+            this.ssLabel.Text = "Здесь могла быть Ваша реклама";
             // 
-            // trackBar1
+            // timer1
             // 
-            this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBar1.AutoSize = false;
-            this.trackBar1.LargeChange = 10;
-            this.trackBar1.Location = new System.Drawing.Point(388, 92);
-            this.trackBar1.Maximum = 100;
-            this.trackBar1.Minimum = -100;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(224, 33);
-            this.trackBar1.SmallChange = 2;
-            this.trackBar1.TabIndex = 5;
-            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
-            // 
-            // label9
-            // 
-            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(394, 76);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(59, 13);
-            this.label9.TabIndex = 6;
-            this.label9.Text = "Ball speed:";
+            this.timer1.Interval = 50;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Form1
             // 
@@ -394,15 +424,18 @@
             this.ClientSize = new System.Drawing.Size(708, 522);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.statusStrip1);
+            this.DoubleBuffered = true;
             this.Name = "Form1";
             this.Text = "Amplitude-frequency characteristics: non-linear resonanse";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -439,6 +472,9 @@
         private System.Windows.Forms.Button buttonPlay;
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label labelBallSpeed;
+        private System.Windows.Forms.ToolStripStatusLabel ssLabel;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
