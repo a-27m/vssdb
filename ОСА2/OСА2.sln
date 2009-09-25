@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab4 (notDuffing)", "lab4 (
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab5  (À×Õ, nonlinear resonance)", "lab5  (À×Õ, nonlinear resonance)\lab5  (À×Õ, nonlinear resonance).csproj", "{F294E90A-B052-48CE-877F-F027D119FCA1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab2 (hunter-victim)", "lab2 (Hunter-Victim)\lab2 (hunter-victim).csproj", "{94C7936D-9B91-4AEA-8134-7DF758B48A40}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{F294E90A-B052-48CE-877F-F027D119FCA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F294E90A-B052-48CE-877F-F027D119FCA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F294E90A-B052-48CE-877F-F027D119FCA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94C7936D-9B91-4AEA-8134-7DF758B48A40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94C7936D-9B91-4AEA-8134-7DF758B48A40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94C7936D-9B91-4AEA-8134-7DF758B48A40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94C7936D-9B91-4AEA-8134-7DF758B48A40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -85,7 +85,6 @@ namespace lab5___АЧХ__nonlinear_resonance_
 
         double sigma, f, mju;
         float a1, a2, h;
-        int n;
 
         double a(double A) { return A; }
 
