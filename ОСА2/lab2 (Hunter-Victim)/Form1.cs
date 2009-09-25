@@ -110,10 +110,12 @@ namespace lab2__Hunter_Victim_
         double ft(double i) { return Y[(int)i][0]; }
         double fN1(double i) { return Y[(int)i][1]; }
         double fN2(double i) { return Y[(int)i][2]; }
-        double fAsympt(double i)
+        double fAsympt(double x1)
         {
             // n1 = Y[i][1];
-            return (C2 / b22) + alpha * Y[(int)i][1];
+            //return (C2 / b22) + alpha * Y[(int)i][1];
+
+            return (C2 / b22) + alpha * x1;
         }
 
         public Form1()
@@ -213,9 +215,10 @@ namespace lab2__Hunter_Victim_
             {
                 grsN1N2.Clear();
 
-                m = new MathGraphic(Color.Green, DrawModes.DrawLines,
-                    fN1, fN2, 0, n - 1, 1);
-                grsN1N2.Add(m);
+                grsN1N2.Add(new MathGraphic(Color.Green, DrawModes.DrawLines,
+                    fN1, fN2, 0, n - 1, 1));
+                grsN1N2.Add(new MathGraphic(Color.BlueViolet, DrawModes.DrawLines,
+                    fAsympt, 0, pictureBox1.Width / zoom, (float)h));
             }
 
             pictureBox1.Refresh();
@@ -254,8 +257,8 @@ namespace lab2__Hunter_Victim_
             if (e.Button == MouseButtons.Left)
                 return;
 
-            //if (!radioN1N2.Checked)
-            //    return;
+            if (!radioN1N2.Checked)
+                return;
 
             Y0[0] = (e.X - dx) / zoom; // n1(0)
             Y0[1] = (e.Y - dy) / -zoom; // n2(0)
@@ -268,8 +271,8 @@ namespace lab2__Hunter_Victim_
             grsN1N2.Clear();
             grsN1N2.Add(new MathGraphic(Color.Green, DrawModes.DrawLines,
                 fN1, fN2, 0, n - 1, 1));
-            grsN1N2.Add(new MathGraphic(Color.Green, DrawModes.DrawLines,
-                fN1, fAsympt, 0, n - 1, 1));
+            grsN1N2.Add(new MathGraphic(Color.BlueViolet, DrawModes.DrawLines,
+                fAsympt, 0, pictureBox1.Width/zoom, (float)h));
 
             pictureBox1.Refresh();
         }
