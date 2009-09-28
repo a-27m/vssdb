@@ -23,45 +23,6 @@ create table Person
 	check (Sex = 'F' or Sex = 'M')
 )
 
-create table Department
-(
-	IDDepartment int PRIMARY KEY NOT NULL , -- identity
-	Title varchar(50) NOT NULL,
-	Boss int references Person,
-	IDMainDepartment int references Department,
-)
-
-create table Team
-(
-	IDTeam int PRIMARY KEY NOT NULL , -- identity
-	IDDepartment int references Department,
-	Boss int references Person,
-)
-
-create table Pilot
-(
-	IDPilot int PRIMARY KEY NOT NULL , -- identity
-	IDPerson int references Person,
-	Salary money,
-)
-
-create table Worker
-(
-	IDWorker int PRIMARY KEY NOT NULL , -- identity
-	IDPerson int references Person,
-	IDTeam int references Team,
-	Salary money,
-)
-
-create table MedCheckup
-(
-	IDMedCheckup int PRIMARY KEY NOT NULL , -- identity
-	IDPilot int references Pilot,
-	CheckDate Datetime NOT NULL, -- Date
-	Result int NOT NULL, -- пригодность 0..10
-	Comment varchar(1024),
-)
-
 /*
  К р а т к а я   характеристика самолета Як-18Т:
 
@@ -91,6 +52,48 @@ create table Plane
 	WorkoutLandings int,
 	LastDeparture datetime,
 	Cost money,
+)
+
+create table Department
+(
+	IDDepartment int PRIMARY KEY NOT NULL , -- identity
+	Title varchar(50) NOT NULL,
+	Boss int references Person,
+	IDMainDepartment int references Department,
+)
+
+create table Team
+(
+	IDTeam int PRIMARY KEY NOT NULL , -- identity
+	--IDDepartment int references Department,
+	IDPlane int references Plane on delete set null,
+	Boss int references Person,
+	
+)
+
+create table Pilot
+(
+	IDPilot int PRIMARY KEY NOT NULL , -- identity
+	IDPerson int references Person,
+	IDTeam int references Team on delete set null,
+	Salary money,
+)
+
+create table Worker
+(
+	IDWorker int PRIMARY KEY NOT NULL , -- identity
+	IDPerson int references Person,
+	IDTeam int references Team,
+	Salary money,
+)
+
+create table MedCheckup
+(
+	IDMedCheckup int PRIMARY KEY NOT NULL , -- identity
+	IDPilot int references Pilot,
+	CheckDate Datetime NOT NULL, -- Date
+	Result int NOT NULL, -- пригодность 0..10
+	Comment varchar(1024),
 )
 
 create table TechCheckup
