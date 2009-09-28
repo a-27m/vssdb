@@ -7,3 +7,8 @@ FROM         PlannedFlight INNER JOIN
                       PlannedRoute ON PlannedFlight.IDPlannedRoute = PlannedRoute.IDPlannedRoute INNER JOIN
                       AirRoute ON PlannedRoute.IDAirRoute = AirRoute.IDRoute INNER JOIN
                       Ticket ON PlannedRoute.IDPlannedRoute = Ticket.IDPlannedRoute
+
+
+use airport;
+select * from AirRoute
+delete from AirRoute where IDRoute = 10;

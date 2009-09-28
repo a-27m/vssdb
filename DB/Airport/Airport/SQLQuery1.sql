@@ -3,32 +3,16 @@ GO
 
 if exists (
 	select name from sys.databases
-	where name = 'airport') drop database airport;
+	where name = 'Airport') drop database airport;
 	
 create database Airport;
 GO
 
 use Airport;
 
---drop table Passenger
---drop table Ticket
---drop table PlannedFlight
---drop table PlannedRoute
---drop table AirRoute
---drop table RouteType
---drop table Flight
---drop table TechCheckup
---drop table Plane
---drop table MedCheckup
---drop table Worker
---drop table Pilot
---drop table Team
---drop table Department
---drop table Person
-
 create table Person
 (
-	IDPerson int PRIMARY KEY NOT NULL,
+	IDPerson int PRIMARY KEY NOT NULL , -- identity
 	FirstName varchar(50) NOT NULL,
 	MiddleName varchar(50),
 	LastName varchar(50) NOT NULL,
@@ -41,10 +25,41 @@ create table Person
 
 create table Department
 (
-	IDDepartment int PRIMARY KEY NOT NULL,
+	IDDepartment int PRIMARY KEY NOT NULL , -- identity
 	Title varchar(50) NOT NULL,
 	Boss int references Person,
 	IDMainDepartment int references Department,
+)
+
+create table Team
+(
+	IDTeam int PRIMARY KEY NOT NULL , -- identity
+	IDDepartment int references Department,
+	Boss int references Person,
+)
+
+create table Pilot
+(
+	IDPilot int PRIMARY KEY NOT NULL , -- identity
+	IDPerson int references Person,
+	Salary money,
+)
+
+create table Worker
+(
+	IDWorker int PRIMARY KEY NOT NULL , -- identity
+	IDPerson int references Person,
+	IDTeam int references Team,
+	Salary money,
+)
+
+create table MedCheckup
+(
+	IDMedCheckup int PRIMARY KEY NOT NULL , -- identity
+	IDPilot int references Pilot,
+	CheckDate Datetime NOT NULL, -- Date
+	Result int NOT NULL, -- пригодность 0..10
+	Comment varchar(1024),
 )
 
 /*
@@ -66,7 +81,7 @@ create table Department
 */
 create table Plane
 (
-	IDPlain int PRIMARY KEY NOT NULL,
+	IDPlane int PRIMARY KEY NOT NULL , -- identity
 	Model varchar(20) NOT NULL,
 	RegNo varchar(15) NOT NULL,
 	ManufactDate datetime, -- Date
@@ -78,47 +93,15 @@ create table Plane
 	Cost money,
 )
 
-create table Team
-(
-	IDTeam int PRIMARY KEY NOT NULL,
-	IDDepartment int references Department,
-	Boss int references Person,
-	IDPlane int null references Plane,
-)
-
-create table Pilot
-(
-	IDPilot int PRIMARY KEY NOT NULL,
-	IDPerson int references Person,
-	Salary money,
-)
-
-create table Worker
-(
-	IDWorker int PRIMARY KEY NOT NULL,
-	IDPerson int references Person,
-	IDTeam int references Team,
-	Salary money,
-)
-
-create table MedCheckup
-(
-	IDMedCheckup int PRIMARY KEY NOT NULL,
-	IDPilot int references Pilot,
-	CheckDate Datetime NOT NULL, -- Date
-	Result int NOT NULL, -- пригодность 0..10
-	Comment varchar(1024),
-)
-
 create table TechCheckup
 (
-	IDCheckup int PRIMARY KEY NOT NULL,
-	IDPlain int references Plane,
+	IDCheckup int PRIMARY KEY NOT NULL , -- identity
+	IDPlane int references Plane on delete cascade
 )
 
 create table Flight
 (
-	IDFlight int PRIMARY KEY NOT NULL,
+	IDFlight int PRIMARY KEY NOT NULL , -- identity
 	IDAviaCompany int, -- references AviaCompany
 	
 	ShortTitle varchar(10),
@@ -126,31 +109,31 @@ create table Flight
 
 create table RouteType
 (
-	IDRouteType int PRIMARY KEY NOT NULL,
+	IDRouteType int PRIMARY KEY NOT NULL , -- identity
 	Title varchar(20) NOT NULL,
 )
 
 create table AirRoute
 (
-	IDRoute int PRIMARY KEY NOT NULL,
+	IDRoute int PRIMARY KEY NOT NULL , -- identity
 	ShortTitle varchar(20),
-	IDRouteType int references RouteType,
+	IDRouteType int references RouteType on delete set null,
 )
 
 
 create table PlannedRoute
 (
-	IDPlannedRoute int PRIMARY KEY NOT NULL,
+	IDPlannedRoute int PRIMARY KEY NOT NULL , -- identity
 	IDAirRoute int references AirRoute,
 	Price money,
 )
 
 create table PlannedFlight
 (
-	IDPlannedFlight int PRIMARY KEY NOT NULL,
+	IDPlannedFlight int PRIMARY KEY NOT NULL , -- identity
 	IDFlight int references Flight,
 	IDPlannedRoute int references PlannedRoute,
-	IDPlain	int references Plane,
+	IDPlane	int references Plane,
 	Departure Datetime,
 	Price money,
 	FlightStatus int,
@@ -158,13 +141,13 @@ create table PlannedFlight
 
 create table Ticket
 (
-	IDTicket int PRIMARY KEY NOT NULL,
+	IDTicket int PRIMARY KEY NOT NULL , -- identity
 	IDPlannedRoute int references PlannedRoute,
 )
 
 create table Passenger
 (
-	IDPassanger int PRIMARY KEY NOT NULL,
+	IDPassanger int PRIMARY KEY NOT NULL , -- identity
 	FirstName varchar(50) NOT NULL,
 	MiddleName varchar(50),
 	LastName varchar(50) NOT NULL,
