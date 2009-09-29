@@ -71,14 +71,29 @@ insert into Department values (3, 'Плановый', 131, 1);
 insert into Department values (4, 'Технический', 141, 1);
 --select * from Department;
 
-insert into Team values (1, 2, 141)
-insert into Team values (2, 1, 142)
+insert into Team values (1111, 2, 141)
+insert into Team values (2222, 1, 142)
 --select * from Team;
 
-insert into Pilot values(1, 111, 1, 7000);
-insert into Pilot values(2, 143, 2, 7000);
+insert into Pilot values(1, 111, 1111, 7000);
+insert into Pilot values(2, 143, 2222, 7000);
+--select * from Pilot;
 
-insert into Ticket values (1001, 1)
-insert into Ticket values (1002, 3)
+insert into MedCheckup values(1, 1, '2009-03-31', 4, 'Такой длинный и подробный комментарий');
+insert into MedCheckup values(2, 1, '2009-02-28', 5, 'Такой длинный и подробный комментарий');
+insert into MedCheckup values(3, 2, '2009-03-31', 2, 'Такой длинный и подробный комментарий');
+insert into MedCheckup values(4, 2, '2009-02-28', 4, 'Такой длинный и подробный комментарий');
+--select * from MedCheckup;
+
+insert into Worker values (1, 144, 1111, 2000);
+insert into Worker values (2, 141, 1111, 1000);
+
+insert into TechCheckup values (4, 1, '2009-07-09');
+insert into TechCheckup values (5, 2, '2009-07-16');
+
+insert into Passenger values (1, 'Дмитрий', 'Герасимович', 'Туманов', 'M', 'СВ123456', 'UKR187-441', 0)
+insert into Passenger values (2, 'Николай', 'Александрович', 'Луговой', 'M', 'СВ654321', 'RUS12954', 0)
+
+insert into Ticket values (1001, 1, 1)
+insert into Ticket values (1002, 3, 2)
 --select * from Ticket;
-

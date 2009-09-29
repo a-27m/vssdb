@@ -99,7 +99,8 @@ create table MedCheckup
 create table TechCheckup
 (
 	IDCheckup int PRIMARY KEY NOT NULL , -- identity
-	IDPlane int references Plane on delete cascade
+	IDPlane int references Plane on delete cascade,
+	Datetaken datetime NOT NULL,
 )
 
 create table Flight
@@ -142,12 +143,6 @@ create table PlannedFlight
 	FlightStatus int,
 )
 
-create table Ticket
-(
-	IDTicket int PRIMARY KEY NOT NULL , -- identity
-	IDPlannedRoute int references PlannedRoute,
-)
-
 create table Passenger
 (
 	IDPassanger int PRIMARY KEY NOT NULL , -- identity
@@ -160,4 +155,11 @@ create table Passenger
 	Customs	tinyint NULL, -- nullable, for internal flights
 
 	check (Sex = 'F' or Sex = 'M')
+)
+
+create table Ticket
+(
+	IDTicket int PRIMARY KEY NOT NULL , -- identity
+	IDPlannedRoute int references PlannedRoute on delete set null,
+	IDPassenger int references Passenger,
 )
