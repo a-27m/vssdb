@@ -143,6 +143,14 @@ create table PlannedFlight
 	FlightStatus int,
 )
 
+create table Place
+(
+	IDPlace int PRIMARY KEY NOT NULL, -- identity
+	IDPlannedFlight int references PlannedFlight on delete cascade,
+	Number int,
+	Sold int,
+)
+
 create table Passenger
 (
 	IDPassanger int PRIMARY KEY NOT NULL , -- identity

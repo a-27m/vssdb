@@ -1,8 +1,8 @@
 use Airport;
 
+delete from Ticket;
 delete from Passenger;
 
-delete from Ticket;
 delete from TechCheckup;
 delete from Worker;
 delete from MedCheckup;
@@ -10,6 +10,7 @@ delete from Pilot;
 delete from Team;
 delete from Department;
 
+delete from Place;
 delete from PlannedFlight;
 delete from PlannedRoute;
 delete from AirRoute;
@@ -64,6 +65,18 @@ insert into PlannedFlight values (9, 3, 3, 2, '2009-09-27', 650, null);
 insert into PlannedFlight values (10,4, 3, 2, '2009-09-28', 200, null); --
 insert into PlannedFlight values (11,5, 3, 2, '2009-09-28', 650, null);
 --select * from PlannedFlight;
+
+insert into Place values (1, 5, 1, 0);
+insert into Place values (2, 5, 3, 0);
+insert into Place values (3, 5, 5, 1);
+insert into Place values (4, 5, 7, 1);
+insert into Place values (5, 5, 9, 1);
+insert into Place values (6, 5, 11, 0);
+insert into Place values (7, 5, 13, 0);
+insert into Place values (8, 5, 15, 0);
+insert into Place values (9, 5, 17, 0);
+insert into Place values (10, 5, 19, 0);
+insert into Place values (11, 5, 21, 0);
 
 insert into Department values (1, 'Администрация', 111, null);
 insert into Department values (2, 'Бухгалтерия', 121, 1);
