@@ -4,32 +4,44 @@
     <LogicalFolder Name="Connections" Type="2" Sorted="true">
       <Items>
         <ConnectionNode Name="KLMN:KLMN\Axell">
-          <Created>2009-09-28T17:59:17.5106888+03:00</Created>
+          <Created>2009-09-13T12:32:43.734375+03:00</Created>
           <Type>SQL</Type>
           <Server>KLMN</Server>
           <UserName />
           <Authentication>Windows Authentication</Authentication>
-          <InitialDB>Airport</InitialDB>
+          <InitialDB />
           <LoginTimeout>15</LoginTimeout>
           <ExecutionTimeout>0</ExecutionTimeout>
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
         </ConnectionNode>
+        <ConnectionNode Name="SERVER1:KLMN\Axell">
+          <Created>2009-09-14T11:23:15.2578973+03:00</Created>
+          <Type>SQL</Type>
+          <Server>SERVER1</Server>
+          <UserName />
+          <Authentication>Windows Authentication</Authentication>
+          <InitialDB />
+          <LoginTimeout>15</LoginTimeout>
+          <ExecutionTimeout>0</ExecutionTimeout>
+          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
+          <ApplicationName />
+        </ConnectionNode>
       </Items>
     </LogicalFolder>
     <LogicalFolder Name="Queries" Type="0" Sorted="true">
       <Items>
-        <FileNode Name="FillData.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:KLMN:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>KLMN</AssociatedConnSrvName>
-          <AssociatedConnUserName />
-          <FullPath>FillData.sql</FullPath>
-        </FileNode>
         <FileNode Name="SQLQuery1.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:KLMN:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>KLMN</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>SQLQuery1.sql</FullPath>
+        </FileNode>
+        <FileNode Name="FillData.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:KLMN:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>KLMN</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>FillData.sql</FullPath>
         </FileNode>
         <FileNode Name="temp.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:KLMN:True</AssociatedConnectionMoniker>
