@@ -10,7 +10,6 @@ SELECT	AirRoute.ShortTitle AS RouteTitle,
 		PlannedFlight.Departure, 
 		Plane.Model, Plane.RegNo,
 		PlannedFlight.Price
-
 FROM 
 	PlannedFlight INNER JOIN
 	Flight ON PlannedFlight.IDFlight = Flight.IDFlight INNER JOIN

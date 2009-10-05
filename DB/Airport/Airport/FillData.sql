@@ -1,23 +1,25 @@
 use Airport;
 
-delete from Ticket;
-delete from Passenger;
+ delete from Ticket;
+ delete from Passenger;
 
-delete from TechCheckup;
-delete from Worker;
-delete from MedCheckup;
-delete from Pilot;
-delete from Team;
-delete from Department;
+ delete from TechCheckup;
+ delete from Worker;
+ delete from MedCheckup;
+ delete from Pilot;
+ delete from Team;
+ delete from Department;
 
-delete from Place;
-delete from PlannedFlight;
-delete from PlannedRoute;
-delete from AirRoute;
-delete from RouteType;
-delete from Flight;
-delete from Plane;
-delete from Person;
+ delete from Place;
+ delete from Delayed;
+ delete from DelayCause;
+ delete from PlannedFlight;
+ delete from PlannedRoute;
+ delete from AirRoute;
+ delete from RouteType;
+ delete from Flight;
+ delete from Plane;
+ delete from Person;
 
 insert into Person values (111, 'Алексей', 'Анатольевич', 'Мироненко', '1988-04-30','M',0)
 insert into Person values (112, 'Иван', 'Петрович', 'Сидоров', '1945-03-12','M',2)
@@ -107,6 +109,6 @@ insert into TechCheckup values (5, 2, '2009-07-16');
 insert into Passenger values (1, 'Дмитрий', 'Герасимович', 'Туманов', 'M', 'СВ123456', 'UKR187-441', 0)
 insert into Passenger values (2, 'Николай', 'Александрович', 'Луговой', 'M', 'СВ654321', 'RUS12954', 0)
 
-insert into Ticket values (1001, 1, 1)
-insert into Ticket values (1002, 3, 2)
---select * from Ticket;
+
+insert into Ticket values (1001, 6, 1, '2009-10-03 18:45')
+insert into Ticket values (1002, 8, 2, '2009-10-03 18:46')
