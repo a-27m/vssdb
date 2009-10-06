@@ -19,7 +19,8 @@ create table Person
 	Birth Datetime, -- Date
 	Sex	char(1), -- F or M
 	Children int,
-
+	Hired datetime,
+	
 	check (Sex = 'F' or Sex = 'M')
 )
 
@@ -76,6 +77,7 @@ create table Pilot
 	IDPilot int PRIMARY KEY NOT NULL , -- identity
 	IDPerson int references Person,
 	IDTeam int references Team on delete set null,
+	IDDepartment int references Department on delete set null,
 	Salary money,
 )
 
@@ -84,6 +86,7 @@ create table Worker
 	IDWorker int PRIMARY KEY NOT NULL , -- identity
 	IDPerson int references Person,
 	IDTeam int references Team,
+	IDDepartment int references Department on delete set null,
 	Salary money,
 )
 

@@ -21,15 +21,15 @@ use Airport;
  delete from Plane;
  delete from Person;
 
-insert into Person values (111, 'Алексей', 'Анатольевич', 'Мироненко', '1988-04-30','M',0)
-insert into Person values (112, 'Иван', 'Петрович', 'Сидоров', '1945-03-12','M',2)
-insert into Person values (121, 'Нина', 'Федоровна', 'Двойченко', '1961-05-17','F',2)
-insert into Person values (122, 'Наталия', 'Михайловна', 'Степанова', '1968-09-28','F',0)
-insert into Person values (131, 'Елена', 'Петровна', 'Максимчук', '1983-02-05','F',1)
-insert into Person values (141, 'Вениамин', 'Александрович', 'Беляев', '1959-01-27','M',1)
-insert into Person values (142, 'Сергей', 'Витальевич', 'Деркач', '1977-12-10','M',0)
-insert into Person values (143, 'Иван', 'Семенович', 'Сидоренко', '1974-04-15','M',0)
-insert into Person values (144, 'Евгений', 'Сергеевич', 'Бакланов', '1965-07-25','M',1)
+insert into Person values (111, 'Алексей', 'Анатольевич', 'Мироненко', '1988-04-30','M',0, '2009-01-01')
+insert into Person values (112, 'Иван', 'Петрович', 'Сидоров', '1945-03-12','M',2, '2009-01-01')
+insert into Person values (121, 'Нина', 'Федоровна', 'Двойченко', '1961-05-17','F',2, '2009-01-01')
+insert into Person values (122, 'Наталия', 'Михайловна', 'Степанова', '1968-09-28','F',0, '2009-01-01')
+insert into Person values (131, 'Елена', 'Петровна', 'Максимчук', '1983-02-05','F',1, '2009-01-01')
+insert into Person values (141, 'Вениамин', 'Александрович', 'Беляев', '1959-01-27','M',1, '2009-01-01')
+insert into Person values (142, 'Сергей', 'Витальевич', 'Деркач', '1977-12-10','M',0, '2009-01-01')
+insert into Person values (143, 'Иван', 'Семенович', 'Сидоренко', '1974-04-15','M',0, '2009-01-01')
+insert into Person values (144, 'Евгений', 'Сергеевич', 'Бакланов', '1965-07-25','M',1, '2009-01-01')
 --select * from Person;
 
 insert into Plane values (1, 'Як-18Т', 'RA-13244', '2001-05-30', 5000, 20000, 653, 2005, '2009-09-30', 143581.26)
@@ -90,8 +90,8 @@ insert into Team values (1111, 2, 141)
 insert into Team values (2222, 1, 142)
 --select * from Team;
 
-insert into Pilot values(1, 111, 1111, 7000);
-insert into Pilot values(2, 143, 2222, 7000);
+insert into Pilot values(1, 111, 1111, 4, 7000);
+insert into Pilot values(2, 143, 2222, 4, 7000);
 --select * from Pilot;
 
 insert into MedCheckup values(1, 1, '2009-03-31', 4, 'Такой длинный и подробный комментарий');
@@ -100,8 +100,8 @@ insert into MedCheckup values(3, 2, '2009-03-31', 2, 'Такой длинный и подробный 
 insert into MedCheckup values(4, 2, '2009-02-28', 4, 'Такой длинный и подробный комментарий');
 --select * from MedCheckup;
 
-insert into Worker values (1, 144, 1111, 2000);
-insert into Worker values (2, 141, 1111, 1000);
+insert into Worker values (1, 144, 1111, 4, 2000);
+insert into Worker values (2, 141, 1111, 4, 1000);
 
 insert into TechCheckup values (4, 1, '2009-07-09');
 insert into TechCheckup values (5, 2, '2009-07-16');
