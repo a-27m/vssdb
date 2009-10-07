@@ -38,7 +38,8 @@ namespace lab7__Catastrophe_
 
         private double P(double q)
         {
-            return 0.5 * Math.Cos(q - x2 / 2) * (q - x2 / 2) + q / 2 + 5;
+            return C * Math.Pow(Math.Sqrt((L0 + h) * (L0 + h) + x * x) - L0, 2) / 2.0;
+            //return 0.5 * Math.Cos(q - x2 / 2) * (q - x2 / 2) + q / 2 + 5;
         }
 
         private double QDotPlus(double q)
