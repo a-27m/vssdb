@@ -82,6 +82,12 @@ namespace DekartGraphic
         protected PointF[][] graphic;
         private bool tabulated = false;
 
+        public PointF[][] GraphicLayersPoints
+        {
+            get { return graphic; }
+            set { graphic = value; }
+        }
+
         private DrawModes drawingMode = DrawModes.DrawPoints;
         public DrawModes DrawingMode
         {
