@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ailab2", "ailab2\ailab2.csproj", "{661CE5E0-AF44-456A-8FB4-B72CAACC2623}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pre3d", "pre3d\pre3d.csproj", "{4777D09C-D3EB-44C6-BDE6-0541B5C587F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{661CE5E0-AF44-456A-8FB4-B72CAACC2623}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{661CE5E0-AF44-456A-8FB4-B72CAACC2623}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{661CE5E0-AF44-456A-8FB4-B72CAACC2623}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4777D09C-D3EB-44C6-BDE6-0541B5C587F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4777D09C-D3EB-44C6-BDE6-0541B5C587F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4777D09C-D3EB-44C6-BDE6-0541B5C587F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4777D09C-D3EB-44C6-BDE6-0541B5C587F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

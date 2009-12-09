@@ -92,16 +92,20 @@ namespace pre3d
             Zk = mz * sin(90f+phiV);
             Norm(ref Zi, ref Zj, ref Zk);
 
-            for (int j = 1; j < pts.Length; j++)
+            //for (int j = 1; j < pts.Length; j++)
+            //{
+            //    for (int i = 1; i < pts[j].Length; i++) // в pts[j] меняется y
+            for (int i = 1; i < pts.Length; i++)
             {
-                for (int i = 1; i < pts[j].Length; i++) // в pts[j] меняется y
+                for (int j = 1; j < pts[i].Length; j++)
                 {
                     Project(ref p1, pts[i][j]);
                     Project(ref p2, pts[i - 1][j]);
                     Project(ref p3, pts[i][j - 1]);
                     Project(ref p4, pts[i - 1][j - 1]);
 
-                    int v = (int)((pts[i][j].z - z_min) / (z_max - z_min) * 200) + 50;
+                    //int v = (int)((pts[i][j].z - z_min) / (z_max - z_min) * 200) + 50;
+                    int v = 0;
 
                     //g.FillPolygon(new SolidBrush(Color.FromArgb(v, v, v)),
                     //    new PointF[] { p1, p2, p4, p3 });
@@ -113,7 +117,7 @@ namespace pre3d
 
             #region Axes
 
-            pen.Width =2f / zoom;
+            pen.Width = 0;// 2f / zoom;
             pen.EndCap = LineCap.Round;
 
             Project(ref p1, new Point3d(0, 0, 0));
