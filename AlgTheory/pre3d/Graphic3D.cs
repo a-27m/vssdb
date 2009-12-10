@@ -56,7 +56,7 @@ namespace pre3d
 
         float x_max, x_min;
         float y_max, y_min;
-        float z_max = float.MinValue, z_min = float.MaxValue;
+        float z_max, z_min;
 
         float Xi, Yi, Zi;
         float Xj, Yj, Zj;
@@ -102,11 +102,10 @@ namespace pre3d
                     Project(ref p4, pts[i - 1][j - 1]);
 
                     int v = (int)((pts[i][j].z - z_min) / (z_max - z_min) * 200) + 50;
-                    Color heightColor = GeoColors((pts[i][j].z - z_min) / (z_max - z_min));
 
                     //g.FillPolygon(new SolidBrush(Color.FromArgb(v, v, v)),
                     //    new PointF[] { p1, p2, p4, p3 });
-                    pen.Color = heightColor;//Color.FromArgb(v, v, v);
+                    pen.Color = Color.FromArgb(v, v, v);
                     g.DrawLine(pen, p1, p2);
                     g.DrawLine(pen, p1, p3);
                 }
@@ -140,37 +139,6 @@ namespace pre3d
             #endregion
         }
 
-        private Color GeoColors(float p)
-        {
-            int r, g, b;
-
-            if (p < 1f / 4f)
-            {
-                r = 0;
-                g = (int)(255f * 4f * p);
-                b = 255;
-                return Color.FromArgb(r, g, b);
-            }
-            if (p < 2f / 4f)
-            {
-                r = 0;
-                g = 255;
-                b = 255 - (int)(255f * 4f * (p - 1f / 4f));
-                return Color.FromArgb(r, g, b);
-            }
-            if (p < 3f / 4f)
-            {
-                r = (int)(255f * 4f * (p - 2f / 4f));
-                g = 255;
-                b = 0;
-                return Color.FromArgb(r, g, b);
-            }
-            r = 255;
-            g = 255 - (int)(255f * 4f * (p - 3f / 4f));
-            b = 0;
-            return Color.FromArgb(r, g, b);
-        }
-
         private void Norm(ref float Xi, ref float Xj, ref float Xk)
         {
             float norm = (float)Math.Sqrt(Xi * Xi + Xj * Xj + Xk * Xk);
@@ -179,11 +147,6 @@ namespace pre3d
             Xk /= norm;
         }
 
-        /// <summary>
-        /// Projects 3D point to the 2D plane using viewpoint
-        /// </summary>
-        /// <param name="p2d">Resulting flat point</param>
-        /// <param name="p3d">Point in a space</param>
         protected void Project(ref PointF p2d, Point3d p3d)
         {
             p2d.X = p3d.x * sin(phiH) + p3d.y * cos(phiH);
