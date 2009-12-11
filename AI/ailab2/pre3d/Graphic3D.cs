@@ -29,11 +29,17 @@ namespace pre3d
     {
         protected Point3d[][] pts;
 
-        float sin(float degree)
+        /// <summary>
+        /// Sine, angle in degrees
+        /// </summary>
+        public static float sin(float degree)
         {
             return (float)Math.Sin(degree / 180.0 * Math.PI);
         }
-        float cos(float degree)
+        /// <summary>
+        /// Cosine, angle in degrees
+        /// </summary>
+        public static float cos(float degree)
         {
             return (float)Math.Cos(degree / 180.0 * Math.PI);
         }
@@ -66,9 +72,11 @@ namespace pre3d
 
         public float phiH = 0f, phiV = 0f;
 
-        public void Draw(Graphics g)
+        public void Draw(Graphics g, bool EraseBackground)
         {
-            g.Clear(Color.White);
+            if (EraseBackground)
+                g.Clear(Color.White);
+
             g.Transform = new Matrix(zoom, 0, 0, zoom, ox, oy);
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
@@ -79,22 +87,20 @@ namespace pre3d
             PointF p3 = new PointF();
             PointF p4 = new PointF();
 
-            Xi = mx * cos(phiH) * cos(phiV);
-            Xj = my * sin(phiH) * cos(phiV);
-            Xk = mz * sin(phiV);
-            Norm(ref Xi, ref Xj, ref Xk);
-            Yi = mx * cos(90f+phiH) * cos(phiV);
-            Yj = my *  sin(90f+phiH) * cos(phiV);
-            Yk = mz * sin(phiV);
-            Norm(ref Yi, ref Yj, ref Yk);
-            Zi = mx * cos(phiH) * cos(90f+phiV);
-            Zj = my * sin(phiH) * cos(90f+phiV);
-            Zk = mz * sin(90f+phiV);
-            Norm(ref Zi, ref Zj, ref Zk);
+            // wtf?
+            //Xi = mx * cos(phiH) * cos(phiV);
+            //Xj = my * sin(phiH) * cos(phiV);
+            //Xk = mz * sin(phiV);
+            //Norm(ref Xi, ref Xj, ref Xk);
+            //Yi = mx * cos(90f + phiH) * cos(phiV);
+            //Yj = my * sin(90f + phiH) * cos(phiV);
+            //Yk = mz * sin(phiV);
+            //Norm(ref Yi, ref Yj, ref Yk);
+            //Zi = mx * cos(phiH) * cos(90f + phiV);
+            //Zj = my * sin(phiH) * cos(90f + phiV);
+            //Zk = mz * sin(90f + phiV);
+            //Norm(ref Zi, ref Zj, ref Zk);
 
-            //for (int j = 1; j < pts.Length; j++)
-            //{
-            //    for (int i = 1; i < pts[j].Length; i++) // в pts[j] меняется y
             for (int i = 1; i < pts.Length; i++)
             {
                 for (int j = 1; j < pts[i].Length; j++)
@@ -125,22 +131,27 @@ namespace pre3d
             // x
             pen.Color = Color.Blue;
             //Project(ref p1, new Point3d(x_min, 0, 0));
-            Project(ref p2, new Point3d(x_max, 0, 0));            
+            Project(ref p2, new Point3d(10*x_max, 0, 0));            
             g.DrawLine(pen, p1, p2);
 
             // y
             pen.Color = Color.Red;
             //Project(ref p1, new Point3d(0, y_min, 0));
-            Project(ref p2, new Point3d(0, y_max, 0));
+            Project(ref p2, new Point3d(0, 10*y_max, 0));
             g.DrawLine(pen, p1, p2);
 
             // z
             pen.Color = Color.Green;
             //Project(ref p1, new Point3d(0, 0, z_min));
-            Project(ref p2, new Point3d(0, 0, z_max));
+            Project(ref p2, new Point3d(0, 0, 10*z_max));
             g.DrawLine(pen, p1, p2);
 
             #endregion
+        }
+
+        public void Draw(Graphics g)
+        {
+            Draw(g, true);
         }
 
         private void Norm(ref float Xi, ref float Xj, ref float Xk)
@@ -151,10 +162,15 @@ namespace pre3d
             Xk /= norm;
         }
 
-        protected void Project(ref PointF p2d, Point3d p3d)
+        public void Project(ref PointF p2d, Point3d p3d)
         {
-            p2d.X = p3d.x * sin(phiH) + p3d.y * cos(phiH);
-            p2d.Y = p3d.x * cos(phiH) * cos(phiV) - p3d.y * sin(phiH) * cos(phiV) - p3d.z * sin(phiV);
+            // левосторонняя система координат
+            //p2d.X = p3d.x * sin(phiH) + p3d.y * cos(phiH);
+            //p2d.Y = p3d.x * cos(phiH) * cos(phiV) - p3d.y * sin(phiH) * cos(phiV) - p3d.z * sin(phiV);
+
+            // правосторонняя система координат
+            p2d.X = p3d.x * sin(phiH) - p3d.y * cos(phiH);
+            p2d.Y = p3d.x * cos(phiH) * cos(phiV) + p3d.y * sin(phiH) * cos(phiV) - p3d.z * sin(phiV);
         }
 
         public Point3d[][] Tabulate(DoubleFunction3d fxy,
@@ -204,6 +220,17 @@ namespace pre3d
                 dots.Clear();
             }
             return surf.ToArray();
+        }
+
+        public void ReTabulate(DoubleFunction3d fxy,
+            float x1, float x2,
+            float y1, float y2,
+            float StepX, float StepY)
+        {
+            // release memory or do something!
+            // ...
+
+            pts = Tabulate(fxy, x1, x2, y1, y2, StepX, StepY);
         }
     }
 }
