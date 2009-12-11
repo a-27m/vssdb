@@ -20,6 +20,7 @@ namespace ailab2
 
         List<Graphic3D> syncList;
         List<Point3dNode>[] chkpntList;
+        List<Point3dNode> path;
         Point3dNode startPos, finishPos;
 
         List<Point3dNode> lOpen, lClosed;
@@ -29,6 +30,8 @@ namespace ailab2
         int n;
         ViewParams vpr;
         bool SetStartState = false, SetFinishState = false;
+
+        Pen penPath;
 
         public double gorka(double x, double y)
         {
@@ -73,6 +76,9 @@ namespace ailab2
 
             lOpen = new List<Point3dNode>();
             lClosed = new List<Point3dNode>();
+            path = new List<Point3dNode>();
+
+            penPath = new Pen(Color.Red, 0);
 
             pictureBox1.Refresh();
         }
@@ -115,17 +121,19 @@ namespace ailab2
             if (g3d != null)
             {
                 SyncViewToGraphics();
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
                 g3d.Draw(e.Graphics);
 
-                float r = 2;
                 PointF p2d = new PointF();
 
+                float r = 2;
                 foreach (List<Point3dNode> line in chkpntList)
                     foreach (Point3d p3d in line)
                     {
                         g3d.Project(ref p2d, p3d);
                         e.Graphics.FillEllipse(Brushes.Blue,
+
                             p2d.X - r / vpr.zoom, p2d.Y - r / vpr.zoom,
                             2 * r / vpr.zoom, 2 * r / vpr.zoom);
                     }
@@ -148,6 +156,21 @@ namespace ailab2
                         2 * r / vpr.zoom, 2 * r / vpr.zoom);
                 }
 
+                if (path != null)
+                {
+                    if (path.Count > 0)
+                    {
+                        PointF[] pts = new PointF[path.Count];
+                        int i = 0;
+                        foreach (Point3dNode p in path)
+                        {
+                            g3d.Project(ref /*out*/ p2d, p);
+                            pts[i++] = p2d;
+                        }
+
+                        e.Graphics.DrawLines(penPath, pts);
+                    }
+                }
             }
         }
 
@@ -380,7 +403,6 @@ namespace ailab2
             lOpen.Clear();
             lClosed.Clear();
 
-            Point3dNode currNode = null;
             bool solved = false, failed = false;
 
             //1. Поместить все узлы из множества So в список OPEN.
@@ -400,11 +422,11 @@ namespace ailab2
                 }
 
                 if (lOpen[0].Region <= 3) // можно раскрыть
-                {  
+                {
                     //4. Раскрыть вершину n и все порождённые вершины поместить в список OPEN настроив указатели к вершине n
                     for (int i = 0; i < chkpntList[lOpen[0].Region + 1 - 1].Count; i++)
                     {
-                        chkpntList[lOpen[0].Region + 1 - 1][i].Previous = currNode;
+                        chkpntList[lOpen[0].Region + 1 - 1][i].Previous = lOpen[0];
                         lOpen.Add(chkpntList[lOpen[0].Region][i]);
                         //5. Если порожденная вершина целевая, т.е. принадлежит Sq то выдать решение с помощью указателей, иначе перейти к шагу №2.
                         if (chkpntList[lOpen[0].Region][i] == finishPos)
@@ -419,8 +441,20 @@ namespace ailab2
                 lOpen.RemoveAt(0);
             }
         brk:
-            if (solved) MessageBox.Show("solved");
-            if (failed) MessageBox.Show("failed");
+            // restore path
+            path.Clear();
+
+            path.Add(finishPos);
+            Point3dNode curr = lOpen[0];
+            while (curr != null)
+            {
+                path.Add(curr);
+                curr = curr.Previous;
+            }
+            Refresh();
+
+            if (solved) Text = ("solved");
+            if (failed) Text = ("failed");
 
         }
     }
