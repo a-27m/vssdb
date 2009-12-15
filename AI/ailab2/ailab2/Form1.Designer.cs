@@ -31,6 +31,14 @@
             this.components = new System.ComponentModel.Container();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.checkBoxLog = new System.Windows.Forms.CheckBox();
+            this.buttonFind = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.переборВШиринуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.переборВГлубинуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.упорядоченныйПоискToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkBoxFinish = new System.Windows.Forms.CheckBox();
+            this.checkBoxStart = new System.Windows.Forms.CheckBox();
             this.buttonZoomIn = new System.Windows.Forms.Button();
             this.buttonZoomOut = new System.Windows.Forms.Button();
             this.buttonApply = new System.Windows.Forms.Button();
@@ -44,20 +52,18 @@
             this.textBoxC = new System.Windows.Forms.TextBox();
             this.textBoxB = new System.Windows.Forms.TextBox();
             this.textBoxA = new System.Windows.Forms.TextBox();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.textBoxLog = new System.Windows.Forms.TextBox();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.checkBoxStart = new System.Windows.Forms.CheckBox();
-            this.checkBoxFinish = new System.Windows.Forms.CheckBox();
-            this.buttonFind = new System.Windows.Forms.Button();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.переборВШиринуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.переборВГлубинуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.упорядоченныйПоискToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -66,7 +72,7 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(526, 387);
+            this.pictureBox1.Size = new System.Drawing.Size(407, 387);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
@@ -84,6 +90,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.checkBoxLog);
             this.splitContainer1.Panel1.Controls.Add(this.buttonFind);
             this.splitContainer1.Panel1.Controls.Add(this.checkBoxFinish);
             this.splitContainer1.Panel1.Controls.Add(this.checkBoxStart);
@@ -103,10 +110,87 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.pictureBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(526, 495);
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
+            this.splitContainer1.Size = new System.Drawing.Size(636, 495);
             this.splitContainer1.SplitterDistance = 104;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // checkBoxLog
+            // 
+            this.checkBoxLog.AutoSize = true;
+            this.checkBoxLog.Checked = true;
+            this.checkBoxLog.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxLog.Location = new System.Drawing.Point(546, 72);
+            this.checkBoxLog.Name = "checkBoxLog";
+            this.checkBoxLog.Size = new System.Drawing.Size(65, 17);
+            this.checkBoxLog.TabIndex = 7;
+            this.checkBoxLog.Text = "Verbose";
+            this.checkBoxLog.UseVisualStyleBackColor = true;
+            // 
+            // buttonFind
+            // 
+            this.buttonFind.ContextMenuStrip = this.contextMenuStrip1;
+            this.buttonFind.Location = new System.Drawing.Point(295, 68);
+            this.buttonFind.Name = "buttonFind";
+            this.buttonFind.Size = new System.Drawing.Size(75, 23);
+            this.buttonFind.TabIndex = 6;
+            this.buttonFind.Text = "Find!";
+            this.buttonFind.UseVisualStyleBackColor = true;
+            this.buttonFind.Click += new System.EventHandler(this.buttonFind_Click);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.переборВШиринуToolStripMenuItem,
+            this.переборВГлубинуToolStripMenuItem,
+            this.упорядоченныйПоискToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.ShowImageMargin = false;
+            this.contextMenuStrip1.Size = new System.Drawing.Size(184, 70);
+            // 
+            // переборВШиринуToolStripMenuItem
+            // 
+            this.переборВШиринуToolStripMenuItem.Name = "переборВШиринуToolStripMenuItem";
+            this.переборВШиринуToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.переборВШиринуToolStripMenuItem.Text = "Перебор в ширину";
+            // 
+            // переборВГлубинуToolStripMenuItem
+            // 
+            this.переборВГлубинуToolStripMenuItem.Name = "переборВГлубинуToolStripMenuItem";
+            this.переборВГлубинуToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.переборВГлубинуToolStripMenuItem.Text = "Перебор в глубину";
+            // 
+            // упорядоченныйПоискToolStripMenuItem
+            // 
+            this.упорядоченныйПоискToolStripMenuItem.Name = "упорядоченныйПоискToolStripMenuItem";
+            this.упорядоченныйПоискToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.упорядоченныйПоискToolStripMenuItem.Text = "Упорядоченный поиск";
+            // 
+            // checkBoxFinish
+            // 
+            this.checkBoxFinish.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBoxFinish.AutoSize = true;
+            this.checkBoxFinish.Cursor = System.Windows.Forms.Cursors.Default;
+            this.checkBoxFinish.Location = new System.Drawing.Point(196, 68);
+            this.checkBoxFinish.Name = "checkBoxFinish";
+            this.checkBoxFinish.Size = new System.Drawing.Size(60, 23);
+            this.checkBoxFinish.TabIndex = 5;
+            this.checkBoxFinish.Text = "Set finish";
+            this.checkBoxFinish.UseVisualStyleBackColor = true;
+            this.checkBoxFinish.CheckedChanged += new System.EventHandler(this.checkBoxFinish_CheckedChanged);
+            // 
+            // checkBoxStart
+            // 
+            this.checkBoxStart.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBoxStart.AutoSize = true;
+            this.checkBoxStart.Cursor = System.Windows.Forms.Cursors.Default;
+            this.checkBoxStart.Location = new System.Drawing.Point(134, 68);
+            this.checkBoxStart.Name = "checkBoxStart";
+            this.checkBoxStart.Size = new System.Drawing.Size(56, 23);
+            this.checkBoxStart.TabIndex = 5;
+            this.checkBoxStart.Text = "Set start";
+            this.checkBoxStart.UseVisualStyleBackColor = true;
+            this.checkBoxStart.CheckedChanged += new System.EventHandler(this.checkBoxStart_CheckedChanged);
             // 
             // buttonZoomIn
             // 
@@ -224,80 +308,45 @@
             this.textBoxA.Size = new System.Drawing.Size(72, 20);
             this.textBoxA.TabIndex = 0;
             // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.pictureBox1);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.textBoxLog);
+            this.splitContainer2.Size = new System.Drawing.Size(636, 387);
+            this.splitContainer2.SplitterDistance = 407;
+            this.splitContainer2.TabIndex = 1;
+            // 
+            // textBoxLog
+            // 
+            this.textBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxLog.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxLog.Location = new System.Drawing.Point(0, 0);
+            this.textBoxLog.Multiline = true;
+            this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.ReadOnly = true;
+            this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBoxLog.Size = new System.Drawing.Size(225, 387);
+            this.textBoxLog.TabIndex = 0;
+            this.textBoxLog.WordWrap = false;
+            // 
             // errorProvider
             // 
             this.errorProvider.ContainerControl = this;
-            // 
-            // checkBoxStart
-            // 
-            this.checkBoxStart.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBoxStart.AutoSize = true;
-            this.checkBoxStart.Cursor = System.Windows.Forms.Cursors.Default;
-            this.checkBoxStart.Location = new System.Drawing.Point(134, 68);
-            this.checkBoxStart.Name = "checkBoxStart";
-            this.checkBoxStart.Size = new System.Drawing.Size(56, 23);
-            this.checkBoxStart.TabIndex = 5;
-            this.checkBoxStart.Text = "Set start";
-            this.checkBoxStart.UseVisualStyleBackColor = true;
-            this.checkBoxStart.CheckedChanged += new System.EventHandler(this.checkBoxStart_CheckedChanged);
-            // 
-            // checkBoxFinish
-            // 
-            this.checkBoxFinish.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBoxFinish.AutoSize = true;
-            this.checkBoxFinish.Cursor = System.Windows.Forms.Cursors.Default;
-            this.checkBoxFinish.Location = new System.Drawing.Point(196, 68);
-            this.checkBoxFinish.Name = "checkBoxFinish";
-            this.checkBoxFinish.Size = new System.Drawing.Size(60, 23);
-            this.checkBoxFinish.TabIndex = 5;
-            this.checkBoxFinish.Text = "Set finish";
-            this.checkBoxFinish.UseVisualStyleBackColor = true;
-            this.checkBoxFinish.CheckedChanged += new System.EventHandler(this.checkBoxFinish_CheckedChanged);
-            // 
-            // buttonFind
-            // 
-            this.buttonFind.ContextMenuStrip = this.contextMenuStrip1;
-            this.buttonFind.Location = new System.Drawing.Point(295, 68);
-            this.buttonFind.Name = "buttonFind";
-            this.buttonFind.Size = new System.Drawing.Size(75, 23);
-            this.buttonFind.TabIndex = 6;
-            this.buttonFind.Text = "Find!";
-            this.buttonFind.UseVisualStyleBackColor = true;
-            this.buttonFind.Click += new System.EventHandler(this.buttonFind_Click);
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.переборВШиринуToolStripMenuItem,
-            this.переборВГлубинуToolStripMenuItem,
-            this.упорядоченныйПоискToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.ShowImageMargin = false;
-            this.contextMenuStrip1.Size = new System.Drawing.Size(176, 70);
-            // 
-            // переборВШиринуToolStripMenuItem
-            // 
-            this.переборВШиринуToolStripMenuItem.Name = "переборВШиринуToolStripMenuItem";
-            this.переборВШиринуToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-            this.переборВШиринуToolStripMenuItem.Text = "Перебор в ширину";
-            // 
-            // переборВГлубинуToolStripMenuItem
-            // 
-            this.переборВГлубинуToolStripMenuItem.Name = "переборВГлубинуToolStripMenuItem";
-            this.переборВГлубинуToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-            this.переборВГлубинуToolStripMenuItem.Text = "Перебор в глубину";
-            // 
-            // упорядоченныйПоискToolStripMenuItem
-            // 
-            this.упорядоченныйПоискToolStripMenuItem.Name = "упорядоченныйПоискToolStripMenuItem";
-            this.упорядоченныйПоискToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-            this.упорядоченныйПоискToolStripMenuItem.Text = "Упорядоченный поиск";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(526, 495);
+            this.ClientSize = new System.Drawing.Size(636, 495);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
             this.Text = "AI: lab2 (Hill)";
@@ -306,8 +355,12 @@
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel2.PerformLayout();
+            this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -337,6 +390,9 @@
         private System.Windows.Forms.ToolStripMenuItem переборВШиринуToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem переборВГлубинуToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem упорядоченныйПоискToolStripMenuItem;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.TextBox textBoxLog;
+        private System.Windows.Forms.CheckBox checkBoxLog;
     }
 }
 
