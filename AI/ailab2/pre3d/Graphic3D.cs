@@ -8,26 +8,26 @@ namespace pre3d
 {
     public delegate double DoubleFunction3d(double x, double y);
 
-    public class Point3d
+    public class Point3D
     {
         public float x, y, z;
 
-        public Point3d(float x, float y, float z)
+        public Point3D(float x, float y, float z)
         {
             this.x = x;
             this.y = y;
             this.z = z;
         }
 
-        public Point3d Clone()
+        public Point3D Clone()
         {
-            return (Point3d)this.MemberwiseClone();
+            return (Point3D)this.MemberwiseClone();
         }
     }
 
     public class Graphic3D
     {
-        protected Point3d[][] pts;
+        protected Point3D[][] pts;
 
         /// <summary>
         /// Sine, angle in degrees
@@ -126,24 +126,24 @@ namespace pre3d
             pen.Width = 0;// 2f / zoom;
             pen.EndCap = LineCap.Round;
 
-            Project(ref p1, new Point3d(0, 0, 0));
+            Project(ref p1, new Point3D(0, 0, 0));
 
             // x
-            pen.Color = Color.Blue;
+            pen.Color = Color.PowderBlue;
             //Project(ref p1, new Point3d(x_min, 0, 0));
-            Project(ref p2, new Point3d(10*x_max, 0, 0));            
+            Project(ref p2, new Point3D(10*x_max, 0, 0));            
             g.DrawLine(pen, p1, p2);
 
             // y
-            pen.Color = Color.Red;
+            pen.Color = Color.MistyRose;
             //Project(ref p1, new Point3d(0, y_min, 0));
-            Project(ref p2, new Point3d(0, 10*y_max, 0));
+            Project(ref p2, new Point3D(0, 10*y_max, 0));
             g.DrawLine(pen, p1, p2);
 
             // z
-            pen.Color = Color.Green;
+            pen.Color = Color.PaleGreen;
             //Project(ref p1, new Point3d(0, 0, z_min));
-            Project(ref p2, new Point3d(0, 0, 10*z_max));
+            Project(ref p2, new Point3D(0, 0, 10*z_max));
             g.DrawLine(pen, p1, p2);
 
             #endregion
@@ -162,7 +162,7 @@ namespace pre3d
             Xk /= norm;
         }
 
-        public void Project(ref PointF p2d, Point3d p3d)
+        public void Project(ref PointF p2d, Point3D p3d)
         {
             // левосторонняя система координат
             //p2d.X = p3d.x * sin(phiH) + p3d.y * cos(phiH);
@@ -173,7 +173,7 @@ namespace pre3d
             p2d.Y = p3d.x * cos(phiH) * cos(phiV) + p3d.y * sin(phiH) * cos(phiV) - p3d.z * sin(phiV);
         }
 
-        public Point3d[][] Tabulate(DoubleFunction3d fxy,
+        public Point3D[][] Tabulate(DoubleFunction3d fxy,
             float x1, float x2,
             float y1, float y2,
             float StepX, float StepY)
@@ -186,8 +186,8 @@ namespace pre3d
             if (fxy == null)
                 throw new ArgumentNullException("fx");
 
-            List<Point3d> dots = new List<Point3d>();
-            List<Point3d[]> surf = new List<Point3d[]>();
+            List<Point3D> dots = new List<Point3D>();
+            List<Point3D[]> surf = new List<Point3D[]>();
 
             float z;
 
@@ -209,7 +209,7 @@ namespace pre3d
                         z = 0;
                     }
 
-                    dots.Add(new Point3d(x, y, z));
+                    dots.Add(new Point3D(x, y, z));
                     if (z_max < z)
                         z_max = z;
                     if (z_min > z)

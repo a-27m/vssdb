@@ -20,6 +20,9 @@ namespace ailab2
         }
 
         #region declarations
+        delegate double MeasureDelegate(Point3D point1, Point3D point2);
+        delegate void SearchDelegate();
+
         List<Graphic3D> syncList;
         List<Point3dNode>[] chkpntList;
         List<Point3dNode> path;
@@ -32,12 +35,15 @@ namespace ailab2
         List<Point3dNode> lOpen, lClosed;
 
         Graphic3D g3d;//, g3dCheckPoints;
-        double a, b, c, h;
+        double a, b, c, h, v0;
         int n;
         ViewParams vpr;
         bool SetStartState = false, SetFinishState = false;
 
         Pen penPath, penBestPath;
+
+        MeasureDelegate measuringMethod;
+        SearchDelegate searchMethod;
         #endregion
 
         public double gorka(double x, double y)
@@ -49,7 +55,7 @@ namespace ailab2
             else
                 z = (1 - x / a - y / b) * h;
 
-            return z < 0 ? 0 : z;
+            return Math.Sign(h) == Math.Sign(z) ? z : 0;
         }
 
         public Form1()
@@ -61,16 +67,18 @@ namespace ailab2
             b = -8;
             c = 5;
             n = 5;
+            v0 = 2f;
 
             textBoxA.Text = a.ToString("F1");
             textBoxB.Text = b.ToString("F1");
             textBoxC.Text = c.ToString("F1");
             textBoxH.Text = h.ToString("F1");
+            textBoxV0.Text = v0.ToString("F1");
             textBoxN.Text = n.ToString();
 
-            g3d = new Graphic3D(gorka, 0f, 10f, -10f, 10f, 5e-1f);
+            g3d = new Graphic3D(gorka, 0f, 20f, -20f, 20f, 5e-1f);
 
-            vpr.phiH = 120f;
+            vpr.phiH = 150f;
             vpr.phiV = 105f;
             vpr.zoom = 20;
             vpr.ox = pictureBox1.Width / 2f;
@@ -89,6 +97,9 @@ namespace ailab2
             penBestPath = new Pen(Color.LimeGreen, 3f / vpr.zoom);
 
             pictureBox1.Refresh();
+
+            measuringMethod = this.MeasureDist;
+            searchMethod = this.BreadthFirstSearch;
         }
 
         private void SetupCheckpionts()
@@ -105,7 +116,7 @@ namespace ailab2
             float dx = (float)a / n;
             for (int i = 0; i <= n; i++)
             {
-                p = new Point3dNode(i * dx, (float)(-c / a * (i * dx) + c), 0f);
+                p = new Point3dNode(i * dx, (float)(-b / a * (i * dx) + b), 0f);
                 p.Region = 1;
                 chkpntList[0].Add(p);
 
@@ -113,7 +124,7 @@ namespace ailab2
                 p.Region = 2;
                 chkpntList[1].Add(p);
 
-                p = new Point3dNode(i * dx, (float)(-b / a * (i * dx) + b), 0f);
+                p = new Point3dNode(i * dx, (float)(-c / a * (i * dx) + c), 0f);
                 p.Region = 3;
                 chkpntList[2].Add(p);
 
@@ -285,7 +296,9 @@ namespace ailab2
         {
             if (ReadABCHN() == false) return;
 
-            g3d.ReTabulate(gorka, 0f, 10f, -10f, 10f, 5e-1f, 5e-1f);
+            bestPath = null;
+
+            g3d.ReTabulate(gorka, 0f, 20f, -20f, 20f, 5e-1f, 5e-1f);
             SetupCheckpionts();
 
             if (finishPos != null)
@@ -355,6 +368,16 @@ namespace ailab2
             {
                 errorProvider.SetError(textBoxN, "Has to be positive");
                 n = nOld;
+                return false;
+            }
+
+            try
+            {
+                v0 = double.Parse(textBoxV0.Text);
+            }
+            catch (FormatException)
+            {
+                errorProvider.SetError(textBoxV0, "Wrong double number");
                 return false;
             }
 
@@ -474,7 +497,6 @@ namespace ailab2
 
             lOpen.Clear();
             lClosed.Clear();
-            bestPath = null;
             showBestPath = true;
             showPath = true;
             buttonApply.Enabled = false;
@@ -484,68 +506,8 @@ namespace ailab2
             //bool solved = false, failed = false;
 
             Log("~~~~ start ~~~~");
-            //1. Поместить все узлы из множества So в список OPEN.
-            lOpen.Add(startPos);
-
-            traversed = false;
-            while (!traversed)
-            {
-                Log(string.Format("Open: {0}, closed: {1}.", lOpen.Count, lClosed.Count));
-                if (lOpen.Count == 0)
-                {
-                    traversed = true;
-                    break;
-                }
-                if (lOpen[0].Region == 4)
-                {
-                    //traversed = true; // solution is found
-                    GeneratePath();
-                    Refresh();
-                    System.Threading.Thread.Sleep(1);
-                    Application.DoEvents();
-                    TestPath(path);
-                    //break;
-                }
-
-                if (lOpen[0].Region <= 3) // можно раскрыть
-                {
-                    //4. Раскрыть вершину n и все порождённые вершины поместить в список OPEN настроив указатели к вершине n
-                    for (int i = 0; i < chkpntList[lOpen[0].Region + 1 - 1].Count; i++)
-                    {
-                        Point3dNode t = new Point3dNode(chkpntList[lOpen[0].Region + 1 - 1][i]);
-                        t.Previous = lOpen[0];
-
-                        //Debug.Print("i: {0}, lOpen.Count: {1}, lClosed.Count: {2}",
-                        //    i, lOpen.Count, lClosed.Count);
-                        
-                        //5. Если порожденная вершина целевая, т.е. принадлежит Sq то выдать решение с помощью указателей, иначе перейти к шагу №2.
-                        if (t.Equals(finishPos))
-                        {
-                            //solved = true; // solution is found
-                            GeneratePath();
-                            Animate();
-                            TestPath(path);
-                            //goto brk;
-                        }
-                        else
-                        {
-                            lOpen.Add(t);
-                        }
-                    }
-                }
-
-                //Debug.Print("# lOpen.Count: {1}, lClosed.Count: {2}",
-                //    0, lOpen.Count, lClosed.Count);
-
-                lClosed.Add(lOpen[0]);
-                lOpen.RemoveAt(0);
-            }
-        //brk:
-            // restore path
-            //GeneratePath();
-
-            //if (solved) Text = ("solved");
-            //if (failed) Text = ("failed");
+            bestPath = null;
+            searchMethod();
 
             buttonApply.Enabled = true;
             checkBoxStart.Enabled = true;
@@ -556,6 +518,156 @@ namespace ailab2
             buttonFind.Text = "Find!";
             Refresh();
             Log("~~ done ~~");
+        }
+
+        private void BreadthFirstSearch()
+        {
+            //1. Поместить все узлы из множества So в список OPEN.
+            lOpen.Add(startPos);
+
+            traversed = false;
+            while (!traversed)
+            {
+                //Log(string.Format("Open: {0}, closed: {1}.", lOpen.Count, lClosed.Count));
+
+                if (lOpen.Count == 0)
+                {
+                    traversed = true;
+                    break;
+                }
+                if (lOpen[0].Region == 4)
+                {
+                    GeneratePath();
+                    Animate();
+                    TestPath(path);
+                }
+
+                if (lOpen[0].Region <= 3) // можно раскрыть
+                {
+                    //4. Раскрыть вершину n и все порождённые вершины поместить в список OPEN настроив указатели к вершине n
+                    for (int i = 0; i < chkpntList[lOpen[0].Region + 1 - 1].Count; i++)
+                    {
+                        Point3dNode t = new Point3dNode(chkpntList[lOpen[0].Region + 1 - 1][i]);
+                        t.Previous = lOpen[0];
+
+                        //5. Если порожденная вершина целевая, т.е. принадлежит Sq то выдать решение с помощью указателей, иначе перейти к шагу №2.
+                        if (t.Equals(finishPos))
+                        {
+                            GeneratePath();
+                            Animate();
+                            TestPath(path);
+                        }
+                        else
+                        {
+                            lOpen.Add(t);
+                        }
+                    }
+                }
+
+                lClosed.Add(lOpen[0]);
+                lOpen.RemoveAt(0);
+            }
+
+            Log(string.Format("Best path BFS: {0:#.##}", bestPathLen));
+        }
+
+        private void DepthFirstSearch()
+        {
+            //1. Поместить все узлы из множества So в список OPEN.
+            lOpen.Add(startPos);
+
+            traversed = false;
+            while (!traversed)
+            {
+                //Log(string.Format("Open: {0}, closed: {1}.", lOpen.Count, lClosed.Count));
+
+                if (lOpen.Count == 0)
+                {
+                    traversed = true;
+                    break;
+                }
+                if (lOpen[0].Region == 4)
+                {
+                    GeneratePath();
+                    Animate();
+                    TestPath(path);
+                }
+
+                if (lOpen[0].Region <= 3) // можно раскрыть
+                {
+                    //4. Раскрыть вершину n и все порождённые вершины поместить в список OPEN настроив указатели к вершине n
+                    for (int i = 0; i < chkpntList[lOpen[0].Region + 1 - 1].Count; i++)
+                    {
+                        Point3dNode t = new Point3dNode(chkpntList[lOpen[0].Region + 1 - 1][i]);
+                        t.Previous = lOpen[0];
+
+                        //5. Если порожденная вершина целевая, т.е. принадлежит Sq то выдать решение с помощью указателей, иначе перейти к шагу №2.
+                        if (t.Equals(finishPos))
+                        {
+                            GeneratePath();
+                            Animate();
+                            TestPath(path);
+                        }
+                        else
+                        {
+                            lOpen.Insert(1, t);
+                        }
+                    }
+                }
+
+                lClosed.Add(lOpen[0]);
+                lOpen.RemoveAt(0);         
+            }
+            Log(string.Format("Best path DFS: {0:#.##}", bestPathLen));
+        }
+
+        private void HeuristicsSearch()
+        {
+            //1. Поместить все узлы из множества So в список OPEN.
+            lOpen.Add(startPos);
+
+            traversed = false;
+            while (!traversed)
+            {
+                //Log(string.Format("Open: {0}, closed: {1}.", lOpen.Count, lClosed.Count));
+
+                if (lOpen.Count == 0)
+                {
+                    traversed = true;
+                    break;
+                }
+                if (lOpen[0].Region == 4)
+                {
+                    GeneratePath();
+                    Animate();
+                    TestPath(path);
+                }
+
+                if (lOpen[0].Region <= 3) // можно раскрыть
+                {
+                    //4. Раскрыть вершину n и все порождённые вершины поместить в список OPEN настроив указатели к вершине n
+                    for (int i = 0; i < chkpntList[lOpen[0].Region + 1 - 1].Count; i++)
+                    {
+                        Point3dNode t = new Point3dNode(chkpntList[lOpen[0].Region + 1 - 1][i]);
+                        t.Previous = lOpen[0];
+
+                        //5. Если порожденная вершина целевая, т.е. принадлежит Sq то выдать решение с помощью указателей, иначе перейти к шагу №2.
+                        if (t.Equals(finishPos))
+                        {
+                            GeneratePath();
+                            Animate();
+                            TestPath(path);
+                        }
+                        else
+                        {
+                            lOpen.Insert(1, t);
+                        }
+                    }
+                }
+
+                lClosed.Add(lOpen[0]);
+                lOpen.RemoveAt(0);
+            }
         }
 
         private void Animate()
@@ -571,7 +683,7 @@ namespace ailab2
         private void Log(string p) { Log(p, false); }
         private void Log(string p, bool sameLine)
         {
-            if (!checkBoxLog.Checked) return;
+            //if (!checkBoxLog.Checked) return;
 
             if (sameLine)
                 textBoxLog.AppendText(p);
@@ -600,7 +712,7 @@ namespace ailab2
             Point3dNode prev = i.Current;
             for (; i.MoveNext(); )
             {
-                len += Measure((Point3D)prev, (Point3D)i.Current);
+                len += measuringMethod((Point3D)prev, (Point3D)i.Current);
                 prev = i.Current;
             }
 
@@ -611,17 +723,32 @@ namespace ailab2
                 bestPath.Clear();
                 bestPath.AddRange(path);
                 bestPathLen = len;
-                Log(string.Format(" Len: {0:#.##} best: {1:#.##}", len, bestPathLen), true);
+                //Log(string.Format(" Len: {0:#.##} best: {1:#.##}", len, bestPathLen), true);
             }
         }
 
-        private double Measure(Point3D point1, Point3D point2)
+        private double MeasureDist(Point3D point1, Point3D point2)
         {
             return Math.Sqrt(
                 (point1.x - point2.x) * (point1.x - point2.x) +
                 (point1.y - point2.y) * (point1.y - point2.y) +
                 (point1.z - point2.z) * (point1.z - point2.z)
                 );
+        }
+        private double MeasureTime(Point3D point1, Point3D point2)
+        {
+            double s =
+                Math.Sqrt(
+                (point1.x - point2.x) * (point1.x - point2.x) +
+                (point1.y - point2.y) * (point1.y - point2.y) +
+                (point1.z - point2.z) * (point1.z - point2.z)
+                );
+
+            double sinAlpha = Math.Abs(point2.z - point1.z) / s;
+
+            double v = v0 / Math.Sqrt(1+15*sinAlpha*sinAlpha);
+
+            return s/v;
         }
 
         private void GeneratePath()
@@ -639,6 +766,34 @@ namespace ailab2
                 curr = curr.Previous;
             }
         }
+        
+        #region radio-buttons logic
+
+        private void rbTime_CheckedChanged(object sender, EventArgs e)
+        {
+            measuringMethod = this.MeasureTime;
+        }
+
+        private void rbDist_CheckedChanged(object sender, EventArgs e)
+        {
+            measuringMethod = this.MeasureDist;
+        }
+
+        private void rbBFS_CheckedChanged(object sender, EventArgs e)
+        {
+            searchMethod = this.BreadthFirstSearch;
+        }
+
+        private void rbDFS_CheckedChanged(object sender, EventArgs e)
+        {
+            searchMethod = this.DepthFirstSearch;
+        }
+
+        private void rbHS_CheckedChanged(object sender, EventArgs e)
+        {
+            searchMethod = this.HeuristicsSearch;
+        }
+        #endregion
     }
 
     public class Point3dNode : Point3D
@@ -660,7 +815,7 @@ namespace ailab2
             Region = p.Region;
         }
 
-        public override bool Equals(object obj)
+        new public bool Equals(object obj)
         {
             if (obj is Point3dNode)
             {

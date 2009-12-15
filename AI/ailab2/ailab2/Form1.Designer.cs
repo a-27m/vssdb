@@ -31,6 +31,15 @@
             this.components = new System.ComponentModel.Container();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.rbBFS = new System.Windows.Forms.RadioButton();
+            this.rbHS = new System.Windows.Forms.RadioButton();
+            this.rbDFS = new System.Windows.Forms.RadioButton();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.rbDist = new System.Windows.Forms.RadioButton();
+            this.rbTime = new System.Windows.Forms.RadioButton();
+            this.label6 = new System.Windows.Forms.Label();
+            this.textBoxV0 = new System.Windows.Forms.TextBox();
             this.checkBoxLog = new System.Windows.Forms.CheckBox();
             this.buttonFind = new System.Windows.Forms.Button();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -59,6 +68,8 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -72,7 +83,7 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(407, 387);
+            this.pictureBox1.Size = new System.Drawing.Size(562, 382);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
@@ -90,6 +101,10 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox2);
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
+            this.splitContainer1.Panel1.Controls.Add(this.label6);
+            this.splitContainer1.Panel1.Controls.Add(this.textBoxV0);
             this.splitContainer1.Panel1.Controls.Add(this.checkBoxLog);
             this.splitContainer1.Panel1.Controls.Add(this.buttonFind);
             this.splitContainer1.Panel1.Controls.Add(this.checkBoxFinish);
@@ -111,16 +126,115 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(636, 495);
-            this.splitContainer1.SplitterDistance = 104;
+            this.splitContainer1.Size = new System.Drawing.Size(880, 495);
+            this.splitContainer1.SplitterDistance = 109;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.rbBFS);
+            this.groupBox2.Controls.Add(this.rbHS);
+            this.groupBox2.Controls.Add(this.rbDFS);
+            this.groupBox2.Location = new System.Drawing.Point(617, 10);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(113, 87);
+            this.groupBox2.TabIndex = 11;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Search";
+            // 
+            // rbBFS
+            // 
+            this.rbBFS.AutoSize = true;
+            this.rbBFS.Checked = true;
+            this.rbBFS.Location = new System.Drawing.Point(15, 14);
+            this.rbBFS.Name = "rbBFS";
+            this.rbBFS.Size = new System.Drawing.Size(80, 17);
+            this.rbBFS.TabIndex = 0;
+            this.rbBFS.TabStop = true;
+            this.rbBFS.Text = "breadth-first";
+            this.rbBFS.UseVisualStyleBackColor = true;
+            this.rbBFS.CheckedChanged += new System.EventHandler(this.rbBFS_CheckedChanged);
+            // 
+            // rbHS
+            // 
+            this.rbHS.AutoSize = true;
+            this.rbHS.Location = new System.Drawing.Point(15, 60);
+            this.rbHS.Name = "rbHS";
+            this.rbHS.Size = new System.Drawing.Size(72, 17);
+            this.rbHS.TabIndex = 0;
+            this.rbHS.Text = "heuristical";
+            this.rbHS.UseVisualStyleBackColor = true;
+            this.rbHS.CheckedChanged += new System.EventHandler(this.rbHS_CheckedChanged);
+            // 
+            // rbDFS
+            // 
+            this.rbDFS.AutoSize = true;
+            this.rbDFS.Location = new System.Drawing.Point(15, 37);
+            this.rbDFS.Name = "rbDFS";
+            this.rbDFS.Size = new System.Drawing.Size(77, 17);
+            this.rbDFS.TabIndex = 0;
+            this.rbDFS.Text = "deapth-first";
+            this.rbDFS.UseVisualStyleBackColor = true;
+            this.rbDFS.CheckedChanged += new System.EventHandler(this.rbDFS_CheckedChanged);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.rbDist);
+            this.groupBox1.Controls.Add(this.rbTime);
+            this.groupBox1.Location = new System.Drawing.Point(736, 10);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(113, 78);
+            this.groupBox1.TabIndex = 10;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Optimization";
+            // 
+            // rbDist
+            // 
+            this.rbDist.AutoSize = true;
+            this.rbDist.Checked = true;
+            this.rbDist.Location = new System.Drawing.Point(19, 24);
+            this.rbDist.Name = "rbDist";
+            this.rbDist.Size = new System.Drawing.Size(79, 17);
+            this.rbDist.TabIndex = 0;
+            this.rbDist.TabStop = true;
+            this.rbDist.Text = "by distance";
+            this.rbDist.UseVisualStyleBackColor = true;
+            this.rbDist.CheckedChanged += new System.EventHandler(this.rbDist_CheckedChanged);
+            // 
+            // rbTime
+            // 
+            this.rbTime.AutoSize = true;
+            this.rbTime.Location = new System.Drawing.Point(19, 47);
+            this.rbTime.Name = "rbTime";
+            this.rbTime.Size = new System.Drawing.Size(58, 17);
+            this.rbTime.TabIndex = 0;
+            this.rbTime.Text = "by time";
+            this.rbTime.UseVisualStyleBackColor = true;
+            this.rbTime.CheckedChanged += new System.EventHandler(this.rbTime_CheckedChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(536, 11);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(19, 13);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "v0";
+            // 
+            // textBoxV0
+            // 
+            this.errorProvider.SetIconAlignment(this.textBoxV0, System.Windows.Forms.ErrorIconAlignment.TopRight);
+            this.textBoxV0.Location = new System.Drawing.Point(539, 27);
+            this.textBoxV0.Name = "textBoxV0";
+            this.textBoxV0.Size = new System.Drawing.Size(72, 20);
+            this.textBoxV0.TabIndex = 8;
             // 
             // checkBoxLog
             // 
             this.checkBoxLog.AutoSize = true;
             this.checkBoxLog.Checked = true;
             this.checkBoxLog.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxLog.Location = new System.Drawing.Point(546, 72);
+            this.checkBoxLog.Location = new System.Drawing.Point(509, 72);
             this.checkBoxLog.Name = "checkBoxLog";
             this.checkBoxLog.Size = new System.Drawing.Size(65, 17);
             this.checkBoxLog.TabIndex = 7;
@@ -130,7 +244,7 @@
             // buttonFind
             // 
             this.buttonFind.ContextMenuStrip = this.contextMenuStrip1;
-            this.buttonFind.Location = new System.Drawing.Point(295, 68);
+            this.buttonFind.Location = new System.Drawing.Point(264, 68);
             this.buttonFind.Name = "buttonFind";
             this.buttonFind.Size = new System.Drawing.Size(75, 23);
             this.buttonFind.TabIndex = 6;
@@ -171,7 +285,7 @@
             this.checkBoxFinish.Appearance = System.Windows.Forms.Appearance.Button;
             this.checkBoxFinish.AutoSize = true;
             this.checkBoxFinish.Cursor = System.Windows.Forms.Cursors.Default;
-            this.checkBoxFinish.Location = new System.Drawing.Point(196, 68);
+            this.checkBoxFinish.Location = new System.Drawing.Point(165, 68);
             this.checkBoxFinish.Name = "checkBoxFinish";
             this.checkBoxFinish.Size = new System.Drawing.Size(60, 23);
             this.checkBoxFinish.TabIndex = 5;
@@ -184,7 +298,7 @@
             this.checkBoxStart.Appearance = System.Windows.Forms.Appearance.Button;
             this.checkBoxStart.AutoSize = true;
             this.checkBoxStart.Cursor = System.Windows.Forms.Cursors.Default;
-            this.checkBoxStart.Location = new System.Drawing.Point(134, 68);
+            this.checkBoxStart.Location = new System.Drawing.Point(103, 68);
             this.checkBoxStart.Name = "checkBoxStart";
             this.checkBoxStart.Size = new System.Drawing.Size(56, 23);
             this.checkBoxStart.TabIndex = 5;
@@ -214,7 +328,7 @@
             // 
             // buttonApply
             // 
-            this.buttonApply.Location = new System.Drawing.Point(424, 68);
+            this.buttonApply.Location = new System.Drawing.Point(393, 68);
             this.buttonApply.Name = "buttonApply";
             this.buttonApply.Size = new System.Drawing.Size(84, 23);
             this.buttonApply.TabIndex = 2;
@@ -321,8 +435,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.textBoxLog);
-            this.splitContainer2.Size = new System.Drawing.Size(636, 387);
-            this.splitContainer2.SplitterDistance = 407;
+            this.splitContainer2.Size = new System.Drawing.Size(880, 382);
+            this.splitContainer2.SplitterDistance = 562;
             this.splitContainer2.TabIndex = 1;
             // 
             // textBoxLog
@@ -334,7 +448,7 @@
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ReadOnly = true;
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLog.Size = new System.Drawing.Size(225, 387);
+            this.textBoxLog.Size = new System.Drawing.Size(314, 382);
             this.textBoxLog.TabIndex = 0;
             this.textBoxLog.WordWrap = false;
             // 
@@ -346,7 +460,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(636, 495);
+            this.ClientSize = new System.Drawing.Size(880, 495);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
             this.Text = "AI: lab2 (Hill)";
@@ -355,6 +469,10 @@
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
@@ -393,6 +511,15 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.TextBox textBoxLog;
         private System.Windows.Forms.CheckBox checkBoxLog;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox textBoxV0;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton rbDist;
+        private System.Windows.Forms.RadioButton rbTime;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton rbBFS;
+        private System.Windows.Forms.RadioButton rbDFS;
+        private System.Windows.Forms.RadioButton rbHS;
     }
 }
 
