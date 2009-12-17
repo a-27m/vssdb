@@ -692,6 +692,23 @@ namespace ailab2
 
                 int q = 0;
                 int p = 1;
+
+                // search [open] for p and q
+                int pos = 0;
+                double minDist = double.MaxValue;
+                foreach (Point3dNode node in lOpen)
+                { 
+                    double dist = MeasureDist(node, finishPos);
+                    if (dist < minDist)
+                    {
+                        minDist = dist;
+                        q = pos;
+                    }
+
+                    pos++;
+                }
+
+                //q = 0;
                 if (lOpen[q].Region <= 3) // можно раскрыть
                 {
                     //4. Раскрыть вершину n и все порождённые вершины поместить в список OPEN настроив указатели к вершине n
@@ -709,7 +726,9 @@ namespace ailab2
                         }
                         else
                         {
-                            lOpen.Insert(p, t);
+                            lOpen.Add(t);
+                            //lOpen.Insert(p, t);
+                            //if (q >= p) q += p;
                         }
                     }
                 }
