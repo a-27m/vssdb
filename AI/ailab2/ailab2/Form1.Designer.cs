@@ -31,11 +31,11 @@
             this.components = new System.ComponentModel.Container();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBoxSearch = new System.Windows.Forms.GroupBox();
             this.rbBFS = new System.Windows.Forms.RadioButton();
             this.rbHS = new System.Windows.Forms.RadioButton();
             this.rbDFS = new System.Windows.Forms.RadioButton();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBoxOptimization = new System.Windows.Forms.GroupBox();
             this.rbDist = new System.Windows.Forms.RadioButton();
             this.rbTime = new System.Windows.Forms.RadioButton();
             this.label6 = new System.Windows.Forms.Label();
@@ -68,8 +68,8 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.groupBoxSearch.SuspendLayout();
+            this.groupBoxOptimization.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -101,8 +101,8 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.groupBox2);
-            this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
+            this.splitContainer1.Panel1.Controls.Add(this.groupBoxSearch);
+            this.splitContainer1.Panel1.Controls.Add(this.groupBoxOptimization);
             this.splitContainer1.Panel1.Controls.Add(this.label6);
             this.splitContainer1.Panel1.Controls.Add(this.textBoxV0);
             this.splitContainer1.Panel1.Controls.Add(this.checkBoxLog);
@@ -130,17 +130,17 @@
             this.splitContainer1.SplitterDistance = 109;
             this.splitContainer1.TabIndex = 1;
             // 
-            // groupBox2
+            // groupBoxSearch
             // 
-            this.groupBox2.Controls.Add(this.rbBFS);
-            this.groupBox2.Controls.Add(this.rbHS);
-            this.groupBox2.Controls.Add(this.rbDFS);
-            this.groupBox2.Location = new System.Drawing.Point(617, 10);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(113, 87);
-            this.groupBox2.TabIndex = 11;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Search";
+            this.groupBoxSearch.Controls.Add(this.rbBFS);
+            this.groupBoxSearch.Controls.Add(this.rbHS);
+            this.groupBoxSearch.Controls.Add(this.rbDFS);
+            this.groupBoxSearch.Location = new System.Drawing.Point(617, 10);
+            this.groupBoxSearch.Name = "groupBoxSearch";
+            this.groupBoxSearch.Size = new System.Drawing.Size(113, 87);
+            this.groupBoxSearch.TabIndex = 11;
+            this.groupBoxSearch.TabStop = false;
+            this.groupBoxSearch.Text = "Search";
             // 
             // rbBFS
             // 
@@ -177,16 +177,16 @@
             this.rbDFS.UseVisualStyleBackColor = true;
             this.rbDFS.CheckedChanged += new System.EventHandler(this.rbDFS_CheckedChanged);
             // 
-            // groupBox1
+            // groupBoxOptimization
             // 
-            this.groupBox1.Controls.Add(this.rbDist);
-            this.groupBox1.Controls.Add(this.rbTime);
-            this.groupBox1.Location = new System.Drawing.Point(736, 10);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(113, 78);
-            this.groupBox1.TabIndex = 10;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Optimization";
+            this.groupBoxOptimization.Controls.Add(this.rbDist);
+            this.groupBoxOptimization.Controls.Add(this.rbTime);
+            this.groupBoxOptimization.Location = new System.Drawing.Point(736, 10);
+            this.groupBoxOptimization.Name = "groupBoxOptimization";
+            this.groupBoxOptimization.Size = new System.Drawing.Size(113, 78);
+            this.groupBoxOptimization.TabIndex = 10;
+            this.groupBoxOptimization.TabStop = false;
+            this.groupBoxOptimization.Text = "Optimization";
             // 
             // rbDist
             // 
@@ -248,7 +248,7 @@
             this.buttonFind.Name = "buttonFind";
             this.buttonFind.Size = new System.Drawing.Size(75, 23);
             this.buttonFind.TabIndex = 6;
-            this.buttonFind.Text = "Find!";
+            this.buttonFind.Text = "Find";
             this.buttonFind.UseVisualStyleBackColor = true;
             this.buttonFind.Click += new System.EventHandler(this.buttonFind_Click);
             // 
@@ -442,7 +442,7 @@
             // textBoxLog
             // 
             this.textBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxLog.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxLog.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxLog.Location = new System.Drawing.Point(0, 0);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
@@ -469,10 +469,10 @@
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupBoxSearch.ResumeLayout(false);
+            this.groupBoxSearch.PerformLayout();
+            this.groupBoxOptimization.ResumeLayout(false);
+            this.groupBoxOptimization.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
@@ -513,10 +513,10 @@
         private System.Windows.Forms.CheckBox checkBoxLog;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBoxV0;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxOptimization;
         private System.Windows.Forms.RadioButton rbDist;
         private System.Windows.Forms.RadioButton rbTime;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBoxSearch;
         private System.Windows.Forms.RadioButton rbBFS;
         private System.Windows.Forms.RadioButton rbDFS;
         private System.Windows.Forms.RadioButton rbHS;

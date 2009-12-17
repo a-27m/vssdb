@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System.Diagnostics;
 using System.Drawing;
-using System.Text;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using pre3d;
-using System.Diagnostics;
 
 namespace ailab2
 {
@@ -24,6 +22,8 @@ namespace ailab2
         delegate void SearchDelegate();
 
         List<Graphic3D> syncList;
+        Point3D[] gorkaPath;
+        PointF[] gorka2d;
         List<Point3dNode>[] chkpntList;
         List<Point3dNode> path;
         Point3dNode startPos, finishPos;
@@ -40,7 +40,7 @@ namespace ailab2
         ViewParams vpr;
         bool SetStartState = false, SetFinishState = false;
 
-        Pen penPath, penBestPath;
+        Pen penPath, penBestPath, penGorka;
 
         MeasureDelegate measuringMethod;
         SearchDelegate searchMethod;
@@ -88,6 +88,7 @@ namespace ailab2
             syncList.Add(g3d);
 
             SetupCheckpionts();
+            MakeGorkaShape();
 
             lOpen = new List<Point3dNode>();
             lClosed = new List<Point3dNode>();
@@ -95,6 +96,9 @@ namespace ailab2
 
             penPath = new Pen(Color.OrangeRed, 1f / vpr.zoom);
             penBestPath = new Pen(Color.LimeGreen, 3f / vpr.zoom);
+            penBestPath.LineJoin = LineJoin.Round;
+            penGorka = new Pen(Color.Black, 1.5f / vpr.zoom);
+            penGorka.LineJoin = LineJoin.Round;
 
             pictureBox1.Refresh();
 
@@ -146,6 +150,19 @@ namespace ailab2
                 g3d.Draw(e.Graphics);
 
                 PointF p2d = new PointF();
+
+                #region gorka shape
+                if (gorkaPath != null)
+                {
+
+                    gorka2d = new PointF[gorkaPath.Length];
+
+                    for (int i = 0; i < gorkaPath.Length; i++)
+                        g3d.Project(ref gorka2d[i], gorkaPath[i]);
+
+                    e.Graphics.DrawLines(penGorka, gorka2d);
+                }
+                #endregion
 
                 float r = 2;
                 foreach (List<Point3dNode> line in chkpntList)
@@ -230,6 +247,9 @@ namespace ailab2
 
             penPath = new Pen(penPath.Color, penPath.Width / zoomFactor);
             penBestPath = new Pen(penBestPath.Color, penBestPath.Width / zoomFactor);
+            penBestPath.LineJoin = LineJoin.Round;
+            penGorka = new Pen(penGorka.Color, penGorka.Width / zoomFactor);
+            penGorka.LineJoin = LineJoin.Round;
 
             pictureBox1.Refresh();
         }
@@ -242,6 +262,9 @@ namespace ailab2
 
             penPath = new Pen(penPath.Color, penPath.Width * zoomFactor);
             penBestPath = new Pen(penBestPath.Color, penBestPath.Width * zoomFactor);
+            penBestPath.LineJoin = LineJoin.Round;
+            penGorka = new Pen(penGorka.Color, penGorka.Width * zoomFactor);
+            penGorka.LineJoin = LineJoin.Round;
 
             pictureBox1.Refresh();
         }
@@ -300,6 +323,7 @@ namespace ailab2
 
             g3d.ReTabulate(gorka, 0f, 20f, -20f, 20f, 5e-1f, 5e-1f);
             SetupCheckpionts();
+            MakeGorkaShape();
 
             if (finishPos != null)
             {
@@ -308,6 +332,21 @@ namespace ailab2
             }
 
             Refresh();
+        }
+
+        private void MakeGorkaShape()
+        {
+            if (gorkaPath == null)
+                gorkaPath = new Point3D[8];
+
+            gorkaPath[0] = new Point3D((float)a, 0, 0);
+            gorkaPath[1] = new Point3D(0, (float)b, 0);
+            gorkaPath[2] = new Point3D(0, (float)c, 0);
+            gorkaPath[3] = new Point3D((float)a, 0, 0);
+            gorkaPath[4] = new Point3D(0, 0, (float)h);
+            gorkaPath[5] = new Point3D(0, (float)b, 0);
+            gorkaPath[6] = new Point3D(0, (float)c, 0);
+            gorkaPath[7] = new Point3D(0, 0, (float)h);
         }
 
         private bool ReadABCHN()
@@ -386,39 +425,35 @@ namespace ailab2
 
         private void checkBoxStart_CheckedChanged(object sender, EventArgs e)
         {
-            //if (checkBoxFinish.Checked)
-            //{
-            //    checkBoxFinish.Checked = false;
-            //    return;
-            //}
-
             if (checkBoxStart.Checked)
             {
+                if (SetFinishState)
+                    checkBoxFinish.Checked = false;
+
                 Cursor = Cursors.Cross;
                 SetStartState = true;
             }
             else
             {
                 Cursor = Cursors.Default;
+                SetStartState = false;
             }
         }
 
         private void checkBoxFinish_CheckedChanged(object sender, EventArgs e)
         {
-            //if (checkBoxStart.Checked)
-            //{
-            //    checkBoxStart.Checked = false;
-            //    return;
-            //}
-
             if (checkBoxFinish.Checked)
             {
+                if (SetStartState)
+                    checkBoxStart.Checked = false;
+
                 Cursor = Cursors.Cross;
                 SetFinishState = true;
             }
             else
             {
                 Cursor = Cursors.Default;
+                SetFinishState = false;
             }
         }
 
@@ -499,28 +534,40 @@ namespace ailab2
             lClosed.Clear();
             showBestPath = true;
             showPath = true;
+
             buttonApply.Enabled = false;
             checkBoxStart.Enabled = false;
             checkBoxFinish.Enabled = false;
+            groupBoxSearch.Enabled = false;
+            groupBoxOptimization.Enabled = false;
+
             buttonFind.Text = "Abort";
             //bool solved = false, failed = false;
 
             Log("~~~~ start ~~~~");
             bestPath = null;
-            searchMethod();
 
-            buttonApply.Enabled = true;
-            checkBoxStart.Enabled = true;
-            checkBoxFinish.Enabled = true;
-            
-            showBestPath = true;
-            showPath = false;
-            buttonFind.Text = "Find!";
-            Refresh();
+            try
+            {
+                searchMethod();
+            }
+            finally
+            {
+                buttonApply.Enabled = true;
+                checkBoxStart.Enabled = true;
+                checkBoxFinish.Enabled = true;
+                groupBoxSearch.Enabled = true;
+                groupBoxOptimization.Enabled = true;
+
+                showBestPath = true;
+                showPath = false;
+                buttonFind.Text = "Find";
+                Refresh();
+            }
             Log("~~ done ~~");
         }
 
-        private void BreadthFirstSearch()
+        private void BreadthFirstSearch()  
         {
             //1. Поместить все узлы из множества So в список OPEN.
             lOpen.Add(startPos);
@@ -643,13 +690,15 @@ namespace ailab2
                     TestPath(path);
                 }
 
-                if (lOpen[0].Region <= 3) // можно раскрыть
+                int q = 0;
+                int p = 1;
+                if (lOpen[q].Region <= 3) // можно раскрыть
                 {
                     //4. Раскрыть вершину n и все порождённые вершины поместить в список OPEN настроив указатели к вершине n
-                    for (int i = 0; i < chkpntList[lOpen[0].Region + 1 - 1].Count; i++)
+                    for (int i = 0; i < chkpntList[lOpen[q].Region + 1 - 1].Count; i++)
                     {
-                        Point3dNode t = new Point3dNode(chkpntList[lOpen[0].Region + 1 - 1][i]);
-                        t.Previous = lOpen[0];
+                        Point3dNode t = new Point3dNode(chkpntList[lOpen[q].Region + 1 - 1][i]);
+                        t.Previous = lOpen[q];
 
                         //5. Если порожденная вершина целевая, т.е. принадлежит Sq то выдать решение с помощью указателей, иначе перейти к шагу №2.
                         if (t.Equals(finishPos))
@@ -660,13 +709,13 @@ namespace ailab2
                         }
                         else
                         {
-                            lOpen.Insert(1, t);
+                            lOpen.Insert(p, t);
                         }
                     }
                 }
 
-                lClosed.Add(lOpen[0]);
-                lOpen.RemoveAt(0);
+                lClosed.Add(lOpen[q]);
+                lOpen.RemoveAt(q);
             }
         }
 
@@ -706,25 +755,35 @@ namespace ailab2
                 return;
             }
 
-            double len = 0;
+            double cost = 0;
+            double dist = 0, time = 0;
             List<Point3dNode>.Enumerator i = path.GetEnumerator();
             i.MoveNext();
             Point3dNode prev = i.Current;
             for (; i.MoveNext(); )
             {
-                len += measuringMethod((Point3D)prev, (Point3D)i.Current);
+                //cost += measuringMethod((Point3D)prev, (Point3D)i.Current);
+                dist += MeasureDist((Point3D)prev, (Point3D)i.Current);
+                time += MeasureTime((Point3D)prev, (Point3D)i.Current);
                 prev = i.Current;
             }
 
-            Debug.Print("len: {0} best: {1}", len, bestPathLen);
+            if (measuringMethod == MeasureDist) cost = dist;
+            if (measuringMethod == MeasureTime) cost = time;
 
-            if (len < bestPathLen)
+            if (cost < bestPathLen)
             {
                 bestPath.Clear();
                 bestPath.AddRange(path);
-                bestPathLen = len;
-                //Log(string.Format(" Len: {0:#.##} best: {1:#.##}", len, bestPathLen), true);
+                bestPathLen = cost;
             }
+
+            Debug.Print("dist: {0}, time: {1}; best: {2}", dist, time, bestPathLen);
+
+            Log(string.Format(
+                "Dist.: {0:#.000}, time.: {1:#.000}; best: {2:#.000}",
+                dist, time, bestPathLen)
+                );
         }
 
         private double MeasureDist(Point3D point1, Point3D point2)
@@ -743,6 +802,8 @@ namespace ailab2
                 (point1.y - point2.y) * (point1.y - point2.y) +
                 (point1.z - point2.z) * (point1.z - point2.z)
                 );
+
+            if (Math.Abs(s) < 1e-3) return 0;
 
             double sinAlpha = Math.Abs(point2.z - point1.z) / s;
 
