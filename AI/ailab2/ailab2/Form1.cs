@@ -668,6 +668,7 @@ namespace ailab2
             Log(string.Format("Best path DFS: {0:#.##}", bestPathLen));
         }
 
+        int q = 0;
         private void HeuristicsSearch()
         {
             //1. Поместить все узлы из множества So в список OPEN.
@@ -683,16 +684,8 @@ namespace ailab2
                     traversed = true;
                     break;
                 }
-                if (lOpen[0].Region == 4)
-                {
-                    GeneratePath();
-                    Animate();
-                    TestPath(path);
-                }
 
-                int q = 0;
                 int p = 1;
-
                 // search [open] for p and q
                 int pos = 0;
                 double minDist = double.MaxValue;
@@ -706,6 +699,13 @@ namespace ailab2
                     }
 
                     pos++;
+                }
+
+                if (lOpen[q].Region == 4)
+                {
+                    GeneratePath();
+                    Animate();
+                    TestPath(path);
                 }
 
                 //q = 0;
@@ -736,6 +736,8 @@ namespace ailab2
                 lClosed.Add(lOpen[q]);
                 lOpen.RemoveAt(q);
             }
+
+            Log(string.Format("Best path EVR: {0:#.##}", bestPathLen));
         }
 
         private void Animate()
@@ -839,7 +841,7 @@ namespace ailab2
                 path.Clear();
 
             path.Add(finishPos);
-            Point3dNode curr = lOpen[0];
+            Point3dNode curr = lOpen[q];
             while (curr != null)
             {
                 path.Add(curr);
