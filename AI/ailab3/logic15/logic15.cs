@@ -55,6 +55,11 @@ namespace logic15
             map = new Cell[rows, cols];
         }
 
+		public IEnumerable<Direction> EnumerateValidTurns()
+		{
+			return null;
+		}
+		
         public void Load(string FileName)
         {
             StreamReader f = null;
