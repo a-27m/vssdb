@@ -38,6 +38,7 @@ namespace logic15
 
     public enum Direction { Up, Down, Left, Right }
 
+    // TODO Validation: Only 1 empty cell should be
     public class Board
     {
         Cell[,] map;
@@ -55,13 +56,24 @@ namespace logic15
             map = new Cell[rows, cols];
         }
 
+        public Cell this[int i, int j]
+        {
+            get { return map[i, j]; }
+            set { map[i, j] = value; }
+        }
+
 		public IEnumerable<Direction> EnumerateValidTurns()
 		{
+            // eval which cells are around ijEmpty
+            // than check if they can take the empty place
+
 			return null;
 		}
-		
-        public void Load(string FileName)
+	
+        public static Board Load(string FileName)
         {
+            Board board;            
+
             StreamReader f = null;
             try
             {
@@ -72,7 +84,8 @@ namespace logic15
                 int n = int.Parse(strs[0]);
                 int m = int.Parse(strs[1]);
 
-                map = new Cell[n, m];
+
+                board = new Board(n, m);
 
                 int i = 0;
                 while (!f.EndOfStream && (i < n))
@@ -88,19 +101,19 @@ namespace logic15
                         switch (strs[j][0])
                         { 
                             case '.':
-                                map[i, j] = null;
+                                board.map[i, j] = null;
                                 break;
                             case '1':
-                                map[i, j] = new Cell(false);
+                                board.map[i, j] = new Cell(false);
                                 break;
                             case '0':
-                                map[i, j] = new Cell(true);
+                                board.map[i, j] = new Cell(true);
                                 break;
                             default:
                                 Debug.WriteLine(string.Format("Wrong input character '{0}' in file '{1}'",
                                     strs[i][0], FileName));
 
-                                map[i, j] = null;
+                                board.map[i, j] = null;
                                 break;
                         }
                     }
@@ -118,6 +131,8 @@ namespace logic15
             {
                 if (f != null) f.Close();
             }
+
+            return board;
         }
 
         public bool Turn(Direction dir)
@@ -147,6 +162,9 @@ namespace logic15
             if (1 == 1) return false;// check if turn is valid;
 
             Swap(x, y, iEmpty, jEmpty);
+
+            iEmpty = x;
+            jEmpty = y;
         }
 
         protected void Swap(int i1, int j1, int i2, int j2)
