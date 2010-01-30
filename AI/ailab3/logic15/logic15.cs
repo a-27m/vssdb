@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
+using System.Windows.Controls;
 
 namespace logic15
 {
@@ -14,9 +15,10 @@ namespace logic15
         /// </summary>
         //Cell nUp, nDown, nLeft, nRight;
 
-        object val;
+        Button val;
+        public string Text;
 
-        public object Value { get { return val; } set { val = value; } }
+        public Button Button { get { return val; } set { val = value; } }
 
         public Cell()
         {
@@ -27,9 +29,6 @@ namespace logic15
         {
             isEmpty = Empty;
         }
-
-        int gridLocationRow;
-        int gridLocationColumn;
 
         bool isEmpty;
 
@@ -47,7 +46,7 @@ namespace logic15
     {
         Cell[,] map;
 
-        internal float f, g, h;
+        internal float g;
         internal Board previous;
         internal Direction turn;
 
@@ -63,15 +62,21 @@ namespace logic15
             get { return iEmpty; }
         }
 
-        int[] positions;
-        int N;
-
         public Board(int rows, int cols)
         {
-            //N = n;
-            //positions = new int[n];
-
+            previous = null;
             map = new Cell[rows, cols];
+        }
+
+        public Board(Board b)
+        {
+            map = (Cell[,])b.map.Clone();
+
+            this.g = b.g;
+            previous = null;
+            turn = b.turn;
+            iEmpty = b.iEmpty;
+            jEmpty = b.jEmpty;
         }
 
         public Cell this[int i, int j]
@@ -142,7 +147,7 @@ namespace logic15
                             board.map[i, j] = new Cell(false);
                         }
 
-                        board.map[i, j].Value = strs[j];
+                        board.map[i, j].Text = strs[j];
                     }
 
                     i++;
@@ -186,7 +191,10 @@ namespace logic15
                     break;
             }
 
-            if (1 != 1) return false;// check if turn is valid;
+            // check if turn is valid;
+            if (x < 0 || x > Rows - 1) Debug.Fail("Wrong turn attempt: "+dir.ToString());// return false;
+            if (y < 0 || y > Columns - 1) Debug.Fail("Wrong turn attempt: " + dir.ToString());// return false;
+            
 
             Swap(x, y, iEmpty, jEmpty);
 
@@ -197,17 +205,29 @@ namespace logic15
             return true;
         }
 
+        /// <summary>
+        /// Moves the cell at (r,c) to the empty position.
+        /// </summary>
+        /// <returns>True if successfull.</returns>
         public bool Turn(int r, int c)
         {
-            if (r - iEmpty > 1) return false;
-            if (c - jEmpty > 1) return false;
+            int di, dj;
+            di = r - iEmpty;
+            dj = c - jEmpty;
 
-
-            if (Math.Abs(r - iEmpty) * Math.Abs(c - jEmpty) != 0) return false;
+            // cannot turn far cells 
+            if (di > 1) return false;
+            if (dj > 1) return false;
+            // check if no move should occure
+            if (di == 0 && dj == 0) return true;
+            // can turn only in horizontal or vertical axe
+            if (Math.Abs(di) * Math.Abs(dj) != 0) return false;
 
             Swap(r, c, iEmpty, jEmpty);
 
             // set this.turn
+            if (di != 0) this.turn = di == 1 ? Direction.Down : Direction.Up;
+            if (dj != 0) this.turn = dj == 1 ? Direction.Right : Direction.Left;
 
             iEmpty = r;
             jEmpty = c;
@@ -223,25 +243,22 @@ namespace logic15
             map[i2, j2] = t;
         }
 
-        List<Board> lOpen, lClosed;
-        bool traversed;
-        int q = 0;
-        public Board initState;
-        public Board etalonState;
-
-        public bool HeuristicsSearch()
+        public static bool HeuristicsSearch(Board initState, Board etalonState, out Board lastBoard)
         {
+            int q;
+
             //init all
+            List<Board> lOpen, lClosed;
+            
             lOpen = new List<Board>();
             lClosed = new List<Board>();
-            this.previous = null;
-            g = 0;
-            initState = this;
+            //this.previous = null;
+            q = 0;
 
             //1. Поместить все узлы из множества So в список OPEN.
             lOpen.Add(initState);
 
-            traversed = false;
+            bool traversed = false;
             while (!traversed)
             {
                 //Log(string.Format("Open: {0}, closed: {1}.", lOpen.Count, lClosed.Count));
@@ -254,10 +271,10 @@ namespace logic15
 
                 // search [open] for pos and q
                 int pos = 0;
-                f = float.MaxValue;
+                float f = float.MaxValue;
                 foreach (Board bd in lOpen)
                 {
-                    h = MeasureNotAtPlace(bd, etalonState);
+                    float h = MeasureNotAtPlace(bd, etalonState);
                     if (h + bd.g < f)
                     {
                         f = h+bd.g;
@@ -269,6 +286,7 @@ namespace logic15
 
                 if (MeasureNotAtPlace(lOpen[q], etalonState) == 0)
                 {
+                    lastBoard = lOpen[q];
                     return true;
                 }
 
@@ -279,23 +297,26 @@ namespace logic15
                 {
                     if (dir == ReverseTurn(lOpen[q].turn)) continue;
 
+                    // TODO: Create copy-constructor for Board and use it here instead of MemberwiseClone()
                     t = (Board)lOpen[q].MemberwiseClone();
                     t.map = (Cell[,])lOpen[q].map.Clone();
-                    t.g = lOpen[q].g + 1;
+
+                    t.g = t.g + 1;
                     t.Turn(dir);
                     t.previous = lOpen[q];
 
-                //5. Если порожденная вершина целевая, т.е. принадлежит Sq то выдать решение с помощью указателей, иначе перейти к шагу №2.
-                if (MeasureNotAtPlace(t, etalonState) == 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    lOpen.Add(t);
-                    //lOpen.Insert(p, t);
-                    //if (q >= p) q += p;
-                }
+                    //5. Если порожденная вершина целевая, т.е. принадлежит Sq то выдать решение с помощью указателей, иначе перейти к шагу №2.
+                    if (MeasureNotAtPlace(t, etalonState) == 0) // TODO: is this check ext
+                    {
+                        lastBoard = lOpen[q];
+                        return true;
+                    }
+                    else
+                    {
+                        lOpen.Add(t);
+                        //lOpen.Insert(p, t);
+                        //if (q >= p) q += p;
+                    }
                 }
 
                 lClosed.Add(lOpen[q]);
@@ -303,49 +324,52 @@ namespace logic15
             }
 
             //Log(string.Format("Best path EVR: {0:#.##}", bestPathLen));
+            lastBoard = null;
             return false;
         }
 
-        private Direction ReverseTurn(Direction direction)
+        private static Direction ReverseTurn(Direction direction)
         {
             switch (direction)
             {
                 case Direction.Up:
                     return Direction.Down;
-                    break;
                 case Direction.Down:
                     return Direction.Up;
-                    break;
                 case Direction.Left:
                     return Direction.Right;
-                    break;
                 case Direction.Right:
                     return Direction.Left;
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
-                    break;
             }
         }
 
-        private float MeasureNotAtPlace(Board bd, Board etalonState)
+        private static float MeasureNotAtPlace(Board bd, Board etalonState)
         {
             int count = 0;
-            for (int i = 0; i < bd.map.GetLength(0); i++)
+            for (int i = 0; i < bd.Rows; i++)
             {
-                for (int j = 0; j < bd.map.GetLength(1); j++)
+                for (int j = 0; j < bd.Columns; j++)
                 {
-                    if (bd[i, j].Value != etalonState[i, j].Value) count++;
+                    if (bd[i, j].Text != etalonState[i, j].Text) count++;
                 }
             }
             return count;
         }
 
-
-        public void SetAsEtalon()
+        private static Board etalonState;
+        public static Board Etalon
         {
-            etalonState = (Board)this.MemberwiseClone();
-            etalonState.map = (Cell[,])this.map.Clone();
+            get
+            {
+                return etalonState;
+            }
+            set
+            {
+                etalonState = (Board)value.MemberwiseClone();
+                etalonState.map = (Cell[,])value.map.Clone();
+            }
         }
 
         public override string ToString()
@@ -357,7 +381,7 @@ namespace logic15
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
                     if (map[i, j].IsEmpty) res += "    ";
-                    else res += " " + map[i, j].Value + " ";
+                    else res += " " + map[i, j].Text + " ";
                 }
                 res += Environment.NewLine;
             }
@@ -373,8 +397,7 @@ namespace logic15
             else
                 path.Clear();
 
-            path.Add(lOpen[q]);
-            Board curr = lOpen[q];
+            Board curr = this;
             while (curr != null)
             {
                 path.Add(curr);
