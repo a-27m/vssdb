@@ -21,7 +21,7 @@ namespace cglr1
             rnd = new Random(DateTime.Now.Millisecond);
         }
 
-        float cellSize = 3f;
+        float cellSize = 2f;
         Brush pixelBrush = Brushes.Black;
 
         private void Plot(Graphics g, int x, int y)
@@ -81,12 +81,12 @@ namespace cglr1
             if (ΔyΔx > 0)
             {
                 e = ΔyΔx - 0.5f;
-                float e2 = e / 2f;
+                //float e2 = e / 2f;
 
                 for (int i = 0; i < Math.Abs(Δx); i++)
                 {
                     this.Plot(g, x, y);//, ptc(Math.Abs(e - e2)/e2));
-                    e2 = e / 2f;
+                   // e2 = e / 2f;
 
                     while (e >= 0)
                     {
