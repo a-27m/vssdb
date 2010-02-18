@@ -12,6 +12,7 @@ namespace cglr2
     public partial class Form1 : Form
     {
         List<Point> pts;
+        Point ptPreview;
 
         public Form1()
         {
@@ -105,9 +106,6 @@ namespace cglr2
 
         private void FillUp(Graphics g, int y1, int y2)
         {
-            //List<Point> pts2 = new List<Point>(pts.AsQueryable().Distinct());
-            //pts = pts2;            
-
             // ребра
             int n = pts.Count + 1;
 
@@ -133,9 +131,35 @@ namespace cglr2
                     {
                         do
                         {
-                            int lextr = LocalExtr(m, Y, I);
-                            if (lextr == 0)
-                            {// remove old rebro and place new
+                            int lExtr = IsLocalExtreme(m, Y, I);
+
+                            if (lExtr > 0)  // max => add new rebra to SAP
+                            {
+                                k = I[m];
+                                sap.Add(k);
+                             
+                                if (k-- < 0) k += n - 1; // предпоследний и без фиктивной последней вершины
+                                sap.Add(k);
+                            }
+
+                            if (lExtr < 0)  // min => remove both rebra
+                            {
+                                sap.Remove(I[m]);
+                                int prev = I[m] - 1;
+                                if (prev < 0) prev += pts.Count - 1;
+                                sap.Remove(prev);
+                            }
+
+                            if (lExtr == 0) // no extr => remove upper rebro and place bottom
+                            {
+                                //if (pts[I[m] + 1].Y == Y[m]) // rebro is on the scanline => 
+                                //{
+                                //    // Y[m] = -1;
+                                //    // Array.Sort<int, int>(Y, I);
+                                //    m++; // skipped to the next point //by continue, so do it now
+                                //    continue;
+                                //}
+
                                 if (pts[I[m] + 1].Y > Y[m])
                                 {
                                     sap.Add(I[m]);
@@ -151,40 +175,21 @@ namespace cglr2
                                     sap.Add(nouvelle);
                                 }
                             }
-                            else
-                            {
-                                if (lextr > 0)  // max
-                                {// add new rebra to SAP
-                                    k = I[m];
-
-                                    sap.Add(k);
-
-                                    if (k == 0)
-                                        sap.Add(n - 1 - 1); // предпоследний и без фиктивной последней вершины
-                                    else
-                                        sap.Add(k - 1);
-                                }
-                                else
-                                {// remove both rebra
-                                    sap.Remove(I[m]);
-                                    int prev = I[m] - 1;
-                                    if (prev < 0) prev += pts.Count - 1;
-                                    sap.Remove(prev);
-                                }
-                            }
                             m++;
                         }
                         while ((m < Y.Length) && Y[m] == Y[m - 1]);
                     }
 
                 if (sap.Count == 0) continue;
-                //sap = sap.AsQueryable().Distinct().ToList();
+
                 // исключить вершины 
                 int[] sax = new int[sap.Count];
                 int sax_i = 0;
 
                 for (int i = 0; i < sap.Count; i++)
                 {
+                    int x;
+
                     int p0_x = pts[sap[i]].X;
                     int p0_y = pts[sap[i]].Y;
                     int p1_x = pts[sap[i] + 1].X;
@@ -192,7 +197,7 @@ namespace cglr2
 
                     float t = (float)(yi - p0_y) / (float)(p1_y - p0_y);
 
-                    int x = (int)(p0_x + (p1_x - p0_x) * t);
+                    x = (int)(p0_x + (p1_x - p0_x) * t);
                     sax[sax_i++] = x;
                 }
 
@@ -207,17 +212,30 @@ namespace cglr2
             pts.RemoveAt(pts.Count - 1); // REMOVE TEMPORARY COPY OF THE 1ST POINT AT THE END
         }
 
-        private int LocalExtr(int m, int[] Y, int[] I)
+        private int IsLocalExtreme(int m, int[] Y, int[] I)
         {
             int prevI = I[m] - 1;
             if (prevI < 0) prevI += pts.Count - 1;
             int prevY = pts[prevI].Y;
+
             int nextY = pts[I[m] + 1].Y;
 
             return (
                 Math.Sign(prevY - Y[m]) +
                 Math.Sign(nextY - Y[m])
-                ) / 2;
+                ) >> 1;
+        }
+
+        protected override void OnKeyPress(KeyPressEventArgs e)
+        {
+            base.OnKeyPress(e);
+
+            if (e.KeyChar == (char)Keys.Escape)
+            {
+                drawPoly = buttonDraw.Checked = false;
+
+                pictureBox1.Refresh();
+            }
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -232,35 +250,40 @@ namespace cglr2
                 prev = p;
             }
 
+            if (drawPoly) 
+            {
+                this.Line(e.Graphics, prev.X, prev.Y, ptPreview.X, ptPreview.Y);
+                prev = ptPreview;
+            }
+
             this.Line(e.Graphics, prev.X, prev.Y, pts[0].X, pts[0].Y);
 
             if (needFill)
                 FillUp(e.Graphics, 0, (int)(pictureBox1.Height/cellSize));
+
+            //if (drawPoly && needFill)
+            //{
+            //    pts.Add(ptPreview);
+            //    FillUp(e.Graphics, 0, (int)(pictureBox1.Height / cellSize));
+            //    pts.RemoveAt(pts.Count - 1);
+            //}
+
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-                if (pts.Count > 2)
-                    pts.RemoveAt(pts.Count - 1);
-
                 needFill = true;
                 drawPoly = false;
-                return;
             }
-
-            //if (pts.Count > 1)
-            //    pts.RemoveAt(pts.Count - 1);
-
-            //pts.Add(new Point(
-            //    (int)(e.X / cellSize),
-            //    (int)(e.Y / cellSize)
-            //    ));
-            pts.Add(new Point(
-                (int)(e.X / cellSize)+1,
-                (int)(e.Y / cellSize)+1
-                ));
+            else
+            {
+                pts.Add(new Point(
+                    (int)(e.X / cellSize) + 1,
+                    (int)(e.Y / cellSize) + 1
+                    ));
+            }
 
             pictureBox1.Refresh();
         }
@@ -271,29 +294,15 @@ namespace cglr2
 
             if (!drawPoly) return;
 
-            if (pts.Count > 0)
-            {
-                Point p = pts[pts.Count - 1];
-                p.X = (int)(e.X / cellSize);
-                p.Y = (int)(e.Y / cellSize);
+            ptPreview.X = (int)(e.X / cellSize);
+            ptPreview.Y = (int)(e.Y / cellSize);
 
-                pts[pts.Count - 1] = p;
-
-                pictureBox1.Refresh();
-            }
+            pictureBox1.Refresh();
         }
 
         private void buttonDraw_Click(object sender, EventArgs e)
         {
-            buttonDraw.Checked = !buttonDraw.Checked;
-            drawPoly = buttonDraw.Checked;
-
-            if (!drawPoly)
-            {
-                if (pts == null) return;
-                if (pts.Count > 2)
-                    pts.RemoveAt(pts.Count - 1);
-            }
+            drawPoly = buttonDraw.Checked = !buttonDraw.Checked;            
 
             pictureBox1.Refresh();
         }
