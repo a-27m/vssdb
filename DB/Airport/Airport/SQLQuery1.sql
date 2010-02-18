@@ -127,6 +127,7 @@ create table AirRoute
 	IDRouteType int references RouteType on delete set null,
 )
 
+-- remove --
 create table PlannedRoute
 (
 	IDPlannedRoute int PRIMARY KEY NOT NULL , -- identity
@@ -164,9 +165,9 @@ create table Delayed
 /*
 ’ранима€ процедура при "запланировании" рейса добавл€ет нумерованные свободные места.
 */
-create table Place
+create table Seat
 (
-	IDPlace int PRIMARY KEY NOT NULL, -- identity
+	IDSeat int PRIMARY KEY NOT NULL, -- identity
 	IDPlannedFlight int references PlannedFlight on delete cascade,
 	Number int,
 	Sold int,
@@ -189,7 +190,7 @@ create table Passenger
 create table Ticket
 (
 	IDTicket int PRIMARY KEY NOT NULL , -- identity
-	IDPlace int references Place on delete set null,
+	IDSeat int references Seat on delete set null,
 	IDPassenger int references Passenger,
 	DateSold datetime,
 )

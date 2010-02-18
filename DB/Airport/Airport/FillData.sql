@@ -10,7 +10,7 @@ use Airport;
  delete from Team;
  delete from Department;
 
- delete from Place;
+ delete from Seat;
  delete from Delayed;
  delete from DelayCause;
  delete from PlannedFlight;
@@ -68,17 +68,17 @@ insert into PlannedFlight values (10,4, 3, 2, '2009-09-28', 200, null); --
 insert into PlannedFlight values (11,5, 3, 2, '2009-09-28', 650, null);
 --select * from PlannedFlight;
 
-insert into Place values (1, 5, 1, 0);
-insert into Place values (2, 5, 3, 0);
-insert into Place values (3, 5, 5, 1);
-insert into Place values (4, 5, 7, 1);
-insert into Place values (5, 5, 9, 1);
-insert into Place values (6, 5, 11, 0);
-insert into Place values (7, 5, 13, 0);
-insert into Place values (8, 5, 15, 0);
-insert into Place values (9, 5, 17, 0);
-insert into Place values (10, 5, 19, 0);
-insert into Place values (11, 5, 21, 0);
+insert into Seat values (1, 5, 1, 0);
+insert into Seat values (2, 5, 3, 0);
+insert into Seat values (3, 5, 5, 1);
+insert into Seat values (4, 5, 7, 1);
+insert into Seat values (5, 5, 9, 1);
+insert into Seat values (6, 5, 11, 0);
+insert into Seat values (7, 5, 13, 0);
+insert into Seat values (8, 5, 15, 0);
+insert into Seat values (9, 5, 17, 0);
+insert into Seat values (10, 5, 19, 0);
+insert into Seat values (11, 5, 21, 0);
 
 insert into Department values (1, 'Администрация', 111, null);
 insert into Department values (2, 'Бухгалтерия', 121, 1);
@@ -95,9 +95,9 @@ insert into Pilot values(2, 143, 2222, 4, 7000);
 --select * from Pilot;
 
 insert into MedCheckup values(1, 1, '2009-03-31', 4, 'Такой длинный и подробный комментарий');
-insert into MedCheckup values(2, 1, '2009-02-28', 5, 'Такой длинный и подробный комментарий');
-insert into MedCheckup values(3, 2, '2009-03-31', 2, 'Такой длинный и подробный комментарий');
-insert into MedCheckup values(4, 2, '2009-02-28', 4, 'Такой длинный и подробный комментарий');
+insert into MedCheckup values(2, 1, '2009-02-28', 5, 'Такой длинный и очень подробный комментарий');
+insert into MedCheckup values(3, 2, '2009-03-31', 2, 'Такой очень длинный и подробный комментарий');
+insert into MedCheckup values(4, 2, '2009-02-28', 4, 'Такой сверх длинный и очень подробный комментарий');
 --select * from MedCheckup;
 
 insert into Worker values (1, 144, 1111, 4, 2000);
