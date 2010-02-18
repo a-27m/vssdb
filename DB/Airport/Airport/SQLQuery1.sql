@@ -1,10 +1,22 @@
-use master;
-GO
+--use master;
+--GO
 
 if exists (
 	select name from sys.databases
-	where name = 'Airport') drop database airport;
-	
+	where name = 'Airport') 
+	--drop database airport;
+	EXEC msdb.dbo.sp_delete_database_backuphistory @database_name = N'Airport'
+	GO
+	USE [master]
+	GO
+	ALTER DATABASE [Airport] SET  SINGLE_USER WITH ROLLBACK IMMEDIATE
+	GO
+	USE [master]
+	GO
+	/****** Object:  Database [Airport]    Script Date: 02/18/2010 05:18:17 ******/
+	DROP DATABASE [Airport]
+	GO	
+
 create database Airport;
 GO
 
@@ -59,7 +71,7 @@ create table Department
 (
 	IDDepartment int PRIMARY KEY NOT NULL , -- identity
 	Title varchar(50) NOT NULL,
-	Boss int references Person,
+	Boss int,-- references Worker, -- FK will be created below
 	IDMainDepartment int references Department,
 )
 
@@ -87,6 +99,7 @@ create table Worker
 	IDPerson int references Person,
 	IDTeam int references Team,
 	IDDepartment int references Department on delete set null,
+	JobTitle varchar(255) default 'Рабочий',
 	Salary money,
 )
 
@@ -194,3 +207,8 @@ create table Ticket
 	IDPassenger int references Passenger,
 	DateSold datetime,
 )
+
+
+alter table Department  with check add foreign key(Boss)
+references Worker (IDWorker)
+GO

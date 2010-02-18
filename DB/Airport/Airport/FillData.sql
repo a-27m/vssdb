@@ -100,8 +100,8 @@ insert into MedCheckup values(3, 2, '2009-03-31', 2, 'Такой очень длинный и подр
 insert into MedCheckup values(4, 2, '2009-02-28', 4, 'Такой сверх длинный и очень подробный комментарий');
 --select * from MedCheckup;
 
-insert into Worker values (1, 144, 1111, 4, 2000);
-insert into Worker values (2, 141, 1111, 4, 1000);
+insert into Worker values (1, 144, 1111, 4, 'Рабочий', 2000);
+insert into Worker values (2, 141, 1111, 4, 'Помощник рабочего', 1000);
 
 insert into TechCheckup values (4, 1, '2009-07-09');
 insert into TechCheckup values (5, 2, '2009-07-16');
