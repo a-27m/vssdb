@@ -27,7 +27,7 @@ from
 		(
 			select p.IDPerson as persid, p.Salary as salary, p.IDTeam, p.IDDepartment, 'Пилот' as JobTitle from Pilot p
 			union
-			select p.IDPerson as persid, p.Salary as salary, p.IDTeam, p.IDDepartment, 'Рабочий' as JobTitle from Worker p
+			select p.IDPerson as persid, p.Salary as salary, p.IDTeam, p.IDDepartment, p.JobTitle from Worker p
 		) empl on Person.IDPerson = empl.persid
 
 GO
@@ -38,15 +38,22 @@ GO
 create view Boss
 as
 select
-	'Бригада' as BossType, Team.IDTeam as ID, Person.*
+	'Бригадир' as BossType, t.IDTeam as ID,
+	p.FirstName,  p.MiddleName, p.LastName, p.Birth,
+	w.Hired, w.Salary, w.JobTitle
 from
-	Team inner join Person on Team.Boss = Person.IDPerson
+	Team t, Worker w, Person p
+where t.Boss = w.IDWorker
+  and w.IDPerson = p.IDPerson
 union
 select
-	'Отдел' as BossType, Department.IDDepartment as ID, Person.*
+	'Начальник отдела' as BossType, d.IDDepartment as ID,
+	p.FirstName,  p.MiddleName, p.LastName, p.Birth,
+	w.Hired, w.Salary, w.JobTitle
 from
-	Department inner join Person on Department.Boss = Person.IDPerson
-
+	Department d, Worker w, Person p
+where d.Boss = w.IDWorker
+  and w.IDPerson = p.IDPerson
 GO
 
 if object_id (N'GetDepartmentEmployees', N'IF') is not null
@@ -91,4 +98,9 @@ order by Age desc
 	за сумарною (середньою) зарплатнею в бригаді
 */
 
-select 
+select
+	*
+from
+	PlannedFlight pf, Team t, Plane p
+where
+	t.IDPlane = p.IDPlane

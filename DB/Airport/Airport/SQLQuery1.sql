@@ -1,21 +1,13 @@
---use master;
---GO
-
-if exists (
-	select name from sys.databases
-	where name = 'Airport') 
-	--drop database airport;
-	EXEC msdb.dbo.sp_delete_database_backuphistory @database_name = N'Airport'
-	GO
-	USE [master]
-	GO
-	ALTER DATABASE [Airport] SET  SINGLE_USER WITH ROLLBACK IMMEDIATE
-	GO
-	USE [master]
-	GO
-	/****** Object:  Database [Airport]    Script Date: 02/18/2010 05:18:17 ******/
-	DROP DATABASE [Airport]
-	GO	
+EXEC msdb.dbo.sp_delete_database_backuphistory @database_name = N'Airport'
+GO
+USE [master]
+GO
+ALTER DATABASE [Airport] SET  SINGLE_USER WITH ROLLBACK IMMEDIATE
+GO
+USE [master]
+GO
+DROP DATABASE [Airport]
+GO	
 
 create database Airport;
 GO
@@ -31,7 +23,6 @@ create table Person
 	Birth Datetime, -- Date
 	Sex	char(1), -- F or M
 	Children int,
-	Hired datetime,
 	
 	check (Sex = 'F' or Sex = 'M')
 )
@@ -78,10 +69,19 @@ create table Department
 create table Team
 (
 	IDTeam int PRIMARY KEY NOT NULL , -- identity
-	--IDDepartment int references Department,
 	IDPlane int references Plane on delete set null,
-	Boss int references Person,
-	
+	Boss int,-- references Worker, -- FK will be created below
+)
+
+create table Worker
+(
+	IDWorker int PRIMARY KEY NOT NULL , -- identity
+	IDPerson int references Person,
+	IDTeam int references Team null,
+	IDDepartment int references Department on delete set null,
+	JobTitle varchar(255) default 'Рабочий',
+	Salary money,
+	Hired datetime,
 )
 
 create table Pilot
@@ -91,18 +91,8 @@ create table Pilot
 	IDTeam int references Team on delete set null,
 	IDDepartment int references Department on delete set null,
 	Salary money,
+	Hired datetime,
 )
-
-create table Worker
-(
-	IDWorker int PRIMARY KEY NOT NULL , -- identity
-	IDPerson int references Person,
-	IDTeam int references Team,
-	IDDepartment int references Department on delete set null,
-	JobTitle varchar(255) default 'Рабочий',
-	Salary money,
-)
-
 create table MedCheckup
 (
 	IDMedCheckup int PRIMARY KEY NOT NULL , -- identity
@@ -119,40 +109,31 @@ create table TechCheckup
 	Datetaken datetime NOT NULL,
 )
 
+create table FlightType
+(
+	IDFlightType int PRIMARY KEY NOT NULL , -- identity
+	Title varchar(20) NOT NULL,
+)
+
 create table Flight
 (
 	IDFlight int PRIMARY KEY NOT NULL , -- identity
 	IDAviaCompany int, -- references AviaCompany
-	
 	ShortTitle varchar(10),
-)
-
-create table RouteType
-(
-	IDRouteType int PRIMARY KEY NOT NULL , -- identity
-	Title varchar(20) NOT NULL,
+	IDFlightType int references FlightType,
 )
 
 create table AirRoute
 (
 	IDRoute int PRIMARY KEY NOT NULL , -- identity
 	ShortTitle varchar(20),
-	IDRouteType int references RouteType on delete set null,
-)
-
--- remove --
-create table PlannedRoute
-(
-	IDPlannedRoute int PRIMARY KEY NOT NULL , -- identity
-	IDAirRoute int references AirRoute,
-	Price money,
+	IDFlightType int references FlightType on delete set null,
 )
 
 create table PlannedFlight
 (
 	IDPlannedFlight int PRIMARY KEY NOT NULL , -- identity
 	IDFlight int references Flight,
-	IDPlannedRoute int references PlannedRoute,
 	IDPlane	int references Plane,
 	Departure Datetime,
 	Price money,
@@ -210,5 +191,7 @@ create table Ticket
 
 
 alter table Department  with check add foreign key(Boss)
+references Worker (IDWorker)
+alter table Team with check add foreign key(Boss)
 references Worker (IDWorker)
 GO
