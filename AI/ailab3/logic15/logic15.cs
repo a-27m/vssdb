@@ -45,6 +45,7 @@ namespace logic15
     public class Board
     {
         Cell[,] map;
+        public static Board t = null;
 
         internal float g;
         internal Board previous;
@@ -243,6 +244,16 @@ namespace logic15
             map[i2, j2] = t;
         }
 
+        public void PrintOut(List<Board> list)
+        {
+            foreach (Board b in list)
+            {
+                Debugger.Log(0, "", b.ToCSV()+Environment.NewLine);
+            }
+        }
+
+        public static EventHandler<EventArgs> ehan;
+
         public static bool HeuristicsSearch(Board initState, Board etalonState, out Board lastBoard)
         {
             int q;
@@ -290,7 +301,7 @@ namespace logic15
                     return true;
                 }
 
-                Board t = null;
+                t = null;
                //q = 0; // в ширину
                 //4. Раскрыть вершину n и все порождённые вершины поместить в список OPEN настроив указатели к вершине n
                 foreach (Direction dir in lOpen[q].EnumerateValidTurns())
@@ -304,6 +315,8 @@ namespace logic15
                     t.g = t.g + 1;
                     t.Turn(dir);
                     t.previous = lOpen[q];
+
+                    if (ehan != null) ehan(null, null);
 
                     //5. Если порожденная вершина целевая, т.е. принадлежит Sq то выдать решение с помощью указателей, иначе перейти к шагу №2.
                     if (MeasureNotAtPlace(t, etalonState) == 0) // TODO: is this check ext
@@ -386,6 +399,21 @@ namespace logic15
                 res += Environment.NewLine;
             }
 
+            return res;
+        }
+
+        public string ToCSV()
+        {
+            string res = "";
+
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    if (map[i, j].IsEmpty) res += "-;";
+                    else res += map[i, j].Text + ";";
+                }
+            }
             return res;
         }
 

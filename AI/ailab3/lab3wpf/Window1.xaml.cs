@@ -86,15 +86,14 @@ namespace lab3wpf
             // update buttons
             Grid.SetColumn(board[OldEmptyRow, OldEmptyCol].Button, OldEmptyCol);
             Grid.SetRow(board[OldEmptyRow, OldEmptyCol].Button, OldEmptyRow);
-            Swap(r, c, OldEmptyRow, OldEmptyCol);
+            //Swap(r, c, OldEmptyRow, OldEmptyCol);
         }
 
         protected void Swap(int i1, int j1, int i2, int j2)
         {
-            Button t = board[i1, j1].Button;
-
+            Cell t = board[i1, j1];
             board[i1, j1] = board[i2, j2];
-            board[i2, j2].Button = t;
+            board[i2, j2] = t;
         }
 
         private void but1_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
@@ -107,7 +106,8 @@ namespace lab3wpf
 
         private void load_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            board = Board.Load("4x4.csv");
+            //board = Board.Load("4x4.csv");
+            board = Board.Load("3x3.csv");
             Board.Etalon = board;
 
             GenerateMesh(board.Rows, board.Columns);
@@ -170,21 +170,48 @@ namespace lab3wpf
             {
                 for (int j = 0; j < board.Columns; j++)
                 {
-                    if (board[i, j].Button == null) continue; // .Value or .Text
+                    if (board[i, j].IsEmpty) continue;
                     Grid.SetColumn(board[i, j].Button, j);
                     Grid.SetRow(board[i, j].Button, i);
                 }
             }
         }
 
+        public void some_Turn(object sender, EventArgs e)
+        {
+            board = Board.t;
+
+            for (int i = 0; i < board.Rows; i++)
+            {
+                for (int j = 0; j < board.Columns; j++)
+                {
+                    if (board[i, j].IsEmpty) continue;
+                    Grid.SetColumn(board[i, j].Button, j);
+                    Grid.SetRow(board[i, j].Button, i);
+                }
+            }            
+        }
+
         private void solve_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Board boardResult;
+            Board.ehan = some_Turn;
+
             Board.HeuristicsSearch(board, Board.Etalon, out boardResult);
 
             List<Board> list = boardResult.GeneratePath();
 
             board = list[0];
+
+            for (int i = 0; i < board.Rows; i++)
+            {
+                for (int j = 0; j < board.Columns; j++)
+                {
+                    if (board[i, j].IsEmpty) continue;
+                    Grid.SetColumn(board[i, j].Button, j);
+                    Grid.SetRow(board[i, j].Button, i);
+                }
+            }
 
             /*
             for (int i = 0; i < 10; i++)
@@ -199,16 +226,6 @@ namespace lab3wpf
 
                 // update buttons
                 Swap(oldi, oldj, board.EmptyRow, board.EmptyCol);
-            }
-
-            for (int i = 0; i < pieces.GetLength(0); i++)
-            {
-                for (int j = 0; j < pieces.GetLength(1); j++)
-                {
-                    if (board[i, j].Value == null) continue;
-                    Grid.SetColumn(board[i, j].Value, j);
-                    Grid.SetRow(board[i, j].Value, i);
-                }
             }
 
              */
