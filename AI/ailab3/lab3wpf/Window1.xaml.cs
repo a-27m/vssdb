@@ -106,8 +106,8 @@ namespace lab3wpf
 
         private void load_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            //board = Board.Load("4x4.csv");
-            board = Board.Load("3x3.csv");
+            board = Board.Load("4x4.csv");
+            //board = Board.Load("3x3.csv");
             Board.Etalon = board;
 
             GenerateMesh(board.Rows, board.Columns);

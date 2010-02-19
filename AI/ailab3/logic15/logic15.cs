@@ -39,7 +39,12 @@ namespace logic15
         }
     }
 
-    public enum Direction { Up=0, Down, Left, Right }
+    public enum Direction
+    {
+        NotApplicable = 8,
+        Up = 5/*101*/, Down = 6/*110*/,
+        Left = 4/*100*/, Right = 7/*111*/,
+    }
 
     // TODO Validation: Only 1 empty cell should be
     public class Board
@@ -48,8 +53,9 @@ namespace logic15
         public static Board t = null;
 
         internal float g;
+        internal float f;
         internal Board previous;
-        internal Direction turn;
+        internal Direction lastTurn;
 
         int iEmpty, jEmpty;
 
@@ -75,7 +81,7 @@ namespace logic15
 
             this.g = b.g;
             previous = null;
-            turn = b.turn;
+            lastTurn = b.lastTurn;
             iEmpty = b.iEmpty;
             jEmpty = b.jEmpty;
         }
@@ -202,7 +208,7 @@ namespace logic15
             iEmpty = x;
             jEmpty = y;
 
-            turn = dir;
+            lastTurn = dir;
             return true;
         }
 
@@ -227,8 +233,8 @@ namespace logic15
             Swap(r, c, iEmpty, jEmpty);
 
             // set this.turn
-            if (di != 0) this.turn = di == 1 ? Direction.Down : Direction.Up;
-            if (dj != 0) this.turn = dj == 1 ? Direction.Right : Direction.Left;
+            if (di != 0) this.lastTurn = di == 1 ? Direction.Down : Direction.Up;
+            if (dj != 0) this.lastTurn = dj == 1 ? Direction.Right : Direction.Left;
 
             iEmpty = r;
             jEmpty = c;
@@ -256,19 +262,18 @@ namespace logic15
 
         public static bool HeuristicsSearch(Board initState, Board etalonState, out Board lastBoard)
         {
-            int q;
-
             //init all
             List<Board> lOpen, lClosed;
-            
+
             lOpen = new List<Board>();
             lClosed = new List<Board>();
-            //this.previous = null;
-            q = 0;
 
             //1. Поместить все узлы из множества So в список OPEN.
             lOpen.Add(initState);
-
+            initState.f = MeasureNotAtPlace(initState, etalonState);
+            initState.g = 0;
+            initState.lastTurn = Direction.NotApplicable;
+            
             bool traversed = false;
             while (!traversed)
             {
@@ -280,60 +285,65 @@ namespace logic15
                     break;
                 }
 
-                // search [open] for pos and q
-                int pos = 0;
-                float f = float.MaxValue;
+                // search [open] for pos and q of min f
+                int iMin = 0;
+                float fMin = float.MaxValue;
+
+                int pos = 0; 
                 foreach (Board bd in lOpen)
                 {
-                    float h = MeasureNotAtPlace(bd, etalonState);
-                    if (h + bd.g < f)
+                    if (bd.f < fMin)
                     {
-                        f = h+bd.g;
-                        q = pos;
+                        fMin = bd.f;
+                        iMin = pos;
                     }
 
                     pos++;
                 }
 
-                if (MeasureNotAtPlace(lOpen[q], etalonState) == 0)
+                // redundant check?
+                //if (MeasureNotAtPlace(lOpen[iMin], etalonState) == 0)
+                //{
+                //    lastBoard = lOpen[iMin];
+                //    return true;
+                //}
+
+                // Раскрыть вершину n(≡lOpen[iMin])
+                // все порождённые вершины поместить в список OPEN,
+                // настроив указатели от порожденных - к вершине n.
+                foreach (Direction dir in lOpen[iMin].EnumerateValidTurns())
                 {
-                    lastBoard = lOpen[q];
-                    return true;
-                }
+                    if (dir == ReverseTurn(lOpen[iMin].lastTurn)) continue;
 
-                t = null;
-               //q = 0; // в ширину
-                //4. Раскрыть вершину n и все порождённые вершины поместить в список OPEN настроив указатели к вершине n
-                foreach (Direction dir in lOpen[q].EnumerateValidTurns())
-                {
-                    if (dir == ReverseTurn(lOpen[q].turn)) continue;
+                    // TODO: Write copy-constructor and use it instead of next 2 lines
+                    t = (Board)lOpen[iMin].MemberwiseClone();
+                    t.map = (Cell[,])lOpen[iMin].map.Clone();
 
-                    // TODO: Create copy-constructor for Board and use it here instead of MemberwiseClone()
-                    t = (Board)lOpen[q].MemberwiseClone();
-                    t.map = (Cell[,])lOpen[q].map.Clone();
-
-                    t.g = t.g + 1;
+                    // do turn
                     t.Turn(dir);
-                    t.previous = lOpen[q];
+                    t.previous = lOpen[iMin];
 
-                    if (ehan != null) ehan(null, null);
+                    // update f
+                    t.g++;
+                    t.f = t.g + MeasureNotAtPlace(t, etalonState);
 
-                    //5. Если порожденная вершина целевая, т.е. принадлежит Sq то выдать решение с помощью указателей, иначе перейти к шагу №2.
-                    if (MeasureNotAtPlace(t, etalonState) == 0) // TODO: is this check ext
+                    //if (ehan != null) ehan(null, null);
+
+                    // Если порожденная вершина целевая - выход.
+                    if (t.f == t.g) // f == g => h == 0      // TODO: is this check redundant?
                     {
-                        lastBoard = lOpen[q];
+                        lastBoard = lOpen[iMin];
                         return true;
                     }
                     else
                     {
+                        // TODO: search for equal nodes in lOpen and lClosed, update their f
                         lOpen.Add(t);
-                        //lOpen.Insert(p, t);
-                        //if (q >= p) q += p;
                     }
                 }
 
-                lClosed.Add(lOpen[q]);
-                lOpen.RemoveAt(q);
+                lClosed.Add(lOpen[iMin]);
+                lOpen.RemoveAt(iMin);
             }
 
             //Log(string.Format("Best path EVR: {0:#.##}", bestPathLen));
@@ -343,19 +353,7 @@ namespace logic15
 
         private static Direction ReverseTurn(Direction direction)
         {
-            switch (direction)
-            {
-                case Direction.Up:
-                    return Direction.Down;
-                case Direction.Down:
-                    return Direction.Up;
-                case Direction.Left:
-                    return Direction.Right;
-                case Direction.Right:
-                    return Direction.Left;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            return (Direction)((byte)direction ^ 3);
         }
 
         private static float MeasureNotAtPlace(Board bd, Board etalonState)
