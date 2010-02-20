@@ -104,8 +104,7 @@ namespace CrissCross
         internal Board board;
 
         List<Situation> open, closed;
-
-
+        
         public Form1()
         {
             InitializeComponent();
@@ -113,7 +112,7 @@ namespace CrissCross
             penZero = new Pen(Color.Red, 3f);
             penCross = new Pen(Color.Blue, 3f);
 
-            board[1, 1] = 1;
+            //board[1, 1] = 1;
 
             open = new List<Situation>();
             closed = new List<Situation>();
@@ -121,16 +120,16 @@ namespace CrissCross
 
         private void ClickSqr(int r, int c, MouseButtons mb)
         {
-            //Text = r.ToString() + ", " + c.ToString();
-
             board[r, c] = mb == MouseButtons.Left ? 1 : -1;
             
             pictureBox1.Refresh();
 
             int[] l = OpenLines(board);
-            Text = string.Format("X:{0} =:{1} O:{2}", l[2], l[1], l[0]);
+            Text = string.Format("X:{0} N:{1} O:{2}", l[2], l[1], l[0]);
         }
-
+        
+        #region I/O
+		
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
             int w = pictureBox1.Width / 3;
@@ -187,7 +186,9 @@ namespace CrissCross
             rc.Inflate(-6, -6);
 
             g.DrawEllipse(penZero, rc);
-        }
+        }        
+
+        #endregion
 
         private int L(Board b)
         {
