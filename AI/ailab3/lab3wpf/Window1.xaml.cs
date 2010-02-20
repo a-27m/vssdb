@@ -21,19 +21,11 @@ namespace lab3wpf
     public partial class Window1 : Window
     {
 		Board board;
-        //Button[,] pieces;
 
         public Window1()
         {
             InitializeComponent();
             but1.Visibility = Visibility.Hidden;
-        }
-
-        private void textBox1_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-			//textBox1.Text += 
-			//textBox1.Visibility.ToString();
-            //textBox1.Visibility = System.Windows.Visibility.Hidden;
         }
 
         protected void GenerateMesh(int rows, int cols)
@@ -70,13 +62,12 @@ namespace lab3wpf
             int OldEmptyCol = board.EmptyCol;
             int OldEmptyRow = board.EmptyRow;
 
-
+            // redundant
             if (board[r, c].IsEmpty) return;
 
             if (!board.Turn(r, c))
             {
                 // no such turn
-                bt.Background = Brushes.Red;
                 return;
             }
 
@@ -86,22 +77,6 @@ namespace lab3wpf
             // update buttons
             Grid.SetColumn(board[OldEmptyRow, OldEmptyCol].Button, OldEmptyCol);
             Grid.SetRow(board[OldEmptyRow, OldEmptyCol].Button, OldEmptyRow);
-            //Swap(r, c, OldEmptyRow, OldEmptyCol);
-        }
-
-        protected void Swap(int i1, int j1, int i2, int j2)
-        {
-            Cell t = board[i1, j1];
-            board[i1, j1] = board[i2, j2];
-            board[i2, j2] = t;
-        }
-
-        private void but1_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-        }
-
-        private void but1_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        {
         }
 
         private void load_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -124,7 +99,6 @@ namespace lab3wpf
                     Button pce = new Button();
                     
                     pce.Click += but1_Click;
-                 //  pce.MouseEnter += Triggers).First());//.MouseEnter; OnMouseEnter1;
                     pce.Effect = but1.Effect;
                     pce.Margin = but1.Margin;
                     pce.Style = but1.Style;
@@ -132,7 +106,7 @@ namespace lab3wpf
                     pce.FontSize = but1.FontSize;
                     pce.FontStyle = but1.FontStyle;
                     pce.FontWeight = but1.FontWeight;
-                    pce.Content = board[i, j].Text;//no++.ToString(); //(i * board.Columns + j + 1).ToString();
+                    pce.Content = board[i, j].Text;
 
                     Grid.SetColumn(pce, j);
                     Grid.SetRow(pce, i);
@@ -145,42 +119,27 @@ namespace lab3wpf
 
         private void mix_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            //textBox1.AppendText(string.Join("; ",
-            //    board.EnumerateValidTurns().AsQueryable<Direction>().Select(d => d.ToString()).ToArray()));
-
-            //return;
-
 			Random rnd = new Random(DateTime.Now.Millisecond);
 
             for (int i = 0; i < 10; i++)
             {
-                int oldi, oldj;
-                oldi = board.EmptyRow;
-                oldj = board.EmptyCol;
-
                 IEnumerable<Direction> turns;
                 turns = board.EnumerateValidTurns();
-                board.Turn(turns.ToArray()[rnd.Next(turns.Count())]);
-
-                // update buttons
-                Swap(oldi, oldj, board.EmptyRow, board.EmptyCol);
-            }
-
-            for (int i = 0; i < board.Rows; i++)
-            {
-                for (int j = 0; j < board.Columns; j++)
+                Direction dir;
+                do
                 {
-                    if (board[i, j].IsEmpty) continue;
-                    Grid.SetColumn(board[i, j].Button, j);
-                    Grid.SetRow(board[i, j].Button, i);
+                    dir = turns.ElementAt<Direction>(rnd.Next(turns.Count()));
                 }
+                while (dir == board.LastTurn);
+
+                board.Turn(dir);
             }
+
+            SyncGridUpToBoard();
         }
 
-        public void some_Turn(object sender, EventArgs e)
+        public void SyncGridUpToBoard()
         {
-            board = Board.t;
-
             for (int i = 0; i < board.Rows; i++)
             {
                 for (int j = 0; j < board.Columns; j++)
@@ -194,67 +153,14 @@ namespace lab3wpf
 
         private void solve_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Board boardResult;
-            Board.ehan = some_Turn;
+            List<Board> list;
+            int L, T;
 
-            Board.HeuristicsSearch(board, Board.Etalon, out boardResult);
-
-            List<Board> list = boardResult.GeneratePath();
-
+            Board.HeuristicsSearch(board, Board.Etalon, out list, out L, out T);
+            
             board = list[0];
 
-            for (int i = 0; i < board.Rows; i++)
-            {
-                for (int j = 0; j < board.Columns; j++)
-                {
-                    if (board[i, j].IsEmpty) continue;
-                    Grid.SetColumn(board[i, j].Button, j);
-                    Grid.SetRow(board[i, j].Button, i);
-                }
-            }
-
-            /*
-            for (int i = 0; i < 10; i++)
-            {
-                int oldi, oldj;
-                oldi = board.EmptyRow;
-                oldj = board.EmptyCol;
-
-                IEnumerable<Direction> turns;
-                turns = board.EnumerateValidTurns();
-                board.Turn(turns.ToArray()[rnd.Next(turns.Count())]);
-
-                // update buttons
-                Swap(oldi, oldj, board.EmptyRow, board.EmptyCol);
-            }
-
-             */
-            //gridField.Children.Clear();
-            //pieces = new Button[board.Rows, board.Columns];
-
-            //for (int i = 0; i < pieces.GetLength(0); i++)
-            //{
-            //    for (int j = 0; j < pieces.GetLength(1); j++)
-            //    {
-            //        if (board[i, j].IsEmpty) { continue; }
-
-            //        board[i, j].Value = new Button();
-            //        board[i, j].Value.Click += but1_Click;
-            //        //  board[i, j].Value.MouseEnter += Triggers).First());//.MouseEnter; OnMouseEnter1;
-            //        board[i, j].Value.Effect = but1.Effect;
-            //        board[i, j].Value.Margin = but1.Margin;
-            //        board[i, j].Value.Style = but1.Style;
-            //        board[i, j].Value.FontFamily = but1.FontFamily;
-            //        board[i, j].Value.FontSize = but1.FontSize;
-            //        board[i, j].Value.FontStyle = but1.FontStyle;
-            //        board[i, j].Value.FontWeight = but1.FontWeight;
-            //        board[i, j].Content = board[i, j].Value.Value;//no++.ToString(); //(i * board.Columns + j + 1).ToString();
-
-            //        Grid.SetColumn(board[i, j].Value, j);
-            //        Grid.SetRow(board[i, j].Value, i);
-            //        gridField.Children.Add(board[i, j].Value);
-            //    }
-            //}
+            SyncGridUpToBoard();
         }
     }
 }

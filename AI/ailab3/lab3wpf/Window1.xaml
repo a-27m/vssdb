@@ -136,7 +136,7 @@
     		<ColumnDefinition Width="0.129*"/>
     		<ColumnDefinition MinWidth="200" Width="Auto"/>
     	</Grid.ColumnDefinitions>
-        <TextBox x:Name="textBox1" SnapsToDevicePixels="False" TextDecorations="None" Grid.Column="2" BorderBrush="#BFE46F00" Foreground="#FF0E1520" FontFamily="Calibri" FontSize="16" TextAlignment="Justify" IsReadOnly="True" IsUndoEnabled="False" MouseUp="textBox1_MouseUp" Width="200" Grid.Row="1" Margin="0" HorizontalAlignment="Right">
+        <TextBox x:Name="textBox1" SnapsToDevicePixels="False" TextDecorations="None" Grid.Column="2" BorderBrush="#BFE46F00" Foreground="#FF0E1520" FontFamily="Calibri" FontSize="16" TextAlignment="Justify" IsReadOnly="True" IsUndoEnabled="False" Width="200" Grid.Row="1" Margin="0" HorizontalAlignment="Right">
         	<TextBox.Background>
         		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" MappingMode="RelativeToBoundingBox">
         			<GradientStop Color="#FFE2E2E2"/>
