@@ -274,8 +274,9 @@ namespace CrissCross
             
             return lines;
         }
-
-            int PlayerOne, PlayerTwo;
+        
+        int PlayerOne, PlayerTwo;
+        int alphaCount, betaCount;
         private void buttonPlay_Click(object sender, EventArgs e)
         {
             if (radioAiX.Checked)
@@ -287,18 +288,27 @@ namespace CrissCross
             Board bestOr = board;
 
             List<Board> orList = GetChildren(board, PlayerOne).ToList<Board>();
+            List<Board> andList;
             foreach (Board or in orList)
             {
                 int minL = int.MaxValue;
                 Board bestAnd;
 
                 // beta-cutting
-                if (L(or) < maxL)
+                if (L(or) <= L(board))
+                {
+                    betaCount++;
                     continue;
+                }
 
-                List<Board> andList = GetChildren(or, PlayerTwo).ToList<Board>();
+                andList = GetChildren(or, PlayerTwo).ToList<Board>();
                 foreach (Board and in andList)
                 {
+                    if (L(and) >= L(or))
+                    {
+                        alphaCount++;
+                        continue;
+                    }
                     if (L(and) < minL)
                     {
                         minL = L(and);
@@ -315,6 +325,10 @@ namespace CrissCross
 
             board = bestOr;
 
+            textBox1.Text = string.Format(
+                "N alpha: {0}"+Environment.NewLine+
+                "N beta: {1}"+Environment.NewLine+
+                "");
             pictureBox1.Refresh();
         }
 

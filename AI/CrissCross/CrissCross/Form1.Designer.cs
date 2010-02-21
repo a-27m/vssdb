@@ -33,6 +33,7 @@
             this.radioAiO = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonPlay = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -91,12 +92,24 @@
             this.buttonPlay.Text = "Next turn";
             this.buttonPlay.Click += new System.EventHandler(this.buttonPlay_Click);
             // 
+            // textBox1
+            // 
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox1.Location = new System.Drawing.Point(281, 161);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(109, 71);
+            this.textBox1.TabIndex = 5;
+            // 
             // Form1
             // 
             this.AcceptButton = this.buttonPlay;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(431, 245);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.buttonPlay);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBox1);
@@ -108,6 +121,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -118,6 +132,7 @@
         private System.Windows.Forms.RadioButton radioAiO;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button buttonPlay;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 
