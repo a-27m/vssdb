@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
+using System.Diagnostics;
 
 namespace CrissCross
 {
@@ -84,26 +85,29 @@ namespace CrissCross
                     }
                 }
             }
-        }
 
-        public class Situation
-        {
-            public Board Board;
             public GameStates State;
-            public Situation Parent;
-
-            public Situation(Board board, Situation parent)
-            {
-                Board = board;
-                Parent = parent;
-            }
+            //public Board Parent;
+            public int alpha, beta;
+            public int L;
         }
+
+        //public class Situation
+        //{
+        //    public Board Board;
+
+        //    public Situation(Board board, Situation parent)
+        //    {
+        //        Board = board;
+        //        Parent = parent;
+        //    }
+        //}
 
         public enum GameStates { Win, Draw, Loose, Intermediate }
 
         internal Board board;
 
-        List<Situation> open, closed;
+        List<Board> open, closed;
         
         public Form1()
         {
@@ -114,8 +118,8 @@ namespace CrissCross
 
             //board[1, 1] = 1;
 
-            open = new List<Situation>();
-            closed = new List<Situation>();
+            //open = new List<Situation>();
+            //closed = new List<Situation>();
         }
 
         private void ClickSqr(int r, int c, MouseButtons mb)
@@ -193,7 +197,7 @@ namespace CrissCross
         private int L(Board b)
         {
             int[] l = OpenLines(b);
-            return l[2] - l[0];
+            return (l[2] - l[0]) * PlayerOne;
         }
 
         private int[] OpenLines(Board b)
@@ -216,52 +220,131 @@ namespace CrissCross
                 sumC = 0;
                 smoC = 0;
 
-                sumD1 += board[r, r];
-                smoD1 += Math.Abs(board[r, r]);
+                sumD1 += b[r, r];
+                smoD1 += Math.Abs(b[r, r]);
 
-                sumD2 += board[r, 2-r];
-                smoD2 += Math.Abs(board[r, 2-r]);
+                sumD2 += b[r, 2-r];
+                smoD2 += Math.Abs(b[r, 2-r]);
 
                 for (int c = 0; c < 3; c++)
                 {
-                    sumC += board[r, c];
-                    smoC += Math.Abs(board[r, c]);
-                    sumR += board[c, r];
-                    smoR += Math.Abs(board[c, r]);
+                    sumC += b[r, c];
+                    smoC += Math.Abs(b[r, c]);
+                    sumR += b[c, r];
+                    smoR += Math.Abs(b[c, r]);
                 }
 
                 sign = Math.Sign(sumC);
-                if (Math.Abs(sumC) == smoC) lines[sign + 1]++;
+                if (Math.Abs(sumC) == smoC)
+                {
+                    if (smoC == 3)
+                        lines[sign + 1] += 100;
+                    else
+                        lines[sign + 1]++;
+                }
+                
                 sign = Math.Sign(sumR);
-                if (Math.Abs(sumR) == smoR) lines[sign + 1]++;
+
+                if (Math.Abs(sumR) == smoR)
+                {
+                    if (smoR == 3)
+                        lines[sign + 1] += 100;
+                    else
+                        lines[sign + 1]++;
+                }
             }
 
             sign = Math.Sign(sumD1);
-            if (Math.Abs(sumD1) == smoD1) lines[sign + 1]++;
+            if (Math.Abs(sumD1) == smoD1)
+            {
+                if (smoD1 == 3)
+                    lines[sign + 1] += 100;
+                else
+                    lines[sign + 1]++;
+            }
+
             sign = Math.Sign(sumD2);
-            if (Math.Abs(sumD2) == smoD2) lines[sign + 1]++;
+            if (Math.Abs(sumD2) == smoD2)
+            {
+                if (smoD2 == 3)
+                    lines[sign + 1] += 100;
+                else
+                    lines[sign + 1]++;
+            }
             
             return lines;
         }
 
+            int PlayerOne, PlayerTwo;
         private void buttonPlay_Click(object sender, EventArgs e)
         {
-            open.Clear();
-            closed.Clear();
+            if (radioAiX.Checked)
+            { PlayerOne = 1; PlayerTwo = -1; }
+            else
+            { PlayerOne = -1; PlayerTwo = 1; }
 
-            open.Add(new Situation(board, null));
+            int maxL = int.MinValue;
+            Board bestOr = board;
 
-            // step 3
-            Situation n = open[0];
-            UpdateState(n);
-            closed.Add(n);
+            List<Board> orList = GetChildren(board, PlayerOne).ToList<Board>();
+            foreach (Board or in orList)
+            {
+                int minL = int.MaxValue;
+                Board bestAnd;
 
+                // beta-cutting
+                if (L(or) < maxL)
+                    continue;
+
+                List<Board> andList = GetChildren(or, PlayerTwo).ToList<Board>();
+                foreach (Board and in andList)
+                {
+                    if (L(and) < minL)
+                    {
+                        minL = L(and);
+                        bestAnd = and;
+                    }
+                }
+
+                if (minL > maxL)
+                {
+                    maxL = minL;
+                    bestOr = or;
+                }
+            }
+
+            board = bestOr;
+
+            pictureBox1.Refresh();
         }
 
-        private void UpdateState(Situation n)
+        private IEnumerable<Board> GetChildren(Board board, int PlayerCode)
         {
-            //TODO find out if game is finished
-            throw new NotImplementedException();
+            Board child;
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    if (board[i,j]==0)
+                    {
+                        // create a copy
+                        child = board;
+
+                        //child.Parent = board;
+                        child[i,j] = PlayerCode;
+                        child.L = L(child);
+                        yield return child;
+                    }
+                }
+            }
+            yield break;
         }
+
+        //private void UpdateState(Situation n)
+        //{
+        //    //TODO find out if game is finished
+        //    throw new NotImplementedException();
+        //}
     }
 }

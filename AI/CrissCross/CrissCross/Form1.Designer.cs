@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioAiX = new System.Windows.Forms.RadioButton();
+            this.radioAiO = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonPlay = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -49,33 +49,32 @@
             this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
             // 
-            // radioButton1
+            // radioAiX
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Checked = true;
-            this.radioButton1.Location = new System.Drawing.Point(26, 19);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(45, 17);
-            this.radioButton1.TabIndex = 1;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "X\'es";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioAiX.AutoSize = true;
+            this.radioAiX.Checked = true;
+            this.radioAiX.Location = new System.Drawing.Point(26, 19);
+            this.radioAiX.Name = "radioAiX";
+            this.radioAiX.Size = new System.Drawing.Size(45, 17);
+            this.radioAiX.TabIndex = 1;
+            this.radioAiX.TabStop = true;
+            this.radioAiX.Text = "X\'es";
+            this.radioAiX.UseVisualStyleBackColor = true;
             // 
-            // radioButton2
+            // radioAiO
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(26, 42);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(46, 17);
-            this.radioButton2.TabIndex = 1;
-            this.radioButton2.Text = "O\'es";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioAiO.AutoSize = true;
+            this.radioAiO.Location = new System.Drawing.Point(26, 42);
+            this.radioAiO.Name = "radioAiO";
+            this.radioAiO.Size = new System.Drawing.Size(46, 17);
+            this.radioAiO.TabIndex = 1;
+            this.radioAiO.Text = "O\'es";
+            this.radioAiO.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.radioButton1);
-            this.groupBox1.Controls.Add(this.radioButton2);
-            this.groupBox1.Enabled = false;
+            this.groupBox1.Controls.Add(this.radioAiX);
+            this.groupBox1.Controls.Add(this.radioAiO);
             this.groupBox1.Location = new System.Drawing.Point(281, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(109, 72);
@@ -89,7 +88,7 @@
             this.buttonPlay.Name = "buttonPlay";
             this.buttonPlay.Size = new System.Drawing.Size(109, 35);
             this.buttonPlay.TabIndex = 4;
-            this.buttonPlay.Text = "Play";
+            this.buttonPlay.Text = "Next turn";
             this.buttonPlay.Click += new System.EventHandler(this.buttonPlay_Click);
             // 
             // Form1
@@ -115,8 +114,8 @@
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioAiX;
+        private System.Windows.Forms.RadioButton radioAiO;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button buttonPlay;
     }
