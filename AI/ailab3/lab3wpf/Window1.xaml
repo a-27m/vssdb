@@ -10,11 +10,119 @@
 			<GradientStop Color="#FF530000"/>
 		</LinearGradientBrush>
 		<SolidColorBrush x:Key="MenuBackground" Color="#BFF6F6F6"/>
+		<Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<ControlTemplate.Resources>
+							<Storyboard x:Key="Storyboard1">
+								<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="back" Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)">
+									<SplineColorKeyFrame KeyTime="00:00:00" Value="#FFCCCCCC"/>
+									<SplineColorKeyFrame KeyTime="00:00:00.3000000" Value="#FFACFF00"/>
+								</ColorAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="back" Storyboard.TargetProperty="(Shape.StrokeThickness)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00" Value="2"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="3"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+							<Storyboard x:Key="Storyboard1Reverse">
+								<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="back" Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)">
+									<SplineColorKeyFrame KeyTime="00:00:00" Value="#FFACFF00"/>
+									<SplineColorKeyFrame KeyTime="00:00:00.7000000" Value="#FFCCCCCC"/>
+								</ColorAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="back" Storyboard.TargetProperty="(Shape.StrokeThickness)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00" Value="3"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.7000000" Value="2"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+							<Storyboard x:Key="stbPress">
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="back" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Offset)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0.772"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+							<Storyboard x:Key="stbPressRev">
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="back" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Offset)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00" Value="0.772"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</ControlTemplate.Resources>
+						<Grid>
+							<UserControl x:Name="UserControl" FontFamily="Fonts/#Myriad Pro" Focusable="True">
+
+								<Grid x:Name="LayoutRoot">
+									<Path x:Name="back" Stretch="Fill" Stroke="#FFCCCCCC" StrokeEndLineCap="Flat" StrokeLineJoin="Miter" StrokeMiterLimit="4" StrokeStartLineCap="Flat" StrokeThickness="2" Data="M184.0889,157.0898C184.0889,165.3748,177.3729,172.0898,169.0889,172.0898L99.0889,172.0898C90.8049,172.0898,84.0889,165.3748,84.0889,157.0898L84.0889,87.0898C84.0889,78.8058,90.8049,72.0898,99.0889,72.0898L169.0889,72.0898C177.3729,72.0898,184.0889,78.8058,184.0889,87.0898L184.0889,157.0898z" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" d:LayoutOverrides="GridBox">
+										<Path.Fill>
+											<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" MappingMode="RelativeToBoundingBox">
+												<GradientStop Color="Black" Offset="0"/>
+												<GradientStop Color="#FF7DB323" Offset="1"/>
+											</LinearGradientBrush>
+										</Path.Fill>
+									</Path>
+									<Path x:Name="light" Stretch="Fill" Data="F1M169.089,72.09L99.089,72.09C90.805,72.09,84.089,78.806,84.089,87.09L84.089,96.413C102.103,98.706,151.316,107.592,184.089,138.529L184.089,87.09C184.089,78.806,177.373,72.09,169.089,72.09" HorizontalAlignment="Stretch" VerticalAlignment="Top" RenderTransformOrigin="0.5,0" Opacity="0.495" Margin="2,2,2,0">
+										<Path.RenderTransform>
+											<TransformGroup>
+												<ScaleTransform ScaleY="0.45"/>
+												<SkewTransform/>
+												<RotateTransform/>
+												<TranslateTransform/>
+											</TransformGroup>
+										</Path.RenderTransform>
+										<Path.Fill>
+											<LinearGradientBrush EndPoint="0.868,0.644" StartPoint="0.318,0.038">
+												<GradientStop Color="#FF909090"/>
+												<GradientStop Color="#FF517417" Offset="0.87"/>
+											</LinearGradientBrush>
+										</Path.Fill>
+										<Path.Effect>
+											<BlurEffect/>
+										</Path.Effect>
+									</Path>
+								</Grid>
+							</UserControl>
+							<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" RecognizesAccessKey="True"/>
+						</Grid>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsFocused" Value="True"/>
+							<Trigger Property="IsDefaulted" Value="True"/>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Trigger.ExitActions>
+									<BeginStoryboard x:Name="Storyboard1Reverse_BeginStoryboard" Storyboard="{StaticResource Storyboard1Reverse}"/>
+								</Trigger.ExitActions>
+								<Trigger.EnterActions>
+									<BeginStoryboard x:Name="Storyboard1_BeginStoryboard" Storyboard="{StaticResource Storyboard1}"/>
+								</Trigger.EnterActions>
+							</Trigger>
+							<Trigger Property="IsPressed" Value="True">
+								<Trigger.ExitActions>
+									<BeginStoryboard x:Name="stbPressRev_BeginStoryboard" Storyboard="{StaticResource stbPressRev}"/>
+								</Trigger.ExitActions>
+								<Trigger.EnterActions>
+									<BeginStoryboard x:Name="stbPress_BeginStoryboard" Storyboard="{StaticResource stbPress}"/>
+								</Trigger.EnterActions>
+							</Trigger>
+							<Trigger Property="IsCancel" Value="False"/>
+							<Trigger Property="IsEnabled" Value="False"/>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Storyboard x:Key="OnMouseLeave1">
+			<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="but1" Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)">
+				<SplineColorKeyFrame KeyTime="00:00:00" Value="#FFCCFF00"/>
+				<SplineColorKeyFrame KeyTime="00:00:00.6000000" Value="Black"/>
+			</ColorAnimationUsingKeyFrames>
+		</Storyboard>
 	</Window.Resources>
 	<Window.Background>
 		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" MappingMode="RelativeToBoundingBox">
-			<GradientStop Color="#FFFF8746" Offset="1"/>
-			<GradientStop Color="#FFFFC245" Offset="0.001"/>
+			<GradientStop Color="#FFBFBFBF" Offset="0.665"/>
+			<GradientStop Color="#FF99B2B5"/>
+			<GradientStop Color="#FF414141" Offset="0.992"/>
+			<GradientStop Color="#FF7C7C7C" Offset="0.843"/>
+			<GradientStop Color="#FFADC1C4" Offset="0.106"/>
 		</LinearGradientBrush>
 	</Window.Background>
     <Grid>
@@ -24,22 +132,20 @@
     		<RowDefinition/>
     	</Grid.RowDefinitions>
     	<Grid.ColumnDefinitions>
-    		<ColumnDefinition/>
+    		<ColumnDefinition Width="0.871*"/>
+    		<ColumnDefinition Width="0.129*"/>
     		<ColumnDefinition MinWidth="200" Width="Auto"/>
     	</Grid.ColumnDefinitions>
-        <TextBox Name="textBox1" SnapsToDevicePixels="False" TextDecorations="None" Grid.Column="1" BorderBrush="#BFE46F00" Foreground="#FF0E1520" FontFamily="Calibri" FontSize="16" TextAlignment="Justify" IsReadOnly="True" IsUndoEnabled="False" MouseUp="textBox1_MouseUp" Width="200" Grid.Row="1" Margin="0" HorizontalAlignment="Right">
+        <TextBox x:Name="textBox1" SnapsToDevicePixels="False" TextDecorations="None" Grid.Column="2" BorderBrush="#BFE46F00" Foreground="#FF0E1520" FontFamily="Calibri" FontSize="16" TextAlignment="Justify" IsReadOnly="True" IsUndoEnabled="False" MouseUp="textBox1_MouseUp" Width="200" Grid.Row="1" Margin="0" HorizontalAlignment="Right">
         	<TextBox.Background>
         		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" MappingMode="RelativeToBoundingBox">
         			<GradientStop Color="#FFE2E2E2"/>
         			<GradientStop Color="#FFA8B1B5" Offset="1"/>
         		</LinearGradientBrush>
-        	</TextBox.Background>123</TextBox>
-        <Menu Name="menu1" Background="{DynamicResource MenuBackground}" FontFamily="Cambria" FontSize="18.667" BorderThickness="2" BorderBrush="#56364243" RenderTransformOrigin="0.052,0.32" VerticalAlignment="Top" Height="35" Grid.ColumnSpan="2" Margin="0">
-            <MenuItem Header="File" BorderThickness="3" BorderBrush="Black" >
-            	<MenuItem Header="Load">
-            		<MenuItem.Background>
-            			<SolidColorBrush Color="#FFF8E8C9"/>
-            		</MenuItem.Background>
+        	</TextBox.Background></TextBox>
+        <Menu Name="menu1" Background="{DynamicResource MenuBackground}" FontFamily="Cambria" FontSize="18.667" BorderThickness="2" BorderBrush="#56364243" RenderTransformOrigin="0.052,0.32" VerticalAlignment="Top" Height="35" Grid.ColumnSpan="3" Margin="0">
+            <MenuItem Header="File" BorderThickness="3" >
+            	<MenuItem x:Name="load" Header="Load" Click="load_Click">
             		<MenuItem.Foreground>
             			<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             				<GradientStop Color="Black" Offset="0.991"/>
@@ -48,7 +154,7 @@
             			</LinearGradientBrush>
             		</MenuItem.Foreground>
             	</MenuItem>
-            	<MenuItem FontFamily="Cambria" Header="Exit" Foreground="{DynamicResource RedExitGradBrush}" Background="#FFF4E3C6"/>
+            	<MenuItem x:Name="exit" FontFamily="Cambria" Header="Exit" Foreground="{DynamicResource RedExitGradBrush}"/>
             </MenuItem>
             <MenuItem Header="Game" RenderTransformOrigin="0.5,0.5">
             	<MenuItem.RenderTransform>
@@ -59,76 +165,26 @@
             			<TranslateTransform/>
             		</TransformGroup>
             	</MenuItem.RenderTransform>
-                <MenuItem Header="New" Background="#FFF8E8C9" />
-                <MenuItem Header="MixUp" Background="#FFF8E8C9" />
-                <MenuItem Header="Solve" Background="#FFF8E8C9" />
+                <MenuItem x:Name="_new" Header="New" />
+                <MenuItem x:Name="mix" Header="MixUp" Click="mix_Click" />
+                <MenuItem x:Name="solve" Header="Solve" Click="solve_Click" />
             </MenuItem>
         </Menu>
-        <Grid x:Name="gridField" Margin="0" Grid.Row="1">
+        <Grid x:Name="gridField" Margin="0" Grid.Row="1" Grid.ColumnSpan="2">
         	<Grid.ColumnDefinitions>
-        		<ColumnDefinition Width="0.23*"/>
-        		<ColumnDefinition Width="0.25*"/>
-        		<ColumnDefinition Width="0.25*"/>
-        		<ColumnDefinition Width="0.25*"/>
+        		<ColumnDefinition Width="0.33*"/>
+        		<ColumnDefinition Width="0.33*"/>
+        		<ColumnDefinition Width="0.33*"/>
         	</Grid.ColumnDefinitions>
         	<Grid.RowDefinitions>
-        		<RowDefinition Height="0.236*"/>
-        		<RowDefinition Height="0.25*"/>
-        		<RowDefinition Height="0.25*"/>
-        		<RowDefinition Height="0.25*"/>
+        		<RowDefinition Height="0.33*"/>
+        		<RowDefinition Height="0.33*"/>
+        		<RowDefinition Height="0.33*"/>
         	</Grid.RowDefinitions>
-        	<Button x:Name="but1" Margin="0" Style="{DynamicResource ButtonStyle1}" Content="13" FontSize="24" FontFamily="Cambria" HorizontalAlignment="Center" Width="102.04" VerticalAlignment="Center" Height="102.023" MouseDown="Button_MouseDown" ClipToBounds="True" Click="but1_Click">
-        		<Button.Resources>
-        			<Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
-        				<Setter Property="Template">
-        					<Setter.Value>
-        						<ControlTemplate TargetType="{x:Type Button}">
-        							<Grid>
-        								<UserControl x:Name="UserControl">
-
-        									<Grid x:Name="LayoutRoot">
-        										<Path Fill="#FF66A833" Stretch="Fill" Stroke="#FFCCCCCC" StrokeEndLineCap="Flat" StrokeLineJoin="Miter" StrokeMiterLimit="4" StrokeStartLineCap="Flat" StrokeThickness="2" Data="M184.0889,157.0898C184.0889,165.3748,177.3729,172.0898,169.0889,172.0898L99.0889,172.0898C90.8049,172.0898,84.0889,165.3748,84.0889,157.0898L84.0889,87.0898C84.0889,78.8058,90.8049,72.0898,99.0889,72.0898L169.0889,72.0898C177.3729,72.0898,184.0889,78.8058,184.0889,87.0898L184.0889,157.0898z" Margin="0.019,-0.022,0.021,0.045"/>
-        										<Image Source="Button_Images\Image.png" Stretch="Fill" Margin="-30.391,-16.928,-773.13,-711.916" d:LayoutOverrides="Width, Height">
-        											<Image.RenderTransform>
-        												<MatrixTransform Matrix="0.180000007415906,0,0,0.180000005143412,0.0005950927734375,5.7220458984375E-05"/>
-        											</Image.RenderTransform>
-        										</Image>
-        										<Canvas Opacity="0.33999601006507874" Margin="1.019,0.978,1.021,34.606">
-        											<Path Stretch="Fill" Width="100" Height="66.439" Data="F1M169.089,72.09L99.089,72.09C90.805,72.09,84.089,78.806,84.089,87.09L84.089,96.413C102.103,98.706,151.316,107.592,184.089,138.529L184.089,87.09C184.089,78.806,177.373,72.09,169.089,72.09" Canvas.Left="0" Canvas.Top="0">
-        												<Path.Fill>
-        													<LinearGradientBrush EndPoint="0.868,0.644" StartPoint="0.318,0.038">
-        														<GradientStop Color="White" Offset="0"/>
-        														<GradientStop Color="#FF221E1F" Offset="1"/>
-        													</LinearGradientBrush>
-        												</Path.Fill>
-        											</Path>
-        										</Canvas>
-        										<Canvas Opacity="0.19999699294567108" Margin="13.674,25.068,2.413,30.556">
-        											<Path Stretch="Fill" Width="85.953" Height="46.399" Data="F1M96.744,96.638C96.744,96.638,160.572,94.143,182.697,142.579C182.697,142.579,163.066,90.805,96.744,96.638" Canvas.Left="0" Canvas.Top="0">
-        												<Path.Fill>
-        													<LinearGradientBrush EndPoint="0.271,0.344" StartPoint="0.704,0.534">
-        														<GradientStop Color="White" Offset="0"/>
-        														<GradientStop Color="#FF221E1F" Offset="1"/>
-        													</LinearGradientBrush>
-        												</Path.Fill>
-        											</Path>
-        										</Canvas>
-        									</Grid>
-        								</UserControl>
-        								<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" RecognizesAccessKey="True"/>
-        							</Grid>
-        							<ControlTemplate.Triggers>
-        								<Trigger Property="IsFocused" Value="True"/>
-        								<Trigger Property="IsDefaulted" Value="True"/>
-        								<Trigger Property="IsMouseOver" Value="True"/>
-        								<Trigger Property="IsPressed" Value="True"/>
-        								<Trigger Property="IsEnabled" Value="False"/>
-        							</ControlTemplate.Triggers>
-        						</ControlTemplate>
-        					</Setter.Value>
-        				</Setter>
-        			</Style>
-        		</Button.Resources>
+        	<Button x:Name="but1" Style="{DynamicResource ButtonStyle1}" Content="16" Grid.Column="1" FontSize="48" FontFamily="Fonts/#Myriad Pro" FontWeight="Bold" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+        		<Button.Effect>
+        			<DropShadowEffect ShadowDepth="4"/>
+        		</Button.Effect>
         	</Button>
         </Grid>
     </Grid>

@@ -4,5 +4,7 @@
     StartupUri="Window1.xaml">
     <Application.Resources>
          
+    	<SolidColorBrush x:Key="BrushButtBkgr" Color="#FF66A833"/>
+         
     </Application.Resources>
 </Application>
