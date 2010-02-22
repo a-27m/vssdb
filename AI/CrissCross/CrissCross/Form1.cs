@@ -125,11 +125,12 @@ namespace CrissCross
         private void ClickSqr(int r, int c, MouseButtons mb)
         {
             board[r, c] = mb == MouseButtons.Left ? 1 : -1;
-            
+            board[r, c] = mb == MouseButtons.Middle ? 0 : board[r, c];
+
             pictureBox1.Refresh();
 
             int[] l = OpenLines(board);
-            Text = string.Format("X:{0} N:{1} O:{2}", l[2], l[1], l[0]);
+            label1.Text = string.Format("X:{0} N:{1} O:{2}", l[2], l[1], l[0]);
         }
         
         #region I/O
@@ -276,7 +277,6 @@ namespace CrissCross
         }
         
         int PlayerOne, PlayerTwo;
-        int alphaCount, betaCount;
         private void buttonPlay_Click(object sender, EventArgs e)
         {
             if (radioAiX.Checked)
@@ -284,18 +284,30 @@ namespace CrissCross
             else
             { PlayerOne = -1; PlayerTwo = 1; }
 
+            bool gameover = IsGameOver();
+
+            int alphaCount = 0, betaCount = 0;
+
             int maxL = int.MinValue;
             Board bestOr = board;
 
             List<Board> orList = GetChildren(board, PlayerOne).ToList<Board>();
-            List<Board> andList;
+
+            #region this block handles possible beta-cut of every turn (when only possible next turn is bad)
+            int L_board = L(board);
+            bool disableBetaCut = true;
+            foreach (Board or in orList) { disableBetaCut &= (L(or) <= L_board); }
+            if (disableBetaCut) L_board = int.MinValue;
+            #endregion
+
+            List<Board> andList = null;
             foreach (Board or in orList)
             {
                 int minL = int.MaxValue;
                 Board bestAnd;
 
                 // beta-cutting
-                if (L(or) <= L(board))
+                if (L(or) <= L_board)
                 {
                     betaCount++;
                     continue;
@@ -325,11 +337,63 @@ namespace CrissCross
 
             board = bestOr;
 
-            textBox1.Text = string.Format(
-                "N alpha: {0}"+Environment.NewLine+
-                "N beta: {1}"+Environment.NewLine+
-                "");
+            if (orList == null || andList == null)
+            {
+                textBox1.Text = string.Format(
+                    "D <= 1" + Environment.NewLine +
+                    "N alpha: {0}" + Environment.NewLine +
+                    "N beta: {1}",
+                    alphaCount,
+                    betaCount
+                    );
+            }
+            else
+            {
+                int nd = andList.Count * (orList.Count - betaCount) - alphaCount;
+                float n = (float)nd / (andList.Count * orList.Count);
+
+                textBox1.Text = string.Format(
+                    "N alpha: {0}" + Environment.NewLine +
+                    "N beta: {1}" + Environment.NewLine +
+                    "ND: {2}" + Environment.NewLine +
+                    "n: {3}",
+                    alphaCount,
+                    betaCount,
+                    nd,
+                    n.ToString("F2")
+                    );
+            }
             pictureBox1.Refresh();
+
+            if (!gameover) IsGameOver();
+
+            return;
+        }
+
+        private bool IsGameOver()
+        {
+            label1.Text = string.Format("L:{0}", L(board));
+
+            int[] l = OpenLines(board);
+
+            if (l[0] > 10)
+            {
+                label1.Text = ("Zeroes win!");
+                return true;
+            }
+            else
+                if (l[2] > 10)
+                {
+                    label1.Text = ("Crosses win!");
+                    return true;
+                }
+                else
+                    if (l[0] + l[1] + l[2] == 0)
+                    {
+                        label1.Text = ("Draw!");
+                        return true;
+                    }
+            return false;
         }
 
         private IEnumerable<Board> GetChildren(Board board, int PlayerCode)
@@ -355,10 +419,13 @@ namespace CrissCross
             yield break;
         }
 
-        //private void UpdateState(Situation n)
-        //{
-        //    //TODO find out if game is finished
-        //    throw new NotImplementedException();
-        //}
+        private void buttonClear_Click(object sender, EventArgs e)
+        {
+            board = new Board();
+            pictureBox1.Refresh();
+            textBox1.Clear();
+            label1.Text = "Ready";
+        }
+
     }
 }
