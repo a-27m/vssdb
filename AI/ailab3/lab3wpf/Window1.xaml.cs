@@ -72,7 +72,7 @@ namespace lab3wpf
             }
 
             // log
-			textBox1.Text += c.ToString() + ";" + r.ToString() + Environment.NewLine;
+            //textBox1.Text += c.ToString() + ";" + r.ToString() + Environment.NewLine;
 
             // update buttons
             Grid.SetColumn(board[OldEmptyRow, OldEmptyCol].Button, OldEmptyCol);
@@ -156,11 +156,34 @@ namespace lab3wpf
             List<Board> list;
             int L, T;
 
-            Board.HeuristicsSearch(board, Board.Etalon, out list, out L, out T);
-            
-            board = list[0];
+            try
+            {
+                if (Board.HeuristicsSearch(board, Board.Etalon, out list, out L, out T))
+                {
+                    if (list != null)
+                    {
+                        board = list[0];
+                        SyncGridUpToBoard();
+                    }
+                }
+            }
+            catch (ArgumentException ae)
+            {
+                MessageBox.Show(ae.Message, "Error",  
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
 
-            SyncGridUpToBoard();
+                return;
+            }
+
+            textBox1.Text = string.Format(
+                "L = {0}," + Environment.NewLine +
+                "T = {1}," + Environment.NewLine +
+                "P = L/T = {2}",
+                L,
+                T, 
+                ((float)L/T).ToString("F2")
+                );
+
         }
     }
 }

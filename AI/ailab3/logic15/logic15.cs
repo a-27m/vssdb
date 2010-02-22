@@ -294,6 +294,17 @@ namespace logic15
         public static bool HeuristicsSearch(Board initState, Board etalonState, out List<Board> listBoard,
             out int L, out int T)
         {
+            if (MeasureNotAtPlace(initState, etalonState) == 0)
+            {
+                L = 0;
+                T = 1;
+                listBoard = null;
+                return true;
+            }
+
+            if (!IsSolvable(initState)) 
+                throw new ArgumentException("Initial state describes unsolvable problem");
+
             //init all
             List<Board> lOpen, lClosed;
 
@@ -334,6 +345,9 @@ namespace logic15
 
                     pos++;
                 }
+
+                if (etalonState.Columns == 4 && etalonState.Rows == 4)
+                    Debug.Assert(lOpen[iMin].g < 80);
 
                 // Раскрыть n ≡ lOpen[iMin]. Порождённые - в OPEN, настроив указатели на предка.
                 foreach (Direction dir in lOpen[iMin].EnumerateValidTurns())
@@ -403,6 +417,23 @@ namespace logic15
                 lOpen.RemoveAt(iMin);
             }
             throw new InvalidOperationException("This execution point never will be reached");
+        }
+
+        private static bool IsSolvable(Board b)
+        {
+            int sum = 0;
+            for (int I = 0; I < b.Rows; I++)
+                for (int J = 0; J < b.Columns; J++)
+                    for (int i = I; i < b.Rows; i++)
+                        for (int j = J; j < b.Columns; j++)
+                            if (
+                                int.Parse(b[i, j].Text) < 
+                                int.Parse(b[I, J].Text)
+                                ) sum++;
+
+            sum += b.EmptyRow + 1;
+
+            return sum % 2 ==  0;
         }
 
         private static Direction ReverseTurn(Direction direction)
