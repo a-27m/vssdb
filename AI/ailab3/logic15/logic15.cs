@@ -302,8 +302,8 @@ namespace logic15
                 return true;
             }
 
-            if (!IsSolvable(initState)) 
-                throw new ArgumentException("Initial state describes unsolvable problem");
+            //if (!IsSolvable(initState)) 
+            //    throw new ArgumentException("Initial state describes unsolvable problem");
 
             //init all
             List<Board> lOpen, lClosed;
