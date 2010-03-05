@@ -137,7 +137,7 @@ namespace Loader
             robot.X = pictureBox1.Width >> 1;
             robot.Y = pictureBox1.Height * 3 / 4;
 
-            fontLen = new Font("Arial", 10f);
+            fontLen = new Font("Arial", 8f);
         }
 
         #region I/O
@@ -185,6 +185,7 @@ namespace Loader
                 {
                     Point prev = lines[0];
                     int iw = 0;
+
                     foreach(Point curr in lines)
                     {
                         if (prev == curr)
@@ -192,8 +193,6 @@ namespace Loader
                             iw++;
                             continue;
                         }
-
-                        g.DrawLine(Pens.Black, prev, curr);
 
                         string caption = weights[iw].ToString("F1");
                             //FullCost(prev, curr).ToString("F1");
@@ -212,6 +211,19 @@ namespace Loader
                             );
 
                         rect.Inflate(measure.Width/2f, measure.Height/2f);
+
+                        Pen penArrow = new Pen(Color.Black);
+                        penArrow.StartCap = LineCap.ArrowAnchor;
+                        penArrow.Width = 5;
+
+                        //g.DrawLine(penArrow, prev, curr);
+
+                        Point mid = new Point(
+                            (int)rect.Left,
+                            (int)rect.Top
+                            );
+
+                        g.DrawCurve(Pens.Blue, new Point[] { prev, mid, curr});
 
                         g.FillRectangle(Brushes.YellowGreen, rect);
                         g.DrawRectangle(Pens.Black, rect.Left, rect.Top, rect.Width, rect.Height);
@@ -496,6 +508,9 @@ namespace Loader
                 {
                     Disposition t = new Disposition(initState);
                     t.GoTo(i_from);
+                    closed.Add(t);
+                    t = new Disposition(t);
+                    t.DragTo(i_where);
                     open.Add(t);
                 }
 
