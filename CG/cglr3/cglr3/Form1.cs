@@ -327,39 +327,31 @@ namespace cglr3
 
         private void buttonBreak_Click(object sender, EventArgs e)
         {
-            Matrix m;
-            m = new Matrix();
-
             pts.Add(pts[0]);
 
-            for (int i = 1; i < pts.Count; i++) 
+            for (int i = 0; i < pts.Count-2; i++) 
             {
-                int dx = pts[i].X - pts[i-1].X;
-                if (dx == 0) 
-                    throw new NotImplementedException();
-
-                int dy = pts[i].Y - pts[i-1].Y;
-
-                float phi = (float)Math.Atan2(dy, dx);
-
-                m.Reset();
-                m.Rotate((float)(phi / 180f * Math.PI));
-
-                Point[] current = pts.ToArray();
-
-                m.TransformPoints(current);
-
-                if (current[i + 1].Y < 0)
+                if (SignП(
+                    pts[i + 0],
+                    pts[i + 1],
+                    pts[i + 2]) > 0)
                 {
-                    // Break apart
-
+                    ptsOut.Add(pts[i]);
                 }
 
-                //if (ChechConvex());
             }
              
             pictureBox1.Refresh();
             pts.RemoveAt(pts.Count-1);
+        }
+
+        public int SignП(Point v1, Point v2, Point v3)
+        {
+            float P;
+
+            P = (v3.X - v1.X) * (v2.Y - v1.Y) - (v3.Y - v2.Y) * (v2.X - v1.X);
+
+            return Math.Sign(P);
         }
     }
 }
