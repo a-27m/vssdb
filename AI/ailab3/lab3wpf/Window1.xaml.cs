@@ -175,15 +175,44 @@ namespace lab3wpf
                 return;
             }
 
+            float b1, b2, b=0;
+            float eps = 1e-1f;
+            b1 = 0;
+            b2 = 100;
+
+            int i = 0;
+            while (Math.Abs(b2 - b1) > eps)
+            {
+                if (i++ > 100) break;
+                b = (b1 + b2) / 2f;
+
+                if (left(b, L, T) > 0)
+                {
+                    b2 = b + eps;
+                }
+                else
+                {
+                    b1 = b - eps;
+                }
+            }
+            
+
             textBox1.Text = string.Format(
                 "L = {0}," + Environment.NewLine +
                 "T = {1}," + Environment.NewLine +
-                "P = L/T = {2}",
+                "P = L/T = {2}" + Environment.NewLine +
+                "B = {3}",
                 L,
                 T, 
-                ((float)L/T).ToString("F2")
+                ((float)L/T).ToString("F2"),
+                ((float)b).ToString("F2")
                 );
 
+        }
+
+        double left(float b, int L, int T)
+        {
+            return b / (b - 1) * (Math.Pow(b, L) - 1) - T;
         }
     }
 }
