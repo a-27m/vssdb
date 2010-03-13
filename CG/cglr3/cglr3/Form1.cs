@@ -21,6 +21,8 @@ namespace cglr3
             InitializeComponent();
             pts = new List<Point>();
             pResult = new List<List<Point>>();
+
+            buttonDraw.Checked = drawPoly;
         }
 
         float cellSize = 1f;
@@ -32,6 +34,95 @@ namespace cglr3
         {
             g.FillRectangle(pixelBrush, x * cellSize + 1, y * cellSize + 1, cellSize, cellSize);
         }
+
+        private void Plot(Graphics g, int x, int y, Color c)
+        {
+            (pixelBrush as SolidBrush).Color = c;
+            g.FillRectangle(pixelBrush, x * cellSize + 1, y * cellSize + 1, cellSize, cellSize);
+            (pixelBrush as SolidBrush).Color = Color.Black;
+        }
+
+        Color ptc(float p)
+        {
+            p = 1f - p;
+            int val = (int)(255f * p);
+            if (val < 0) return Color.Red;
+            if (val > 255) return Color.Blue;
+            return Color.FromArgb(val, val, val);
+        }
+
+        private void LineWu(Graphics g, int x1, int y1, int x2, int y2)
+        {
+            if (x1 == x2 && y1 == y2)
+            {
+                Plot(g, x1, y1);
+                return;
+            }
+
+            int Δx, Δy;
+            Δx = x2 - x1;
+            Δy = y2 - y1;
+
+            int dx = Math.Sign(Δx);
+            int dy = Math.Sign(Δy);
+
+            if (x1 == x2)
+            {
+                for (int i = y1; (y2 - i) * dy > 0; i += dy)
+                    Plot(g, x1, i);
+                return;
+            }
+
+            if (y1 == y2)
+            {
+                for (int i = x1; (x2 - i) * dx > 0; i += dx)
+                    Plot(g, i, y1);
+                return;
+            }
+
+            if (Math.Abs(Δx) > Math.Abs(Δy))
+            {
+                //swap(ref x1, ref y1);
+                //swap(ref x2, ref y2);
+
+
+                float ΔyΔx = (float)Δy / (float)Δx;
+
+                // main loop
+                float intery = y1 + ΔyΔx * dy; // first y-intersection for the main loop
+                for (int x = x1; x != x2; x += dx)
+                {
+                    Plot(g, x, ipart(intery), ptc(rfpart(intery)));
+                    Plot(g, x, ipart(intery) + dy, ptc(fpart(intery)));
+                    intery = intery + ΔyΔx;
+                }
+
+               for (int x = x1; x != x2; x += dx)
+                {
+                    Plot(g, x, ipart(intery), ptc(rfpart(intery)));
+                    Plot(g, x, ipart(intery) + dy, ptc(fpart(intery)));
+                    intery = intery + ΔyΔx;
+                }
+            }
+        }
+
+        private void swap(ref int a, ref int b)
+        {
+            int t = a;
+            a = b;
+            b = t;
+        }
+
+        private int ipart(float a)
+        {
+            return (int)Math.Truncate(a);
+        }
+        private float fpart(float a)
+        {
+            return (float)(a - Math.Truncate(a));
+        }
+        private float rfpart(float a)
+        { return (float)(1f - (a - Math.Truncate(a))); }
 
         private void Line(Graphics g, int x1, int y1, int x2, int y2)
         {
@@ -47,7 +138,6 @@ namespace cglr3
             int Δx, Δy;
             Δx = x2 - x1;
             Δy = y2 - y1;
-            float ΔyΔx = (float)Δy / (float)Δx;
             float e;
 
             int dx = Math.Sign(Δx);
@@ -67,22 +157,53 @@ namespace cglr3
                 return;
             }
 
+            float ΔyΔx = (float)Δy / (float)Δx;
 
-            if (ΔyΔx > 0)
+            //if (Math.Abs(ΔyΔx) == 1)
+            //{
+            //    for (int i = 0; i <= Math.Abs(Δx / dx); i++)
+            //    {
+            //        Plot(g, x1, y1);
+            //        y1 += dy;
+            //        x1 += dx;
+            //    }
+            //    return;
+            //}
+
+            //float w, e1;
+
+            if ((ΔyΔx > 0))
             {
+                /* w = 1f - ΔyΔx;
+                 e1 = .5f;
+
+                 for (int i = 0; i < Δx/dx; i++)
+                 {
+                     if (e1 >= w)
+                     {
+                         y = y + dy; 
+                         e1 = e1 - w;
+                     }
+                     else //(e1 < w)
+                     {
+                         e1 = e1 + ΔyΔx;
+                     }
+
+                     x = x + dx;
+                     this.Plot(g, x, y, ptc(e1));
+                 }
+                 */
+
                 e = ΔyΔx - 0.5f;
-                //float e2 = e / 2f;
 
                 for (int i = 0; i < Math.Abs(Δx); i++)
                 {
-                    this.Plot(g, x, y);//, ptc(Math.Abs(e - e2)/e2));
-                    // e2 = e / 2f;
-
+                    this.Plot(g, x, y);
                     while (e > 0)
                     {
                         y = y + dy;
-                        this.Plot(g, x, y);//, ptc(Math.Abs(e - e2) / e2));
                         e = e - 1f;
+                        this.Plot(g, x, y);
                     }
                     x = x + dx;
                     e = e + ΔyΔx;
@@ -326,30 +447,62 @@ namespace cglr3
         }
 
         private void buttonBreak_Click(object sender, EventArgs e)
-        {
+        {           
+            List<List<Point>> ptsOut;
+            int k = 0;
+
+            ptsOut = new List<List<Point>>();
+            ptsOut.Add(new List<Point>());
+
             pts.Add(pts[0]);
+            pts.Add(pts[1]);
 
             for (int i = 0; i < pts.Count-2; i++) 
             {
                 if (SignП(
                     pts[i + 0],
                     pts[i + 1],
-                    pts[i + 2]) > 0)
+                    pts[i + 2]) < 0)
                 {
-                    ptsOut.Add(pts[i]);
+                    ptsOut[k].Add(pts[i]);
                 }
+                else 
+                {
 
+                }
             }
-             
-            pictureBox1.Refresh();
+
             pts.RemoveAt(pts.Count-1);
+
+            pts.Clear();
+            pts.AddRange(ptsOut[0]);
+
+           // pictureBox1.Refresh();
         }
 
         public int SignП(Point v1, Point v2, Point v3)
         {
             float P;
 
-            P = (v3.X - v1.X) * (v2.Y - v1.Y) - (v3.Y - v2.Y) * (v2.X - v1.X);
+            // metodi4ka
+            //P = (v3.X - v1.X) * (v2.Y - v1.Y) - (v3.Y - v2.Y) * (v2.X - v1.X);
+
+            // cos
+            //P = (v1.X - v2.X) * (v3.X - v2.X) + (v1.Y - v2.Y) * (v3.Y - v2.Y);
+
+            // Xa*Yc-Xc*Ya
+            P = (v1.X - v2.X) * (v3.Y - v2.Y)- 
+                (v3.X - v2.X) * (v1.Y - v2.Y);
+
+            P /= (float)(
+                Math.Sqrt((v1.X - v2.X) * (v1.X - v2.X) + (v1.Y - v2.Y) * (v1.Y - v2.Y)) *
+                Math.Sqrt((v3.X - v2.X) * (v3.X - v2.X) + (v3.Y - v2.Y) * (v3.Y - v2.Y))
+                );
+
+            pictureBox1.CreateGraphics().DrawString(
+                string.Format("{0}° (sin={1})",
+                (int)(Math.Acos(P)/Math.PI*180f), P.ToString("F2")), 
+                new Font("Arial", 10f), Brushes.Blue, v2);
 
             return Math.Sign(P);
         }
