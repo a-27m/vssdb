@@ -17,7 +17,7 @@ namespace cglr3
         Point ptPreview;
 
         float cellSize = 1f;
-        Brush pixelBrush = Brushes.Gray;
+        Brush pixelBrush = Brushes.Black;
         bool needFill = false;
         bool drawPoly = true;
 
@@ -364,6 +364,39 @@ namespace cglr3
         double angel;
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
+            e.Graphics.Clear(Color.Gray);
+
+            DrawUserPolygon(e);
+
+            DrawResultPolygons(e);
+
+            DrawAngles(e);
+        }
+
+        private void DrawAngles(PaintEventArgs e)
+        {
+            if (pts == null) return;
+            if (pts.Count < 2) return;
+
+            pts.Add(pts[0]);
+            pts.Add(pts[1]);
+
+            for (int i = 0; i < pts.Count - 2; i++)
+            {
+                SignП(pts[i], pts[i + 1], pts[i + 2]);
+
+                e.Graphics.DrawString(
+                    string.Format("{0}° (sin: {1})",
+                    (int)(Math.Acos(-P) / Math.PI * 180f), P.ToString("F1")),
+                    new Font("Arial", 10f), Brushes.Black, pts[i + 1]);
+            }
+
+            pts.RemoveAt(pts.Count - 1);
+            pts.RemoveAt(pts.Count - 1);
+        }
+
+        private void DrawUserPolygon(PaintEventArgs e)
+        {
             if (pts == null) return;
             if (pts.Count < 2) return;
 
@@ -391,7 +424,11 @@ namespace cglr3
             //    FillUp(e.Graphics, 0, (int)(pictureBox1.Height / cellSize));
             //    pts.RemoveAt(pts.Count - 1);
             //}
+        }
 
+        private void DrawResultPolygons(PaintEventArgs e)
+        {
+            Point prev;
             Brush oldPixelBrush = pixelBrush;
             pixelBrush = new SolidBrush(Color.LightGray);
 
@@ -401,7 +438,7 @@ namespace cglr3
                 return;
             }
 
-            float polyCount = ptsOut.Count-1;
+            float polyCount = ptsOut.Count - 1;
             float k = 0;
             foreach (List<Point> polygon in ptsOut)
             {
@@ -410,19 +447,19 @@ namespace cglr3
                 float r = 2;
                 //angel = k / (polyCount + 1) * Math.PI * 2;
                 double a1 = (k % 2) * 2 - 1;
-                int dx = (int)(Math.Cos(angel*a1) * r);
-                int dy = (int)(Math.Sin(angel*a1) * r);
+                int dx = (int)(Math.Cos(angel * a1) * r);
+                int dy = (int)(Math.Sin(angel * a1) * r);
 
                 pixelBrush = new SolidBrush(Color.FromArgb(150, GeoColor(k / polyCount)));
 
                 prev = polygon[0];
                 foreach (Point p in polygon)
                 {
-                    this.Line(e.Graphics, prev.X+dx, prev.Y+dy, p.X+dx, p.Y+dy);
+                    this.Line(e.Graphics, prev.X + dx, prev.Y + dy, p.X + dx, p.Y + dy);
                     prev = p;
                 }
 
-                this.Line(e.Graphics, prev.X+dx, prev.Y+dy, polygon[0].X+dx, polygon[0].Y+dy);
+                this.Line(e.Graphics, prev.X + dx, prev.Y + dy, polygon[0].X + dx, polygon[0].Y + dy);
 
                 k++;
             }
@@ -515,71 +552,92 @@ namespace cglr3
         }
 
         private void buttonBreak_Click(object sender, EventArgs e)
-        {           
+        {
             int k = 0;
+
+            List<Point> ptsBackup = new List<Point>();
+            ptsBackup.AddRange(pts);
 
             ptsOut = new List<List<Point>>();
             ptsOut.Add(new List<Point>());
 
-            pts.Add(pts[0]);
-            pts.Add(pts[1]);
-
-            ptsOut[k].Add(pts[0]);
-            for (int i = 0; i < pts.Count-2; i++) 
+            if (pts.Count > 3)
             {
-                if (SignП(
-                    pts[i + 0],
-                    pts[i + 1],
-                    pts[i + 2]) < 0)
+                pts.Add(pts[0]);
+
+                ptsOut[0].Add(pts[0]);
+
+                while (pts.Count > 2)
                 {
-                    ptsOut[k].Add(pts[i + 1]);
-                }
-                else
-                {
-                    // find nearest intersect point V3' = V1V2 ∩ S
-                    float t = int.MaxValue;
-                    Point nearestV3 = Point.Empty;
-                    for (int s = 0; s < pts.Count-2; s++)
+                    if (SignП(pts[0], pts[1], pts[2]) < 0)
                     {
-                        if (s == i) continue; // skip V1V2 itself
+                        ptsOut[k].Add(pts[1]);
+                        pts.RemoveAt(0);
 
-                        Point V3_;
-                        float ts;
-                        V3_ = CalcIntersect(
-                            pts[i + 0], pts[i + 1], // V1V2
-                            pts[s + 0], pts[s + 1], // Si
-                            out ts
-                            );
-
-                        if (ts == float.NaN) continue;
-
-                        if (ts < t)
-                        {
-                            ts = t;
-                            nearestV3 = V3_;
-                        }
+                        //// change phantom
+                        //if (pts.Count > 1)
+                        //{
+                        //    pts.RemoveAt(pts.Count - 1);
+                        //    pts.Add(pts[0]);
+                        //}
                     }
+                    else
+                    {
+                        #region find nearest intersect point V3' = V1V2 ∩ S
 
+                        float t = int.MaxValue;
+                        Point nearestV3 = Point.Empty;
+                        for (int s = 2; s < pts.Count - 1; s++)// skip V1V2 itself
+                        {
+                            Point V3_;
+                            float ts;
+                            V3_ = CalcIntersect(
+                                pts[0], pts[1], // V1V2
+                                pts[s], pts[s + 1], // Si
+                                out ts
+                                );
 
-                    // replace v2 with v3' in polygon #k, but v2 isnt added yet, so just add V3'
-                    ptsOut[k].Add(nearestV3);
+                            if (ts == float.NaN) continue;
 
-                    // start new polygon with v3'-v2-v3 and continue do checks
-                    ptsOut.Add(new List<Point>());
-                    ptsOut[k + 1].Add(nearestV3);
-                    ptsOut[k + 1].Add(pts[i + 1]);
+                            if (ts < t)
+                            {
+                                ts = t;
+                                nearestV3 = V3_;
+                            }
+                        }
+                        #endregion
 
-                    // make the new polygon current
-                    k++;
+                        // replace v2 with v3' in polygon #k, but v2 isnt added yet, so just add V3'
+                        ptsOut[k].Add(nearestV3);
+
+                        // start new polygon with v3'-v2-v3 and continue do checks
+                        ptsOut.Add(new List<Point>());
+                        ptsOut[k + 1].Add(nearestV3);
+                        ptsOut[k + 1].Add(pts[1]);
+
+                        // make the new polygon current
+                        k++;
+
+                        pts.RemoveAt(0); 
+                        //pts[0] = nearestV3;
+                        // change phantom
+                        //pts.RemoveAt(pts.Count - 1);
+                        //pts.Add(nearestV3);
+                    }
                 }
+
+                pts.RemoveAt(pts.Count - 1);
             }
 
-            pts.RemoveAt(pts.Count-1);
+            // add last points to the last polygon
+            ptsOut[k].AddRange(pts);
 
-            //pts.Clear();
-            //pts.AddRange(ptsOut[0]);
+            // restore user input
+            pts.Clear();
+            pts.AddRange(ptsBackup);
 
             pictureBox1.Refresh();
+
             //timer1.Enabled = true;
         }
 
@@ -598,10 +656,10 @@ namespace cglr3
             t = (s2.X - s1.X) * (v1.Y - s1.Y) - (s2.Y - s1.Y) * (v1.X - s1.X);
             t /= denominator;
 
-            q = (v2.X-v1.X)*(v1.Y-s1.Y)-(v2.Y-v1.Y)*(v1.X-s1.X);
+            q = (v2.X - v1.X) * (v1.Y - s1.Y) - (v2.Y - v1.Y) * (v1.X - s1.X);
             q /= denominator;
 
-            if (q<0f || q > 1f)
+            if (q < 0f || q > 1f)
             {
                 t = float.NaN;
                 return Point.Empty;
@@ -613,9 +671,10 @@ namespace cglr3
                 );
         }
 
+
+        float P;
         public int SignП(Point v1, Point v2, Point v3)
         {
-            float P;
 
             // metodi4ka
             //P = (v3.X - v1.X) * (v2.Y - v1.Y) - (v3.Y - v2.Y) * (v2.X - v1.X);
@@ -624,18 +683,15 @@ namespace cglr3
             //P = (v1.X - v2.X) * (v3.X - v2.X) + (v1.Y - v2.Y) * (v3.Y - v2.Y);
 
             // Xa*Yc-Xc*Ya
-            P = (v1.X - v2.X) * (v3.Y - v2.Y)- 
+            P = (v1.X - v2.X) * (v3.Y - v2.Y) -
                 (v3.X - v2.X) * (v1.Y - v2.Y);
+
+            if (P == 0f) return 0;
 
             P /= (float)(
                 Math.Sqrt((v1.X - v2.X) * (v1.X - v2.X) + (v1.Y - v2.Y) * (v1.Y - v2.Y)) *
                 Math.Sqrt((v3.X - v2.X) * (v3.X - v2.X) + (v3.Y - v2.Y) * (v3.Y - v2.Y))
                 );
-
-            pictureBox1.CreateGraphics().DrawString(
-                string.Format("{0}° (sin={1})",
-                (int)(Math.Acos(P)/Math.PI*180f), P.ToString("F2")), 
-                new Font("Arial", 10f), Brushes.Blue, v2);
 
             return Math.Sign(P);
         }
@@ -645,6 +701,17 @@ namespace cglr3
             angel += Math.PI * 2f / 20f;
 
             if (angel >= Math.PI * 2) angel -= Math.PI * 2;
+
+            pictureBox1.Refresh();
+        }
+
+        private void buttonResultAsInput_Click(object sender, EventArgs e)
+        {
+            if (ptsOut != null)
+                if (ptsOut.Count > 0)
+                {
+                    pts = ptsOut[0];
+                }
 
             pictureBox1.Refresh();
         }

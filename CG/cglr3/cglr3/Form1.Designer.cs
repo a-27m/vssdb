@@ -36,6 +36,7 @@
             this.buttonBreak = new System.Windows.Forms.ToolStripButton();
             this.buttonClear = new System.Windows.Forms.ToolStripButton();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.buttonResultAsInput = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -58,7 +59,8 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.buttonDraw,
             this.buttonBreak,
-            this.buttonClear});
+            this.buttonClear,
+            this.buttonResultAsInput});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(696, 25);
@@ -96,6 +98,15 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // buttonResultAsInput
+            // 
+            this.buttonResultAsInput.Image = ((System.Drawing.Image)(resources.GetObject("buttonResultAsInput.Image")));
+            this.buttonResultAsInput.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonResultAsInput.Name = "buttonResultAsInput";
+            this.buttonResultAsInput.Size = new System.Drawing.Size(124, 22);
+            this.buttonResultAsInput.Text = "Use current as input";
+            this.buttonResultAsInput.Click += new System.EventHandler(this.buttonResultAsInput_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -121,6 +132,7 @@
         private System.Windows.Forms.ToolStripButton buttonBreak;
         private System.Windows.Forms.ToolStripButton buttonClear;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ToolStripButton buttonResultAsInput;
     }
 }
 
