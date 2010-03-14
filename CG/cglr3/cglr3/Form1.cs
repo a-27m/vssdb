@@ -13,22 +13,21 @@ namespace cglr3
     public partial class Form1 : Form
     {
         List<Point> pts;
-        List<List<Point>> pResult;
+        List<List<Point>> ptsOut;
         Point ptPreview;
+
+        float cellSize = 1f;
+        Brush pixelBrush = Brushes.Gray;
+        bool needFill = false;
+        bool drawPoly = true;
 
         public Form1()
         {
             InitializeComponent();
             pts = new List<Point>();
-            pResult = new List<List<Point>>();
 
             buttonDraw.Checked = drawPoly;
         }
-
-        float cellSize = 1f;
-        Brush pixelBrush = Brushes.Black;
-        bool needFill = false;
-        bool drawPoly = true;
 
         private void Plot(Graphics g, int x, int y)
         {
@@ -362,6 +361,7 @@ namespace cglr3
             }
         }
 
+        double angel;
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             if (pts == null) return;
@@ -392,13 +392,80 @@ namespace cglr3
             //    pts.RemoveAt(pts.Count - 1);
             //}
 
+            Brush oldPixelBrush = pixelBrush;
+            pixelBrush = new SolidBrush(Color.LightGray);
+
+            if (ptsOut == null)
+            {
+                pixelBrush = oldPixelBrush;
+                return;
+            }
+
+            float polyCount = ptsOut.Count-1;
+            float k = 0;
+            foreach (List<Point> polygon in ptsOut)
+            {
+                if (polygon.Count < 2) continue;
+
+                float r = 2;
+                //angel = k / (polyCount + 1) * Math.PI * 2;
+                double a1 = (k % 2) * 2 - 1;
+                int dx = (int)(Math.Cos(angel*a1) * r);
+                int dy = (int)(Math.Sin(angel*a1) * r);
+
+                pixelBrush = new SolidBrush(Color.FromArgb(150, GeoColor(k / polyCount)));
+
+                prev = polygon[0];
+                foreach (Point p in polygon)
+                {
+                    this.Line(e.Graphics, prev.X+dx, prev.Y+dy, p.X+dx, p.Y+dy);
+                    prev = p;
+                }
+
+                this.Line(e.Graphics, prev.X+dx, prev.Y+dy, polygon[0].X+dx, polygon[0].Y+dy);
+
+                k++;
+            }
+
+            pixelBrush = oldPixelBrush;
+        }
+
+        private Color GeoColor(double p)
+        {
+            int r, g, b;
+
+            if (p < 1f / 4f)
+            {
+                r = 0;
+                g = (int)(255f * 4f * p);
+                b = 255;
+                return Color.FromArgb(r, g, b);
+            }
+            if (p < 2f / 4f)
+            {
+                r = 0;
+                g = 255;
+                b = 255 - (int)(255f * 4f * (p - 1f / 4f));
+                return Color.FromArgb(r, g, b);
+            }
+            if (p < 3f / 4f)
+            {
+                r = (int)(255f * 4f * (p - 2f / 4f));
+                g = 255;
+                b = 0;
+                return Color.FromArgb(r, g, b);
+            }
+            r = 255;
+            g = 255 - (int)(255f * 4f * (p - 3f / 4f));
+            b = 0;
+            return Color.FromArgb(r, g, b);
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-                needFill = true;
+                //needFill = true;
 
                 drawPoly = false;
                 buttonDraw.Checked = false;
@@ -436,6 +503,7 @@ namespace cglr3
         private void buttonClear_Click(object sender, EventArgs e)
         {
             pts.Clear();
+            ptsOut.Clear();
             needFill = false;
             pictureBox1.Refresh();
         }
@@ -448,7 +516,6 @@ namespace cglr3
 
         private void buttonBreak_Click(object sender, EventArgs e)
         {           
-            List<List<Point>> ptsOut;
             int k = 0;
 
             ptsOut = new List<List<Point>>();
@@ -457,6 +524,7 @@ namespace cglr3
             pts.Add(pts[0]);
             pts.Add(pts[1]);
 
+            ptsOut[k].Add(pts[0]);
             for (int i = 0; i < pts.Count-2; i++) 
             {
                 if (SignП(
@@ -464,20 +532,85 @@ namespace cglr3
                     pts[i + 1],
                     pts[i + 2]) < 0)
                 {
-                    ptsOut[k].Add(pts[i]);
+                    ptsOut[k].Add(pts[i + 1]);
                 }
-                else 
+                else
                 {
+                    // find nearest intersect point V3' = V1V2 ∩ S
+                    float t = int.MaxValue;
+                    Point nearestV3 = Point.Empty;
+                    for (int s = 0; s < pts.Count-2; s++)
+                    {
+                        if (s == i) continue; // skip V1V2 itself
 
+                        Point V3_;
+                        float ts;
+                        V3_ = CalcIntersect(
+                            pts[i + 0], pts[i + 1], // V1V2
+                            pts[s + 0], pts[s + 1], // Si
+                            out ts
+                            );
+
+                        if (ts == float.NaN) continue;
+
+                        if (ts < t)
+                        {
+                            ts = t;
+                            nearestV3 = V3_;
+                        }
+                    }
+
+
+                    // replace v2 with v3' in polygon #k, but v2 isnt added yet, so just add V3'
+                    ptsOut[k].Add(nearestV3);
+
+                    // start new polygon with v3'-v2-v3 and continue do checks
+                    ptsOut.Add(new List<Point>());
+                    ptsOut[k + 1].Add(nearestV3);
+                    ptsOut[k + 1].Add(pts[i + 1]);
+
+                    // make the new polygon current
+                    k++;
                 }
             }
 
             pts.RemoveAt(pts.Count-1);
 
-            pts.Clear();
-            pts.AddRange(ptsOut[0]);
+            //pts.Clear();
+            //pts.AddRange(ptsOut[0]);
 
-           // pictureBox1.Refresh();
+            pictureBox1.Refresh();
+            //timer1.Enabled = true;
+        }
+
+        private Point CalcIntersect(Point v1, Point v2, Point s1, Point s2, out float t)
+        {
+            float q;
+
+            float denominator = (s2.Y - s1.Y) * (v2.X - v1.X) - (s2.X - s1.X) * (v2.Y - v1.Y);
+
+            if (denominator == 0)
+            {
+                t = float.NaN;
+                return Point.Empty;
+            }
+
+            t = (s2.X - s1.X) * (v1.Y - s1.Y) - (s2.Y - s1.Y) * (v1.X - s1.X);
+            t /= denominator;
+
+            q = (v2.X-v1.X)*(v1.Y-s1.Y)-(v2.Y-v1.Y)*(v1.X-s1.X);
+            q /= denominator;
+
+            if (q<0f || q > 1f)
+            {
+                t = float.NaN;
+                return Point.Empty;
+            }
+
+            return new Point(
+                (int)(v1.X + t * (v2.X - v1.X)),
+                (int)(v1.Y + t * (v2.Y - v1.Y))
+                );
         }
 
         public int SignП(Point v1, Point v2, Point v3)
@@ -505,6 +638,15 @@ namespace cglr3
                 new Font("Arial", 10f), Brushes.Blue, v2);
 
             return Math.Sign(P);
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            angel += Math.PI * 2f / 20f;
+
+            if (angel >= Math.PI * 2) angel -= Math.PI * 2;
+
+            pictureBox1.Refresh();
         }
     }
 }
