@@ -444,13 +444,15 @@ namespace cglr3
             {
                 if (polygon.Count < 2) continue;
 
-                float r = 2;
+                float r = 0;
                 //angel = k / (polyCount + 1) * Math.PI * 2;
                 double a1 = (k % 2) * 2 - 1;
                 int dx = (int)(Math.Cos(angel * a1) * r);
                 int dy = (int)(Math.Sin(angel * a1) * r);
 
                 pixelBrush = new SolidBrush(Color.FromArgb(150, GeoColor(k / polyCount)));
+
+                e.Graphics.FillPolygon(pixelBrush, polygon.ToArray());
 
                 prev = polygon[0];
                 foreach (Point p in polygon)
@@ -550,8 +552,146 @@ namespace cglr3
             needFill = true;
             pictureBox1.Refresh();
         }
-
+        
         private void buttonBreak_Click(object sender, EventArgs e)
+        {
+            /*
+             * 1 find where to cut
+             *     true:   cut into two pieces
+             *                  put pieces into input list
+             *             goto 1
+             *     false:  end
+             */
+            List<Point> poly1, poly2;
+
+            ptsOut = new List<List<Point>>();
+            List<List<Point>> ptsIn = new List<List<Point>>();
+
+            ptsIn.Add(pts);
+
+            while (ptsIn.Count > 0 && ptsOut.Count < pts.Count)
+            {
+                //if (HasSelfSection(ptsIn[0]))
+                //{
+                //    ptsIn.RemoveAt(0);
+                //    continue;
+                //}
+
+                ptsIn[0].Add(ptsIn[0][0]);
+                bool cuts = BreakPolygon(ptsIn[0], out poly1, out poly2);
+                ptsIn[0].RemoveAt(ptsIn.Count - 1);
+
+                if (!cuts) 
+                {
+                    ptsOut.Add(ptsIn[0]);
+                    ptsIn.RemoveAt(0);
+
+                    continue;
+                }
+
+                ptsIn.RemoveAt(0);
+
+                if (Opuhli(poly1))
+                    ptsOut.Add(poly1);
+                else
+                    ptsIn.Add(poly1);
+
+                if (Opuhli(poly2))
+                    ptsOut.Add(poly2);
+                else
+                    ptsIn.Add(poly2);
+            }
+
+            pictureBox1.Refresh();
+        }
+
+        private bool Opuhli(List<Point> poly)
+        {
+            for (int i = 1; i < poly.Count - 1; i++)
+            {
+                if (SignП(poly[i - 1], poly[i], poly[i + 1]) > 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool HasSelfSection(List<Point> poly)
+        {
+            for (int i = 0; i < poly.Count - 1 /* -1 do not check the last one*/; i++)
+            {
+                for (int j = 0; j < poly.Count - 1; j++)
+                {
+                    float t;
+                    CalcIntersect(poly[i], poly[i + 1], poly[j], poly[j + 1], out t);
+
+                    if (float.IsNaN(t)) continue;
+
+                    if (Math.Abs(t) < 1e-8f) continue;
+                    if (Math.Abs(t-1) < 1e-8f) continue;
+
+                    if (t > 0f && t < 1f) return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool BreakPolygon(List<Point> poly, out List<Point> polyPart1, out List<Point> polyPart2)
+        {
+            bool cutTakesPlace = false;
+            polyPart1 = new List<Point>();
+            polyPart2 = new List<Point>();
+
+            for (int i = 1; i < poly.Count - 1; i++)
+            {
+                if (SignП(poly[i - 1], poly[i], poly[i + 1]) > 0)
+                {
+                    cutTakesPlace = true;
+
+                    int s;
+                    // cut here
+                    Point Q = GetIntersectPoint(poly, i - 1, out s);
+                    
+                    int k;
+
+                    polyPart1.Add(Q);
+                    polyPart1.Add(poly[s + 1]);
+                    // to i-1 incl, i++
+                    k = s + 1 + 1;
+                    do
+                    {
+                        if (k > poly.Count - 1) k -= poly.Count;
+
+                        polyPart1.Add(poly[k]);
+
+                        //k++;
+                    }
+                    while (k++ != i - 1);
+
+                    polyPart2.Add(Q);
+                    polyPart2.Add(poly[s]);
+                    // to i incl, i--
+                    k = s - 1;
+                    do
+                    {
+                        if (k < 0) k += poly.Count - 1;
+
+                        polyPart2.Add(poly[k]);
+
+                        //k--;
+                    }
+                    while (k-- != i);
+
+                    break;
+                }
+            }
+            return cutTakesPlace;
+        }
+        /*
+        private void buttonBreak_Click1(object sender, EventArgs e)
         {
             int k = 0;
 
@@ -583,29 +723,6 @@ namespace cglr3
                     }
                     else
                     {
-                        #region find nearest intersect point V3' = V1V2 ∩ S
-
-                        float t = int.MaxValue;
-                        Point nearestV3 = Point.Empty;
-                        for (int s = 2; s < pts.Count - 1; s++)// skip V1V2 itself
-                        {
-                            Point V3_;
-                            float ts;
-                            V3_ = CalcIntersect(
-                                pts[0], pts[1], // V1V2
-                                pts[s], pts[s + 1], // Si
-                                out ts
-                                );
-
-                            if (ts == float.NaN) continue;
-
-                            if (ts < t)
-                            {
-                                ts = t;
-                                nearestV3 = V3_;
-                            }
-                        }
-                        #endregion
 
                         // replace v2 with v3' in polygon #k, but v2 isnt added yet, so just add V3'
                         ptsOut[k].Add(nearestV3);
@@ -640,6 +757,44 @@ namespace cglr3
 
             //timer1.Enabled = true;
         }
+        */
+
+        /// <summary>Finds nearest intersection point Q = ViVi+1 ∩ S</summary>
+        /// <param name="i">poly[i] and poly[i+1] are ends of the side which cuts</param>
+        /// <param name="s">index, side (poly[s];poly[s+1]) is S </param>
+        /// <returns>Intersection point Q</returns>
+        private Point GetIntersectPoint(List<Point> poly, int i, out int s)
+        {
+            float tNearest = float.MaxValue;
+            Point nearest = Point.Empty;
+            int sNearest = -1;
+
+            for (s = 0; s < poly.Count - 1; s++)
+            {
+                if ((s - i >= -1) && (s - i <= 1)) continue; // skip V1V2 itself
+
+                Point Q;
+                float t_s;
+
+                Q = CalcIntersect(
+                    poly[i], poly[i + 1], // V1V2
+                    poly[s], poly[s + 1], // Si
+                    out t_s
+                    );
+
+                if (float.IsNaN(t_s)) continue;
+
+                if (t_s < tNearest)
+                {
+                    t_s = tNearest;
+                    nearest = Q;
+                    sNearest = s;
+                }
+            }
+
+            s = sNearest;
+            return nearest;
+        }
 
         private Point CalcIntersect(Point v1, Point v2, Point s1, Point s2, out float t)
         {
@@ -670,7 +825,6 @@ namespace cglr3
                 (int)(v1.Y + t * (v2.Y - v1.Y))
                 );
         }
-
 
         float P;
         public int SignП(Point v1, Point v2, Point v3)
