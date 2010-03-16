@@ -17,16 +17,18 @@ namespace mapr3
         float[,] p;
         int[] q;
 
+        int n = 11;
+
         public Form1()
         {
             InitializeComponent();
 
-            c1 = 300;
-            c2 = 620;
-            c3 = 200;
+            c1 = 20;
+            c2 = 50;
+            c3 = 20;
             n1 = 5;
             n2 = 5;
-            N = 15;
+            N = 4;
 
             errorProvider1.Clear();
 
@@ -37,9 +39,9 @@ namespace mapr3
             textBoxN2.Text = n2.ToString();
             textBoxN.Text = N.ToString();
 
-            e = new int[10, 10];
-            p = new float[10, 10];
-            q = new int[10];
+            e = new int[n, n];
+            p = new float[n, n];
+            q = new int[n];
         }
 
         private void button1_Click(object sender, EventArgs ep)
@@ -47,12 +49,12 @@ namespace mapr3
             dgv1.Rows.Clear();
             dgv1.Columns.Clear();
 
-            for (int i = 0; i < 10; i++)
-                dgv1.Columns.Add((i + 1).ToString(), "F" + (i + 1).ToString());
+            for (int i = 0; i < n; i++)
+                dgv1.Columns.Add((i + 1).ToString(), "F" + (N+i).ToString());
 
-            dgv1.Rows.Add(10);
-            for (int i = 0; i < 10; i++)
-                dgv1.Rows[i].HeaderCell.Value = "E" + (i + 1).ToString();
+            dgv1.Rows.Add(n);
+            for (int i = 0; i < n; i++)
+                dgv1.Rows[i].HeaderCell.Value = "E" + (N + i).ToString();
 
             dgv1.AutoResizeColumns();
 
@@ -65,10 +67,23 @@ namespace mapr3
             ctrlToVal(textBoxN2, out n2);
             ctrlToVal(textBoxN, out N);
 
-            for (int i = 0; i < 10; i++)
-                for (int j = 0; j < 10; j++)
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++)
                 {
-                    e[i, j] = 10 * i + j + 11;
+                    int Ei = N + i;
+                    int Fi = N + j; 
+
+                    e[i, j] = Fi * c2 - Ei*c1;
+
+                    int d = Fi - Ei;
+                    
+                    // недостаток
+                    if (d > n2)
+                        e[i, j] -= c3 * d;
+
+                    if (-d > n1)
+                        e[i, j] += -d * c1; // возвращаем затраты (маршрутки не использованы)
+                    
                 }
 
             MatrixToGrid(e, dgv1);
@@ -77,9 +92,10 @@ namespace mapr3
         private void MatrixToGrid(int[,] a, DataGridView dgv)
         {
             // check rows columns
-            for (int i = 0; i < 10; i++)
-                for (int j = 0; j < 10; j++)
-                    dgv[j, i].Value = a[i, j];
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++)
+                    dgv1[j,i].Value = a[i, j];
+
         }
 
         private void ctrlToVal(TextBox textBox, out int val)
