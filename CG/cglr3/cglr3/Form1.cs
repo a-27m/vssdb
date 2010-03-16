@@ -41,10 +41,10 @@ namespace cglr3
             (pixelBrush as SolidBrush).Color = Color.Black;
         }
 
-        Color ptc(float p)
+        Color GetGrayShade(float brightness)
         {
-            p = 1f - p;
-            int val = (int)(255f * p);
+            brightness = 1f - brightness;
+            int val = (int)(255f * brightness);
             if (val < 0) return Color.Red;
             if (val > 255) return Color.Blue;
             return Color.FromArgb(val, val, val);
@@ -91,15 +91,15 @@ namespace cglr3
                 float intery = y1 + ΔyΔx * dy; // first y-intersection for the main loop
                 for (int x = x1; x != x2; x += dx)
                 {
-                    Plot(g, x, ipart(intery), ptc(rfpart(intery)));
-                    Plot(g, x, ipart(intery) + dy, ptc(fpart(intery)));
+                    Plot(g, x, ipart(intery), GetGrayShade(rfpart(intery)));
+                    Plot(g, x, ipart(intery) + dy, GetGrayShade(fpart(intery)));
                     intery = intery + ΔyΔx;
                 }
 
                for (int x = x1; x != x2; x += dx)
                 {
-                    Plot(g, x, ipart(intery), ptc(rfpart(intery)));
-                    Plot(g, x, ipart(intery) + dy, ptc(fpart(intery)));
+                    Plot(g, x, ipart(intery), GetGrayShade(rfpart(intery)));
+                    Plot(g, x, ipart(intery) + dy, GetGrayShade(fpart(intery)));
                     intery = intery + ΔyΔx;
                 }
             }
@@ -368,9 +368,9 @@ namespace cglr3
 
             DrawUserPolygon(e);
 
-            DrawResultPolygons(e);
+            //DrawAngles(e);
 
-            DrawAngles(e);
+            DrawResultPolygons(e);
         }
 
         private void DrawAngles(PaintEventArgs e)
@@ -444,7 +444,7 @@ namespace cglr3
             {
                 if (polygon.Count < 2) continue;
 
-                float r = 0;
+                float r = 0*(float)angel*8f;
                 //angel = k / (polyCount + 1) * Math.PI * 2;
                 double a1 = (k % 2) * 2 - 1;
                 int dx = (int)(Math.Cos(angel * a1) * r);
@@ -464,6 +464,18 @@ namespace cglr3
                 this.Line(e.Graphics, prev.X + dx, prev.Y + dy, polygon[0].X + dx, polygon[0].Y + dy);
 
                 k++;
+
+                int sumX = 0, sumY = 0;
+
+                for (int i = 0; i < polygon.Count; i++)
+                {
+                    sumX += polygon[i].X;
+                    sumY += polygon[i].Y;
+                }
+
+                Point mid = new Point(sumX / polygon.Count, sumY / polygon.Count);
+
+                e.Graphics.DrawString(k.ToString(), new Font("Arial", 10), Brushes.Black, mid.X, mid.Y);
             }
 
             pixelBrush = oldPixelBrush;
@@ -562,7 +574,9 @@ namespace cglr3
              *             goto 1
              *     false:  end
              */
-            List<Point> poly1, poly2;
+            List<Point> ptsBackup = new List<Point>();
+            ptsBackup.AddRange(pts);
+
 
             ptsOut = new List<List<Point>>();
             List<List<Point>> ptsIn = new List<List<Point>>();
@@ -576,10 +590,11 @@ namespace cglr3
                 //    ptsIn.RemoveAt(0);
                 //    continue;
                 //}
+                List<Point> poly1, poly2;
 
                 ptsIn[0].Add(ptsIn[0][0]);
                 bool cuts = BreakPolygon(ptsIn[0], out poly1, out poly2);
-                ptsIn[0].RemoveAt(ptsIn.Count - 1);
+                ptsIn[0].RemoveAt(ptsIn[0].Count - 1);
 
                 if (!cuts) 
                 {
@@ -602,7 +617,11 @@ namespace cglr3
                     ptsIn.Add(poly2);
             }
 
+            //pts.Clear();
+            //pts.AddRange(ptsBackup);
+
             pictureBox1.Refresh();
+            timer1.Enabled = true;
         }
 
         private bool Opuhli(List<Point> poly)
@@ -614,6 +633,9 @@ namespace cglr3
                     return false;
                 }
             }
+
+            if (SignП(poly[poly.Count - 1], poly[0], poly[1]) > 0)
+                return false;
 
             return true;
         }
@@ -659,7 +681,7 @@ namespace cglr3
 
                     polyPart1.Add(Q);
                     polyPart1.Add(poly[s + 1]);
-                    // to i-1 incl, i++
+                    // to i-1 incl, k++
                     k = s + 1 + 1;
                     do
                     {
@@ -671,19 +693,20 @@ namespace cglr3
                     }
                     while (k++ != i - 1);
 
-                    polyPart2.Add(Q);
                     polyPart2.Add(poly[s]);
-                    // to i incl, i--
-                    k = s - 1;
+                    polyPart2.Add(Q);
+                    // to s incl, k++
+                    k = i;
                     do
                     {
-                        if (k < 0) k += poly.Count - 1;
+                        if (k > poly.Count - 1) k -= poly.Count;
+                        //if (k < 0) k += poly.Count - 1;
 
                         polyPart2.Add(poly[k]);
 
                         //k--;
                     }
-                    while (k-- != i);
+                    while (k++ != s);
 
                     break;
                 }
