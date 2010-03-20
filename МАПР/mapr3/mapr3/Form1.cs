@@ -157,27 +157,29 @@ namespace mapr3
 
         private void buttonCriteries_Click(object sender, EventArgs e)
         {
+            textBox1.Clear();
+
             int iE;
             int income;
 
             iE = MiniMax(a, out income);
             PrintResult(iE, income, "Minimax");
 
-            iE = MiniMax(a, out income);
-            PrintResult(iE, income, "Minimax");
+            iE = Laplace(a, out income);
+            PrintResult(iE, income, "Laplace");
 
-            iE = MiniMax(a, out income);
-            PrintResult(iE, income, "Minimax");
+            iE = Savage(a, out income);
+            PrintResult(iE, income, "Savage");
 
-            iE = MiniMax(a, out income);
-            PrintResult(iE, income, "Minimax");
+            float alpha = 0.5f;
+            iE = Hurwitz(a, alpha, out income);
+            PrintResult(iE, income, "Hurwitz");
 
         }
 
         private void PrintResult(int iE, int income, string methodName)
         {
-
-            string strFormatCriteria = "{0}:\t\tE{1}, with income {2}";
+            string strFormatCriteria = "{0}:\t\tE{1}, with income {2}" + Environment.NewLine;
             textBox1.AppendText(string.Format(strFormatCriteria,
                 methodName, iE + Variant, income));
         }
@@ -200,6 +202,37 @@ namespace mapr3
             return iE;
         }
 
+        private int MaxiMin(int[,] a, out int minValue)
+        {
+            int iE = 0;
+            minValue = int.MaxValue;
+            
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                int max = MaxValueInRow(a, i);
+                if (max < minValue)
+                {
+                    minValue = max;
+                    iE = i;
+                }
+            }
+
+            return iE;
+        }
+
+        private int MaxValueInRow(int[,] a, int i)
+        {
+            int max = int.MinValue;
+
+            for (int j = 0; j < a.GetLength(1); j++)
+
+                if (a[i, j] > max)
+
+                    max = a[i, j];
+
+            return max;
+        }
+
         private int MinValueInRow(int[,] a, int i)
         {
             int min = int.MaxValue;
@@ -211,6 +244,73 @@ namespace mapr3
                     min = a[i, j];
 
             return min;
+        }
+
+        private int Laplace(int[,] a, out int income)
+        {
+            income = int.MinValue;
+            int iE = -1;
+
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                // srednee
+                int mid = 0;
+                for (int j = 0; j < a.GetLength(1); j++)
+                {
+                    mid += a[i, j];
+                }
+                mid /= a.GetLength(1);
+
+                // is it max?
+                if (mid >= income)
+                {
+                    income = mid;
+                    iE = i;
+                }
+            }
+
+            return iE;
+        }
+
+        private int Savage(int[,] a, out int income)
+        {
+            income = int.MinValue;
+            int iE = -1;
+
+            // maryca zhaluy
+            int[,] r = new int[a.GetLength(0), a.GetLength(1)];
+
+            for (int j = 0; j < a.GetLength(1); j++)
+            {
+                // look for max in col
+                int maxVal = a[0, j];
+                //int maxI = 0;
+                for (int i = 1; i < a.GetLength(0); i++)
+                {
+                    if (a[i, j] > maxVal)
+                    {
+                        maxVal = a[i, j];
+                  //      maxI = i;
+                    }
+                }
+
+                for (int i = 0; i < a.GetLength(0); i++)
+                    r[i, j] = maxVal - a[i, j];
+            }
+
+            MatrixToGrid(r, dgv1);
+
+            iE = MaxiMin(r, out income);
+
+
+            return iE;
+        }
+
+        private int Hurwitz(int[,] a, float alpha, out int income)
+        {
+            income = -1;
+            return 0;
+            throw new NotImplementedException();
         }
     }
 }
