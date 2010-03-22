@@ -13,11 +13,19 @@ namespace mapr3
     public partial class Form1 : Form
     {
         int[,] a;
-        float[,] p;
-        int[] q;
         int c1, c2, c3, n1, n2, Variant;
 
         int n = 11;
+
+        private float q(int j)
+        {
+            j++;
+            return (n + 1f - j) * j / (26f * n);
+        }
+        private float p(int i, int j)
+        {
+            return 1f - 0.01f * (Variant + i);
+        }
 
         public Form1()
         {
@@ -38,9 +46,6 @@ namespace mapr3
             textBoxN1.Text = n1.ToString();
             textBoxN2.Text = n2.ToString();
             textBoxN.Text = Variant.ToString();
-
-            p = new float[n, n];
-            q = new int[n];
         }
 
         private void buttonBuildIncome_Click(object sender, EventArgs ep)
@@ -162,19 +167,33 @@ namespace mapr3
             int iE;
             int income;
 
+            float alpha = 0.5f;
+
             iE = MiniMax(a, out income);
-            PrintResult(iE, income, "Minimax");
+            PrintResult(iE, income, "Minimax (Wild)");
 
             iE = Laplace(a, out income);
-            PrintResult(iE, income, "Laplace");
+            PrintResult(iE, income, "Laplace (neutral)");
 
             iE = Savage(a, out income);
-            PrintResult(iE, income, "Savage");
+            PrintResult(iE, income, "Savage (min regret)");
 
-            float alpha = 0.5f;
             iE = Hurwitz(a, alpha, out income);
-            PrintResult(iE, income, "Hurwitz");
+            PrintResult(iE, income, "Hurwitz, a=" + alpha.ToString("F2"));
 
+            iE = Production(a, out income);
+            PrintResult(iE, income, "Production");
+
+
+            iE = BayesLaplace(a, out income);
+            PrintResult(iE, income, "Bayes-Laplace");
+
+            iE = HodgeLehmann(a, alpha, out income);
+            PrintResult(iE, income, "Hodge-Lehmann");
+
+            iE = Geymeyer(a, out income);
+            PrintResult(iE, income, "Geymeyer");
+            
         }
 
         private void PrintResult(int iE, int income, string methodName)
@@ -302,15 +321,166 @@ namespace mapr3
 
             iE = MaxiMin(r, out income);
 
+            income = MaxValueInRow(a, iE) - income;
 
             return iE;
         }
 
         private int Hurwitz(int[,] a, float alpha, out int income)
         {
-            income = -1;
-            return 0;
-            throw new NotImplementedException();
+            if (alpha < 0f) throw new ArgumentOutOfRangeException("alpha");
+            if (alpha > 1f) throw new ArgumentOutOfRangeException("alpha");
+
+            int iE = -1;
+            float maxValue = float.MinValue;
+
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                int min = MinValueInRow(a, i);
+                int max = MaxValueInRow(a, i);
+                float f = alpha * max + (1f - alpha) * min;
+
+                if (f > maxValue)
+                {
+                    maxValue = (int)f;
+                    iE = i;
+                }
+            }
+
+            income = (int)maxValue;
+
+            return iE;
+        }
+
+        private int Production(int[,] a, out int income)
+        {
+            income = 0;
+
+            // calc min
+            int min = a[0,0];
+            foreach (int e in a)
+                if (e < min) min = e;
+
+            if (min <= 0)
+            {
+                // update to eliminate all non-positive
+                for (int i = 0; i < a.GetLength(0); i++)
+                    for (int j = 0; j < a.GetLength(1); j++)
+                        a[i, j] += -min; // since min < 0
+            }
+
+            MatrixToGrid(a, dgv1);
+            
+            int iE = 0;
+            double maxValue = double.MinValue;
+
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                double prod = a[i, 0];
+                for (int j = 1; j < a.GetLength(1); j++) prod *= a[i, j];
+
+                if (prod > maxValue)
+                {
+                    maxValue = prod;
+                    iE = i;
+                }
+            }
+
+            return iE;
+        }
+
+        
+        private int BayesLaplace(int[,] a, out int income)
+        {
+            int iE = 0;
+            float maxValue = float.MinValue;
+
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                float sum = 0;
+                for (int j = 0; j < a.GetLength(1); j++)
+                {
+                    sum += a[i, j] * q(j) * p(i, j);
+                }
+
+                if (sum > maxValue)
+                {
+                    maxValue = sum;
+                    iE = i;
+                }
+            }
+
+            income = (int)maxValue;
+
+            return iE;
+        }
+
+        private int HodgeLehmann(int[,] a, float alpha, out int income)
+        {
+            if (alpha < 0f) throw new ArgumentOutOfRangeException("alpha");
+            if (alpha > 1f) throw new ArgumentOutOfRangeException("alpha");
+
+            int iE = 0;
+            float maxValue = float.MinValue;
+
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                float sum = 0;
+                for (int j = 0; j < a.GetLength(1); j++)
+                {
+                    sum += a[i, j] * q(j) * p(i, j);
+                }
+
+                int min = MinValueInRow(a, i);
+
+                float f = alpha * sum - (1f - alpha) * min;
+
+                if (f > maxValue)
+                {
+                    maxValue = f;
+                    iE = i;
+                }
+            }
+
+            income = (int)maxValue;
+
+            return iE;
+        }
+
+        private int Geymeyer(int[,] a, out int income)
+        {
+            // calc min
+            int min = a[0, 0];
+            foreach (int e in a)
+                if (e < min) min = e;
+
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                float max = float.MinValue;
+
+                if (min <= 0)
+                {
+                    for (int j = 0; j < a.GetLength(1); j++)
+                    {
+                        float eqp = a[i, j] * q(j) / p(i, j);
+                        if (eqp > max) max = eqp;
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < a.GetLength(1); j++)
+                    {
+                        float eqp = a[i, j] * q(j) * p(i, j);
+                        if (eqp > max) max = eqp;
+                    }
+                }
+
+                if (sum > maxValue)
+                {
+                    maxValue = sum;
+                    iE = i;
+                }
+            }
         }
     }
 }
