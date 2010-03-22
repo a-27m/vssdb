@@ -22,6 +22,7 @@ namespace mapr3
             j++;
             return (n + 1f - j) * j / (26f * n);
         }
+
         private float p(int i, int j)
         {
             return 1f - 0.01f * (Variant + i);
@@ -46,35 +47,6 @@ namespace mapr3
             textBoxN1.Text = n1.ToString();
             textBoxN2.Text = n2.ToString();
             textBoxN.Text = Variant.ToString();
-        }
-
-        private void buttonBuildIncome_Click(object sender, EventArgs ep)
-        {
-            errorProvider1.Clear();
-            bool ok = true;
-
-            ok &= ctrlToVal(textBoxC1, out c1);
-            ok &= ctrlToVal(textBoxC2, out c2);
-            ok &= ctrlToVal(textBoxC3, out c3);
-            ok &= ctrlToVal(textBoxN1, out n1);
-            ok &= ctrlToVal(textBoxN2, out n2);
-            ok &= ctrlToVal(textBoxN, out Variant);
-
-            if (!ok) return;
-
-            BuildEmptyGridWithHeaders(Variant);
-
-            a = BuildIncomeMatrix(n, c1, c2, c3, n1, n2, Variant);
-
-            MatrixToGrid(a, dgv1);
-
-            dgv1.AutoResizeColumns();
-
-            // make square cells
-            //for (int i = 0; i < dgv1.Rows.Count; i++)
-            //{
-            //    dgv1.Rows[i].Height = dgv1.Columns[1].Width; 
-            //}
         }
 
         private void BuildEmptyGridWithHeaders(int N)
@@ -130,7 +102,8 @@ namespace mapr3
             return e;
         }
 
-        private void MatrixToGrid(int[,] m, DataGridView dgv)
+        private void MatrixToGrid(int[,] m, DataGridView dgv) { MatrixToGrid<int>(m, dgv); }
+        private void MatrixToGrid<TElement>(TElement[,] m, DataGridView dgv)
         {
             if (m == null) return;
 
@@ -158,6 +131,35 @@ namespace mapr3
             }
 
             return true;
+        }
+
+        private void buttonBuildIncome_Click(object sender, EventArgs ep)
+        {
+            errorProvider1.Clear();
+            bool ok = true;
+
+            ok &= ctrlToVal(textBoxC1, out c1);
+            ok &= ctrlToVal(textBoxC2, out c2);
+            ok &= ctrlToVal(textBoxC3, out c3);
+            ok &= ctrlToVal(textBoxN1, out n1);
+            ok &= ctrlToVal(textBoxN2, out n2);
+            ok &= ctrlToVal(textBoxN, out Variant);
+
+            if (!ok) return;
+
+            BuildEmptyGridWithHeaders(Variant);
+
+            a = BuildIncomeMatrix(n, c1, c2, c3, n1, n2, Variant);
+
+            MatrixToGrid(a, dgv1);
+
+            dgv1.AutoResizeColumns();
+
+            // make square cells
+            //for (int i = 0; i < dgv1.Rows.Count; i++)
+            //{
+            //    dgv1.Rows[i].Height = dgv1.Columns[1].Width; 
+            //}
         }
 
         private void buttonCriteries_Click(object sender, EventArgs e)
@@ -194,6 +196,8 @@ namespace mapr3
             iE = Geymeyer(a, out income);
             PrintResult(iE, income, "Geymeyer");
             
+            iE = MostProbable(a, out income);
+            PrintResult(iE, income, "Probable outcome");
         }
 
         private void PrintResult(int iE, int income, string methodName)
@@ -449,16 +453,19 @@ namespace mapr3
 
         private int Geymeyer(int[,] a, out int income)
         {
+            float min = float.MaxValue;
+            int iE = -1;
+
             // calc min
-            int min = a[0, 0];
+            int minE = a[0, 0];
             foreach (int e in a)
-                if (e < min) min = e;
+                if (e < minE) minE = e;
 
             for (int i = 0; i < a.GetLength(0); i++)
             {
                 float max = float.MinValue;
 
-                if (min <= 0)
+                if (minE <= 0)
                 {
                     for (int j = 0; j < a.GetLength(1); j++)
                     {
@@ -475,11 +482,56 @@ namespace mapr3
                     }
                 }
 
+                if (max < min)
+                {
+                    min = max;
+                    iE = i;
+                }
+            }
+
+            income = (int)min;
+            return iE;
+        }
+
+        private int MostProbable(int[,] a, out int income)
+        {
+            income = 0;
+            int iE = 0;
+
+            //float[,] fl = new float[n, n];
+
+            //for (int i = 0; i < a.GetLength(0); i++)
+            //    for (int j = 0; j < a.GetLength(1); j++)
+            //        fl[i, j] = q(j); 
+
+            //MatrixToGrid(fl, dgv1);
+
+            float maxValue = float.MinValue;
+
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                float sum = 0;
+                for (int j = 0; j < a.GetLength(1); j++)
+                    sum += q(j) * p(i, j);
+
                 if (sum > maxValue)
                 {
                     maxValue = sum;
                     iE = i;
                 }
+            }
+
+            income = (int)maxValue;
+            return iE;
+        }
+
+        private void dgv1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if ((e.ColumnIndex < 0) || (e.RowIndex < 0))
+            {
+
+                e.Handled = true;
+                return;
             }
         }
     }

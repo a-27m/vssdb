@@ -90,11 +90,11 @@
             this.button3.Text = "button3";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // buttonCriteries
             // 
             this.buttonCriteries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonCriteries.Location = new System.Drawing.Point(26, 388);
-            this.buttonCriteries.Name = "button2";
+            this.buttonCriteries.Name = "buttonCriteries";
             this.buttonCriteries.Size = new System.Drawing.Size(128, 23);
             this.buttonCriteries.TabIndex = 5;
             this.buttonCriteries.Text = "Criteries";
@@ -281,6 +281,7 @@
             this.dgv1.ShowRowErrors = false;
             this.dgv1.Size = new System.Drawing.Size(618, 356);
             this.dgv1.TabIndex = 1;
+            this.dgv1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgv1_CellPainting);
             // 
             // textBox1
             // 
