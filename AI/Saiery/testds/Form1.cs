@@ -18,21 +18,41 @@ namespace testds
         public Form1()
         {
             InitializeComponent();
+
+            dev = new Device();
         }
 
         const int samplerate = 22050;
         const int bitspersample = 16;
 
+        MemoryStream pcm;
+        Device dev;
+        SecondaryBuffer buffer;
+
         private void button1_Click(object sender, EventArgs e)
         {
-            Int16[] pcm = new Int16[samplerate * 60 * 3];
+            // Int16[] pcm = new Int16[samplerate * 60 * 3];
+            pcm = new MemoryStream(samplerate * 60 * 3 * 16 / 8);
 
-            for (int i = 0; i < pcm.Length; i++)
-                pcm[i] = (Int16)f(i);
+            for (int i = 0; i < pcm.Length / 2; i++)
+            {
+                Int16 sample =(Int16)f(i);
+                pcm.WriteByte((byte)(sample >> 8));
+                pcm.WriteByte((byte)(sample & 255));
+            }
+
+            Stop();
 
             WriteToFile("my.wav", pcm);
 
             MessageBox.Show("Done!");
+
+            Play("my.wav");
+        }
+
+        private void Stop()
+        {
+            buffer.Stop();
         }
 
         private int f(float i)
@@ -76,6 +96,39 @@ namespace testds
                 f.Write(words[i]);
 
             f.Close();
+        }
+        private void WriteToFile(string filename, MemoryStream words)
+        {
+            BinaryWriter f = new BinaryWriter(new FileStream(filename, FileMode.Create));
+
+            f.Write("RIFF".ToCharArray());
+            f.Write((Int32)(words.Length * 2 - 8));
+            f.Write("WAVEfmt ".ToCharArray());
+            f.Write((Int32)16);
+            f.Write((Int16)1); // format tag
+            f.Write((Int16)1); // channels
+            f.Write((Int32)samplerate); // SamplesPerSec
+            f.Write((Int32)samplerate * 2);// AvgBytesPerSec = samplerate*sizeof(int16)/sizeof(byte);
+            f.Write((Int16)2); // BlockAlign
+            f.Write((Int16)16); // BitsPerSample
+            f.Write("data".ToCharArray());
+            f.Write((Int32)words.Length * 2); // Length;
+            
+            words.WriteTo(f.BaseStream);
+
+            f.Close();
+        }
+
+        private void Play(string filename)
+        {
+            buffer = new SecondaryBuffer(filename, dev);
+
+            buffer.Play(10, BufferPlayFlags.Default);
+        }
+
+        private void buttonStop_Click(object sender, EventArgs e)
+        {
+            buffer.Stop();
         }
     }
 }
