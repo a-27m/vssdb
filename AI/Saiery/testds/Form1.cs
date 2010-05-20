@@ -1,20 +1,93 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-
-using Microsoft.DirectX.DirectSound;
 using System.IO;
+using System.Windows.Forms;
+using Microsoft.DirectX.DirectSound;
 
 
 namespace testds
 {
     public partial class Form1 : Form
     {
+        public class Generator
+        {
+            public static void Tone(Int16[] data, int offset, double frequency, double volume, int samples)
+            {
+                if (offset + samples >= data.Length)
+                {
+                    samples = data.Length - offset - 1;
+                    //throw new ArgumentException("Wrong offset, samples and data.Length combination");
+                }
+
+                for (int i = 0; i < samples; i++)
+                {
+                    data[offset + i] = (Int16)(Math.Sin(i * 6.28f / samplerate * frequency) * volume);
+                }
+
+                // TODO add antialiasing
+                int len = 1000 % samples;
+                for (int i = 0; i < len; i++)
+                {
+                    data[offset + i] = //data[offset + samples - i - 1] =
+                        (Int16)((float)i / (float)len * data[offset + i]);
+                    data[offset + samples - i - 1] =
+                        (Int16)((float)i / (float)len * data[offset + samples - i - 1]);
+                }
+            }
+
+            public static void Bass(Int16[] data, int offset, double frequency, double volume, int samples)
+            {
+                // v = (sin(x*2*3.14/0.22)/(x*2*3.14/0.22)-(x*2*3.14/0.22)/9+1)/2
+                // f = 3.3/(0.02*(x+1))+35
+
+                double T;
+                T = (double)samples / (double)samplerate;
+
+                // volume params
+                double kv, TwoPiT;
+                TwoPiT = Math.PI * 2.0 / T;
+                kv = 1.0 / 9.0;
+
+                // modulation params
+                double f_max, f_min, kf, a, b;
+
+                //f_max = 200;
+                f_max = frequency;
+                f_min = f_max - 150;
+
+                a = 1;
+                kf = (f_max - f_min) * a * (T + a) / T;
+                b = f_max - kf / a;
+
+                if (offset + samples >= data.Length)
+                {
+                    samples = data.Length - offset - 1;
+                }
+
+
+                double t, dt, v, f;
+                t = 0; dt = T/samples;
+                for (int i = 0; i < samples; i++)
+                {
+                    v = (Math.Sin(t * TwoPiT) / (t * TwoPiT) - kv * t * TwoPiT + 1) / 2 * volume;
+                    f = kf / (t + a) + b; 
+ 
+                    data[offset + i] = (Int16)(Math.Sin(t * f) * v);
+
+                    t += dt;
+                }
+ 
+                // add antialiasing
+                int len = 132 % samples;
+                for (int i = 0; i < len; i++)
+                {
+                    data[offset + i] = //data[offset + samples - i - 1] =
+                        (Int16)((float)i / (float)len * data[offset + i]);
+                    data[offset + samples - i - 1] =
+                        (Int16)((float)i / (float)len * data[offset + samples - i - 1]);
+                }
+            }
+        }
+
         public Form1()
         {
             InitializeComponent();
@@ -27,31 +100,121 @@ namespace testds
         const int bitspersample = 16;
 
         //MemoryStream pcm;
-        Int16[] pcm;
+        //Int16[] pcm, pcmTmp;
         Device dev;
         SecondaryBuffer buffer;
 
-        private void button1_Click(object sender, EventArgs e)
+        private Int16[] ComposeTone(float fmax, float len)
         {
-            pcm = new Int16[samplerate * 60 * 1]; // Int16[]
-            //pcm = new MemoryStream(samplerate * 60 * 3 * 16 / 8);
+            Int16[] pcm = new Int16[samplerate * 60 * 1]; // Int16[]
 
-            for (int i = 0; i < pcm.Length / 2; i++)
+            int pos = 0;
+            Random rnd = new Random();
+            double f, df, v, l; 
+            
+            f = fmax / 4;
+            df = fmax / 20;
+            while (pos < pcm.Length)
             {
-                //Int16 sample =(Int16)f(i);
-                //pcm.WriteByte((byte)(sample >> 8));
-                //pcm.WriteByte((byte)(sample & 255));
 
-                pcm[i] = (Int16)f(i);
+                f = f + (rnd.NextDouble() - 0.5) * 2 * df;
+                if (f > fmax) f -= df;
+                if (f < 50) f += df;
+
+                v = Math.Sqrt(Math.Sqrt(rnd.NextDouble()+1e-3)) * 5000;// +20000;
+
+                l = Math.Sqrt(Math.Sqrt(rnd.NextDouble() + 0.1)) * len; // sec
+
+                Generator.Tone(pcm, pos, f, v, (int)(l * 22050));
+
+                pos += (int)(l * 22050);
+
+                progressBar1.Value = (int)((decimal)pos / (decimal)pcm.Length * (decimal)progressBar1.Maximum) % progressBar1.Maximum;
+                Application.DoEvents();
             }
 
+            return pcm;
+        }
+
+        private Int16[] ComposeBass()
+        {
+            Int16[] pcm = new Int16[samplerate * 60 * 1]; // Int16[]
+
+            int pos = 0;
+            Random rnd = new Random();
+
+            double f, v, l;
+            l = 0.0;
+            while (pos < pcm.Length)
+            {
+                f = rnd.NextDouble() * 500 + 150; // 150 .. 450
+
+                //v = rnd.NextDouble() * 16000;// +20000;
+
+                //l = rnd.NextDouble() * 0.4 + 0.2;// 0.18 .. 0.3; // sec
+                l = 0.5;
+                Generator.Bass(pcm, pos, f, 20000, (int)(l * 22050));
+
+                pos += (int)(l * 22050);
+
+                progressBar1.Value = (int)((decimal)pos / (decimal)pcm.Length * (decimal)progressBar1.Maximum) % progressBar1.Maximum;
+                Application.DoEvents();
+            }
+
+            return pcm;
+        }
+
+        private Int16[] mix(Int16[] pcm1, Int16[] pcm2)
+        {
+            int maxlen = pcm1.Length > pcm2.Length ? pcm1.Length : pcm2.Length;
+            int minlen = pcm1.Length > pcm2.Length ? pcm2.Length : pcm1.Length;
+            
+            Int16[] result = new Int16[maxlen];
+
+            for (int i = 0; i < minlen; i++)
+            {
+                int sample = pcm1[i] + pcm2[i];
+                if (sample > Int16.MaxValue) sample = Int16.MaxValue;
+                if (sample < Int16.MinValue) sample = Int16.MinValue;
+                result[i] = (Int16)sample;
+            }
+
+            Int16[] pcmLong = pcm1.Length > pcm2.Length ? pcm1 : pcm2;
+            for (int i = minlen; i < maxlen; i++)
+            {
+                result[i] = pcmLong[i];
+            }
+
+            return result;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //pcm = new Int16[samplerate * 60 * 1]; // Int16[]
+            //pcm = new MemoryStream(samplerate * 60 * 3 * 16 / 8);
+
+            //for (int i = 0; i < pcm.Length; i++)
+            //{
+            //    pcm[i] = (Int16)f(i);
+            //}
+            Int16[] final, track1, track2;
+
+            final = ComposeBass();            
+
+            //final = mix(ComposeTone(), ComposeTone());
+            //final = mix(final, ComposeTone());
+
+            //final = mix(final, ComposeTone(400, 1f));
+            final = mix(final, ComposeTone(1000, 0.5f));
+            final = mix(final, ComposeTone(2000, 0.5f));
+            final = mix(final, ComposeTone(10000, 0.1f));
+            final = mix(final, ComposeTone(10000, 0.01f));
+
             Stop();
+            Play(final);
 
             //WriteToFile("my.wav", pcm);
-
             //MessageBox.Show("Done!");
-
-            Play(pcm);
         }
 
         private void Stop()
@@ -163,7 +326,7 @@ namespace testds
 
         private void Play(Int16[] data)
         {
-            WaveFormat format = new WaveFormat();
+            WaveFormat format = new Microsoft.DirectX.DirectSound.WaveFormat();
             format.AverageBytesPerSecond = bitspersample / 8 * samplerate;
             format.BitsPerSample = bitspersample;
             format.BlockAlign = bitspersample / 8;
@@ -185,6 +348,18 @@ namespace testds
         private void buttonStop_Click(object sender, EventArgs e)
         {
             buffer.Stop();
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            WriteToFile("my.wav", (Int16[])buffer.Read(
+                0,
+                Int16.MaxValue.GetType(),
+                LockFlag.None,
+                buffer.Caps.BufferBytes / 2
+                ));
+
+            MessageBox.Show("Saved");
         }
     }
 }
