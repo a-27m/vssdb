@@ -99,8 +99,6 @@ namespace testds
         const int samplerate = 22050;
         const int bitspersample = 16;
 
-        //MemoryStream pcm;
-        //Int16[] pcm, pcmTmp;
         Device dev;
         SecondaryBuffer buffer;
 
@@ -117,9 +115,10 @@ namespace testds
             while (pos < pcm.Length)
             {
 
-                f = f + (rnd.NextDouble() - 0.5) * 2 * df;
-                if (f > fmax) f -= df;
-                if (f < 50) f += df;
+                // f = f + (rnd.NextDouble() - 0.5) * 2 * df;
+                f = f * Math.Pow(1.213, rnd.Next(0, 2) * 2 - 1);
+                if (f > fmax) f /= 2;
+                if (f < 50) f *= 2;
 
                 v = Math.Sqrt(Math.Sqrt(rnd.NextDouble()+1e-3)) * 5000;// +20000;
 
@@ -147,7 +146,7 @@ namespace testds
             l = 0.0;
             while (pos < pcm.Length)
             {
-                f = rnd.NextDouble() * 500 + 150; // 150 .. 450
+                f = rnd.NextDouble() * 1500 + 150; // 150 .. 450
 
                 //v = rnd.NextDouble() * 16000;// +20000;
 
