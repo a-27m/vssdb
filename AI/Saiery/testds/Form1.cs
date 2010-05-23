@@ -23,7 +23,7 @@ namespace testds
                     data[offset + i] = (Int16)(Math.Sin(i * 6.28f / samplerate * frequency) * volume);
                 }
 
-                // TODO add antialiasing
+                // antialiasing
                 int len = 1000 % samples;
                 for (int i = 0; i < len; i++)
                 {
@@ -88,12 +88,115 @@ namespace testds
             }
         }
 
+        public class StateMachine
+        {
+            protected static Random rnd = new Random();
+            //public readonly float SampleRate;
+
+            public struct Note
+            {
+                float freq;
+                float dura; // in samples
+                float vol;
+
+                /// <summary>
+                /// Hz
+                /// </summary>
+                public float Frequency { get { return freq; } set { freq = value; } }
+                /// <summary>
+                /// sec
+                /// </summary>
+                public float DurationSeconds { get { return dura / samplerate; } set { dura = value * samplerate; } }
+                public float DurationSamples { get { return dura; } set { dura = value; } }
+                /// <summary>
+                /// 0..32767
+                /// </summary>
+                public float Volume { get { return vol; } set { vol = value; } }
+
+                public Note(float frequency, float duration, float volume)
+                {
+                    freq = frequency;
+                    dura = duration;
+                    vol = volume;
+                }
+
+            }
+
+            Note stateCurr;
+
+            /// <summary>
+            /// Равномерно темперированный строй
+            /// </summary>
+            /// <param name="camerton">Частота камертона (например, Ля 440 Hz)</param>
+            /// <param name="HalfTones">Количество полутонов в интервале от искомого звука к камертону</param>
+            public float ShiftHalfTone(float camerton, int HalfTones)
+            {
+                return (float)(camerton * Math.Pow(2.0, (double)HalfTones / 12.0));
+            }
+
+            public Note Current
+            {
+                get { return stateCurr; }
+//                set { stateCurr = value; }
+            }
+
+            //public float Frequency { get { return stateCurr.Frequency; } }
+            //public float Duration { get { return stateCurr.Duration; } }
+            //public float Volume { get { return stateCurr.Volume; } }
+
+            float fMin, fMax;
+            float dMin, dMax;
+            float vMin, vMax;
+
+            public StateMachine(/*int samplerate*/)
+            {
+                //this.SampleRate = samplerate;
+                fMin = 30f; fMax = 15000f;
+                dMin = 0f; dMax = 0.8f;
+                vMin = 1f; vMax = 7000f;
+
+                stateCurr = new Note();
+            }
+
+            public Note Next()
+            {
+                int htones;
+                do { htones = rnd.Next(-12, 12); } 
+                while ((htones == 2) || (htones == -2) ||
+                    (htones == 7) || (htones == -7));
+
+                float f = ShiftHalfTone(stateCurr.Frequency, htones);
+
+                while (f > fMax) f = ShiftHalfTone(f, -5);
+                while (f < fMin) f = ShiftHalfTone(f, 5);
+
+                float v = (float)(Math.Sqrt(Math.Sqrt(rnd.NextDouble() + 1e-3)) * vMax);// +20000;
+                float l = (float)(Math.Sqrt(Math.Sqrt(rnd.NextDouble() + 0.1)) * dMax); // sec
+
+
+                stateCurr.Frequency = f;
+                stateCurr.Volume = v;
+
+                return new Note(f, l*samplerate, v);
+            }
+
+
+            public void Initialize()
+            {
+                stateCurr.Frequency = 440; // Ля 1й октавы
+            }
+        }
+
+        public StateMachine stateMachine;
+
         public Form1()
         {
             InitializeComponent();
 
             dev = new Device();
-            dev.SetCooperativeLevel(this, CooperativeLevel.Normal);            
+            dev.SetCooperativeLevel(this, CooperativeLevel.Normal);
+
+            stateMachine = new StateMachine();
         }
 
         const int samplerate = 22050;
@@ -105,28 +208,18 @@ namespace testds
         private Int16[] ComposeTone(float fmax, float len)
         {
             Int16[] pcm = new Int16[samplerate * 60 * 1]; // Int16[]
-
             int pos = 0;
-            Random rnd = new Random();
-            double f, df, v, l; 
-            
-            f = fmax / 4;
-            df = fmax / 20;
+
+            StateMachine.Note n;
+            stateMachine.Initialize();
+
             while (pos < pcm.Length)
-            {
+            {                
+                n = stateMachine.Next();
 
-                // f = f + (rnd.NextDouble() - 0.5) * 2 * df;
-                f = f * Math.Pow(1.213, rnd.Next(0, 2) * 2 - 1);
-                if (f > fmax) f /= 2;
-                if (f < 50) f *= 2;
+                Generator.Tone(pcm, pos, n.Frequency, n.Volume, (int)(n.DurationSamples));
 
-                v = Math.Sqrt(Math.Sqrt(rnd.NextDouble()+1e-3)) * 5000;// +20000;
-
-                l = Math.Sqrt(Math.Sqrt(rnd.NextDouble() + 0.1)) * len; // sec
-
-                Generator.Tone(pcm, pos, f, v, (int)(l * 22050));
-
-                pos += (int)(l * 22050);
+                pos += (int)(n.DurationSamples);
 
                 progressBar1.Value = (int)((decimal)pos / (decimal)pcm.Length * (decimal)progressBar1.Maximum) % progressBar1.Maximum;
                 Application.DoEvents();
@@ -143,10 +236,10 @@ namespace testds
             Random rnd = new Random();
 
             double f, v, l;
-            l = 0.0;
+            l = 0.5;
             while (pos < pcm.Length)
             {
-                f = rnd.NextDouble() * 1500 + 150; // 150 .. 450
+                f = pos/(l*samplerate) % 4 * 200 + 200; // 150 .. 450
 
                 //v = rnd.NextDouble() * 16000;// +20000;
 
