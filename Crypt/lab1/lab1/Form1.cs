@@ -14,55 +14,98 @@ namespace lab1
         public Form1()
         {
             InitializeComponent();
-
-            frq_dict = new Dictionary<char, float>();
         }
 
-        Dictionary<Char, float> frq_dict;
-        int sort_direction = 1;
+        Tree tree;
 
         private void button1_Click(object sender, EventArgs e)
         {
-            frq_dict.Clear();
+            tree = new Tree();
+            Tree.Node[] leaves;
 
-            textBoxMsg.Enabled = false;
+            Dictionary<char, float> dict = new Dictionary<char, float>();
 
-            for (int i = 0; i < textBoxMsg.TextLength; i++)
+            for (int i = 0; i < textBoxMsg.Text.Length; i++)
             {
-                char key = textBoxMsg.Text[i];
-
-                if (!frq_dict.ContainsKey(key))
-                    frq_dict.Add(key, 1); // the first occurance
+                char c = textBoxMsg.Text[i];
+                if (dict.ContainsKey(c))
+                {
+                    dict[c] = dict[c] + 1;
+                }
                 else
-                    frq_dict[key] = frq_dict[key] + 1;
+                {
+                    dict.Add(c, 1);
+                }
             }
 
-            textBoxMsg.Enabled = true;
+            KeyValuePair<char, float>[] pairs = dict.ToArray();
 
-            List<KeyValuePair<char, float>> l = frq_dict.ToList();
-            l.Sort(
-                new Comparison<KeyValuePair<char, float>>(
-                    delegate(KeyValuePair<char, float> kv, KeyValuePair<char, float> kv2)
-                    {
-                        return (int)Math.Sign( sort_direction * (kv.Value - kv2.Value)); //kv.Key.CompareTo(kv2.Key);
-                    }
-                ));
-            listBox1.DataSource = l;
+            // less freaquent will be first ones
+            Array.Sort(pairs, new Comparison<KeyValuePair<char, float>>(
+                delegate(KeyValuePair<char, float> a, KeyValuePair<char, float> b)
+                {
+                    return a.Value.CompareTo(b.Value);
+                }
+                )
+                );
 
-            float txtLength = (float)textBoxMsg.TextLength; 
-            KeyValuePair<char, float>[] kvList = frq_dict.ToArray();
-            for (int i = 0; i < kvList.Length; i++)
+            // create leaves, less freaquent goes first, again
+            leaves = new Tree.Node[pairs.Length];
+            for (int i = 0; i < pairs.Length; i++)
             {
-                kvList[i] = new KeyValuePair<char,float>(kvList[i].Key, kvList[i].Value / txtLength);
+                leaves[i] = new Tree.Node();
+                leaves[i].k = pairs[i].Key;
+                // TODO count total probability and let last leave's p to be = (1 - sum)
+                leaves[i].p = pairs[i].Value / (float)textBoxMsg.TextLength;
             }
 
+            int index = 0;
 
+            while (index < pairs.Length - 1)
+            {
+                Tree.Node n = MakeNode(leaves[index], leaves[index + 1]);
+                n.children.Add(leaves[index]);
+                n.children.Add(leaves[index + 1]);
+
+                leaves[index] = new Tree.Node();
+                leaves[index + 1] = n;
+
+                // TODO вынести безымянный метод отдельно чтоб не new
+                Array.Sort(leaves, new Comparison<Tree.Node>(
+                delegate(Tree.Node a, Tree.Node b)
+                {
+                    return a.p.CompareTo(b.p);
+                }
+                ));
+
+                index++;
+            }
+
+            GatherCodes(leaves[pairs.Length - 1]);
+
+            //PrintCodes();
         }
-    }
 
-    class Node
-    {
-        Node parent;
+        object[] GatherCodes(Tree.Node root)
+        {
+
+            return null;
+            // root.children[0] => 0
+            // root.children[1] => 1
+        }
+
+        Tree.Node MakeNode(Tree.Node n1, Tree.Node n2)
+        {
+            return new Tree.Node('#', n1.p + n2.p);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            while (true)
+            {
+                double[] m = new double[1000];
+            }
+        }
 
     }
 }
