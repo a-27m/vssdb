@@ -17,6 +17,7 @@ namespace lab1
         }
 
         Tree tree;
+        KeyValuePair<char, float>[] pairs;
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -38,7 +39,7 @@ namespace lab1
                 }
             }
 
-            KeyValuePair<char, float>[] pairs = dict.ToArray();
+            pairs = dict.ToArray();
 
             // less freaquent will be first ones
             Array.Sort(pairs, new Comparison<KeyValuePair<char, float>>(
@@ -82,30 +83,38 @@ namespace lab1
             }
 
             GatherCodes(leaves[pairs.Length - 1]);
+        }
 
-            //PrintCodes();
+        private void PrintCodes()
+        {
+            throw new NotImplementedException();
         }
 
         object[] GatherCodes(Tree.Node root)
         {
+            Gardener(root.children[0], "0");
+            Gardener(root.children[1], "1");
 
             return null;
-            // root.children[0] => 0
-            // root.children[1] => 1
+        }
+
+        void Gardener(Tree.Node node, string prefix)
+        {
+            if (node.children.Count > 0)
+            {
+                Gardener(node.children[0], prefix + "0");
+                Gardener(node.children[1], prefix + "1");
+            }
+            else
+            {
+                // its leaf
+                listBox1.Items.Add("Node: "+node.k + " --> " + prefix);
+            }
         }
 
         Tree.Node MakeNode(Tree.Node n1, Tree.Node n2)
         {
             return new Tree.Node('#', n1.p + n2.p);
         }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            while (true)
-            {
-                double[] m = new double[1000];
-            }
-        }
-
     }
 }
