@@ -32,6 +32,11 @@ namespace KG1
             _x = x; _y = y; _z = z;
         }
 
+        public Vector(double x, double y)
+        {
+            _x = x; _y = y; _z = 0.0;
+        }
+
         public Vector(PointF pt)
         {
             _x = pt.X; _y = pt.Y; _z = 0;
@@ -49,12 +54,19 @@ namespace KG1
         public static Vector operator +(Vector v1, Vector v2)
         {
             return new Vector(
-                v1._x + v2._x, 
-                v1._y + v2._y, 
+                v1._x + v2._x,
+                v1._y + v2._y,
                 v1._z + v2._z);
         }
+        public static Vector operator -(Vector v1, Vector v2)
+        {
+            return new Vector(
+                v1._x - v2._x,
+                v1._y - v2._y,
+                v1._z - v2._z);
+        }
 
-        public PointF ToPoint()
+        public PointF ToPointF()
         {
             return new PointF((float)_x, (float)_y);
         }

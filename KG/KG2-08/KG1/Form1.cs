@@ -17,36 +17,11 @@ namespace KG1
         float mx = 100, my = 100;
         float ox = 100, oy = 100;
 
-        double l1(double x, double y)
-        {
-            return 0;
-        }
-
-        double l2(double x, double y)
-        {
-            return 0;
-        }
-
-        double l1l2(double x, double y)
-        {
-            return x * x + y * y - 1;
-        }
-
-        double l3(double x, double y)
-        {
-            return x-1;
-        }
-
-        double l4(double x, double y)
-        {
-            return y-1;
-        }
-
-        double lambda = 0.1;
-        double eps = 1e-3;
+        double lambda = 0.30;
+        double mju = 0.6;
+        float eps = 1e-2f;
 
         Vector r0, r1, r2, r3;
-
         Vector r(double u)
         {
             //return x * x + y * y - 1;
@@ -56,39 +31,27 @@ namespace KG1
                 + u * u * u * r3;
         }
 
-        double y1(double x, double l)
+        class Segment
         {
-            double f = 0.1e1 / (double)(-1 + l) * ((double)(l * x) - (double)l + Math.Sqrt((double)(-3 * l * l * x * x - 6 * l * l * x + 9 * l * l - 4 * x * x - 12 * l + 4 + 8 * l * x * x + 4 * l * x))) / 0.2e1;
-            return f;
+            public static Vector r0_global;
 
-        }
-        double y2(double x, double l)
-        {
-            double f = -(-(double)(l * x) + (double)l + Math.Sqrt((double)(-3 * l * l * x * x - 6 * l * l * x + 9 * l * l - 4 * x * x - 12 * l + 4 + 8 * l * x * x + 4 * l * x))) / (double)(-1 + l) / 0.2e1;
+            public Vector r1, r2;
+            public Vector r3;
 
-            return f;
-        }
+            Segment prev;
+            public Segment Previous
+            {
+                get { return prev; }
+                set { prev = value; }
+            }
 
-        double S(double x, double y) { return 0.0; }
-
-        PointF[] tabulate(double x1, double x2, double y1, double y2, double nx, double ny)
-        {
-            List<PointF> pts = new List<PointF>();
-
-            double hx = (x2 - x1) / nx;
-            double hy = (y2 - y1) / ny;
-
-            for (double x = x1; x <= x2; x += hx)
-                for (double y = y1; y <= y2; y += hy)
-                {
-                    if (Math.Abs(S(x, y)) < eps) pts.Add(new PointF((float)x, (float)y));
-                }
-
-            return pts.ToArray();
+            public Vector r0
+            {
+                get { return prev == null ?  r0_global : prev.r3; }
+            }
         }
 
-
-        List<PointF> pts;
+        List<Segment> sgs;
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -100,6 +63,26 @@ namespace KG1
            // pts = tabulate(-2, 2, -2, 2, 2000, 2000);
 
             //status1.Text = pts.Length.ToString();
+            if (sgs == null) return;
+            if (sgs.Count < 1) return;
+
+            firstSegment = true;
+            foreach (Segment s in sgs)
+            {
+                if (firstSegment)
+                {
+                    s.r1 = (s.r0 + s.r3) * 0.5;
+                    s.r2 = (s.r0 + s.r3) * 0.5;
+                    firstSegment = false;
+                }
+                else
+                {
+                    s.r1 = lambda * (s.r0 - s.Previous.r2) + s.r0;
+                    s.r2 = (lambda * lambda) * (s.r0 - 2 * s.Previous.r2 + s.Previous.r1)
+                        + mju / 3.0 * (s.r0 - s.Previous.r2) + 2 * s.r1 - s.r0;
+                }
+
+            }
 
             pictureBox1.Refresh();
 
@@ -107,8 +90,8 @@ namespace KG1
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            if (pts == null) return;
-            if (pts.Count < 2) return;
+            if (sgs == null) return;
+            if (sgs.Count < 1) return;
 
             Graphics g = e.Graphics;
             
@@ -117,29 +100,31 @@ namespace KG1
 
             g.Clear(Color.White);
 
-            List<PointF>.Enumerator l = pts.GetEnumerator();
-            l.MoveNext();
-            r0 = new Vector(l.Current);
+            List<Segment>.Enumerator l = sgs.GetEnumerator();
             while(l.MoveNext())
             {
-                r0 = r3;
-                r3 = new Vector(l.Current);
+                r0 = l.Current.r0;
+                r1 = l.Current.r1;
+                r2 = l.Current.r2;
+                r3 = l.Current.r3;
 
-                r1 = (r0 + r3) * 0.3;
-                r2 = (r0 + r3) * 0.6;
-
-                for (float u = 0; u <= 1; u += 1e-3f)
+                for (float u = 0; u <= 1; u += eps)
                 {
-                    PointF p = r(u).ToPoint();
+                    PointF p = r(u).ToPointF();
                     g.FillEllipse(Brushes.Black, p.X, p.Y, 2f / mx, 2f / my);
                 }
             }
 
-            Pen pen = new Pen(Color.Black, 0f);
+            Pen pen = new Pen(Color.Green, 0f);
             
-            foreach(PointF p in pts)
+            foreach(Segment s in sgs)
             {
-                g.DrawLines(pen, pts.ToArray());//(Brushes.Black, p.X, p.Y, 2f / mx, 2f / my);
+                pen.Color = Color.Green;
+                g.DrawLine(pen, s.r3.ToPointF(), s.r2.ToPointF());
+                pen.Color = Color.Blue;
+                g.DrawLine(pen, s.r2.ToPointF(), s.r1.ToPointF());
+                pen.Color = Color.Red;
+                g.DrawLine(pen, s.r1.ToPointF(), s.r0.ToPointF());
             }
         }
 
@@ -154,9 +139,18 @@ namespace KG1
         {
             if (double.TryParse(textBox1.Text, out lambda))
             {
-                button1_Click(sender, e);
+                //button1_Click(sender, e);
             }
         }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            if (double.TryParse(textBox2.Text, out mju))
+            {
+                //button1_Click(sender, e);
+            }
+        }
+
 
         private void Form1_Resize(object sender, EventArgs e)
         {
@@ -166,11 +160,62 @@ namespace KG1
             pictureBox1.Refresh();
         }
 
+        Segment last;
+        bool firstSegment = true;
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            if (pts == null) pts = new List<PointF>();
+            if (sgs == null)
+            { 
+                sgs = new List<Segment>();
+                Segment.r0_global = new Vector((e.X - ox) / mx, -(e.Y - oy) / my);
+                return;
+            }
 
-            pts.Add(new PointF((e.X -ox) / mx, -(e.Y-oy) / my));
+            // check if it's node
+            // ...
+
+            Segment prev = last;
+            last = new Segment();
+            last.r3 = new Vector((e.X - ox) / mx, -(e.Y - oy) / my);
+            last.Previous = prev; 
+            
+            if (firstSegment)
+            {
+                last.r1 = (last.r0 + last.r3) * 0.5;
+                last.r2 = (last.r0 + last.r3) * 0.5;
+                firstSegment = false;
+            }
+            else
+            {
+                last.r1 = lambda * (last.r0 - last.Previous.r2) + last.r0;
+
+                /*
+(
+  (
+   (-1/3)*
+   (
+     (-3*(l^2)*(r13-2*r12+r11)
+     )
+     -(m*(r13-r12))
+   )
+  )
+  +(2*r21)-r20
+)                 
+                 */
+
+
+                last.r2 = (lambda * lambda) * (last.r0 - 2 * last.Previous.r2 + last.Previous.r1) + mju / 3.0 * (last.r0 - last.Previous.r2) + 2 * last.r1 - last.r0;
+             
+                 
+                //last.r2 = lambda * lambda * (last.Previous.r2 - 2 * last.Previous.r1 + last.Previous.r0) + mju * (last.r0 - last.Previous.r2) - last.r0 + 2 * last.Previous.r2;
+            }
+            /*
+            f := ((3*(r22+(-2*r21)+r20))+(-3*(l^2)*(r13+(-2*r12)+r11))-(m*(r13-r12)))
+
+Output: 
+(((-1/3)*((-3*(l^2)*(r13+(-2*r12)+r11))-(m*(r13-r12))))+(2*r21)-r20)
+            */
+            sgs.Add(last);
 
             pictureBox1.Refresh();
         }
