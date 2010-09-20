@@ -19,7 +19,7 @@ namespace KG1
 
         double lambda = 0.30;
         double mju = 0.6;
-        float eps = 1e-2f;
+        float eps = 1e-3f;
 
         Vector r0, r1, r2, r3;
         Vector r(double u)
@@ -55,7 +55,7 @@ namespace KG1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (!double.TryParse(textBox1.Text, out lambda))
+            if (!double.TryParse(textBoxLambda.Text, out lambda))
             {
                 MessageBox.Show("Wrong number format in lambda!");
                 return;
@@ -81,11 +81,9 @@ namespace KG1
                     s.r2 = (lambda * lambda) * (s.r0 - 2 * s.Previous.r2 + s.Previous.r1)
                         + mju / 3.0 * (s.r0 - s.Previous.r2) + 2 * s.r1 - s.r0;
                 }
-
             }
 
             pictureBox1.Refresh();
-
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -96,7 +94,7 @@ namespace KG1
             Graphics g = e.Graphics;
             
             g.Transform = new System.Drawing.Drawing2D.Matrix(mx, 0, 0, -my, ox, oy);
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
             g.Clear(Color.White);
 
@@ -125,29 +123,39 @@ namespace KG1
                 g.DrawLine(pen, s.r2.ToPointF(), s.r1.ToPointF());
                 pen.Color = Color.Red;
                 g.DrawLine(pen, s.r1.ToPointF(), s.r0.ToPointF());
+
+                g.FillEllipse(Brushes.Gray, s.r3.ToPointF().X-4f/mx, s.r3.ToPointF().Y-4f/my, 8f / mx, 8f / my);
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            textBox1.Text = lambda.ToString("F3");
+            textBoxLambda.Text = lambda.ToString("F3");
+            textBoxMju.Text = mju.ToString("F3");
+
             ox = pictureBox1.Width / 2;
             oy = pictureBox1.Height / 2;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            if (double.TryParse(textBox1.Text, out lambda))
+            if (double.TryParse(textBoxLambda.Text, out lambda))
             {
-                //button1_Click(sender, e);
+                if (lambda > 3) lambda = 0;
+                else
+                    if (lambda < 0) lambda = 0;
+                button1_Click(sender, e);
             }
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-            if (double.TryParse(textBox2.Text, out mju))
+            if (double.TryParse(textBoxMju.Text, out mju))
             {
-                //button1_Click(sender, e);
+                if (mju > 3) mju = 0;
+                else
+                    if (mju < 0) mju = 0;
+                button1_Click(sender, e);
             }
         }
 
@@ -188,33 +196,9 @@ namespace KG1
             else
             {
                 last.r1 = lambda * (last.r0 - last.Previous.r2) + last.r0;
-
-                /*
-(
-  (
-   (-1/3)*
-   (
-     (-3*(l^2)*(r13-2*r12+r11)
-     )
-     -(m*(r13-r12))
-   )
-  )
-  +(2*r21)-r20
-)                 
-                 */
-
-
                 last.r2 = (lambda * lambda) * (last.r0 - 2 * last.Previous.r2 + last.Previous.r1) + mju / 3.0 * (last.r0 - last.Previous.r2) + 2 * last.r1 - last.r0;
-             
-                 
-                //last.r2 = lambda * lambda * (last.Previous.r2 - 2 * last.Previous.r1 + last.Previous.r0) + mju * (last.r0 - last.Previous.r2) - last.r0 + 2 * last.Previous.r2;
             }
-            /*
-            f := ((3*(r22+(-2*r21)+r20))+(-3*(l^2)*(r13+(-2*r12)+r11))-(m*(r13-r12)))
 
-Output: 
-(((-1/3)*((-3*(l^2)*(r13+(-2*r12)+r11))-(m*(r13-r12))))+(2*r21)-r20)
-            */
             sgs.Add(last);
 
             pictureBox1.Refresh();
