@@ -181,11 +181,11 @@ namespace lab1
                 }
                 B[i] += pairs[i].Value / 2.0f;
 
-                int m = (int)Math.Ceiling(Math.Log(1f / pairs[i].Value)) +1;
+                int m = (int)Math.Ceiling(Math.Log(1f / pairs[i].Value))+1;
 
                 string code = "";
                 float b = B[i];
-                for (int k = 0; k <= m; k++)
+                for (int k = 0; k < m; k++)
                 { 
                     b *= 2f;
                     int integer = (int)Math.Truncate(b);                    
