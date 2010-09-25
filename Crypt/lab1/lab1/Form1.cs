@@ -155,7 +155,7 @@ namespace lab1
 
             BuildPairs();
 
-            // less freaquent will be first ones
+            // alphabetically
             Array.Sort(pairs, new Comparison<KeyValuePair<char, float>>(
                 delegate(KeyValuePair<char, float> a, KeyValuePair<char, float> b)
                 {
@@ -212,7 +212,16 @@ namespace lab1
 
             BuildPairs();
 
-            RODic rodic = new RODic();
+            // alphabetically
+            Array.Sort(pairs, new Comparison<KeyValuePair<char, float>>(
+                delegate(KeyValuePair<char, float> a, KeyValuePair<char, float> b)
+                {
+                    return a.Key.CompareTo(b.Key);
+                }
+                )
+                );
+
+            RODic roDic = new RODic();
 
             int n = pairs.Length;
 
@@ -221,7 +230,7 @@ namespace lab1
             {
                 KeyValuePair<char, string>[] set = new KeyValuePair<char, string>[1];
                 set[0] = new KeyValuePair<char, string>(pairs[i].Key, "");
-                rodic.Add(set, 0f);
+                roDic.Add(set, 0f);
             }
 
             // (A,B) (B,C) ...
@@ -230,7 +239,7 @@ namespace lab1
                 KeyValuePair<char, string>[] set = new KeyValuePair<char, string>[2];
                 set[0] = new KeyValuePair<char, string>(pairs[i].Key, "0");
                 set[1] = new KeyValuePair<char, string>(pairs[i+1].Key, "1");
-                rodic.Add(set, pairs[i].Value + pairs[i+1].Value);
+                roDic.Add(set, pairs[i].Value + pairs[i+1].Value);
             }
 
             for (int k = 3; k <= n; k++)
@@ -238,9 +247,9 @@ namespace lab1
                 for (int i = 0; i <= n - k; i++)
                 {
                     int j = i + k - 1;
-                    //for (int j = i; j < i + k; j++)
                     {
-                        Debug.Print("k:{0} ({1},{2})", k, i, j);
+                        //DebugPrint("k:{0} ({1},{2})", k, i, j);
+                        string debugString = "";
 
                         int minMid = i;
                         float minCost = float.MaxValue;
@@ -251,6 +260,7 @@ namespace lab1
                         for (int mid = i; mid < j; mid++)
                         {
                             float c = 0;
+                            debugString = "(";
 
                             KeyValuePair<char, string>[] set1 = new KeyValuePair<char, string>[mid - i + 1];
                             KeyValuePair<char, string>[] set2 = new KeyValuePair<char, string>[j - mid];
@@ -259,28 +269,38 @@ namespace lab1
                             {
                                 set1[t-i] = new KeyValuePair<char, string>(pairs[t].Key, "");
                                 c += pairs[t].Value;
+
+                                debugString += pairs[t].Key;
                             }
+                            debugString += "), (";
                             for (int t = mid+1; t <= j; t++)
                             {
                                 set2[t-mid-1] = new KeyValuePair<char, string>(pairs[t].Key, "");
                                 c += pairs[t].Value;
-                            }
 
-                            c += rodic.Read(set1) + rodic.Read(set2);
+                                debugString += pairs[t].Key;
+
+                            }
+                            debugString += ")";
+
+                            c += roDic.Read(set1) + roDic.Read(set2);
+
+                            DebugPrint("{0}, Cч = {1}", debugString, c);
 
                             if (c < minCost)
                             {
                                 minCost = c;
                                 minMid = mid;
 
-                                li1 = rodic.Search(set1);
-                                li2 = rodic.Search(set2);
+                                li1 = roDic.Search(set1);
+                                li2 = roDic.Search(set2);
                             }
                         }
                         #endregion
 
-                        KeyValuePair<char, string>[] set0 = new KeyValuePair<char, string>[k];
+                        KeyValuePair<char, string>[] setNew = new KeyValuePair<char, string>[k];
 
+                        debugString = "Codes: (";
                         for (int t = i; t <= j; t++)
                         {
                             string code;
@@ -289,15 +309,48 @@ namespace lab1
                             else
                                 code = "1" + li2.ltrs[t - minMid-1].Value;
 
+                            setNew[t - i] = new KeyValuePair<char, string>(pairs[t].Key, code);
 
-                            set0[t - i] = new KeyValuePair<char, string>(pairs[t].Key, code);
+                            debugString += pairs[t].Key + "~" + code + " ";
                         }
+                        debugString += ")";
 
-                        rodic.Add(set0, minCost);
+                        DebugPrint("Minimal Cч = {0}; {1}" + Environment.NewLine, minCost, debugString);
+                        roDic.Add(setNew, minCost);
                     }
                 }
             }
-            UpdateHR(C: CurrentCost);
+
+            // now dictionary contains partition consisting from all
+            // symbols from input alphabet with their codes.
+
+            // Lets print them out and evaluate their costs.
+            RODic.LetterItem li = roDic.GetLastEntry();
+
+            for (int i = 0; i < li.ltrs.Length; i++)
+            {
+                dgv1.Rows.Add();
+                dgv1[0, indexDGV].Value = li.ltrs[i].Key;
+                dgv1[1, indexDGV].Value = pairs[i].Value.ToString("F3");//li.ltrs[i].Value.ToString("F3");
+                dgv1[2, indexDGV].Value = li.ltrs[i].Value;
+                indexDGV++;
+                //(*) CurrentCost += pairs[i].Value * li.ltrs[i].Value.Length;
+            }
+
+            //(*) UpdateHR(C: CurrentCost);
+            UpdateHR(C: li.cost);
+
+            //DebugPrint("cost_partial:{0}", li.cost);
+        }
+
+        private void DebugPrint(string format, params object[] p)
+        {
+            textBoxDebug.Text += string.Format(format, p) + Environment.NewLine;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxDebug.Visible = checkBox1.Checked;
         }
     }
 }

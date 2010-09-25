@@ -45,6 +45,7 @@ namespace lab1
         }
 
         List<LetterItem> items;
+        LetterItem last = null;
 
         public RODic()
         {
@@ -61,6 +62,7 @@ namespace lab1
             item.cost = cost;
 
             items.Add(item);
+            last = item;
         }
 
         public float Read(KeyValuePair<char, string>[] letters)
@@ -86,6 +88,12 @@ namespace lab1
                 }
             }
             return null;        
+        }
+
+        /// <returns>Last aded element or null, if nothing has been added yet.</returns>
+        public LetterItem GetLastEntry()
+        {
+            return last;
         }
     }
 }
