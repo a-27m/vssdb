@@ -6,23 +6,28 @@ namespace pre3d
 {
     public partial class Form1 : Form
     {        
+        const int n = 4;
+
+        int a, b;
+        double H, h;
+
         Matrix U, V;
         Matrix M, Mt;
         Matrix[,] B;
-        Graphic3D g3d = null;
-        int n;
-        double H, h;
+        Graphic3D g3d, g3dB = null;
+
+        double[][] r;
+        Point3d[][] pts;
 
         public Form1()
         {
             InitializeComponent();
 
-            int a = 8;            
-            int b = 8;
-
-            n = 4;
+            a = 8;            
+            b = 8;
             H = 1.0;
             h = 1.0 / n;
+
             U = new Matrix(1, 4);
             V = new Matrix(4, 1);
             M = new Matrix(4, 4);
@@ -30,11 +35,13 @@ namespace pre3d
                 { 1,  0,  0,  0},
                 {-3,  3,  0,  0},
                 { 3, -6,  3,  0},
-                { 1, -3,  3, -1}};
+                {-1,  3, -3,  1}};
 
             Mt = Matrix.Transpose(M);
 
             B = new Matrix[a,b];
+
+            r = null;
 
             double u, v;
 
@@ -46,17 +53,59 @@ namespace pre3d
                     for (int i = 0; i < n; i++)
                     {
                         u = ii * H + i * h;
-                        U.Elements = new double[,] { { 1, u, u * u, u * u * u } };
+ //                       U.Elements = new double[,] { { 1, u, u * u, u * u * u } };
+
                         for (int j = 0; j < n; j++)
                         {
                             v = jj * H + j * h;
-                            V.Elements = new double[,] { { 1 }, { v }, { v * v }, { v * v * v } };
+                           // V.Elements = new double[,] { { 1 }, { v }, { v * v }, { v * v * v } };
 
                             B[ii, jj].Elements[i, j] = fxy(u, v);
-                       }
+                        }
                     }
+                }
 
-                    Matrix r = U * M * B[ii,jj] * Mt * Matrix.Transpose(B[ii,jj]) * V;
+            CalcR();
+        }
+
+        void CalcR()
+        {
+            //r = new double[a * n][];
+            //for (int i = 0; i < a * n; i++)
+            //    r[i] = new double[b * n];
+            pts = new Point3d[a * n][];
+            for (int i = 0; i < a * n; i++)
+                pts[i] = new Point3d[b * n];
+
+            double u, v;
+
+            U.Elements = new double[1, 4];// { { 1, u, u * u, u * u * u } };
+            V.Elements = new double[4, 1];// { { 1 }, { v }, { v * v }, { v * v * v } };
+
+            for (int ii = 0; ii < a; ii++)
+                for (int jj = 0; jj < b; jj++)
+                {
+                    for (int i = 0; i < n; i++)
+                    {
+                        u = ii * H + i * h;
+                        U[0, 1] = u;
+                        U[0, 2] = u * u;
+                        U[0, 3] = u * u * u;
+
+                        for (int j = 0; j < n; j++)
+                        {
+                            v = jj * H + j * h;
+                            V[1, 0] = v;
+                            V[2, 0] = v * v;
+                            V[3, 0] = v * v * v;
+
+                            pts[ii * n + i][jj * n + j] = new Point3d(
+                                (float)u,
+                                (float)v,
+                                (float)(U * M * B[ii, jj] * Mt * V)[0, 0]
+                                );
+                        }
+                    }
                 }
         }
 
@@ -67,13 +116,13 @@ namespace pre3d
             return Math.Sin(x) * Math.Cos(y);
             // return -Math.Sqrt(x * x + y * y) + 4;
             //return x * x * Math.Cos(4*y);
-            
-
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            g3d = new Graphic3D(fxy, -2f, 2f, -2f, 2f, 0.1f);
+            //g3d = new Graphic3D(fxy, 0f, 8f, 0f, 8f, (float)h);
+            g3d = new Graphic3D(fxy, 0f, 0f, 0f, 0f, 1f);
+            g3d.pts = pts;
             g3d.phiV = -45f;
             g3d.phiH = -45f;
             pictureBox1.Refresh();
