@@ -5,16 +5,13 @@ using System.Windows.Forms;
 namespace pre3d
 {
     public partial class Form1 : Form
-    {
-        struct Portion
-        {
-            public Matrix U, M, B, V;
-        }
-
+    {        
+        Matrix U, V;
+        Matrix M, Mt;
+        Matrix[,] B;
         Graphic3D g3d = null;
-        Portion[,] ports;
-        int n = 4;
-        double H = 1, h;
+        int n;
+        double H, h;
 
         public Form1()
         {
@@ -23,28 +20,44 @@ namespace pre3d
             int a = 8;            
             int b = 8;
 
+            n = 4;
+            H = 1.0;
             h = 1.0 / n;
+            U = new Matrix(1, 4);
+            V = new Matrix(4, 1);
+            M = new Matrix(4, 4);
+            M.Elements = new double[4, 4] {
+                { 1,  0,  0,  0},
+                {-3,  3,  0,  0},
+                { 3, -6,  3,  0},
+                { 1, -3,  3, -1}};
 
-            ports = new Portion[a,b];
-            for (int i = 0; i < a; i++)
-                for (int j = 0; j < b; j++)
+            Mt = Matrix.Transpose(M);
+
+            B = new Matrix[a,b];
+
+            double u, v;
+
+            for (int ii = 0; ii < a; ii++)
+                for (int jj = 0; jj < b; jj++)
                 {
-                    //ports[i, j].U = new Matrix<double>(1, n);
-                    //ports[i, j].V = new Matrix<double>(n, 1);
-                    //ports[i, j].M = new Matrix<double>(n, n);
-                    //ports[i, j].B = new Matrix<double>(n, n);
+                    B[ii, jj] = new Matrix(n, n);
 
-                    for (int ii = 0; ii < n; ii++)
+                    for (int i = 0; i < n; i++)
                     {
-                        ports[i,j].U[1,ii] = 0;
-                        ports[i,j].V[ii,1] = 0;
+                        u = ii * H + i * h;
+                        U.Elements = new double[,] { { 1, u, u * u, u * u * u } };
+                        for (int j = 0; j < n; j++)
+                        {
+                            v = jj * H + j * h;
+                            V.Elements = new double[,] { { 1 }, { v }, { v * v }, { v * v * v } };
+
+                            B[ii, jj].Elements[i, j] = fxy(u, v);
+                       }
                     }
 
-                    //for (int jj = 0; jj < b; jj++)
-
+                    Matrix r = U * M * B[ii,jj] * Mt * Matrix.Transpose(B[ii,jj]) * V;
                 }
-
-
         }
 
         double fxy(double x, double y)
@@ -53,7 +66,7 @@ namespace pre3d
             // return x * y / 2f;
             return Math.Sin(x) * Math.Cos(y);
             // return -Math.Sqrt(x * x + y * y) + 4;
-            return x * x * Math.Cos(4*y);
+            //return x * x * Math.Cos(4*y);
             
 
         }
