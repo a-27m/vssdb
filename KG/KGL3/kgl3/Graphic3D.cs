@@ -27,7 +27,7 @@ namespace pre3d
 
     public class Graphic3D
     {
-        protected Point3d[][] pts;
+        public Point3d[][] pts;
 
         float sin(float degree)
         {
@@ -67,6 +67,9 @@ namespace pre3d
         public float phiH = 0f, phiV = 0f;
 
         public void Draw(Graphics g)
+        { Draw(g, false); }
+
+        public void Draw(Graphics g, bool Wireframe)
         {
             g.Clear(Color.White);
             g.Transform = new System.Drawing.Drawing2D.Matrix(zoom, 0, 0, zoom, ox, oy);
@@ -106,9 +109,12 @@ namespace pre3d
 
                     //int v = (int)((pts[i][j].z - z_min) / (z_max - z_min) * 200) + 50;
                     int v = 0;
+                    int u = 50;
 
-                    //g.FillPolygon(new SolidBrush(Color.FromArgb(v, v, v)),
-                    //    new PointF[] { p1, p2, p4, p3 });
+                    if (!Wireframe)
+                        g.FillPolygon(new SolidBrush(Color.FromArgb(u, u, u)),
+                            new PointF[] { p1, p2, p4, p3 });
+
                     pen.Color = Color.FromArgb(v, v, v);
                     g.DrawLine(pen, p1, p2);
                     g.DrawLine(pen, p1, p3);
