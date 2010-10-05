@@ -70,8 +70,11 @@ namespace pre3d
         { Draw(g, false); }
 
         public void Draw(Graphics g, bool Wireframe)
+        { Draw(g, false, true); }
+
+        public void Draw(Graphics g, bool Wireframe, bool EraseBackground)
         {
-            g.Clear(Color.White);
+            if (EraseBackground) g.Clear(Color.White);
             g.Transform = new System.Drawing.Drawing2D.Matrix(zoom, 0, 0, zoom, ox, oy);
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
@@ -86,13 +89,13 @@ namespace pre3d
             Xj = my * sin(phiH) * cos(phiV);
             Xk = mz * sin(phiV);
             Norm(ref Xi, ref Xj, ref Xk);
-            Yi = mx * cos(90f+phiH) * cos(phiV);
-            Yj = my *  sin(90f+phiH) * cos(phiV);
+            Yi = mx * cos(90f + phiH) * cos(phiV);
+            Yj = my * sin(90f + phiH) * cos(phiV);
             Yk = mz * sin(phiV);
             Norm(ref Yi, ref Yj, ref Yk);
-            Zi = mx * cos(phiH) * cos(90f+phiV);
-            Zj = my * sin(phiH) * cos(90f+phiV);
-            Zk = mz * sin(90f+phiV);
+            Zi = mx * cos(phiH) * cos(90f + phiV);
+            Zj = my * sin(phiH) * cos(90f + phiV);
+            Zk = mz * sin(90f + phiV);
             Norm(ref Zi, ref Zj, ref Zk);
 
             //for (int j = 1; j < pts.Length; j++)
@@ -131,7 +134,7 @@ namespace pre3d
             // x
             pen.Color = Color.Blue;
             //Project(ref p1, new Point3d(x_min, 0, 0));
-            Project(ref p2, new Point3d(x_max, 0, 0));            
+            Project(ref p2, new Point3d(x_max, 0, 0));
             g.DrawLine(pen, p1, p2);
 
             // y
@@ -211,5 +214,6 @@ namespace pre3d
             }
             return surf.ToArray();
         }
+
     }
 }

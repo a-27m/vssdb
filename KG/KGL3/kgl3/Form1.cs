@@ -8,7 +8,7 @@ namespace pre3d
     public partial class Form1 : Form
     {     
         // number of lines inside a rectangle
-        const int n = 4;
+        const int n = 3;
 
         // number of topological rectangles
         int a, b;
@@ -30,8 +30,8 @@ namespace pre3d
         {
             InitializeComponent();
 
-            a = 8;
-            b = 8;
+            a = 3;
+            b = 3;
             nu = 3;
             nv = 3;
             H = 1.0;
@@ -50,14 +50,14 @@ namespace pre3d
 
             Mt = Matrix.Transpose(M);
 
-            B = new Matrix(n, n);
+            B = new Matrix(4, 4);
 
             // First square is of n*n points any following
             // are (n-1)*(n-1) becouse of using two previous square's sides
             // so that we have r.Len == n+(a-1)*(n-1) == n+a*n-n-a+1 == a*(n-1)+1
-            r = new double[a * (n - 1) + 1][];
+            r = new double[a * n + 1][];
             for (int i = 0; i < r.Length; i++)
-                r[i] = new double[b * (n - 1) + 1];
+                r[i] = new double[b * n + 1];
 
             double u, v;
 
@@ -68,8 +68,9 @@ namespace pre3d
                 for (int j = 0; j < r[i].Length; j++)
                 {
                     v = j * h;
-                    r[i][j] = (i + j) & 1;
-                    //r[ii * n + i][jj * n + j] = fxy(u, v);
+                    //r[i][j] = (i + j) & 1;
+                   // r[i][j] = i & 1;
+                    r[i][j] = fxy(u, v);
                 }
             }
 
@@ -90,8 +91,8 @@ namespace pre3d
 
         private void SmoothOrder1()
         {
-            for (int i = n; i < a * (n - 1) + 1; i += n - 1)
-                for (int j = 0; j < b * (n - 1) + 1; j++)
+            for (int i = n; i < a * n + 1 - 1; i += n)
+                for (int j = 0; j < b * n + 1; j++)
                 {
                     double r3j_r2j = r[i][j] - r[i - 1][j];
 
@@ -99,21 +100,20 @@ namespace pre3d
 
                 }
 
-            for (int j = n; j < b * (n - 1) + 1; j += n - 1)
-                for (int i = 0; i < a * (n - 1) + 1; i++)
+            for (int j = n; j < b * n + 1 - 1; j += n)
+                for (int i = 0; i < a * n + 1; i++)
                 {
-                    double ri3_ri2 = r[i][j] - r[i][j-1];
+                    double ri3_ri2 = r[i][j] - r[i][j - 1];
 
-                    r[i][j+1] = r[i][j] + ri3_ri2;
-
+                    r[i][j + 1] = r[i][j] + ri3_ri2;
                 }
         }
 
         void BuildBeziers()
         {
-            pts = new Point3d[a * n * nu][];
-            for (int i = 0; i < a * n * nu; i++)
-                pts[i] = new Point3d[b * n * nv];
+            pts = new Point3d[(a * n) * nu][];
+            for (int i = 0; i < pts.Length; i++)
+                pts[i] = new Point3d[(b * n) * nv];
 
             double u, v;
 
@@ -134,14 +134,14 @@ namespace pre3d
                         u = i * stepU;
                         U[0, 1] = u;
                         U[0, 2] = u * u;
-                        U[0, 3] = u * u * u;
+                        U[0, 3] = U[0, 2] * u;
 
                         for (int j = 0; j < n * nv; j++)
                         {
                             v = j * stepV;
                             V[1, 0] = v;
                             V[2, 0] = v * v;
-                            V[3, 0] = v * v * v;
+                            V[3, 0] = V[2, 0] * v;
 
                             pts[ii * n * nu + i][jj * n * nv + j] = new Point3d(
                                 (float)(u + ii * H),
@@ -151,12 +151,14 @@ namespace pre3d
                         }
                     }
                 }
+
+            r_to_pts();
         }
         void r_to_pts()
         {
             ptsR = new Point3d[r.Length][];
             for (int i = 0; i < ptsR.Length; i++)
-                pts[i] = new Point3d[r[i].Length];
+                ptsR[i] = new Point3d[r[i].Length];
 
             for (int i = 0; i < ptsR.Length; i++)
             {
@@ -173,9 +175,9 @@ namespace pre3d
 
         private void MakeB(int ii, int jj, ref Matrix B)
         {
-            for (int i = 0; i < n; i++)
-                for (int j = 0; j < n; j++)
-                    B[i, j] = r[ii*n-ii+i][jj*n-jj+j];
+            for (int i = 0; i <= n; i++)
+                for (int j = 0; j <= n; j++)
+                    B[i, j] = r[ii*n+i][jj*n+j];
         }
 
         double fxy(double x, double y)
@@ -209,11 +211,24 @@ namespace pre3d
             {
                 g3d.Draw(e.Graphics);
                 Text = string.Format("h: {0:f2} deg., v: {1:f2}", g3d.phiH, g3d.phiV);
-            }
-            if (g3dR != null)
-            {
-                g3dR.Draw(e.Graphics, Wireframe:true);
-                //Text = string.Format("h: {0:f2} deg., v: {1:f2}", g3d.phiH, g3d.phiV);
+
+                if (g3dR != null)
+                {
+                    g3dR.ox = g3d.ox;
+                    g3dR.oy = g3d.oy;
+
+                    g3dR.phiH = g3d.phiH;
+                    g3dR.phiV = g3d.phiV;
+
+                    g3dR.zoom = g3d.zoom;
+
+                    g3dR.mx = g3d.mx;
+                    g3dR.my = g3d.my;
+                    g3dR.mz = g3d.mz;
+
+                    g3dR.Draw(e.Graphics, Wireframe: true, EraseBackground: false);
+                    //Text = string.Format("h: {0:f2} deg., v: {1:f2}", g3d.phiH, g3d.phiV);
+                }
             }
         }
 
@@ -223,12 +238,6 @@ namespace pre3d
             {
                 g3d.ox = pictureBox1.Size.Width / 2f;
                 g3d.oy = pictureBox1.Size.Height / 2f;
-
-                if (g3dR != null)
-                {
-                    g3dR.ox = g3d.ox;
-                    g3dR.oy = g3d.oy;
-                }
 
                 Refresh();
             }
