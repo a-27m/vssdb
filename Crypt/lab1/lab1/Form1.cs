@@ -35,7 +35,7 @@ namespace lab1
 
             double R = C - H;
 
-            label2.Text = string.Format("H = {0}, C = {1}, R = {2}", H, C, R);
+            labelStatusBar.Text = string.Format("H = {0}, C = {1}, R = {2}", H, C, R);
         }
 
         private void BuildPairs()
@@ -57,10 +57,27 @@ namespace lab1
 
             pairs = dict.ToArray();
 
-            for (int i = 0; i < pairs.Length; i++)
+            float sum = 0;
+            for (int i = 0; i < pairs.Length-1; i++)
             {
                 pairs[i] = new KeyValuePair<char, float>(pairs[i].Key, pairs[i].Value / (float)textBoxMsg.TextLength);
+                sum += pairs[i].Value;
             }
+            pairs[pairs.Length - 1] = new KeyValuePair<char, float>(pairs[pairs.Length - 1].Key, 1f - sum);
+        }
+
+        protected const string SYMBOLS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+        public static int BFromString(string code, int NumberBase)
+        {
+            int n = code.Length;
+            int value = 0;
+            for (int i = 0; i < n; i++)
+            {
+                value += SYMBOLS.IndexOf(code[i]) * (int)Math.Pow(NumberBase, i);
+            }
+
+            return value;
         }
 
         #region №1 - huffman
@@ -179,11 +196,11 @@ namespace lab1
                 }
                 B[i] += pairs[i].Value / 2.0f;
 
-                int m = (int)Math.Ceiling(Math.Log(1f / pairs[i].Value))+1;
+                int m = (int)Math.Ceiling(Math.Log(1f / pairs[i].Value))+2;
 
                 string code = "";
                 float b = B[i];
-                for (int k = 0; k < m; k++)
+                for (int k = 0; k <= m; k++)
                 { 
                     b *= 2f;
                     int integer = (int)Math.Truncate(b);                    
@@ -345,12 +362,31 @@ namespace lab1
 
         private void DebugPrint(string format, params object[] p)
         {
-            textBoxDebug.Text += string.Format(format, p) + Environment.NewLine;
+           // textBoxDebug.Text += string.Format(format, p) + Environment.NewLine;
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             textBoxDebug.Visible = checkBox1.Checked;
+        }
+
+        private void buttonTree_Click(object sender, EventArgs e)
+        {
+            FormTree ftree = new FormTree();
+            
+            if (dgv1.RowCount > 1)
+            {
+                ftree.codes = new List<string>();
+                for (int i = 0; i < dgv1.RowCount-1; i++)
+                {
+                    ftree.codes.Add(dgv1[2, i].Value.ToString());
+                }
+            }
+            ftree.UpdateCodes();
+
+            ftree.ShowDialog();
+
+            //labelStatusBar.Text = BFromString(textBoxMsg.Text, 2).ToString();
         }
     }
 }

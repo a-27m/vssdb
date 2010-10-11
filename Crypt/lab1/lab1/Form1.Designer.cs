@@ -36,12 +36,13 @@
             this.colProbability = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.textBoxMsg = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelStatusBar = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.buttonHuffman = new System.Windows.Forms.Button();
             this.buttonOptimal = new System.Windows.Forms.Button();
             this.buttonAlphabCodes = new System.Windows.Forms.Button();
             this.textBoxDebug = new System.Windows.Forms.TextBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.buttonTree = new System.Windows.Forms.Button();
             label1 = new System.Windows.Forms.Label();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             panel1 = new System.Windows.Forms.Panel();
@@ -56,7 +57,7 @@
             label1.AutoSize = true;
             label1.Location = new System.Drawing.Point(4, 0);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(31, 14);
+            label1.Size = new System.Drawing.Size(31, 13);
             label1.TabIndex = 3;
             label1.Text = "Text:";
             // 
@@ -65,23 +66,24 @@
             tableLayoutPanel1.ColumnCount = 4;
             tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 185F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 251F));
             tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 67F));
             tableLayoutPanel1.Controls.Add(this.dgv1, 0, 1);
             tableLayoutPanel1.Controls.Add(this.textBoxMsg, 1, 0);
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
-            tableLayoutPanel1.Controls.Add(this.label2, 0, 3);
+            tableLayoutPanel1.Controls.Add(this.labelStatusBar, 0, 3);
             tableLayoutPanel1.Controls.Add(panel1, 2, 0);
             tableLayoutPanel1.Controls.Add(this.textBoxDebug, 0, 2);
+            tableLayoutPanel1.Controls.Add(this.buttonTree, 3, 0);
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 4;
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 56F));
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new System.Drawing.Size(695, 482);
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
+            tableLayoutPanel1.Size = new System.Drawing.Size(773, 499);
             tableLayoutPanel1.TabIndex = 6;
             // 
             // dgv1
@@ -93,9 +95,9 @@
             this.colCode});
             tableLayoutPanel1.SetColumnSpan(this.dgv1, 4);
             this.dgv1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgv1.Location = new System.Drawing.Point(3, 63);
+            this.dgv1.Location = new System.Drawing.Point(3, 59);
             this.dgv1.Name = "dgv1";
-            this.dgv1.Size = new System.Drawing.Size(689, 190);
+            this.dgv1.Size = new System.Drawing.Size(767, 226);
             this.dgv1.TabIndex = 5;
             // 
             // colChar
@@ -127,39 +129,51 @@
             this.textBoxMsg.Location = new System.Drawing.Point(43, 3);
             this.textBoxMsg.Multiline = true;
             this.textBoxMsg.Name = "textBoxMsg";
-            this.textBoxMsg.Size = new System.Drawing.Size(397, 54);
+            this.textBoxMsg.Size = new System.Drawing.Size(409, 50);
             this.textBoxMsg.TabIndex = 0;
             this.textBoxMsg.Text = "this is some sample message";
             // 
-            // label2
+            // labelStatusBar
             // 
-            this.label2.AutoSize = true;
-            tableLayoutPanel1.SetColumnSpan(this.label2, 4);
-            this.label2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label2.Location = new System.Drawing.Point(3, 462);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(689, 14);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Ready";
+            this.labelStatusBar.AutoSize = true;
+            tableLayoutPanel1.SetColumnSpan(this.labelStatusBar, 4);
+            this.labelStatusBar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.labelStatusBar.Location = new System.Drawing.Point(3, 480);
+            this.labelStatusBar.Name = "labelStatusBar";
+            this.labelStatusBar.Size = new System.Drawing.Size(767, 13);
+            this.labelStatusBar.TabIndex = 6;
+            this.labelStatusBar.Text = "Ready";
             // 
             // panel1
             // 
-            tableLayoutPanel1.SetColumnSpan(panel1, 2);
             panel1.Controls.Add(this.checkBox1);
             panel1.Controls.Add(this.buttonHuffman);
             panel1.Controls.Add(this.buttonOptimal);
             panel1.Controls.Add(this.buttonAlphabCodes);
             panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            panel1.Location = new System.Drawing.Point(446, 3);
+            panel1.Location = new System.Drawing.Point(458, 3);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(246, 54);
+            panel1.Size = new System.Drawing.Size(245, 50);
             panel1.TabIndex = 7;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.checkBox1.Location = new System.Drawing.Point(202, 8);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(41, 31);
+            this.checkBox1.TabIndex = 3;
+            this.checkBox1.Text = "debug";
+            this.checkBox1.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // buttonHuffman
             // 
-            this.buttonHuffman.Location = new System.Drawing.Point(0, 7);
+            this.buttonHuffman.Location = new System.Drawing.Point(0, 6);
             this.buttonHuffman.Name = "buttonHuffman";
-            this.buttonHuffman.Size = new System.Drawing.Size(63, 41);
+            this.buttonHuffman.Size = new System.Drawing.Size(63, 38);
             this.buttonHuffman.TabIndex = 0;
             this.buttonHuffman.Text = "Huffman codes";
             this.buttonHuffman.UseVisualStyleBackColor = true;
@@ -167,9 +181,9 @@
             // 
             // buttonOptimal
             // 
-            this.buttonOptimal.Location = new System.Drawing.Point(138, 7);
+            this.buttonOptimal.Location = new System.Drawing.Point(138, 6);
             this.buttonOptimal.Name = "buttonOptimal";
-            this.buttonOptimal.Size = new System.Drawing.Size(63, 41);
+            this.buttonOptimal.Size = new System.Drawing.Size(63, 38);
             this.buttonOptimal.TabIndex = 2;
             this.buttonOptimal.Text = "Optimal codes";
             this.buttonOptimal.UseVisualStyleBackColor = true;
@@ -177,9 +191,9 @@
             // 
             // buttonAlphabCodes
             // 
-            this.buttonAlphabCodes.Location = new System.Drawing.Point(69, 7);
+            this.buttonAlphabCodes.Location = new System.Drawing.Point(69, 6);
             this.buttonAlphabCodes.Name = "buttonAlphabCodes";
-            this.buttonAlphabCodes.Size = new System.Drawing.Size(63, 41);
+            this.buttonAlphabCodes.Size = new System.Drawing.Size(63, 38);
             this.buttonAlphabCodes.TabIndex = 1;
             this.buttonAlphabCodes.Text = "Alphab. codes";
             this.buttonAlphabCodes.UseVisualStyleBackColor = true;
@@ -190,32 +204,30 @@
             tableLayoutPanel1.SetColumnSpan(this.textBoxDebug, 4);
             this.textBoxDebug.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxDebug.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxDebug.Location = new System.Drawing.Point(3, 259);
+            this.textBoxDebug.Location = new System.Drawing.Point(3, 291);
             this.textBoxDebug.Multiline = true;
             this.textBoxDebug.Name = "textBoxDebug";
             this.textBoxDebug.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxDebug.Size = new System.Drawing.Size(689, 200);
+            this.textBoxDebug.Size = new System.Drawing.Size(767, 186);
             this.textBoxDebug.TabIndex = 8;
             this.textBoxDebug.Visible = false;
             // 
-            // checkBox1
+            // buttonTree
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.checkBox1.Location = new System.Drawing.Point(202, 9);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(41, 32);
-            this.checkBox1.TabIndex = 3;
-            this.checkBox1.Text = "debug";
-            this.checkBox1.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.buttonTree.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.buttonTree.Location = new System.Drawing.Point(709, 9);
+            this.buttonTree.Name = "buttonTree";
+            this.buttonTree.Size = new System.Drawing.Size(61, 38);
+            this.buttonTree.TabIndex = 9;
+            this.buttonTree.Text = "Tree";
+            this.buttonTree.UseVisualStyleBackColor = true;
+            this.buttonTree.Click += new System.EventHandler(this.buttonTree_Click);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(695, 482);
+            this.ClientSize = new System.Drawing.Size(773, 499);
             this.Controls.Add(tableLayoutPanel1);
             this.Name = "Form1";
             this.Text = "Cryptography, labs 1-3";
@@ -235,12 +247,13 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colChar;
         private System.Windows.Forms.DataGridViewTextBoxColumn colProbability;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCode;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelStatusBar;
         private System.Windows.Forms.Button buttonHuffman;
         private System.Windows.Forms.Button buttonOptimal;
         private System.Windows.Forms.Button buttonAlphabCodes;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.TextBox textBoxDebug;
+        private System.Windows.Forms.Button buttonTree;
     }
 }
 
