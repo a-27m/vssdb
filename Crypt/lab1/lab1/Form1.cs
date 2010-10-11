@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using System.Diagnostics;
 
 namespace lab1
 {
@@ -66,19 +65,19 @@ namespace lab1
             pairs[pairs.Length - 1] = new KeyValuePair<char, float>(pairs[pairs.Length - 1].Key, 1f - sum);
         }
 
-        protected const string SYMBOLS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        //protected const string SYMBOLS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        public static int BFromString(string code, int NumberBase)
-        {
-            int n = code.Length;
-            int value = 0;
-            for (int i = 0; i < n; i++)
-            {
-                value += SYMBOLS.IndexOf(code[i]) * (int)Math.Pow(NumberBase, i);
-            }
+        //public static int BFromString(string code, int NumberBase)
+        //{
+        //    int n = code.Length;
+        //    int value = 0;
+        //    for (int i = 0; i < n; i++)
+        //    {
+        //        value += SYMBOLS.IndexOf(code[i]) * (int)Math.Pow(NumberBase, i);
+        //    }
 
-            return value;
-        }
+        //    return value;
+        //}
 
         #region №1 - huffman
         private void buttonHuffman_Click(object sender, EventArgs e)
@@ -355,7 +354,7 @@ namespace lab1
             }
 
             //(*) UpdateHR(C: CurrentCost);
-            UpdateHR(C: li.cost);
+            UpdateHR(li.cost);
 
             //DebugPrint("cost_partial:{0}", li.cost);
         }
@@ -384,7 +383,7 @@ namespace lab1
             }
             ftree.UpdateCodes();
 
-            ftree.ShowDialog();
+            ftree.Show();
 
             //labelStatusBar.Text = BFromString(textBoxMsg.Text, 2).ToString();
         }
