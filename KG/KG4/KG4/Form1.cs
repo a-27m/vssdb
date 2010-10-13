@@ -25,21 +25,34 @@ namespace KG4
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            Graphics g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             foreach (Point p in pts)
                 e.Graphics.FillEllipse(Brushes.White, p.X, p.Y, 5f, 5f);
+
+            if (convex != null)
+            {
+                Point prev = pts[convex[0]];
+                for (int i = 0; i < convex.Length; i++)
+                {
+                    g.DrawLine(Pens.White, prev, pts[convex[i]]);
+                    prev = pts[convex[i]];
+                }
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            MoveAll();
+           MoveAll();
             MakeConvex();
             pictureBox1.Refresh();
         }
 
         private void MakeConvex()
         {
+            if (convex == null) convex = new int[pts.Length];
+
             // find min y
             int minIndex = 0;
             int minVal = pts[minIndex].Y;
@@ -54,16 +67,37 @@ namespace KG4
 
             // chain
             convex[0] = minIndex;
-            int convI = 0;
-            while (0==1)
+            int convI = 1;
+            int magic = 1;
+            do
             {
-                double minCos = double.MaxValue;
                 minIndex = -1;
+
+                double maxCos = -1.1;
                 for (int i = 0; i < pts.Length; i++)
                 {
-                    //Math.Cos(pts[i].Y)
+                    Point p = pts[i];
+                    p.Offset(-pts[convex[convI - 1]].X, -pts[convex[convI - 1]].Y);
+
+                    double cos;
+                    if (magic * p.Y >= 0)
+                    {
+                        cos = p.X / Math.Sqrt(p.X * p.X + p.Y * p.Y);
+
+                        if (magic * cos > maxCos)
+                        {
+                            maxCos = magic * cos;
+                            minIndex = i;
+                        }
+                    }
                 }
-            }
+
+                if (minIndex == -1) { magic *= -1; continue; }
+
+                convex[convI++] = minIndex;
+
+                if (convI >= pts.Length) break;
+            } while (pts[convex[convI - 1]] != pts[convex[0]]);
         }
 
         private void MoveAll()

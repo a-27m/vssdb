@@ -1,6 +1,6 @@
 
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KG4", "KG4\KG4.csproj", "{CECDD701-C9DA-4F79-A805-1C1A0C79B748}"
 EndProject
 Global
