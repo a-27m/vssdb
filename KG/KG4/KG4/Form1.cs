@@ -34,7 +34,7 @@ namespace KG4
             if (convex != null)
             {
                 Point prev = pts[convex[0]];
-                for (int i = 0; i < convex.Length; i++)
+                for (int i = 0; i < convex.Length && convex[i]!=-1; i++)
                 {
                     g.DrawLine(Pens.White, prev, pts[convex[i]]);
                     prev = pts[convex[i]];
@@ -97,7 +97,10 @@ namespace KG4
                 convex[convI++] = minIndex;
 
                 if (convI >= pts.Length) break;
-            } while (pts[convex[convI - 1]] != pts[convex[0]]);
+            }
+            while (pts[convex[convI - 1]] != pts[convex[0]]);
+
+            for(int i = convI; i < pts.Length; i++) convex[i] = -1;
         }
 
         private void MoveAll()
@@ -158,7 +161,7 @@ namespace KG4
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Generate(20, pictureBox1.Width - 5, pictureBox1.Height - 5, 3);
+            Generate(10, pictureBox1.Width - 5, pictureBox1.Height - 5, 3);
 
             timer1.Enabled = !timer1.Enabled;
         }
