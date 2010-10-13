@@ -174,7 +174,7 @@ namespace lab1
 
             /*
              * в 10 пикс должна ложиться цифра. это бывает 
-             * когда масштаб мх больше 10. если меньше - то 
+             * когда масштаб mx больше 10. если меньше - то 
              * прыгать надо через два, пока цифра в 10 пикс
              * не перестанет укладываться в 20 и т. д.
              */
@@ -247,6 +247,36 @@ namespace lab1
             {
                 this.buttonAdd_Click(sender, e);
             }
+        }
+
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.None) return;
+
+            float factor;
+            int dx = e.X - mouseDownX;
+            int dy = e.Y - mouseDownY;
+
+            float w = System.Windows.Forms.Screen.GetWorkingArea(pictureBox1).Width;
+            factor = 1 - Math.Abs(dx / w);
+            if (Math.Sign(dx) > 0)
+                mx = mx / factor;
+            else
+                mx = mx * factor;
+
+            float h = System.Windows.Forms.Screen.GetWorkingArea(pictureBox1).Height;
+            factor = 1 - Math.Abs(dy / h);
+            if (Math.Sign(dy) < 0)
+                my = my / factor;
+            else
+                my = my * factor;
+
+            if (mx < 1e-2f) mx = 1e-2f;
+            if (my < 1e-2f) my = 1e-2f;
+
+            pictureBox1.Refresh();
+
+            mouseDownX = e.X; mouseDownY = e.Y;
         }
     }
 }
