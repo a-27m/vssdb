@@ -1,0 +1,20 @@
+
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KG4", "KG4\KG4.csproj", "{CECDD701-C9DA-4F79-A805-1C1A0C79B748}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CECDD701-C9DA-4F79-A805-1C1A0C79B748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CECDD701-C9DA-4F79-A805-1C1A0C79B748}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CECDD701-C9DA-4F79-A805-1C1A0C79B748}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CECDD701-C9DA-4F79-A805-1C1A0C79B748}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

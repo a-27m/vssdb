@@ -156,23 +156,23 @@ namespace pre3d
         }
         void r_to_pts()
         {
-            ptsR = new Point3d[r.Length][];
+            ptsR = new Point3d[r.Length/3+1][];
             for (int i = 0; i < ptsR.Length; i++)
-                ptsR[i] = new Point3d[r[i].Length];
+                ptsR[i] = new Point3d[r[i].Length/3+1];
 
             for (int i = 0; i < ptsR.Length; i++)
             {
                 for (int j = 0; j < ptsR[i].Length; j++)
                 {
                     ptsR[i][j] = new Point3d(
-                        (float)(i*h),
-                        (float)(j*h),
-                        (float)(r[i][j])
+                        (float)(i*h*3),
+                        (float)(j*h*3),
+                        (float)(r[i*3][j*3])
                         );
                 }
             }
         }
-
+        шел дин выпу
         private void MakeB(int ii, int jj, ref Matrix B)
         {
             for (int i = 0; i <= n; i++)
@@ -272,14 +272,19 @@ namespace pre3d
             //    g3d.alphaY += e.Delta / 12;
             //}
 
-            if (ctrlKeyPressed)
-            {
-                g3d.phiV += e.Delta / 12;
-            }
-            else
-            {
-                g3d.phiH += e.Delta / 12;
-            }
+            //if (ctrlKeyPressed)
+            //{
+            //    g3d.phiV += e.Delta / 12;
+            //}
+            //else
+            //{
+            //    g3d.phiH += e.Delta / 12;
+            //}
+
+            // zoom
+            if (e.Delta == 0) return;
+
+            g3d.zoom /= (float)Math.Pow(0.8f, Math.Sign(e.Delta));
 
             Refresh();
         }
@@ -334,7 +339,7 @@ namespace pre3d
                 if ((deltaX == 0) && (deltaY == 0))
                 {
                     // zoom
-                    g3d.zoom /= 0.8f;
+//                    g3d.zoom /= 0.8f;
                 }
                 else
                 {
