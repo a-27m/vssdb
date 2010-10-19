@@ -15,12 +15,18 @@ namespace KG4
         Point[] velocity;
         int[] convex, hamilton;
         Random rnd;
+        Font font;
+        Pen penConvex, penHamilton;
 
         public Form1()
         {
             InitializeComponent();
             pts = new Point[1];
-            rnd = new Random(); 
+            rnd = new Random();
+
+            font = new Font("Arial", 10f);
+            penConvex = new Pen(Color.White, 3f);
+            penHamilton = new Pen(Color.Blue, 1f);
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -28,16 +34,31 @@ namespace KG4
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
+            int k = 0;
+            int r = 3;
             foreach (Point p in pts)
-                e.Graphics.FillEllipse(Brushes.White, p.X, p.Y, 5f, 5f);
+            {
+                g.FillEllipse(Brushes.White, p.X-r, p.Y-r, 2*r, 2*r);
+                g.DrawString((k++).ToString(), font, Brushes.White, p.X, p.Y);
+            }
 
             if (convex != null)
             {
                 Point prev = pts[convex[0]];
                 for (int i = 0; i < convex.Length && convex[i]!=-1; i++)
                 {
-                    g.DrawLine(Pens.White, prev, pts[convex[i]]);
+                    g.DrawLine(penConvex, prev, pts[convex[i]]);
                     prev = pts[convex[i]];
+                }
+            }
+
+            if (hamilton != null)
+            {
+                Point prev = pts[hamilton[0]];
+                for (int i = 0; i < hamilton.Length && hamilton[i] != -1; i++)
+                {
+                    g.DrawLine(penHamilton, prev, pts[hamilton[i]]);
+                    prev = pts[hamilton[i]];
                 }
             }
         }
@@ -59,9 +80,11 @@ namespace KG4
             // determine inner points
             List<int> inside = new List<int>();
             for (int i = 0; i < pts.Length; i++) inside.Add(i);
-            for (int i = 0; i < convex.Length && convex[i] != -1; i++) inside.RemoveAt(convex[i]);
+            for (int i = 0; i < convex.Length && convex[i] != -1; i++) inside.Remove(convex[i]);
 
+            int N = 3;
             while (inside.Count > 0)
+            //while (N-- > 0)
             {
                 // choose one. strategy is to pick the farthest rel to convex nodes.
                 float maxDistance = float.MinValue;
@@ -82,22 +105,49 @@ namespace KG4
                         pTr[k].Offset(-pts[i].X, -pts[i].Y);
 
                     // max distance lookup
-                    for (int h = 0; h < hamilton.Length - 1 && hamilton[h + 1] != -1; h++)
+                    for (int H = 0; H < hamilton.Length - 1 && hamilton[H + 1] != -1; H++)
                     {
-                        float distance;
-                        int p = hamilton[h];
-                        int q = hamilton[h + 1];
-                        int x1 = pTr[p].X;
-                        int y1 = pTr[p].Y;
-                        int x2 = pTr[q].X;
-                        int y2 = pTr[q].Y;
+                        float distance=-1, distH2, distA2, distB2;
+                        int p = hamilton[H];
+                        int q = hamilton[H + 1];
+                        // A
+                        float x1 = pTr[p].X;
+                        float y1 = pTr[p].Y;
+                        // B
+                        float x2 = pTr[q].X;
+                        float y2 = pTr[q].Y;
+                        
+                        // OH = 2*S / o
+                        double o = Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+                        double h = 2.0 * (x1 * y2 - x2 * y1) / o;
 
-                        distance = (float)(2.0 * (x1 * y2 - x2 * y1) / Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
+                        //distH2 = (float)((4.0 * (x1 * y2 - x2 * y1) * (x1 * y2 - x2 * y1)) / ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
+
+                        Point AB = pTr[q]; // == B
+                        AB.Offset((int)-x1, (int)-y1); // = B-A
+
+                        double AH = -(x1 * AB.X + y1 * AB.Y) / Math.Sqrt(AB.X*AB.X+AB.Y*AB.Y);
+
+                        if (AH > o)
+                        {
+                            distA2 = (float)(x1 * x1 + y1 * y1);
+                            distB2 = (float)(x2 * x2 + y2 * y2);
+
+                            distance = (float)Math.Sqrt(Math.Min(distA2, distB2));
+                        }
+                        else
+                        {
+                            PointF n = new Point(-AB.Y, AB.X); // n T AB
+                            n.X /= (float)o;
+                            n.Y /= (float)o;
+
+                            distance = (float)Math.Abs(x1*n.X+y1*n.Y);
+                        }
 
                         if (distance < minDistance) 
                         { 
                             minDistance = distance; 
-                            nearestHamiltonNode = p;
+                            nearestHamiltonNode = H;
                         }
                     }
 
@@ -113,9 +163,13 @@ namespace KG4
                 // hamilton[farthestInsideFutureHamiltonInsertIndex]
                 // farthestInside
                 // hamilton[farthestInsideFutureHamiltonInsertIndex+1]
-                ;
+                for(int i = hamilton.Length-1; i>farthestInsideFutureHamiltonInsertIndex ; i--)
+                    hamilton[i] = hamilton[i-1];
+
+                hamilton[farthestInsideFutureHamiltonInsertIndex + 1] = farthestInside;
                 // determine conv[i] and conv[i+1]
 
+                inside.Remove(farthestInside);
             }
         }
 
@@ -154,7 +208,7 @@ namespace KG4
                     {
                         cos = p.X / Math.Sqrt(p.X * p.X + p.Y * p.Y);
 
-                        if (magic * cos > maxCos)
+                        if (magic * cos > maxCos && p.Y * magic > 0)
                         {
                             maxCos = magic * cos;
                             minIndex = i;
@@ -162,7 +216,11 @@ namespace KG4
                     }
                 }
 
-                if (minIndex == -1) { magic = -1; continue; }
+                if (minIndex == -1) 
+                {
+                    if (magic == 1) { magic = -1; continue; }
+                    else break;
+                }
 
                 convex[convI++] = minIndex;
 
@@ -230,16 +288,22 @@ namespace KG4
             }                
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonStart_Click(object sender, EventArgs e)
         {
-            Generate(200, pictureBox1.Width - 5, pictureBox1.Height - 5, 3);
-
             timer1.Enabled = !timer1.Enabled;
         }
 
         private void pictureBox1_Resize(object sender, EventArgs e)
         {
             Refresh();
+        }
+
+        private void buttonGenerate_Click(object sender, EventArgs e)
+        {
+            Generate(10, pictureBox1.Width - 5, pictureBox1.Height - 5, 3);
+            MakeConvex();
+            ConvexToGamilton();
+            pictureBox1.Refresh();
         }
     }
 }
