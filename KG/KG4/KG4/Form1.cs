@@ -13,14 +13,14 @@ namespace KG4
     {
         Point[] pts;
         Point[] velocity;
-        int[] convex;
+        int[] convex, hamilton;
         Random rnd;
 
         public Form1()
         {
             InitializeComponent();
             pts = new Point[1];
-            rnd = new Random();
+            rnd = new Random(); 
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -44,9 +44,79 @@ namespace KG4
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-           MoveAll();
+            MoveAll();
             MakeConvex();
+            ConvexToGamilton();
             pictureBox1.Refresh();
+        }
+
+        private void ConvexToGamilton()
+        {
+            // if (gamilton == null) gamilton = new int[pts.Length];
+
+            hamilton = (int[])convex.Clone();
+
+            // determine inner points
+            List<int> inside = new List<int>();
+            for (int i = 0; i < pts.Length; i++) inside.Add(i);
+            for (int i = 0; i < convex.Length && convex[i] != -1; i++) inside.RemoveAt(convex[i]);
+
+            while (inside.Count > 0)
+            {
+                // choose one. strategy is to pick the farthest rel to convex nodes.
+                float maxDistance = float.MinValue;
+                int farthestInside = -1;
+                int nearestHamiltonNode = -1;
+                int farthestInsideFutureHamiltonInsertIndex = -1;
+
+                //int far = 0; //int i = 0;
+                foreach (int i in inside)
+                {
+                    float minDistance = float.MaxValue;
+                    nearestHamiltonNode = -1;
+
+                    // current inside point translates to (0,0)
+                    // others respective to their relational position
+                    Point[] pTr = (Point[])pts.Clone();
+                    for (int k = 0; k < pts.Length; k++)
+                        pTr[k].Offset(-pts[i].X, -pts[i].Y);
+
+                    // max distance lookup
+                    for (int h = 0; h < hamilton.Length - 1 && hamilton[h + 1] != -1; h++)
+                    {
+                        float distance;
+                        int p = hamilton[h];
+                        int q = hamilton[h + 1];
+                        int x1 = pTr[p].X;
+                        int y1 = pTr[p].Y;
+                        int x2 = pTr[q].X;
+                        int y2 = pTr[q].Y;
+
+                        distance = (float)(2.0 * (x1 * y2 - x2 * y1) / Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
+
+                        if (distance < minDistance) 
+                        { 
+                            minDistance = distance; 
+                            nearestHamiltonNode = p;
+                        }
+                    }
+
+                    if (minDistance > maxDistance)
+                    {
+                        maxDistance = minDistance;
+                        farthestInside = i;
+                        farthestInsideFutureHamiltonInsertIndex = nearestHamiltonNode;
+                    }
+                }
+                
+                //   i n s e r t 
+                // hamilton[farthestInsideFutureHamiltonInsertIndex]
+                // farthestInside
+                // hamilton[farthestInsideFutureHamiltonInsertIndex+1]
+                ;
+                // determine conv[i] and conv[i+1]
+
+            }
         }
 
         private void MakeConvex()
@@ -92,7 +162,7 @@ namespace KG4
                     }
                 }
 
-                if (minIndex == -1) { magic *= -1; continue; }
+                if (minIndex == -1) { magic = -1; continue; }
 
                 convex[convI++] = minIndex;
 
@@ -117,7 +187,7 @@ namespace KG4
                 Point t= pts[i];
                 t.Offset(-(pictureBox1.Width / 2), -(pictureBox1.Height / 2));
                 //if (pts[i].X * pts[i].X + pts[i].Y * pts[i].Y > 200*200)
-                if (t.X * t.X + t.Y * t.Y > 200 * 200)
+                if (t.X * t.X + t.Y * t.Y > Math.Pow(Math.Min(pictureBox1.Width/2, pictureBox1.Height/2),2))
                 {
                     //float tgA = pts[i].Y / pts[i].X;
                     //velocity[i].X = -velocity[i].Y;
@@ -125,10 +195,11 @@ namespace KG4
                     //pts[i].Offset(-velocity[i].X, -velocity[i].Y);
                     //do { velocity[i].X = rnd.Next(2 * maxVel+1) - maxVel; } while (velocity[i].X == 0);
                     //do { velocity[i].Y = rnd.Next(2 * maxVel+1) - maxVel; } while (velocity[i].Y == 0);
-                    //pts[i].Offset(velocity[i].X, velocity[i].Y);
+                    
+                    //pts[i].Offset(-velocity[i].X, -velocity[i].Y);
 
-                    //velocity[i].X = -velocity[i].Y;
-                    //velocity[i].Y = -velocity[i].X;
+                    //velocity[i].X = -velocity[i].X;
+                    //velocity[i].Y = -velocity[i].Y;
 
                     //pts[i].X = rnd.Next(pictureBox1.Width);
                     //pts[i].Y = rnd.Next(pictureBox1.Height);
@@ -161,9 +232,14 @@ namespace KG4
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Generate(10, pictureBox1.Width - 5, pictureBox1.Height - 5, 3);
+            Generate(200, pictureBox1.Width - 5, pictureBox1.Height - 5, 3);
 
             timer1.Enabled = !timer1.Enabled;
+        }
+
+        private void pictureBox1_Resize(object sender, EventArgs e)
+        {
+            Refresh();
         }
     }
 }
