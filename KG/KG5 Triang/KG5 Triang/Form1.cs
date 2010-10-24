@@ -85,6 +85,8 @@ namespace KG5_Triang
             //for (int i = 3; i <4; i++)
             for (int i = 3; i < points.Length; i++)
             {
+                if (points[i].IsEmpty) continue;
+
                 PointF A = points[i];
 
                 Triangle t;
@@ -179,18 +181,18 @@ namespace KG5_Triang
 
             foreach (Triangle t in trsCollection)
             {
-                evenNumberOfIntersections = false;
-                for (int i = 0, j = 2; i < 3; j = i++)
-                {
-                    evenNumberOfIntersections ^= (t.v[0].X - p.X) * (t.v[1].Y - t.v[0].Y) - (t.v[1].X - t.v[0].X) * (t.v[0].Y - p.Y) > 0;
-                    evenNumberOfIntersections ^= (t.v[1].X - p.X) * (t.v[2].Y - t.v[1].Y) - (t.v[2].X - t.v[1].X) * (t.v[1].Y - p.Y) > 0;
-                    evenNumberOfIntersections ^= !((t.v[2].X - p.X) * (t.v[0].Y - t.v[2].Y) - (t.v[0].X - t.v[2].X) * (t.v[2].Y - p.Y) > 0);
-                    //if ((((t.v[i].Y <= p.Y) && (p.Y < t.v[j].Y)) || ((t.v[j].Y <= p.Y) && (p.Y < t.v[i].Y))) &&
-                     // (p.X > (t.v[j].X - t.v[i].X) * (p.Y - t.v[i].Y) / (t.v[j].Y - t.v[i].Y) + t.v[i].X))
-                     //(t.v[i].X < p.X) && (t.v[j].X > p.X) || (t.v[i].X > p.X) && (t.v[j].X < p.X))
-                    // (p.X > (t.v[j].X - t.v[i].X) * (p.Y - t.v[i].Y) / (t.v[j].Y - t.v[i].Y) + t.v[i].X))
-                    //    evenNumberOfIntersections = !evenNumberOfIntersections;
-                }
+                bool signPositive1 = (t.v[0].X - p.X) * (t.v[1].Y - t.v[0].Y) - (t.v[1].X - t.v[0].X) * (t.v[0].Y - p.Y) > 0;
+                bool signPositive2 = (t.v[1].X - p.X) * (t.v[2].Y - t.v[1].Y) - (t.v[2].X - t.v[1].X) * (t.v[1].Y - p.Y) > 0;
+                bool signPositive3 = (t.v[2].X - p.X) * (t.v[0].Y - t.v[2].Y) - (t.v[0].X - t.v[2].X) * (t.v[2].Y - p.Y) > 0;
+
+                evenNumberOfIntersections = !(signPositive1 ^ signPositive2) & !(signPositive1 ^ signPositive3);
+
+                //if ((((t.v[i].Y <= p.Y) && (p.Y < t.v[j].Y)) || ((t.v[j].Y <= p.Y) && (p.Y < t.v[i].Y))) &&
+                // (p.X > (t.v[j].X - t.v[i].X) * (p.Y - t.v[i].Y) / (t.v[j].Y - t.v[i].Y) + t.v[i].X))
+                //(t.v[i].X < p.X) && (t.v[j].X > p.X) || (t.v[i].X > p.X) && (t.v[j].X < p.X))
+                // (p.X > (t.v[j].X - t.v[i].X) * (p.Y - t.v[i].Y) / (t.v[j].Y - t.v[i].Y) + t.v[i].X))
+                //    evenNumberOfIntersections = !evenNumberOfIntersections;
+
                 if (evenNumberOfIntersections) return t;
             }
             return null;
