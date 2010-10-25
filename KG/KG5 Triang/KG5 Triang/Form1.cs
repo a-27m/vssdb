@@ -140,14 +140,16 @@ namespace KG5_Triang
                     float x2 = t.v[l].X - p.X;
                     float y2 = t.v[l].Y - p.Y;
 
-                    // OH = 2*S / o
-                    double o = Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-                    double h = Math.Abs(2.0 * (x1 * y2 - x2 * y1) / o);
-
-
                     PointF AB = Point.Empty;// vector
                     AB.X = x2 - x1;
                     AB.Y = y2 - y1;
+                    
+                    //double o = Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+                    double o = Math.Sqrt(AB.X * AB.X + AB.Y * AB.Y);
+                    // OH = 2*S / o
+                    double h = Math.Abs(2 * (x1 * y2 - x2 * y1) / o)/2;
+
+
 
                     double AH = -(x1 * AB.X + y1 * AB.Y) / o;
 
