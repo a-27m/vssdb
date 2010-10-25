@@ -129,21 +129,39 @@ namespace KG5_Triang
             foreach (Triangle t in trsCollection)
             {
                 index++;
-                int l = 2;
-                for(int k = 0; k < 3; l = k++)
+                for(int a = 0, b=1, c = 2; a < 3; c = b, b = a++)
                 {   
                     float distance = -1;
+                    // P
+                    float xp = p.X - t.v[c].X;
+                    float yp = p.Y - t.v[c].Y;
+
                     // A
-                    float x1 = t.v[k].X - p.X;
-                    float y1 = t.v[k].Y - p.Y;
+                    float xa = t.v[a].X - t.v[c].X;
+                    float ya = t.v[a].Y - t.v[c].Y;
                     // B
-                    float x2 = t.v[l].X - p.X;
-                    float y2 = t.v[l].Y - p.Y;
+                    float xb = t.v[b].X - t.v[c].X;
+                    float yb = t.v[b].Y - t.v[c].Y;
 
                     PointF AB = Point.Empty;// vector
                     AB.X = x2 - x1;
                     AB.Y = y2 - y1;
+
+                    double cosACP, cosPCB;
+
                     
+                    double modA, modB, modP;
+                    modA = Math.Sqrt(xa * xa + ya * ya);
+                    modB = Math.Sqrt(xb * xb + yb * yb);
+                    modP = Math.Sqrt(xp * xp + yp * yp);
+
+                    // cos = a*p / |a|*|p|
+                    cosACP = (xa * xp + ya * yp) / (modA *modB);
+                    // cos = b*p / |b|*|p|
+                    cosPCB = (xb * xp + yb * yp) / (modA * modP);
+
+                    if (cosACP < cosPCB) // get it!
+
                     //double o = Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
                     double o = Math.Sqrt(AB.X * AB.X + AB.Y * AB.Y);
                     // OH = 2*S / o
