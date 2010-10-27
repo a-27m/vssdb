@@ -11,67 +11,131 @@ namespace KG5_Triang
 {
     public partial class Form1 : Form
     {
-        int[] convex;
+        //int[] convex;
         PointF[] pts;
         Random rnd;
         Font font;
         Pen penConvex;
         Pen penTriangle;
-        int gridStep = 50;
+        //int gridStep = 50;
         IList<Triangle> triangles;
-
-        public class Triangle
-        {
-            //public PointF v1, v2, v3;
-            public PointF[] v;
-            //public Triangle t1, t2, t3;
-            public Triangle[] t;
-
-            public PointF center; // ?
-            public int hashX;
-            public int HashY;
-
-            public Triangle(
-                PointF vertex1, PointF vertex2, PointF vertex3, 
-                Triangle neighbour1, Triangle neighbour2, Triangle neighbour3
-                )
-                : this(vertex1, vertex2, vertex3)
-            {
-                t = new Triangle[3];
-                t[0] = neighbour1;
-                t[1] = neighbour2;
-                t[2] = neighbour3;
-            }
-
-            public Triangle(PointF vertex1, PointF vertex2, PointF vertex3)
-            {
-                v = new PointF[3]; 
-                v[0] = vertex1;
-                v[1] = vertex2;
-                v[2] = vertex3;
-
-                center.X = (vertex1.X + vertex2.X + vertex3.X) / 3f;
-                center.Y = (vertex1.Y + vertex2.Y + vertex3.Y) / 3f;
-            }
-        }
 
         void Flip(ref Triangle A, ref Triangle B)
         {
-            int i1, j1, i2, j2;
+            //int i1, j1, i2, j2;
 
-            for(int i = 0; i < 3; i++)
-            for(int j = 0; j < 3; j++)
-            if (A.v[i] == B.v[j])
-            {i1 = i;}
+            //for(int i = 0; i < 3; i++)
+            //for(int j = 0; j < 3; j++)
+            //if (A.v[i] == B.v[j])
+            //{i1 = i;}
         }
 
-        IList<Triangle> DelaunayIterative(PointF[] points)
-        {
+        IList<Triangle> SHull(PointF[] points)
+        { 
             List<Triangle> trs = new List<Triangle>();
 
-            // sort by X then by Y
-            //Array.Sort<PointF>(points, delegate(PointF a, PointF b) { return Math.Sign(a.Y - b.Y); });
-            //Array.Sort<PointF>(points, delegate(PointF a, PointF b) { return Math.Sign(a.X - b.X); });
+            // select a seed point x_0 from points[], 
+            // sort according to |x_i - x_0|^2.
+            float x0, y0;
+            x0 = points[0].X;
+            y0 = points[0].Y;
+
+            Array.Sort<PointF>(points, 
+                delegate(PointF a, PointF b)
+                {
+                    float dx_ab, dy_ab;
+                    dx_ab = a.X - b.X;
+                    dy_ab = a.Y - b.Y;
+                    return Math.Sign(
+                        dx_ab * (a.X + b.X) - 2 * x0 * dx_ab +
+                        dy_ab * (a.Y + b.Y) - 2 * y0 * dy_ab
+                        );
+                }
+            );
+
+            List<int> convhull = new List<int>();
+
+            if (IsCCW(points[0], points[1], points[2]))
+            {
+                // keep [0 1 2]
+                convhull.Add(0);
+                convhull.Add(1);
+                convhull.Add(2);
+
+                trs.Add(new Triangle(points[0], points[1], points[2]));
+            }
+            else
+            {
+                // make [0 2 1]
+
+                convhull.Add(0);
+                convhull.Add(2);
+                convhull.Add(1);
+                trs.Add(new Triangle(points[0], points[2], points[1]));
+            }
+
+            x0 = (points[0].X + points[1].X + points[2].X) / 3f;
+            y0 = (points[0].Y + points[1].Y + points[2].Y) / 3f;
+
+            Array.Sort<PointF>(points, 
+                delegate(PointF a, PointF b)
+                {
+                    float dx_ab, dy_ab;
+                    dx_ab = a.X - b.X;
+                    dy_ab = a.Y - b.Y;
+                    return Math.Sign(
+                        dx_ab * (a.X + b.X) - 2 * x0 * dx_ab +
+                        dy_ab * (a.Y + b.Y) - 2 * y0 * dy_ab
+                        );
+                }
+            );
+
+            for (int i = 3; i < points.Length; i++)
+            { 
+                // reaverse hull and check visibility condition
+                bool firstGoes = true;
+                int edgeIndex = 0;
+                foreach (int edge in convhull)
+                {
+                    int edgeNext = edge + 1;
+                    if (edgeNext >= convhull.Count) edgeNext = 0; // or -=convhull.Count
+
+                    bool visible;
+                    visible = TestVisible(points[i], points[edge], points[edgeNext]);
+
+                    if (visible && edgeIndex == 0) firstGoes = true;
+                }
+            }
+
+            return trs;
+        }
+
+        private bool TestVisible(PointF lookFrom, PointF A, PointF B)
+        {
+            PointF OA = PointF.Empty;
+            PointF OB = PointF.Empty;
+            OA.X = A.X - lookFrom.X;
+            OA.Y = A.Y - lookFrom.Y;
+            OB.X = B.X - lookFrom.X;
+            OB.Y = B.Y - lookFrom.Y;
+
+            return OA.X * OB.Y - OA.Y * OB.X > 0;
+        }
+
+        private bool IsCCW(PointF A, PointF B, PointF C)
+        {
+            PointF AB = PointF.Empty;
+            PointF AC = PointF.Empty;
+            AB.X = B.X - A.X;
+            AB.Y = B.Y - A.Y;
+            AC.X = C.X - A.X;
+            AC.Y = C.Y - A.Y;
+
+            return AB.X * AC.Y - AB.Y * AC.X < 0;
+        }
+/*
+        IList<Triangle> DelaunayIterative(PointF[] points)
+        {
 
             // remove duplicates. this way?
             for (int i = 0; i < points.Length - 1; i++)
@@ -102,12 +166,6 @@ namespace KG5_Triang
                 }
                 else
                 {
-                    /*Triangle t1, t2, t3;
-                    t1 = new Triangle(t.v[0], t.v[1], A);
-                    t2 = new Triangle(t.v[1], t.v[2], A);
-                    t3 = new Triangle(t.v[2], t.v[0], A);
-                    */
-
                     trs.Add(new Triangle(t.v[0], t.v[1], A));
                     trs.Add(new Triangle(t.v[1], t.v[2], A));
                     trs.Add(new Triangle(t.v[2], t.v[0], A));
@@ -236,7 +294,7 @@ namespace KG5_Triang
         {
             return null;
         }
-
+*/
         public Form1()
         {
             InitializeComponent();
@@ -266,16 +324,16 @@ namespace KG5_Triang
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            if (convex != null)
-            {
-                PointF prev = pts[convex[0]];
-                for (int i = 0; i < convex.Length && convex[i] != -1; i++)
-                {
-                    g.DrawLine(penConvex, prev, pts[convex[i]]);
-                    prev = pts[convex[i]];
-                }
-                g.DrawLine(penConvex, prev, pts[convex[0]]);
-            }
+            //if (convex != null)
+            //{
+            //    PointF prev = pts[convex[0]];
+            //    for (int i = 0; i < convex.Length && convex[i] != -1; i++)
+            //    {
+            //        g.DrawLine(penConvex, prev, pts[convex[i]]);
+            //        prev = pts[convex[i]];
+            //    }
+            //    g.DrawLine(penConvex, prev, pts[convex[0]]);
+            //}
 
             if (triangles != null)
             {
@@ -317,13 +375,11 @@ namespace KG5_Triang
         private void buttonTriangulate_Click(object sender, EventArgs e)
         {
             //MakeConvex();
-            triangles = DelaunayIterative(pts);
+            triangles = SHull(pts);
 
             pictureBox1.Refresh();
         }
-
-
-        private void MakeConvex()
+/*        private void MakeConvex()
         {
             //if (convex == null)
                 convex = new int[pts.Length];
@@ -382,6 +438,6 @@ namespace KG5_Triang
 
             for (int i = convI; i < pts.Length; i++) convex[i] = -1;
         }
-
+*/  
     }
 }
