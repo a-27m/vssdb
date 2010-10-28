@@ -6,27 +6,37 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace KG4
 {
     public partial class Form1 : Form
     {
-        Point[] pts;
-        Point[] velocity;
+        PointF[] pts;
+        PointF[] velocity;
         int[] convex, hamilton;
         Random rnd;
         Font font;
         Pen penConvex, penHamilton;
+        
+        double maxR2 = 1e20;
 
         public Form1()
         {
             InitializeComponent();
-            pts = new Point[1];
             rnd = new Random();
 
+            W = pictureBox1.Width;
+            H = pictureBox1.Height;
+
             font = new Font("Arial", 10f);
-            penConvex = new Pen(Color.White, 3f);
-            penHamilton = new Pen(Color.Blue, 1f);
+            penConvex = new Pen(Color.DarkGray, 2f);
+            penHamilton = new Pen(Color.Green, 0.2f);
+
+            //panel1.Visible = false;
+
+            buttonGenerate_Click(null, null);
+            buttonStart_Click(null, null);
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -34,17 +44,9 @@ namespace KG4
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            int k = 0;
-            int r = 3;
-            foreach (Point p in pts)
+            if (convex != null && checkBoxConvexHull.Checked)
             {
-                g.FillEllipse(Brushes.White, p.X-r, p.Y-r, 2*r, 2*r);
-                g.DrawString((k++).ToString(), font, Brushes.White, p.X, p.Y);
-            }
-
-            if (convex != null)
-            {
-                Point prev = pts[convex[0]];
+                PointF prev = pts[convex[0]];
                 for (int i = 0; i < convex.Length && convex[i] != -1; i++)
                 {
                     g.DrawLine(penConvex, prev, pts[convex[i]]);
@@ -52,10 +54,10 @@ namespace KG4
                 }
                 g.DrawLine(penConvex, prev, pts[convex[0]]);
             }
-            return;
-            if (hamilton != null)
+            
+            if (hamilton != null && checkBoxHamilton.Checked)
             {
-                Point prev = pts[hamilton[0]];
+                PointF prev = pts[hamilton[0]];
                 for (int i = 0; i < hamilton.Length && hamilton[i] != -1; i++)
                 {
                     g.DrawLine(penHamilton, prev, pts[hamilton[i]]);
@@ -63,20 +65,35 @@ namespace KG4
                 }
                 g.DrawLine(penHamilton, prev, pts[hamilton[0]]);
             }
+
+            float r = 2;
+            if (pts != null)
+            {
+                int i = 0;
+                foreach (PointF p in pts)
+                {
+                    //r = (p.X - pictureBox1.Width / 2) * (p.X - pictureBox1.Width / 2) + (p.Y - pictureBox1.Height / 2) * (p.Y - pictureBox1.Height / 2);
+                    //r = (int)Math.Sqrt(r / maxR2 * 100) + r_min;
+                    r =  Math.Abs(velocity[i].X) + Math.Abs(velocity[i].Y);
+                    r /= 2;
+                    i++;                    
+                    g.FillRectangle(Brushes.White, p.X - r, p.Y - r, 2 * r, 2 * r);
+                }
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (pts == null) return;
+
             MoveAll();
-            MakeConvex();
-            ConvexToGamilton();
+            if (checkBoxConvexHull.Checked || checkBoxHamilton.Checked) MakeConvex();
+            if (checkBoxHamilton.Checked) ConvexToGamilton();
             pictureBox1.Refresh();
         }
 
         private void ConvexToGamilton()
         {
-            // if (gamilton == null) gamilton = new int[pts.Length];
-
             hamilton = (int[])convex.Clone();
 
             // determine inner points
@@ -84,17 +101,14 @@ namespace KG4
             for (int i = 0; i < pts.Length; i++) inside.Add(i);
             for (int i = 0; i < convex.Length && convex[i] != -1; i++) inside.Remove(convex[i]);
 
-            int N = 3;
             while (inside.Count > 0)
-            //while (N-- > 0)
             {
                 // choose one. strategy is to pick the farthest rel to convex nodes.
-                float maxDistance = float.MaxValue;
+                float maxDistance = float.MinValue;
                 int farthestInside = -1;
                 int nearestHamiltonNode = -1;
                 int farthestInsideFutureHamiltonInsertIndex = -1;
 
-                //int far = 0; //int i = 0;
                 foreach (int i in inside)
                 {
                     float minDistance = float.MaxValue;
@@ -102,14 +116,17 @@ namespace KG4
 
                     // current inside point translates to (0,0)
                     // others respective to their relational position
-                    Point[] pTr = (Point[])pts.Clone();
+                    PointF[] pTr = (PointF[])pts.Clone();
                     for (int k = 0; k < pts.Length; k++)
-                        pTr[k].Offset(-pts[i].X, -pts[i].Y);
+                    {
+                        pTr[k].X = pTr[k].X - pts[i].X;
+                        pTr[k].Y = pTr[k].Y - pts[i].Y;
+                    }
 
                     // max distance lookup
                     for (int H = 0; H < hamilton.Length - 1 && hamilton[H + 1] != -1; H++)
                     {
-                        float distance = -1, distH2, distA2, distB2;
+                        float distance = -1;
                         int p = hamilton[H];
                         int q = hamilton[H + 1];
                         // A
@@ -119,35 +136,49 @@ namespace KG4
                         float x2 = pTr[q].X;
                         float y2 = pTr[q].Y;
 
+                        // OH = 2*S / o
+                        double o2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+                        double ho = Math.Abs(2.0 * (x1 * y2 - x2 * y1) / o2);
 
-                        distA2 = x1 * x1 + y1 * y1;
-                        distB2 = x2 * x2 + y2 * y2;
-                        distance = (float)(Math.Sqrt(distA2) + Math.Sqrt(distB2));
 
-                        if (distance < minDistance)
+                        //PointF AB = pTr[q];
+                        //AB.X = AB.X - x1; // == B-A
+                        //AB.Y = AB.Y - y1;
+
+                        double AH = -(x1 * (x2 - x1) + y1 * (y2 - y1));
+
+                        if (AH > o2 || AH < 0)
+                            distance = float.MaxValue;
+                        else
+                            distance = (float)ho;
+
+                        if (distance <= minDistance)
                         {
                             minDistance = distance;
                             nearestHamiltonNode = H;
                         }
                     }
 
-                    if (minDistance < maxDistance)
+                    if (minDistance > maxDistance)
                     {
                         maxDistance = minDistance;
                         farthestInside = i;
                         farthestInsideFutureHamiltonInsertIndex = nearestHamiltonNode;
                     }
                 }
-                
+                if (farthestInsideFutureHamiltonInsertIndex < 0)
+                {
+                    timer1.Enabled = false;
+                    MessageBox.Show("Cannot insert any of inside points");
+                    return;
+                }
+
                 //   i n s e r t 
-                // hamilton[farthestInsideFutureHamiltonInsertIndex]
-                // farthestInside
-                // hamilton[farthestInsideFutureHamiltonInsertIndex+1]
+                //  farthestInside after hamilton[farthestInsideFutureHamiltonInsertIndex]
                 for(int i = hamilton.Length-1; i>farthestInsideFutureHamiltonInsertIndex ; i--)
                     hamilton[i] = hamilton[i-1];
 
                 hamilton[farthestInsideFutureHamiltonInsertIndex + 1] = farthestInside;
-                // determine conv[i] and conv[i+1]
 
                 inside.Remove(farthestInside);
             }
@@ -159,7 +190,7 @@ namespace KG4
 
             // find min y
             int minIndex = 0;
-            int minVal = pts[minIndex].Y;
+            float minVal = pts[minIndex].Y;
             for (int i = 0; i < pts.Length; i++)
             {
                 if (pts[i].Y < minVal)
@@ -180,8 +211,9 @@ namespace KG4
                 double maxCos = -1.1;
                 for (int i = 0; i < pts.Length; i++)
                 {
-                    Point p = pts[i];
-                    p.Offset(-pts[convex[convI - 1]].X, -pts[convex[convI - 1]].Y);
+                    PointF p = pts[i];
+                    p.X = p.X - pts[convex[convI - 1]].X;
+                    p.Y = p.Y - pts[convex[convI - 1]].Y;
 
                     double cos;
                     if (magic * p.Y >= 0)
@@ -213,59 +245,60 @@ namespace KG4
 
         private void MoveAll()
         {
-            int maxVel = 3;
-
             for (int i = 0; i < pts.Length; i++)
             {
-                pts[i].Offset(velocity[i]);
-            }
+                pts[i].X = pts[i].X + velocity[i].X;
+                pts[i].Y = pts[i].Y + velocity[i].Y;
 
-            for (int i = 0; i < pts.Length; i++)
-            {
-                Point t= pts[i];
-                t.Offset(-(pictureBox1.Width / 2), -(pictureBox1.Height / 2));
-                //if (pts[i].X * pts[i].X + pts[i].Y * pts[i].Y > 200*200)
-                if (t.X * t.X + t.Y * t.Y > Math.Pow(Math.Min(pictureBox1.Width/2, pictureBox1.Height/2),2))
+                if (pts[i].X < 0 || pts[i].X > W ||
+                    pts[i].Y < 0 || pts[i].Y > H)
+                //if (Math.Abs(pts[i].X - W/2) < 20 ||
+                //    Math.Abs(pts[i].Y - H/2) < 20)
                 {
-                    //float tgA = pts[i].Y / pts[i].X;
-                    //velocity[i].X = -velocity[i].Y;
-                    //velocity[i].Y = -velocity[i].X;
-                    //pts[i].Offset(-velocity[i].X, -velocity[i].Y);
-                    do { velocity[i].X = rnd.Next(2 * maxVel + 1) - maxVel; } while (velocity[i].X == 0);
-                    do { velocity[i].Y = rnd.Next(2 * maxVel + 1) - maxVel; } while (velocity[i].Y == 0);
-                    
-                    //pts[i].Offset(-velocity[i].X, -velocity[i].Y);
-
-                    //velocity[i].X = -velocity[i].X;
-                    //velocity[i].Y = -velocity[i].Y;
-
-                    //pts[i].X = rnd.Next(pictureBox1.Width);
-                    //pts[i].Y = rnd.Next(pictureBox1.Height);
-
-                    pts[i].X = (pictureBox1.Width) / 2;
-                    pts[i].Y = (pictureBox1.Height) / 2;
-
+                    GeneratePoint(ref pts[i], ref velocity[i]);
                 }
-//                pts[i].Offset(pictureBox1.Width / 2, pictureBox1.Height / 2);
+                else
+                    UpdateVelocity(ref velocity[i], pts[i]);
             }
         }
 
-        private void Generate(int count, int maxX, int maxY, int maxVel)
+        private void Generate(int count, int maxX, int maxY)
         {
-            if (maxVel == 0) throw new ArgumentException("maxVel");
-
-            pts = new Point[count];
-            velocity = new Point[count];
+            pts = new PointF[count];
+            velocity = new PointF[count];
+            convex = new int[count];
 
             for (int i = 0; i < count; i++)
             {
-                pts[i].X = rnd.Next(maxX);
-                pts[i].Y = rnd.Next(maxY);
+                GeneratePoint(ref pts[i], ref velocity[i]);
+            }
+        }
 
-                do { velocity[i].X = rnd.Next(2 * maxVel+1) - maxVel;// } while (velocity[i].X == 0);
-                //do {
-                    velocity[i].Y = rnd.Next(2 * maxVel+1) - maxVel; } while ((velocity[i].X | velocity[i].Y) == 0);
-            }                
+        private void GeneratePoint(ref PointF p, ref PointF velocity)
+        {
+            p.X = rnd.Next(W);
+            p.Y = rnd.Next(H);
+
+            UpdateVelocity(ref velocity, p);
+
+            return;
+        }
+
+        private void UpdateVelocity(ref PointF velocity, PointF p, float k_vel = 0.01f)
+        {
+            p.X = p.X - W / 2;
+            p.Y = p.Y - H / 2;
+
+            float r = (float)radius(p);
+            float vx = p.X / r * Math.Abs(r);
+            float vy = p.Y / r * Math.Abs(r);
+            velocity.X = vx * k_vel;
+            velocity.Y = vy * k_vel;
+        }
+
+        private double radius(PointF point)
+        {
+            return Math.Sqrt(point.X * point.X + point.Y * point.Y);
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
@@ -273,17 +306,39 @@ namespace KG4
             timer1.Enabled = !timer1.Enabled;
         }
 
+        int W, H;
         private void pictureBox1_Resize(object sender, EventArgs e)
         {
+            maxR2 = Math.Pow(Math.Min(pictureBox1.Width / 2, pictureBox1.Height / 2), 2);
+            
+            W = pictureBox1.Width;
+            H = pictureBox1.Height;
+            
             Refresh();
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
-            Generate(20, pictureBox1.Width - 5, pictureBox1.Height - 5, 3);
-            MakeConvex();
-            ConvexToGamilton();
+            Generate((int)numericUpDown1.Value, pictureBox1.Width, pictureBox1.Height);
+            if (checkBoxConvexHull.Checked) MakeConvex();
+            if (checkBoxHamilton.Checked) ConvexToGamilton();
             pictureBox1.Refresh();
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            /*
+            bool play = timer1.Enabled;
+            timer1.Enabled = false;
+
+            Generate(200, pictureBox1.Width, pictureBox1.Height);
+            if (checkBoxConvexHull.Checked) MakeConvex();
+            if (checkBoxHamilton.Checked) ConvexToGamilton();
+            pictureBox1.Refresh();
+
+
+            timer1.Enabled = play;
+             */
         }
     }
 }
