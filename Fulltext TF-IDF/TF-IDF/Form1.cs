@@ -35,6 +35,8 @@ namespace TF_IDF
             dictBoolCount = new Dictionary<string, float>();
             //dictDocs = new List<Dictionary<string, float>>();
             dictDocs = new List<Document>();
+
+            textBox1.Text = System.Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -119,7 +121,7 @@ namespace TF_IDF
 
             // pass all docs again to update Wij
             double N = dictDocs.Count; // number fo docs in base
-            foreach(Document doc in dictDocs)
+            foreach (Document doc in dictDocs)
             {
                 string[] terms = new string[doc.dict.Keys.Count];
                 doc.dict.Keys.CopyTo(terms, 0);
@@ -135,18 +137,22 @@ namespace TF_IDF
             button4.Enabled = true;
         }
 
-        public static object Query(IList<Document> docs, KeyValuePair<string, float>[] query)
-        { 
+        public static object Query(List<Document> docs, KeyValuePair<string, float>[] query)
+        {
             float rank;
-            
-            for(int i = 0; i < docs.Count; i++)
+
+            for (int i = 0; i < docs.Count; i++)
             //foreach (Document doc in docs)
             {
                 rank = 0;
                 foreach (KeyValuePair<string, float> queryTerm in query)
-                    rank = docs[i].dict[queryTerm.Key] * queryTerm.Value;
+                {
+                    float w = 0;
+                    docs[i].dict.TryGetValue(queryTerm.Key, out w);
+                    rank += w * queryTerm.Value*1000000f;
+                }
 
-                docs[i].SetRank(rank);
+                docs[i].rank = rank;
             }
 
             return docs;
@@ -160,13 +166,36 @@ namespace TF_IDF
             fm.Owner = this;
             fm.Show();
         }
+
+        private void buttonMinus_Click(object sender, EventArgs e)
+        {
+            object[] items = new object[listBox1.SelectedItems.Count];
+            listBox1.SelectedItems.CopyTo(items,0);
+
+            foreach (object item in items) listBox1.Items.Remove(item);
+        }
     }
 
-    public struct Document
+    public class Document
     {
         public Dictionary<string, float> dict;
         public string path;
+
+        public string Name
+        {
+            get
+            {
+                FileInfo fi = new FileInfo(path);
+                return fi.Name;
+            }
+            set { path = value; }
+        }
         public float rank;
+
+        public string Rank
+        {
+            get { return rank.ToString("F10"); }
+        }
 
         public Document(Dictionary<string, float> dictionary, string filePath)
         {
@@ -175,10 +204,10 @@ namespace TF_IDF
             rank = -1;
         }
 
-        public void SetRank(float Rank)
-        {
-            this.rank = Rank;
-        }
+        //public void SetRank(float Rank)
+        //{
+        //    this.rank = Rank;
+        //}
     }
 
 }
