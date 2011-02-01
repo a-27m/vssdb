@@ -29,12 +29,12 @@ namespace pdadigit
             data[0] = (byte)(X & 0xFF);
             data[1] = (byte)((X & 0xFF00) >> 8);
             data[2] = (byte)((X & 0xFF0000) >> 16);
-            data[3] = (byte)((X & 0xFF00000) >> 24);
+            data[3] = (byte)((X & 0xFF000000) >> 24);
 
             data[4] = (byte)(Y & 0xFF);
             data[5] = (byte)((Y & 0xFF00) >> 8);
             data[6] = (byte)((Y & 0xFF0000) >> 16);
-            data[7] = (byte)((Y & 0xFF00000) >> 24);
+            data[7] = (byte)((Y & 0xFF000000) >> 24);
         }
 
         public Form1()
@@ -46,26 +46,26 @@ namespace pdadigit
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
-            //XyToData(e.X, e.Y);
-            //try
-            //{
-            //    tcp1.Connect("klmn", 5555);
-            //    this.Text = "connected";
-            //}
-            //catch
-            //{
-            //    this.Text = "err connect";
-            //}
+            XyToData(-e.X, -e.Y);
+            try
+            {
+                tcp1.Connect("klmn", 5555);
+                this.Text = "connected";
+            }
+            catch
+            {
+                this.Text = "err connect";
+            }
 
-            //try
-            //{
-            //    tcp1.Client.Send(data);
-            //    this.Text = "sent";
-            //}
-            //catch
-            //{
-            //    this.Text = "cant send";
-            //}
+            try
+            {
+                tcp1.Client.Send(data);
+                this.Text = "m down";
+            }
+            catch
+            {
+                this.Text = "cant send m down";
+            }
         }
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
@@ -94,7 +94,6 @@ namespace pdadigit
 
         private void Form1_MouseUp(object sender, MouseEventArgs e)
         {
-
         }
 
         private void Form1_Resize(object sender, EventArgs e)

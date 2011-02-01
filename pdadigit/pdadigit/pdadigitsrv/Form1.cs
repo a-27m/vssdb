@@ -44,6 +44,9 @@ namespace pdadigitsrv
             //}
         }
 
+        void swap<T>(ref T a, ref T b)
+        { T t = a; a = b; b = t; }
+
         int prevX, prevY;
         private void button1_Click(object sender, EventArgs e)
         {
@@ -59,9 +62,28 @@ namespace pdadigitsrv
                     Encoding.ASCII.GetString(data),
                     DateTime.Now.ToShortTimeString()
                     );
-                int x,y;
-                x = BitConverter.ToInt32(data, 0);
-                y = BitConverter.ToInt32(data, 4);
+                int x, y;
+                x = data[0] | (data[1] << 8) | (data[2] << 16) | (data[3] << 24);
+                y = data[4] | (data[5] << 8) | (data[6] << 16) | (data[7] << 24);
+                //x = BitConverter.ToInt32(data, 0);
+                //y = BitConverter.ToInt32(data, 4);
+
+                int w, W, h, H;
+                w = 320;
+                W = 1152;
+                h = 240;
+                H = 864;
+
+                x = 3 * x;
+                y = 3 * y;
+
+                if (x < 0)
+                {
+                    prevX = -3*x;
+                    prevY = -3*y;
+                    firstPacket = false;
+                    continue;
+                }
 
                 if (!firstPacket)
                 {
@@ -69,11 +91,18 @@ namespace pdadigitsrv
                     dx = prevX - x;
                     dy = prevY - y;
 
+                    float veloA = 1.0f;
                     Point xy = Cursor.Position;
-                    xy.X += dx;
-                    xy.Y += dy;
+                    xy.X -= (int)(dx*veloA);
+                    xy.Y -= (int)(dy*veloA);
                     Cursor.Position = xy;
                 }
+
+                //swap(ref x, ref y);
+                //Point xy = Cursor.Position;
+                //xy.X = x;
+                //xy.Y = y;
+                //Cursor.Position = xy;
 
                 prevX = x;
                 prevY = y;
