@@ -18,7 +18,6 @@ namespace Dap
             public Int32 index;
             public Bitmap bitmapA;
             public Bitmap bitmapB;
-            //public Char letter;
 
             public static double[] BitmapToInputs(Bitmap bmp, int nx, int ny)
             {
@@ -35,7 +34,6 @@ namespace Dap
                     {
                         int shiftY = iy / dy;
 
-                        //pixs[shiftX + shiftY] += bmp.GetPixel(ix, iy).GetBrightness();
                         if (bmp.GetPixel(ix, iy).GetBrightness() > 0)
                         {
                             pixs[shiftX + shiftY] = 2.0;
@@ -46,9 +44,6 @@ namespace Dap
                 }
 
                 // than normalize brightnesses back
-                //double norm = dx * dy;
-                //double norm = pixs.max;
-
                 for (int i = 0; i < nx * ny; )
                     pixs[i++]--;
 
@@ -67,36 +62,11 @@ namespace Dap
         
         double[,] w;
         double[] A, B;
-        //double[][] s, d;
-
-        //double bias = 0.1;
-        //double eps = 1e-2;
-        //int maxEpoch = (int)1e4;
-        //double const_a = 5e-3;
-        //double const_Eta = 2e-1;
 
         int sqareSideLengthA, sqareSideLengthB;
 
-        //public string chars
-        //{
-        //    get
-        //    {
-        //        string result = "";
-        //        foreach (RawSample sam in rawSamples)
-        //        {
-        //            if (result.IndexOf(sam.letter) < 0)
-        //                result += sam.letter;
-        //        }
-
-        //        return result;
-        //    }
-        //}
-
         List<RawSample> rawSamples;
         int rawSamplesIndex = 0;
-
-        double reportError = 0.0;
-        int reportEpoc = 0;
 
         double[][] xCookedSamples;
         double[][] yCookedSamples; 
@@ -136,75 +106,14 @@ namespace Dap
             digitizedA = null;
             digitizedB = null;
 
-            //txtA.Text = const_a.ToString();
-            //txtBias.Text = bias.ToString();
-            //txtEta.Text = const_Eta.ToString();
             numGridNa.Value = sqareSideLengthA;
             numGridNb.Value = sqareSideLengthB;
         }
 
-        //void FillSmallRandom(ref double[][][] a, double smallNumber)
-        //{
-        //    for (int i = 0; i < a.GetLength(0); i++)
-        //        for (int j = 0; j < a[i].GetLength(0); j++)
-        //            for (int k = 0; k < a[i][j].GetLength(0); k++)
-        //                a[i][j][k] = smallNumber * (rnd.NextDouble() * 2.0 - 1.0);
-        //}
-
-        // 'ch' should be contained in 'chars' 
-        //public double[] CharToOutputs(char ch, int outsLen)
-        //{
-        //    int index = chars.IndexOf(ch);
-
-        //    if (index < 0)
-        //    {
-        //        throw null;
-        //        return null; 
-        //    }
-
-        //    string bits = Convert.ToString(index, 2);
-
-        //    if (bits.Length > outsLen)
-        //    {
-        //        throw null;
-        //        return null;
-        //    }
-                        
-        //    double[] y = new double[outsLen];
-
-        //    for (int i = 0; i < bits.Length; i++)
-        //    {
-        //        y[i] = bits[(bits.Length - 1) - i] == '1' ? 1f : 0f;
-        //    }
-
-        //    return y;
-        //}
-
-        //public char OutputsToChar(double[] y)//, int outsLen)
-        //{
-        //    int n = y.Length;
-
-        //    int twoRaised = 1; // == 2^0
-        //    int sum = 0;
-        //    for (int i = 0; i < n; i++)
-        //    {
-        //        sum += y[i] < double.Epsilon ? twoRaised : 0;
-        //        twoRaised <<= 1;
-        //    }
-
-        //    return chars[sum];
-        //}
-
-        public double F(double s)
-        {
-            return s >= 0.0 ? 1.0 : -1.0;
-        }
-
+        /// <exception cref="System.OutOfMemory">System.OutOfMemory: weight matix too huge to fit in memory.</exception>
         public void AllocateNetwork(int nA, int nB)
         {
             w = new double[nA,nB];
-            //s = new double[layersCount][];
-            //d = new double[layersCount][];
             A = new double[nA];
             B = new double[nB];
         }
@@ -498,7 +407,19 @@ namespace Dap
                 return;
             }
 
-            AllocateNetwork(sqareSideLengthA*sqareSideLengthA, sqareSideLengthB*sqareSideLengthB);
+            try
+            {
+                AllocateNetwork(sqareSideLengthA * sqareSideLengthA, sqareSideLengthB * sqareSideLengthB);
+            }
+            catch (OutOfMemoryException oome)
+            {
+                MessageBox.Show(
+                    oome.Message + Environment.NewLine + "while trying to allocate " +
+                    (Math.Pow(sqareSideLengthA, 2) * Math.Pow(sqareSideLengthB, 2) * sizeof(double) / 1024.0 / 1024.0 / 1024.0).ToString("F1") + " GB",
+                    "Network failed allocation",
+                     MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
 
             CookSamples(out xCookedSamples, out yCookedSamples);
 
@@ -513,11 +434,26 @@ namespace Dap
             double[] result;
             result = RecognizeAtoB(task);
 
+            ClearField(ref bmpB);
             digitizedB = result;
 
+            labelRound.Text = string.Format("Stabilized in {0} rounds.", round);
             pictureBox2.Refresh();
         }
+        private void bnRecognizeB_Click(object sender, EventArgs e)
+        {
+            double[] task = RawSample.BitmapToInputs(bmpB, sqareSideLengthB, sqareSideLengthB);
+            double[] result;
+            result = RecognizeBtoA(task);
 
+            ClearField(ref bmpA);
+            digitizedA = result;
+
+            labelRound.Text = string.Format("Stabilized in {0} rounds.", round);
+            pictureBox1.Refresh();
+        }
+
+        int round = 0;
         private double[] RecognizeAtoB(double[] task)
         {
             double[] result;
@@ -528,7 +464,7 @@ namespace Dap
 
             bool Resonance = false;
 
-            int round = 0;
+            round = 0;
             do
             {
                 double[] delta;
@@ -548,10 +484,51 @@ namespace Dap
 
                 Resonance = error < sqareSideLengthA * sqareSideLengthB / 25.0;
 
-                Array.Copy(result, prevResult, sqareSideLengthB);
-                Array.Copy(task, prevTask, sqareSideLengthA);
+                Array.Copy(result, prevResult, sqareSideLengthB*sqareSideLengthB);
+                Array.Copy(task, prevTask, sqareSideLengthA*sqareSideLengthA);
 
                 round++;
+                Debug.Print("Error: {0}", error);
+            }
+            while (!Resonance && round < 50);
+            return result;
+        }
+
+        private double[] RecognizeBtoA(double[] task)
+        {
+            double[] result;
+
+            double[] prevResult, prevTask;
+            prevTask = new double[w.GetLength(1)];
+            prevResult = new double[w.GetLength(0)];
+
+            bool Resonance = false;
+
+            round = 0;
+            do
+            {
+                double[] delta;
+                double error = 0;
+
+                result = FeedBackward(task);
+                BinarizeToPlusMinus(ref result);
+
+                delta = vvMinus(result, prevResult);
+                error += vvSum(vvPairMult(delta, delta));
+
+                task = FeedForward(result);
+                BinarizeToPlusMinus(ref task);
+
+                delta = vvMinus(task, prevTask);
+                error += vvSum(vvPairMult(delta, delta));
+
+                Resonance = error < sqareSideLengthA * sqareSideLengthB / 25.0;
+
+                Array.Copy(result, prevResult, sqareSideLengthA*sqareSideLengthA);
+                Array.Copy(task, prevTask, sqareSideLengthB*sqareSideLengthB);
+
+                round++;
+                Debug.Print("Error: {0}", error);
             }
             while (!Resonance && round < 50);
             return result;
@@ -580,12 +557,14 @@ namespace Dap
         {
             ClearField(ref bmpA);
             digitizedA = null;
+            pictureBox1.Refresh();
         } 
 
         private void bnClearB_Click(object sender, EventArgs e)
         {
             ClearField(ref bmpB);
             digitizedB = null;
+            pictureBox2.Refresh();
         }
 
         private void tbtMode_Click(object sender, EventArgs e)
@@ -749,6 +728,5 @@ namespace Dap
             //labelNetError.Text = "Net error: " + reportError.ToString("F10");
             //labelEpoch.Text = string.Format("Epoch: {0} - done.", reportEpoc);
         }
-
     }
 }

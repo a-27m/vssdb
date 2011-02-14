@@ -68,9 +68,10 @@
             this.txtEta = new System.Windows.Forms.TextBox();
             this.bnApplyEta = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.bnRecognizeB = new System.Windows.Forms.Button();
             this.bnClearB = new System.Windows.Forms.Button();
             this.numGridNb = new System.Windows.Forms.NumericUpDown();
+            this.labelRound = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             label4 = new System.Windows.Forms.Label();
@@ -87,18 +88,18 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(464, 396);
+            label2.Location = new System.Drawing.Point(464, 426);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(16, 13);
+            label2.Size = new System.Drawing.Size(16, 14);
             label2.TabIndex = 18;
             label2.Text = "a:";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(451, 420);
+            label3.Location = new System.Drawing.Point(451, 452);
             label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(29, 13);
+            label3.Size = new System.Drawing.Size(30, 14);
             label3.TabIndex = 18;
             label3.Text = "bias:";
             label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -106,9 +107,9 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new System.Drawing.Point(455, 444);
+            label4.Location = new System.Drawing.Point(455, 478);
             label4.Name = "label4";
-            label4.Size = new System.Drawing.Size(25, 13);
+            label4.Size = new System.Drawing.Size(25, 14);
             label4.TabIndex = 18;
             label4.Text = "eta:";
             label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -116,18 +117,18 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new System.Drawing.Point(42, 426);
+            label5.Location = new System.Drawing.Point(42, 459);
             label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(18, 13);
+            label5.Size = new System.Drawing.Size(17, 14);
             label5.TabIndex = 19;
             label5.Text = "N:";
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new System.Drawing.Point(463, 355);
+            label6.Location = new System.Drawing.Point(463, 382);
             label6.Name = "label6";
-            label6.Size = new System.Drawing.Size(18, 13);
+            label6.Size = new System.Drawing.Size(17, 14);
             label6.TabIndex = 19;
             label6.Text = "N:";
             // 
@@ -135,9 +136,9 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 28);
+            this.pictureBox1.Location = new System.Drawing.Point(12, 30);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(300, 300);
+            this.pictureBox1.Size = new System.Drawing.Size(300, 323);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
@@ -211,7 +212,7 @@
             this.tbtMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.tbtMode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbtMode.Name = "tbtMode";
-            this.tbtMode.Size = new System.Drawing.Size(91, 22);
+            this.tbtMode.Size = new System.Drawing.Size(81, 22);
             this.tbtMode.Text = "Learning mode";
             this.tbtMode.Visible = false;
             this.tbtMode.Click += new System.EventHandler(this.tbtMode_Click);
@@ -234,16 +235,16 @@
             "A",
             "B",
             "C"});
-            this.comboBox1.Location = new System.Drawing.Point(305, 530);
+            this.comboBox1.Location = new System.Drawing.Point(305, 571);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(72, 27);
             this.comboBox1.TabIndex = 2;
             // 
             // bnAdd
             // 
-            this.bnAdd.Location = new System.Drawing.Point(288, 393);
+            this.bnAdd.Location = new System.Drawing.Point(288, 423);
             this.bnAdd.Name = "bnAdd";
-            this.bnAdd.Size = new System.Drawing.Size(72, 39);
+            this.bnAdd.Size = new System.Drawing.Size(72, 42);
             this.bnAdd.TabIndex = 4;
             this.bnAdd.Text = "Add pair";
             this.bnAdd.UseVisualStyleBackColor = true;
@@ -251,9 +252,9 @@
             // 
             // bnRecognize
             // 
-            this.bnRecognize.Location = new System.Drawing.Point(237, 334);
+            this.bnRecognize.Location = new System.Drawing.Point(237, 360);
             this.bnRecognize.Name = "bnRecognize";
-            this.bnRecognize.Size = new System.Drawing.Size(75, 44);
+            this.bnRecognize.Size = new System.Drawing.Size(75, 47);
             this.bnRecognize.TabIndex = 7;
             this.bnRecognize.Text = "Recognize";
             this.bnRecognize.UseVisualStyleBackColor = true;
@@ -263,7 +264,7 @@
             // 
             this.txtAnswer.BackColor = System.Drawing.SystemColors.Info;
             this.txtAnswer.Font = new System.Drawing.Font("Cambria", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.txtAnswer.Location = new System.Drawing.Point(201, 500);
+            this.txtAnswer.Location = new System.Drawing.Point(201, 538);
             this.txtAnswer.Name = "txtAnswer";
             this.txtAnswer.ReadOnly = true;
             this.txtAnswer.Size = new System.Drawing.Size(75, 64);
@@ -274,17 +275,17 @@
             // progressBar1
             // 
             this.progressBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.progressBar1.Location = new System.Drawing.Point(0, 503);
+            this.progressBar1.Location = new System.Drawing.Point(0, 542);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(651, 13);
+            this.progressBar1.Size = new System.Drawing.Size(651, 14);
             this.progressBar1.TabIndex = 9;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(305, 514);
+            this.label1.Location = new System.Drawing.Point(305, 554);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 13);
+            this.label1.Size = new System.Drawing.Size(30, 14);
             this.label1.TabIndex = 10;
             this.label1.Text = "Char";
             // 
@@ -296,7 +297,7 @@
             this.bnPrev,
             this.bnNext,
             this.bnRemove});
-            this.toolStrip2.Location = new System.Drawing.Point(288, 435);
+            this.toolStrip2.Location = new System.Drawing.Point(288, 468);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Size = new System.Drawing.Size(72, 25);
             this.toolStrip2.TabIndex = 11;
@@ -334,9 +335,9 @@
             // 
             // buttonClearA
             // 
-            this.buttonClearA.Location = new System.Drawing.Point(12, 334);
+            this.buttonClearA.Location = new System.Drawing.Point(12, 360);
             this.buttonClearA.Name = "buttonClearA";
-            this.buttonClearA.Size = new System.Drawing.Size(72, 39);
+            this.buttonClearA.Size = new System.Drawing.Size(72, 42);
             this.buttonClearA.TabIndex = 12;
             this.buttonClearA.Text = "Clear A";
             this.buttonClearA.UseVisualStyleBackColor = true;
@@ -347,9 +348,9 @@
             this.chkDigitizedView.AutoSize = true;
             this.chkDigitizedView.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
             this.chkDigitizedView.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.chkDigitizedView.Location = new System.Drawing.Point(126, 424);
+            this.chkDigitizedView.Location = new System.Drawing.Point(126, 457);
             this.chkDigitizedView.Name = "chkDigitizedView";
-            this.chkDigitizedView.Size = new System.Drawing.Size(51, 42);
+            this.chkDigitizedView.Size = new System.Drawing.Size(51, 44);
             this.chkDigitizedView.TabIndex = 13;
             this.chkDigitizedView.Text = "Digitized\r\nview";
             this.chkDigitizedView.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -370,9 +371,9 @@
             // labelCounter
             // 
             this.labelCounter.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelCounter.Location = new System.Drawing.Point(288, 460);
+            this.labelCounter.Location = new System.Drawing.Point(288, 495);
             this.labelCounter.Name = "labelCounter";
-            this.labelCounter.Size = new System.Drawing.Size(72, 23);
+            this.labelCounter.Size = new System.Drawing.Size(72, 25);
             this.labelCounter.TabIndex = 14;
             this.labelCounter.Text = "0 / 0";
             this.labelCounter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -381,9 +382,9 @@
             // 
             this.labelNetError.AutoEllipsis = true;
             this.labelNetError.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelNetError.Location = new System.Drawing.Point(416, 530);
+            this.labelNetError.Location = new System.Drawing.Point(416, 571);
             this.labelNetError.Name = "labelNetError";
-            this.labelNetError.Size = new System.Drawing.Size(257, 23);
+            this.labelNetError.Size = new System.Drawing.Size(257, 25);
             this.labelNetError.TabIndex = 15;
             this.labelNetError.Text = "Net error: infinity";
             // 
@@ -391,18 +392,18 @@
             // 
             this.labelEpoch.AutoEllipsis = true;
             this.labelEpoch.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelEpoch.Location = new System.Drawing.Point(436, 553);
+            this.labelEpoch.Location = new System.Drawing.Point(436, 596);
             this.labelEpoch.Name = "labelEpoch";
-            this.labelEpoch.Size = new System.Drawing.Size(237, 23);
+            this.labelEpoch.Size = new System.Drawing.Size(237, 25);
             this.labelEpoch.TabIndex = 15;
             this.labelEpoch.Text = "Epoch: 0";
             // 
             // labelSure
             // 
             this.labelSure.AutoSize = true;
-            this.labelSure.Location = new System.Drawing.Point(198, 484);
+            this.labelSure.Location = new System.Drawing.Point(198, 521);
             this.labelSure.Name = "labelSure";
-            this.labelSure.Size = new System.Drawing.Size(57, 13);
+            this.labelSure.Size = new System.Drawing.Size(62, 14);
             this.labelSure.TabIndex = 10;
             this.labelSure.Text = "(Sureness)";
             this.labelSure.Visible = false;
@@ -417,7 +418,7 @@
             // 
             // txtA
             // 
-            this.txtA.Location = new System.Drawing.Point(486, 393);
+            this.txtA.Location = new System.Drawing.Point(486, 423);
             this.txtA.Name = "txtA";
             this.txtA.Size = new System.Drawing.Size(41, 20);
             this.txtA.TabIndex = 16;
@@ -425,7 +426,7 @@
             // 
             // numGridNa
             // 
-            this.numGridNa.Location = new System.Drawing.Point(65, 424);
+            this.numGridNa.Location = new System.Drawing.Point(65, 457);
             this.numGridNa.Maximum = new decimal(new int[] {
             300,
             0,
@@ -448,7 +449,7 @@
             // 
             // txtBias
             // 
-            this.txtBias.Location = new System.Drawing.Point(486, 417);
+            this.txtBias.Location = new System.Drawing.Point(486, 449);
             this.txtBias.Name = "txtBias";
             this.txtBias.Size = new System.Drawing.Size(41, 20);
             this.txtBias.TabIndex = 16;
@@ -456,7 +457,7 @@
             // 
             // txtEta
             // 
-            this.txtEta.Location = new System.Drawing.Point(486, 441);
+            this.txtEta.Location = new System.Drawing.Point(486, 475);
             this.txtEta.Name = "txtEta";
             this.txtEta.Size = new System.Drawing.Size(41, 20);
             this.txtEta.TabIndex = 16;
@@ -464,10 +465,10 @@
             // 
             // bnApplyEta
             // 
-            this.bnApplyEta.Location = new System.Drawing.Point(499, 464);
+            this.bnApplyEta.Location = new System.Drawing.Point(499, 500);
             this.bnApplyEta.Margin = new System.Windows.Forms.Padding(0);
             this.bnApplyEta.Name = "bnApplyEta";
-            this.bnApplyEta.Size = new System.Drawing.Size(28, 23);
+            this.bnApplyEta.Size = new System.Drawing.Size(28, 25);
             this.bnApplyEta.TabIndex = 20;
             this.bnApplyEta.Text = "ok";
             this.bnApplyEta.UseVisualStyleBackColor = true;
@@ -477,9 +478,9 @@
             // 
             this.pictureBox2.BackColor = System.Drawing.Color.White;
             this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox2.Location = new System.Drawing.Point(337, 28);
+            this.pictureBox2.Location = new System.Drawing.Point(337, 30);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(300, 300);
+            this.pictureBox2.Size = new System.Drawing.Size(300, 323);
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             this.pictureBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox2_Paint);
@@ -487,21 +488,21 @@
             this.pictureBox2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox2_MouseMove);
             this.pictureBox2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox2_MouseUp);
             // 
-            // button1
+            // bnRecognizeB
             // 
-            this.button1.Location = new System.Drawing.Point(562, 334);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 44);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "Recognize";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.bnRecognizeA_Click);
+            this.bnRecognizeB.Location = new System.Drawing.Point(562, 360);
+            this.bnRecognizeB.Name = "bnRecognizeB";
+            this.bnRecognizeB.Size = new System.Drawing.Size(75, 47);
+            this.bnRecognizeB.TabIndex = 7;
+            this.bnRecognizeB.Text = "Recognize";
+            this.bnRecognizeB.UseVisualStyleBackColor = true;
+            this.bnRecognizeB.Click += new System.EventHandler(this.bnRecognizeB_Click);
             // 
             // bnClearB
             // 
-            this.bnClearB.Location = new System.Drawing.Point(337, 334);
+            this.bnClearB.Location = new System.Drawing.Point(337, 360);
             this.bnClearB.Name = "bnClearB";
-            this.bnClearB.Size = new System.Drawing.Size(72, 39);
+            this.bnClearB.Size = new System.Drawing.Size(72, 42);
             this.bnClearB.TabIndex = 12;
             this.bnClearB.Text = "Clear B";
             this.bnClearB.UseVisualStyleBackColor = true;
@@ -509,7 +510,7 @@
             // 
             // numGridNb
             // 
-            this.numGridNb.Location = new System.Drawing.Point(486, 353);
+            this.numGridNb.Location = new System.Drawing.Point(486, 380);
             this.numGridNb.Maximum = new decimal(new int[] {
             300,
             0,
@@ -530,11 +531,21 @@
             0});
             this.numGridNb.ValueChanged += new System.EventHandler(this.numGridNb_ValueChanged);
             // 
+            // labelRound
+            // 
+            this.labelRound.AutoSize = true;
+            this.labelRound.Location = new System.Drawing.Point(27, 505);
+            this.labelRound.Name = "labelRound";
+            this.labelRound.Size = new System.Drawing.Size(38, 14);
+            this.labelRound.TabIndex = 21;
+            this.labelRound.Text = "Ready";
+            // 
             // FormMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(651, 516);
+            this.ClientSize = new System.Drawing.Size(651, 556);
+            this.Controls.Add(this.labelRound);
             this.Controls.Add(this.bnApplyEta);
             this.Controls.Add(label6);
             this.Controls.Add(label5);
@@ -557,7 +568,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.txtAnswer);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.bnRecognizeB);
             this.Controls.Add(this.bnRecognize);
             this.Controls.Add(this.bnAdd);
             this.Controls.Add(this.comboBox1);
@@ -616,9 +627,10 @@
         private System.Windows.Forms.TextBox txtEta;
         private System.Windows.Forms.Button bnApplyEta;
         private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button bnRecognizeB;
         private System.Windows.Forms.Button bnClearB;
         private System.Windows.Forms.NumericUpDown numGridNb;
+        private System.Windows.Forms.Label labelRound;
     }
 }
 
