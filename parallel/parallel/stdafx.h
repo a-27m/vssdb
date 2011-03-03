@@ -54,4 +54,6 @@
 #endif
 #endif
 
-
+// compile with: /openmp 
+#include <math.h>
+#include <omp.h>
