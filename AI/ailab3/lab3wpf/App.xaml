@@ -5,6 +5,13 @@
     <Application.Resources>
          
     	<SolidColorBrush x:Key="BrushButtBkgr" Color="#FF66A833"/>
-         
-    </Application.Resources>
+    <LinearGradientBrush x:Key="BackgroundMain" EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+      <GradientStop Color="#FF88C4CD" Offset="0.665" />
+      <GradientStop Color="#FF99B2B5" />
+      <GradientStop Color="#FF496367" Offset="0.992" />
+      <GradientStop Color="#FF69B1BB" Offset="0.843" />
+      <GradientStop Color="#FFADC1C4" Offset="0.488" />
+      <GradientStop Color="#FF5E98A0" Offset="0.14" />
+    </LinearGradientBrush>
+  </Application.Resources>
 </Application>

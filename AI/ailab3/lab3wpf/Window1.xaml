@@ -2,7 +2,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Class="lab3wpf.Window1"
-    Title="ИИ, л/р №3, Пятнашки" Height="534" Width="712.232" mc:Ignorable="d">
+    Title="ИИ, л/р №3, Пятнашки" Height="534" Width="712.232" mc:Ignorable="d" Background="{StaticResource BackgroundMain}">
 	<Window.Resources>
 		<LinearGradientBrush x:Key="RedExitGradBrush" EndPoint="0.5,1" StartPoint="0.5,0">
 			<GradientStop Color="Black" Offset="1"/>
@@ -123,15 +123,6 @@
 			<GradientStop Color="#FFADC1C4" Offset="0.106"/>
 		</LinearGradientBrush>
 	</Window.Resources>
-	<Window.Background>
-		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" MappingMode="RelativeToBoundingBox">
-			<GradientStop Color="#FF88C4CD" Offset="0.665"/>
-			<GradientStop Color="#FF99B2B5"/>
-			<GradientStop Color="#FF496367" Offset="0.992"/>
-			<GradientStop Color="#FF69B1BB" Offset="0.843"/>
-			<GradientStop Color="#FFADC1C4" Offset="0.106"/>
-		</LinearGradientBrush>
-	</Window.Background>
     <Grid>
         
     	<Grid.RowDefinitions>
@@ -143,8 +134,8 @@
     		<ColumnDefinition Width="0.129*"/>
     		<ColumnDefinition MinWidth="200" Width="Auto"/>
     	</Grid.ColumnDefinitions>
-        <TextBox x:Name="textBox1" SnapsToDevicePixels="False" TextDecorations="None" Grid.Column="2" Foreground="#FF0E1520" FontFamily="Cambria" FontSize="16" TextAlignment="Justify" IsReadOnly="True" IsUndoEnabled="False" Width="200" Grid.Row="1" Margin="0" HorizontalAlignment="Right" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}"/>
-        <Menu Name="menu1" Background="{DynamicResource MenuBackground}" FontFamily="Cambria" FontSize="18.667" BorderThickness="2" BorderBrush="#56364243" RenderTransformOrigin="0.052,0.32" VerticalAlignment="Top" Height="35" Grid.ColumnSpan="3" Margin="0">
+        <TextBox x:Name="textBox1" SnapsToDevicePixels="False" TextDecorations="None" Grid.Column="2" Foreground="#FF0E1520" FontFamily="Cambria" FontSize="16" TextAlignment="Justify" IsReadOnly="True" IsUndoEnabled="False" Width="200" Grid.Row="1" Margin="0" HorizontalAlignment="Right" Background="{DynamicResource WindowBkBrush}" />
+        <Menu Name="menu1" Background="{DynamicResource BackgroundMain}" FontFamily="Cambria" FontSize="18.667" BorderBrush="#56364243" RenderTransformOrigin="0.052,0.32" VerticalAlignment="Top" Height="35" Grid.ColumnSpan="3" Margin="0">
             <MenuItem x:Name="load" Header="Load" Click="load_Click" Margin="0">
             	<MenuItem.Foreground>
             		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
