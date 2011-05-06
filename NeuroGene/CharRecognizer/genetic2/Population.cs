@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Jenyay.Genetic
+namespace NeuroGenes.Genetic
 {
 	/// <summary>
 	/// Бросается, когда пытаемся получить новое поколение, а готовых видов нет

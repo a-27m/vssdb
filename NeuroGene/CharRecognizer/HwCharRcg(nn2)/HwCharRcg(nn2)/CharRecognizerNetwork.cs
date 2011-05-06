@@ -7,7 +7,7 @@ using NeuroNetwork;
 
 namespace NeuroGenes
 {
-    class CharRecognizerNetwork : NeuroNetwork.BaseNeuroNetwork
+    public class CharRecognizerNetwork : NeuroNetwork.BaseNeuroNetwork
     {
         double[][][] w;
         double[][] x;

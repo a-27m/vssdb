@@ -1,7 +1,7 @@
 using System;
 //using System.Diagnostics;
 
-namespace Jenyay.Genetic
+namespace NeuroGenes.Genetic
 {
 	/// <summary>
 	/// Базовый класс для вида

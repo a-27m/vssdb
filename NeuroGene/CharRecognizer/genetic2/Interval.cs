@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Jenyay.Genetic
+namespace NeuroGenes.Genetic
 {
 	public class Interval
 	{

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Jenyay.Genetic
+namespace NeuroGenes.Genetic
 {
 	/// <summary>
 	/// Summary description for DoubleSpecies.
