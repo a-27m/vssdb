@@ -7,16 +7,19 @@ using NeuroGenes;
 
 namespace NeuroGenes
 {
-    internal class CharRecognSpecies : BaseDoubleSpecies<CharRecognSpecies>, CharRecognizerNetwork
+    internal class CharRecognSpecies : BaseDoubleSpecies<CharRecognSpecies>
     {
+        private CharRecognizerNetwork charNetwork;
 
         public CharRecognSpecies()
             : base()
-        { }
+        {
+ 
+        }
         
         protected override double CalcFinalFunc()
         {
-            
+            charNetwork.FeedForward(
             throw new NotImplementedException();
         }
     }
