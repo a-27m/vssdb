@@ -19,7 +19,7 @@ namespace NeuroGenes
         
         protected override double CalcFinalFunc()
         {
-            charNetwork.FeedForward(
+            //charNetwork.FeedForward(
             throw new NotImplementedException();
         }
     }
