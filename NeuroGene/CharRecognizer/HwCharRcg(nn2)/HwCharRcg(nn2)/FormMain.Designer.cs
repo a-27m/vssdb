@@ -41,7 +41,9 @@
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.copyToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.tbtMode = new System.Windows.Forms.ToolStripButton();
-            this.tbnTrain = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.tbnTrainBackProp = new System.Windows.Forms.ToolStripMenuItem();
+            this.tbnTrainNeuroNetwork = new System.Windows.Forms.ToolStripMenuItem();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.bnAdd = new System.Windows.Forms.Button();
             this.bnRecognize = new System.Windows.Forms.Button();
@@ -123,7 +125,7 @@
             this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(16, 34);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(399, 369);
             this.pictureBox1.TabIndex = 0;
@@ -143,7 +145,7 @@
             this.toolStripSeparator,
             this.copyToolStripButton,
             this.tbtMode,
-            this.tbnTrain});
+            this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(767, 27);
@@ -190,7 +192,7 @@
             this.copyToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("copyToolStripButton.Image")));
             this.copyToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.copyToolStripButton.Name = "copyToolStripButton";
-            this.copyToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.copyToolStripButton.Size = new System.Drawing.Size(23, 24);
             this.copyToolStripButton.Text = "&Copy";
             this.copyToolStripButton.Visible = false;
             // 
@@ -204,15 +206,31 @@
             this.tbtMode.Visible = false;
             this.tbtMode.Click += new System.EventHandler(this.tbtMode_Click);
             // 
-            // tbnTrain
+            // toolStripButton1
             // 
-            this.tbnTrain.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tbnTrain.Image = ((System.Drawing.Image)(resources.GetObject("tbnTrain.Image")));
-            this.tbnTrain.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tbnTrain.Name = "tbnTrain";
-            this.tbnTrain.Size = new System.Drawing.Size(55, 24);
-            this.tbnTrain.Text = "Train...";
-            this.tbnTrain.Click += new System.EventHandler(this.tbnTrain_Click);
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tbnTrainBackProp,
+            this.tbnTrainNeuroNetwork});
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(55, 24);
+            this.toolStripButton1.Text = "Train";
+            // 
+            // tbnTrainBackProp
+            // 
+            this.tbnTrainBackProp.Name = "tbnTrainBackProp";
+            this.tbnTrainBackProp.Size = new System.Drawing.Size(196, 24);
+            this.tbnTrainBackProp.Text = "Back propagation";
+            this.tbnTrainBackProp.Click += new System.EventHandler(this.tbnTrainBackProp_Click);
+            // 
+            // tbnTrainNeuroNetwork
+            // 
+            this.tbnTrainNeuroNetwork.Name = "tbnTrainNeuroNetwork";
+            this.tbnTrainNeuroNetwork.Size = new System.Drawing.Size(196, 24);
+            this.tbnTrainNeuroNetwork.Text = "Neuro network";
+            this.tbnTrainNeuroNetwork.Click += new System.EventHandler(this.tbnTrainNeuroNetwork_Click);
             // 
             // comboBox1
             // 
@@ -223,7 +241,7 @@
             "B",
             "C"});
             this.comboBox1.Location = new System.Drawing.Point(424, 54);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(95, 32);
             this.comboBox1.TabIndex = 2;
@@ -231,7 +249,7 @@
             // bnAdd
             // 
             this.bnAdd.Location = new System.Drawing.Point(424, 95);
-            this.bnAdd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bnAdd.Margin = new System.Windows.Forms.Padding(4);
             this.bnAdd.Name = "bnAdd";
             this.bnAdd.Size = new System.Drawing.Size(96, 48);
             this.bnAdd.TabIndex = 4;
@@ -242,7 +260,7 @@
             // bnRecognize
             // 
             this.bnRecognize.Location = new System.Drawing.Point(648, 140);
-            this.bnRecognize.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bnRecognize.Margin = new System.Windows.Forms.Padding(4);
             this.bnRecognize.Name = "bnRecognize";
             this.bnRecognize.Size = new System.Drawing.Size(100, 54);
             this.bnRecognize.TabIndex = 7;
@@ -255,7 +273,7 @@
             this.txtAnswer.BackColor = System.Drawing.SystemColors.Info;
             this.txtAnswer.Font = new System.Drawing.Font("Cambria", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txtAnswer.Location = new System.Drawing.Point(648, 54);
-            this.txtAnswer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtAnswer.Margin = new System.Windows.Forms.Padding(4);
             this.txtAnswer.Name = "txtAnswer";
             this.txtAnswer.ReadOnly = true;
             this.txtAnswer.Size = new System.Drawing.Size(99, 78);
@@ -266,7 +284,7 @@
             // 
             this.progressBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.progressBar1.Location = new System.Drawing.Point(0, 415);
-            this.progressBar1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(4);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(767, 16);
             this.progressBar1.TabIndex = 9;
@@ -328,7 +346,7 @@
             // buttonClear
             // 
             this.buttonClear.Location = new System.Drawing.Point(424, 356);
-            this.buttonClear.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonClear.Margin = new System.Windows.Forms.Padding(4);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(96, 48);
             this.buttonClear.TabIndex = 12;
@@ -342,7 +360,7 @@
             this.chkDigitizedView.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
             this.chkDigitizedView.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.chkDigitizedView.Location = new System.Drawing.Point(541, 353);
-            this.chkDigitizedView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkDigitizedView.Margin = new System.Windows.Forms.Padding(4);
             this.chkDigitizedView.Name = "chkDigitizedView";
             this.chkDigitizedView.Size = new System.Drawing.Size(66, 52);
             this.chkDigitizedView.TabIndex = 13;
@@ -415,7 +433,7 @@
             // txtA
             // 
             this.txtA.Location = new System.Drawing.Point(693, 263);
-            this.txtA.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtA.Margin = new System.Windows.Forms.Padding(4);
             this.txtA.Name = "txtA";
             this.txtA.Size = new System.Drawing.Size(53, 22);
             this.txtA.TabIndex = 16;
@@ -424,7 +442,7 @@
             // numGridN
             // 
             this.numGridN.Location = new System.Drawing.Point(455, 309);
-            this.numGridN.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numGridN.Margin = new System.Windows.Forms.Padding(4);
             this.numGridN.Maximum = new decimal(new int[] {
             300,
             0,
@@ -448,7 +466,7 @@
             // txtBias
             // 
             this.txtBias.Location = new System.Drawing.Point(693, 293);
-            this.txtBias.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtBias.Margin = new System.Windows.Forms.Padding(4);
             this.txtBias.Name = "txtBias";
             this.txtBias.Size = new System.Drawing.Size(53, 22);
             this.txtBias.TabIndex = 16;
@@ -457,7 +475,7 @@
             // txtEta
             // 
             this.txtEta.Location = new System.Drawing.Point(693, 322);
-            this.txtEta.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtEta.Margin = new System.Windows.Forms.Padding(4);
             this.txtEta.Name = "txtEta";
             this.txtEta.Size = new System.Drawing.Size(53, 22);
             this.txtEta.TabIndex = 16;
@@ -504,7 +522,7 @@
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FormMain";
             this.Text = "Hand-written character reconition";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -537,7 +555,6 @@
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripButton bnPrev;
         private System.Windows.Forms.ToolStripButton bnNext;
-        private System.Windows.Forms.ToolStripButton tbnTrain;
         private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.CheckBox chkDigitizedView;
         private System.Windows.Forms.ToolStripButton bnRemove;
@@ -553,6 +570,9 @@
         private System.Windows.Forms.TextBox txtBias;
         private System.Windows.Forms.TextBox txtEta;
         private System.Windows.Forms.Button bnApplyEta;
+        private System.Windows.Forms.ToolStripDropDownButton toolStripButton1;
+        private System.Windows.Forms.ToolStripMenuItem tbnTrainBackProp;
+        private System.Windows.Forms.ToolStripMenuItem tbnTrainNeuroNetwork;
     }
 }
 

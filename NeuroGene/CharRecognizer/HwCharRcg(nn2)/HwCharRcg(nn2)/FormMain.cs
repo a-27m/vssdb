@@ -307,11 +307,16 @@ namespace NeuroGenes
                 comboBox1.Items.Add(c);
         }
 
-        private void tbnTrain_Click(object sender, EventArgs e)
+        private void tbnTrainNeuroNetwork_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbnTrainBackProp_Click(object sender, EventArgs e)
         {
             if (backgroundWorkerTrain.IsBusy)
             {
-                tbnTrain.Text = "Cancelling...";
+                tbnTrainBackProp.Text = "Cancelling...";
                 backgroundWorkerTrain.CancelAsync();
                 return;
             }
@@ -341,7 +346,7 @@ namespace NeuroGenes
             CookSamples(out xCookedSamples, out yCookedSamples);
 
             // Train();
-            tbnTrain.Text = "Cancel";
+            tbnTrainBackProp.Text = "Cancel";
             backgroundWorkerTrain.RunWorkerAsync();
         }
 
@@ -513,7 +518,7 @@ namespace NeuroGenes
         private void backgroundWorkerTrain_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             progressBar1.Value = 0;
-            tbnTrain.Text = "Train";
+            tbnTrainBackProp.Text = "Train";
             labelNetError.Text = "Net error: " + reportError.ToString("F10");
             labelEpoch.Text = string.Format("Epoch: {0} - done.", reportEpoc);
         }
@@ -529,5 +534,6 @@ namespace NeuroGenes
             double.TryParse(txtEta.Text, out charNet.const_Eta);
             txtEta.Text = charNet.const_Eta.ToString();
         }
+
     }
 }
