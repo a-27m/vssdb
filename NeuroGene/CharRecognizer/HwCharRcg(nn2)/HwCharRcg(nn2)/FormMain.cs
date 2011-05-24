@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using NeuroGenes.Genetic;
 
 namespace NeuroGenes
 {
@@ -91,6 +92,8 @@ namespace NeuroGenes
         Pen penHand;
 
         bool showDigitized;
+        
+        Population<BaseDoubleSpecies<CharRecognSpecies>> population;
 
         public FormMain()
         {
@@ -307,8 +310,36 @@ namespace NeuroGenes
                 comboBox1.Items.Add(c);
         }
 
+        static double minChromosomeValue = 0;
+        static double maxChromosomeValue = 1e5;
+
+        Interval[] GetIntervals(int numberChromosomes)
+        {
+            Interval[] ints = new Interval[numberChromosomes];
+            for(int i = 0; i < numberChromosomes; i++)
+            {
+                ints[i] = new Interval(minChromosomeValue, maxChromosomeValue);
+            }
+
+            return ints;
+        }
+
         private void tbnTrainNeuroNetwork_Click(object sender, EventArgs e)
         {
+            int numChrom = 1;/* TODO equals net weights count */
+            population = new Population<BaseDoubleSpecies<CharRecognSpecies>>();
+            CharRecognSpecies.Intervals = GetIntervals(numChrom);
+            population.Add(
+            //population.BestFunc
+    /*Обучение
+	1. Случайная популяция
+	2. Для каждой особи вычисление ошибки (== fitness) на наборе примеров
+	3. Отбор особей
+	4. Скрещивание, мутации
+	5. Если Поколение или Ошибка --> перейти на п. 7
+	6. Перейти на п. 2
+	7. Конец. Каждая особь-сеть обучена. Ответ - лучшая в популяции.
+    */
 
         }
 

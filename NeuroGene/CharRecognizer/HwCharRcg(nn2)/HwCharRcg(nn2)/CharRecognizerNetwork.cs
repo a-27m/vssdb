@@ -191,12 +191,25 @@ namespace NeuroGenes
             //reportEpoc = epoch;
             //reportError = netError;
             //Debug.Print("Trainig finished with Error: {0}, at epoch #{1}", netError, epoch);
-        } 
+        }
 
+        double[] GetChromosomes()
+        {
+            // TODO cast w[][][] to result[] (TIME OPT)
+            unsafe
+            {
+                return w[0][0];
+            }
+        }
 
         public CharRecognizerNetwork()
         { 
             rnd = new Random();
+        }
+        public CharRecognizerNetwork(double[] chromosomes) : this()
+        {
+            // TODO init w from chromosomes (QUICKLY!)
+            w[0][0] = chromosomes;
         }
     }
 }

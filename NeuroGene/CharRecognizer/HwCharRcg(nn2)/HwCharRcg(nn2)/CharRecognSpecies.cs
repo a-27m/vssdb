@@ -7,7 +7,7 @@ using NeuroGenes;
 
 namespace NeuroGenes
 {
-    internal class CharRecognSpecies : BaseDoubleSpecies<CharRecognSpecies>
+    public class CharRecognSpecies : BaseDoubleSpecies<CharRecognSpecies>
     {
         private CharRecognizerNetwork charNetwork;
 
