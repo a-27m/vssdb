@@ -329,8 +329,10 @@ namespace NeuroGenes
             int numChrom = 1;/* TODO equals net weights count */
             population = new Population<BaseDoubleSpecies<CharRecognSpecies>>();
             CharRecognSpecies.Intervals = GetIntervals(numChrom);
-            population.Add(
-            //population.BestFunc
+
+            CreatePopulation();
+
+            
     /*Обучение
 	1. Случайная популяция
 	2. Для каждой особи вычисление ошибки (== fitness) на наборе примеров
@@ -341,6 +343,38 @@ namespace NeuroGenes
 	7. Конец. Каждая особь-сеть обучена. Ответ - лучшая в популяции.
     */
 
+        }
+
+        private void CreatePopulation()
+        {
+            int count = (int)chromoCount.Value;
+
+            // Зададим интервалы изменения хромосом
+            Interval[] intervals = new Interval[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                intervals[i] = new Interval(-500.0, 500.0);
+            }
+
+            m_Analytics.Clear();
+
+            // Зададим параметры алгоритма
+            m_Population.Reset();
+            m_Population.MaxSize = (int)popSize.Value;
+            m_Population.MutationPossibility = int.Parse(mutation.Text) / 100.0;
+            m_Population.CrossPossibility = int.Parse(cross.Text) / 100.0;
+
+            // Установим свойства видов
+            SchwefelSpecies.Intervals = intervals;
+
+            // Добавим виды
+            for (int i = 0; i < m_Population.MaxSize; ++i)
+            {
+                m_Population.Add(new SchwefelSpecies());
+            }
+
+            ShowData();
         }
 
         private void tbnTrainBackProp_Click(object sender, EventArgs e)

@@ -31,7 +31,7 @@ namespace NeuroGenes
         public double const_a = 5e-3;
         public double const_Eta = 2e-1;
 
-        Random rnd;
+        static Random rnd = new Random();
 
         public double F(double s)
         {
@@ -47,11 +47,11 @@ namespace NeuroGenes
             //return 0.5 * (1 - Math.Pow(s, 2)); // Bipolar
         }
 
-        public void AllocateNetwork(int inputs, params int[] NeuronCounts)
+        public void AllocateNetwork(bool allocateWeights, int inputs, params int[] NeuronCounts)
         {
             int layersCount = NeuronCounts.Length;           
 
-            w = new double[layersCount][][];
+            if (allocateWeights) w = new double[layersCount][][];
             s = new double[layersCount][];
             d = new double[layersCount][];
             x = new double[1 + layersCount][];
@@ -64,9 +64,12 @@ namespace NeuroGenes
             {
                 int neuronsInLayer = NeuronCounts[L];
 
-                w[L] = new double[neuronsInLayer][];
-                for (int i = 0; i < neuronsInLayer; i++)
-                    w[L][i] = new double[prevLayerNeurons + 1]; // perv layer outs, +1 for bias
+                if (allocateWeights)
+                {
+                    w[L] = new double[neuronsInLayer][];
+                    for (int i = 0; i < neuronsInLayer; i++)
+                        w[L][i] = new double[prevLayerNeurons + 1]; // perv layer outs, +1 for bias
+                }
 
                 s[L] = new double[neuronsInLayer];
                 d[L] = new double[neuronsInLayer];
@@ -78,6 +81,30 @@ namespace NeuroGenes
 
                 prevLayerNeurons = neuronsInLayer;
             }
+        }
+
+        public void SetWeights(double[][][] new_weights, bool doValidation)
+        {
+            if (!doValidation || ValidateDimensions(new_weights))
+            {
+                this.w = new_weights;
+            }
+            else 
+                throw new ArgumentException();
+        }
+
+        public bool ValidateDimensions(double[][][] m)
+        {
+            if (w.GetLength(0) != m.GetLength(0)) return false;
+            for (int i = 0; i < w.GetLength(0); i++)
+            {
+                if (w[i].GetLength(0) != m[i].GetLength(0)) return false;
+                for (int j = 0; j < w[i].GetLength(0); j++)
+                {
+                    if (w[i][j].GetLength(0) != m[i][j].GetLength(0)) return false;
+                }
+            }
+            return true;
         }
 
         public void FillSmallRandom(double smallNumber)
@@ -193,6 +220,13 @@ namespace NeuroGenes
             //Debug.Print("Trainig finished with Error: {0}, at epoch #{1}", netError, epoch);
         }
 
+        public static double CalculateError(double[] etalonOut, double[] sampleOut)
+        {
+            double[] D = MatrixArithmetics.Minus(sampleOut, etalonOut);
+
+            return MatrixArithmetics.Sum(MatrixArithmetics.PairMult(D, D));
+         }
+
         double[] GetChromosomes()
         {
             // TODO cast w[][][] to result[] (TIME OPT)
@@ -203,13 +237,6 @@ namespace NeuroGenes
         }
 
         public CharRecognizerNetwork()
-        { 
-            rnd = new Random();
-        }
-        public CharRecognizerNetwork(double[] chromosomes) : this()
-        {
-            // TODO init w from chromosomes (QUICKLY!)
-            w[0][0] = chromosomes;
-        }
+        {}
     }
 }

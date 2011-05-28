@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="CharRecognizerNetwork.cs" />
     <Compile Include="CharRecognSpecies.cs" />
+    <Compile Include="CookedSamples.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
